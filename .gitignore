@@ -1,0 +1,17 @@
+node_modules/
+*.log
+docs-app/.next/
+docs-app/node_modules/
+docs-app/test-results/
+docs-app/**/*-darwin.png
+*.tsbuildinfo
+
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Claude Code worktrees
+.claude/worktrees/
+
+# npm pack output
+*.tgz

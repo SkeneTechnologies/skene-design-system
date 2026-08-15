@@ -1,0 +1,518 @@
+# shadcn + workspace component inventory — Skene Cloud dashboard
+# Human reference: design-system/docs/ux-patterns.md §1
+#
+# This file says what you must NOT do with a component. It does not say which
+# one to reach for — read machine/context.yaml first for that, then come back
+# here for the constraints on whatever you picked.
+
+version: "1.0.0"
+context: machine/context.yaml
+config:
+  style: new-york
+  rsc: true
+  css_variables: true
+  base_color: neutral
+  icon_library: lucide
+  css_entry: app/globals.css
+  config_file: components.json
+
+import_order:
+  - "@skene/design-system/ui/*"
+  - components/dashboard-chrome/*
+  - components/workspace/*
+  - components/settings/*
+
+workspace_forms:
+  use:
+    - SettingsInput
+    - SettingsSelect
+    - SettingsSwitch
+  import: "@skene/design-system/ui/settings-field.tsx"
+  rule: Prefer over raw Input / Radix Select / Switch on dense workspace form surfaces
+
+primitives:
+  Accordion:
+    import: "@skene/design-system/ui/accordion.tsx"
+    notes: Radix-based, accordion-down / accordion-up animations
+  Alert:
+    import: "@skene/design-system/ui/alert.tsx"
+    variants: [default, destructive]
+  AlertDialog:
+    import: "@skene/design-system/ui/alert-dialog.tsx"
+  Badge:
+    import: "@skene/design-system/ui/badge.tsx"
+    variants: [default, secondary, destructive, outline]
+  Button:
+    import: "@skene/design-system/ui/button.tsx"
+    variants: [default, destructive, outline, secondary, ghost, link]
+    sizes: [default, sm, lg, icon]
+    rules:
+      - Primary CTA uses default variant with fixed bg-brand-peach (#fec089), not theme-split --primary
+      - Do not add bg-[#...] overrides
+  Card:
+    import: "@skene/design-system/ui/card.tsx"
+    exports: [Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter]
+  Checkbox:
+    import: "@skene/design-system/ui/checkbox.tsx"
+  Collapsible:
+    import: "@skene/design-system/ui/collapsible.tsx"
+  Command:
+    import: "@skene/design-system/ui/command.tsx"
+    notes: cmdk-based
+  Dialog:
+    import: "@skene/design-system/ui/dialog.tsx"
+  DropdownMenu:
+    import: "@skene/design-system/ui/dropdown-menu.tsx"
+  HoverCard:
+    import: "@skene/design-system/ui/hover-card.tsx"
+  Input:
+    import: "@skene/design-system/ui/input.tsx"
+  InputGroup:
+    import: "@skene/design-system/ui/input-group.tsx"
+  Label:
+    import: "@skene/design-system/ui/label.tsx"
+  NavigationMenu:
+    import: "@skene/design-system/ui/navigation-menu.tsx"
+  Popover:
+    import: "@skene/design-system/ui/popover.tsx"
+  Progress:
+    import: "@skene/design-system/ui/progress.tsx"
+    notes: Brand gradient indicator (bronze-to-gold)
+  Select:
+    import: "@skene/design-system/ui/select.tsx"
+    sizes: [sm, default]
+  SettingsField:
+    import: "@skene/design-system/ui/settings-field.tsx"
+    exports: [SettingsInput, SettingsSelect, SettingsSwitch]
+  Sheet:
+    import: "@skene/design-system/ui/sheet.tsx"
+  Skeleton:
+    import: "@skene/design-system/ui/skeleton.tsx"
+  Slider:
+    import: "@skene/design-system/ui/slider.tsx"
+  Sonner:
+    import: "@skene/design-system/ui/sonner.tsx"
+    notes: Error toasts persist until dismissed (duration Infinity, closeButton true)
+  Switch:
+    import: "@skene/design-system/ui/switch.tsx"
+  Table:
+    import: "@skene/design-system/ui/table.tsx"
+  Tabs:
+    import: "@skene/design-system/ui/tabs.tsx"
+    exports: [Tabs, TabsList, TabsTrigger, TabsContent]
+    rules:
+      - Use for mutually exclusive sections or view modes (canvas/list, tokens/gallery)
+      - Do not hand-roll segmented controls with raw buttons and manual active classes
+      - Controlled Tabs (value + onValueChange) when panel content renders outside TabsContent
+      - Active trigger uses data-[state=active]:bg-card + border-border on bg-muted track
+    design_system_page: app/design-system/tabs/page.tsx
+  Textarea:
+    import: "@skene/design-system/ui/textarea.tsx"
+  Tooltip:
+    import: "@skene/design-system/ui/tooltip.tsx"
+  Breadcrumb:
+    import: "@skene/design-system/ui/breadcrumb.tsx"
+
+# NOT IN THIS PACKAGE. Every `path:` below points into skene-dashboard, and an
+# agent reading this file as the package's contract was being told to open files
+# the package does not contain — the same class as the phantom `./theme.css`
+# export, and enforced by nothing.
+#
+# Renamed from `dashboard_chrome:` on 2026-08-14 so the key itself says whose
+# code it is. `__tests__/package-contract.test.ts` now asserts that every
+# `import:` in this file resolves inside the package; these carry `path:`
+# instead, which the test treats as a declaration that the code lives elsewhere.
+#
+# Six of these are candidates to move INTO the package as a `chrome/` tier —
+# StatusPill, EmptyStateCard, TruncateWithTooltip, PageActionBar, TableRow,
+# SidebarCollapsibleSection. The other three are coupled to a workspace,
+# integration or onboarding model and stay where they are. That promotion is
+# gated on the dashboard importing package primitives first; promoting sooner
+# forks each component a second time, because their internals still resolve to
+# the dashboard's local copies of `ui/*`.
+consumer_overlay:
+  repo: skene-dashboard
+  note: >-
+    Documented here because the dashboard has no contract of its own since its
+    design-system/machine fork was found to have diverged on all five files.
+    Read as "what that consumer has", never as "what this package exports".
+  components:
+    PageActionBar:
+      path: components/dashboard-chrome/PageActionBar.tsx
+      purpose: Filter bar / toolbar above tables
+    StatusPill:
+      path: components/dashboard-chrome/StatusPill.tsx
+      purpose: Colored status indicator
+    ConnectionStatusBadge:
+      path: components/dashboard-chrome/ConnectionStatusBadge.tsx
+    EmptyStateCard:
+      path: components/dashboard-chrome/EmptyStateCard.tsx
+    TableRow:
+      path: components/dashboard-chrome/TableRow.tsx
+    SuccessHero:
+      path: components/dashboard-chrome/SuccessHero.tsx
+    WorkspaceAvatarPill:
+      path: components/dashboard-chrome/WorkspaceAvatarPill.tsx
+    TruncateWithTooltip:
+      path: components/dashboard-chrome/TruncateWithTooltip.tsx
+    SidebarCollapsibleSection:
+      path: components/dashboard-chrome/SidebarCollapsibleSection.tsx
+
+# Page furniture — a recurring treatment, not a whole band.
+#
+# Absent from this contract until 2026-08-12, so an agent reading it could not
+# discover PillNav, Eyebrow, DisplayHeading, NumberedStep or the dither family
+# and would rebuild them by hand. Human reference: docs/sections.md.
+patterns:
+  marketing:
+    import: "@skene/design-system/patterns/marketing.tsx"
+    exports: [PillNav, PillNavLink, Eyebrow, DisplayHeading, Accent, NumberedStep, SplitAuthLayout]
+    rules:
+      - >-
+        Eyebrow is the section-heading kicker and owns font.tracking.eyebrow
+        (0.16em). It is NOT interchangeable with Badge, which is the product
+        surface's status primitive, nor with StatChip/MetaChip.
+      - >-
+        PillNav sits OVER the hero rather than above it, so media runs to the top
+        of the viewport. The translucent fill plus blur is what keeps links
+        legible over arbitrary photography without a solid bar.
+  dither:
+    import: "@skene/design-system/patterns/dither.tsx"
+    exports: [DitherOverlay, DitheredMedia]
+    rules:
+      - >-
+        Four things in this package put texture behind content and they are
+        scoped differently. DitherOverlay is the raw layer; DitheredMedia is a
+        full hero composition; HeroBackdrop is a hero strip; SectionBackdrop is
+        the field behind a mock inside a feature row. Pick by scope, see
+        docs/sections.md.
+      - >-
+        soft-light is what makes the overlay read as a print halftone rather than
+        a sticker. overlay is harsher, multiply just dims. Change deliberately.
+  heroBackdrop:
+    import: "@skene/design-system/patterns/hero-backdrop.tsx"
+    exports: [HeroBackdrop]
+  terminal:
+    import: "@skene/design-system/patterns/terminal.tsx"
+    exports: [Terminal, TerminalLine]
+    rules:
+      - >-
+        Terminal frames code and CLI output; ProductWindow frames a product mock
+        and inverts to light by default. They read as different objects on
+        purpose — do not substitute one for the other.
+  skeneMark:
+    import: "@skene/design-system/patterns/skene-mark.tsx"
+    exports: [SkeneMark, SkeneLockup]
+    props:
+      tone: [block, onDark, onLight]
+      size: "px, square"
+      radius: "px, applied only to `block` — the other two have no fill to round"
+    rules:
+      - >-
+        tone names the GROUND, not the ink: onLight is the BLACK glyph. Naming
+        it after the ink is what makes a caller pick the invisible variant.
+      - >-
+        block — the peach glyph on its own black tile — is the default because
+        it brings its own ground and is safe anywhere. There is no
+        peach-on-transparent file; do not fake one with a mask recolour, the
+        counters are part of the artwork.
+      - >-
+        Anywhere the product speaks for itself — the featured Bridge card, the
+        AgentCallout avatar — this is the mark. Do not draw a ring glyph or a
+        letter "S" as a stand-in.
+      - >-
+        SkeneLockup is the symbol WITH the wordmark, and it is sized by `height`
+        rather than by `size`: the artwork is 1016x260 and one number meaning
+        width in one component and height in the other ships at the wrong scale.
+        Its `accent` tone is the only one not named after a ground — peach
+        symbol, white wordmark, dark grounds only.
+      - >-
+        SkeneLockup defaults alt="Skene". A nav bar has no word beside it, so
+        the lockup usually IS the accessible name; the mark defaults the other
+        way because it sits next to type that already says it.
+
+# Marketing page sections — whole bands of a page, not controls.
+#
+# Extracted from the captured Stand demo (site-capture-skene-demo) in Stage 2,
+# against the tokens settled during the 2026-08-12 reconciliation, which is
+# recorded in design-tokens.json's own $description fields and in CHANGELOG.md.
+# All content is props: nothing here knows what a Skene finding says.
+sections:
+  Chip:
+    import: "@skene/design-system/sections/chip.tsx"
+    exports: [Chip]
+    props:
+      tone: [neutral, healthy, live]
+    rules:
+      - >-
+        The 10px mono rectangle, extracted 2026-08-12 from two copies that were
+        written independently: PlanCard's inline tier span and WindowStatus. Do
+        not write a third inline one — add a tone here instead, and only when
+        something actually renders it.
+      - >-
+        tone carries colour only. The geometry is fixed, with exactly one
+        declared exception: tracking. The two originals differed (WindowStatus
+        0.05em, PlanCard tier 0.08em), Chip holds 0.08em, and WindowStatus
+        overrides back to 0.05em so its verified rendering did not change. That
+        divergence is unreconciled on purpose — picking a winner is a visual
+        decision, not a refactor.
+      - >-
+        neutral is the only tone allowed invariant chrome.* / brand.light: its
+        fill is near-black on the dark page AND on the featured cream PlanCard,
+        so there is nothing for an invariant token to get wrong. healthy and live
+        mix their fill from mode-aware tokens through color-mix so they follow a
+        `light` ancestor.
+  ProductWindow:
+    import: "@skene/design-system/sections/product-window.tsx"
+    exports: [ProductWindow, WindowStatus, WindowToolbar, WindowChip]
+    props:
+      tone: [light, dark]
+    rules:
+      - >-
+        WindowStatus is a Chip with a narrower vocabulary (healthy | live) and a
+        0.05em tracking override. Style changes to the chip shape belong in
+        sections/chip.tsx, not here.
+      - >-
+        tone=light is the DEFAULT and means "the customer's product". A dark
+        window on a dark page reads as a screenshot of Skene itself.
+      - >-
+        tone=light applies the `light` class. This is load-bearing, not
+        decoration: mode-aware tokens inside otherwise resolve to their DARK
+        value against a cream fill (semantic.matcha #d7f4ab on #faf1e9 is
+        1.16:1, and the status pill was illegible). Do not remove it.
+      - >-
+        Internal rules use chrome.line.onLight, not chrome.line.subtle.
+  Finding:
+    import: "@skene/design-system/sections/finding-card.tsx"
+    exports: [Finding, MetricCard, Sparkline]
+    props:
+      status: [good, warn, danger]
+      onLight: "boolean — true (default) means inside a light ProductWindow"
+    rules:
+      - >-
+        status binds to semantic.matcha / warningAmber / errorRed, the same
+        three the dashboard uses. Do not introduce a marketing-only green or
+        red; that disagreement is what the token reconciliation removed.
+      - >-
+        Sparkline is not a chart. No axes, no scale, values authored rather
+        than measured. `highlight` is an index because the copy decides which
+        bar matters, not the data.
+  FeatureRow:
+    import: "@skene/design-system/sections/feature-row.tsx"
+    exports: [FeatureRow, FeatureStack, FeatureIcon]
+    props:
+      reverse: "boolean — mirrors the layout"
+      lede: "the italic promise line under the title"
+      actions: "buttons, pinned to the bottom of the copy column"
+      accent: [peach, violet, blue]
+    rules:
+      - >-
+        Set `reverse` explicitly per row. Deriving it from index breaks the
+        moment a row is inserted or reordered, and these rows are content.
+      - >-
+        The line under the title is `lede` and the buttons are `actions`, the
+        same names LightSectionCard and FinalCta use. These were `subtitle` and
+        `action` until 2026-08-12; one concept under two names is drift that
+        gets copied, so do not reintroduce the old names.
+      - >-
+        accent.violet / accent.blue exist for FeatureIcon specifically; the
+        nearest neon.* is dE 24+ and far too saturated at a 44px ring.
+  PipelineStepper:
+    import: "@skene/design-system/sections/pipeline-stepper.tsx"
+    exports: [PipelineStepper, PipelineStep]
+    props:
+      state: [done, active, pending]
+      onLight: "boolean — true when inside a light ProductWindow"
+    rules:
+      - >-
+        The connector between two steps fills only when the LEFT step is done, so
+        progress reads as a filling track rather than N independent dots.
+      - >-
+        Renders inside a light ProductWindow on the live site, so it takes
+        onLight and uses the theme-aware text role throughout.
+  AskWidget:
+    import: "@skene/design-system/sections/ask-widget.tsx"
+    exports: [AskWidget]
+    rules:
+      - >-
+        Client component — controlled textarea. It is the only interactive part
+        of its section and lives in its own module for that reason.
+      - >-
+        The submit button is bottom-right of the textarea, not full width. It is
+        a low-commitment probe and a full-width primary button oversells it.
+      - >-
+        showAiBadge defaults true. The answer is model-generated and the badge is
+        the disclosure; keep it minor, not optional-by-default.
+  AnnotatedCurve:
+    import: "@skene/design-system/sections/annotated-curve.tsx"
+    exports: [AnnotatedCurve]
+    props:
+      points: "array of { x, y, label } — x/y are 0-100 percentages"
+    rules:
+      - >-
+        The SVG is decorative and aria-hidden; annotations are real HTML so they
+        stay selectable, wrap normally, and remain in the a11y tree. SVG text
+        does not wrap.
+      - >-
+        Labels are offset from their node, never centred on it, or the box hides
+        the point it annotates.
+  LightSectionCard:
+    import: "@skene/design-system/sections/light-section-card.tsx"
+    exports: [LightSectionCard]
+    rules:
+      - >-
+        Root carries the `light` class and it is load-bearing. This is a cream
+        surface on a dark page; without it every mode-aware token inside resolves
+        to its dark value against the fill and the text disappears. Same
+        mechanism as ProductWindow tone=light and the featured PlanCard.
+  StatChip:
+    import: "@skene/design-system/sections/stat-chip.tsx"
+    exports: [StatChip, MetaChip]
+    rules:
+      - >-
+        StatChip and MetaChip are deliberately NOT one component with a variant.
+        StatChip states a fact that is true now; MetaChip marks something
+        not-yet-shipped. Merging them lets a roadmap marker be read as a live
+        statistic.
+      - >-
+        Both render on dark and on the cream LightSectionCard, so both use the
+        theme-aware text role rather than chrome.text.*.
+  Bridge:
+    import: "@skene/design-system/sections/bridge.tsx"
+    exports: [Bridge, BridgeNode]
+    props:
+      featured: "boolean on BridgeNode — the dark, raised middle card"
+      items: "short fragments under the rule; three is the shape"
+      icon: "glyph above the label; on the live section only the featured card has one"
+    rules:
+      - >-
+        Doubly nested inversion, and both halves are load-bearing. The band root
+        carries `light` over brand.light; the featured card carries `dark` back
+        over chrome.surface.1. Drop either class and every mode-aware token in
+        that subtree keeps the wrong value against the fill.
+      - >-
+        Nothing rendered here uses chrome.text.*. The band flips, so all type is
+        the theme-aware text.* role. The two hairlines are the exception:
+        chrome.line.onLight on the cream cards, chrome.line.subtle on the dark
+        one, because no mode-aware role covers that pair.
+      - >-
+        The kicker is an Eyebrow-SHAPED chip, not <Eyebrow>. Eyebrow is built
+        from chrome.surface.border and chrome.text.muted and renders
+        near-invisible on cream. <Accent> inside `title` does compose — brand
+        peach is mode-aware and lands on its light value inside the band.
+      - >-
+        Bridge owns the arrows and interleaves them between its children, so N
+        nodes get N-1. A node that drew its own trailing arrow would have to
+        know it is not last. Below md the row stacks and each arrow rotates a
+        quarter turn rather than being dropped.
+      - >-
+        The featured card's FILL stays invariant chrome.surface.* on purpose:
+        that card is dark in every context. The `dark` class is for the type
+        inside it, not for the fill.
+
+  AgentCallout:
+    import: "@skene/design-system/sections/agent-callout.tsx"
+    exports: [AgentCallout]
+    props:
+      eyebrow: "mono kicker over the claim; absent on the nested instance"
+      evidence: "the dot-separated line under the claim; separators are content"
+      avatar: "override the mark; defaults to SkeneMark"
+    rules:
+      - >-
+        chrome.* is correct here and this is the exception, not a precedent: the
+        block paints its OWN near-black fill inside its own border, exactly like
+        AskWidget, so nothing under its type can invert. Give it a light variant
+        and every chrome.text.* in it has to become the theme-aware text.* role.
+      - >-
+        Border and fill both derive from brand.peach through color-mix, so a
+        token change moves them together. Do not hand-pick a second tint.
+      - >-
+        The default avatar is SkeneMark, not a letter in a disc. Wherever the
+        product speaks for itself the real symbol is the mark — the demo drew an
+        "S" because it had no access to the artwork.
+  ScoreRing:
+    import: "@skene/design-system/sections/score-ring.tsx"
+    exports: [ScoreRing]
+    props:
+      status: [good, warn, danger]
+      size: "rendered diameter in px; the digits size off it"
+      label: "what the number means, for assistive tech — required"
+    rules:
+      - >-
+        status binds the reserved vocabulary to semantic.matcha /
+        warningAmber / errorRed, the same three Finding uses. Never peach: peach
+        is the primary action colour and a peach fault reads as a call to
+        action. The captured ring's gold is the demo's own accent fork.
+      - >-
+        The default is warn, not good. The only shipped instance reads "coverage
+        needs attention" at 72, so a forgotten prop must not render a failing
+        score in the reassurance colour.
+      - >-
+        Theme-aware: digits take text.*, and the track is mixed from
+        currentColor so it follows a `light` ancestor. There is no onLight prop
+        and there should not be one.
+  RecommendationCard:
+    import: "@skene/design-system/sections/recommendation-card.tsx"
+    exports: [RecommendationCard]
+    props:
+      eyebrow: "mono kicker — RECOMMENDED NEXT STEP"
+      meta: "qualifier chips under the body; TagChip fits"
+    rules:
+      - >-
+        It carries NO status colour, and that is the difference from Finding.
+        Finding reports a measured state; this proposes a next step, and an
+        amber pill on a suggestion teaches the reader that amber means two
+        different things.
+      - >-
+        Fill and hairline mix from currentColor, so the card works on the light
+        AppWindow it shipped in and on the dark page without a prop.
+      - >-
+        meta is a slot. MetaChip is the wrong part for it — that one marks
+        something not shipped yet — so callers pass TagChip.
+  FaqBand:
+    import: "@skene/design-system/sections/faq-band.tsx"
+    exports: [FaqBand, FaqRow]
+    props:
+      multiple: "open many rows at once; default is one at a time, collapsible"
+      note: "the line under the heading, usually a talk-to-us link"
+    rules:
+      - >-
+        Composes @radix-ui/react-accordion directly rather than ui/accordion.
+        The primitive bakes a ChevronDown into its trigger and this band's mark
+        is a round +/× at the right edge; wrapping it would mean rendering a
+        chevron and hiding it.
+      - >-
+        The whole module is 'use client' because disclosure is state. FaqRow
+        needs useId for a stable Radix item value — a slug of the question text
+        would collide and a counter would not survive reordering.
+      - >-
+        `light` on the root, never conditional. The band ships in one tone; a
+        tone="dark" prop would have to flip that class and no FAQ on either
+        surface is the dark one.
+  SurfaceTiles:
+    import: "@skene/design-system/sections/surface-tiles.tsx"
+    exports: [SurfaceTiles, SurfaceTile, SurfaceDetail]
+    props:
+      selected: "the cream tile — applies `light` to that tile"
+      accent: [peach, violet, blue, neutral]
+    rules:
+      - >-
+        Not OverviewTiles. That one is caption/number/note and exists so four
+        counts read as commensurable; these are icon/name/note with exactly one
+        selected. A metric tile cannot be "chosen".
+      - >-
+        selected carries the `light` class, which is the whole mechanism. On a
+        cream tile without it, text.primary is #faf1e9 on #faf1e9. The
+        unselected tiles paint their own near-black ground and so take the
+        invariant chrome.* roles legitimately.
+      - >-
+        Selection is presentational: no onSelect, no internal state. The band
+        that uses this is editorial, and a caller who wants a real picker owns
+        the state and passes the flag.
+      - >-
+        SurfaceDetail is a SIBLING of the row, not a child. Nesting it would
+        force the row to own selection state to know where to render it.
+      - >-
+        These render on a SectionBackdrop field, and SurfaceDetail is
+        deliberately translucent so the halftone reads through it. A solid fill
+        punches a rectangle out of the field.

@@ -1,0 +1,2834 @@
+{
+  "generated": "by scripts/build-inventory.mjs — do not edit by hand",
+  "modules": [
+    {
+      "module": "accordion",
+      "layer": "ui",
+      "import": "@skene/design-system/ui/accordion",
+      "exports": [
+        "Accordion",
+        "AccordionItem",
+        "AccordionTrigger",
+        "AccordionContent"
+      ],
+      "summary": "",
+      "client": false,
+      "lines": 63,
+      "cases": [
+        "ui-accordion"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "accordion",
+        "purpose": "Radix disclosure list. One trigger, one panel, animated open and close.",
+        "alsoFor": [
+          "A settings or filter group that collapses on a dense product screen."
+        ],
+        "watchFor": [
+          "It is the primitive, not the marketing band. FaqBand composes Radix directly because this trigger bakes in a chevron."
+        ],
+        "notFor": [
+          "A cream FAQ band on a marketing page. FaqBand owns the ground, the two-column split, the hairline per row and the round toggle; this is the level below it."
+        ]
+      }
+    },
+    {
+      "module": "alert-dialog",
+      "layer": "ui",
+      "import": "@skene/design-system/ui/alert-dialog",
+      "exports": [
+        "AlertDialog",
+        "AlertDialogPortal",
+        "AlertDialogOverlay",
+        "AlertDialogTrigger",
+        "AlertDialogContent",
+        "AlertDialogHeader",
+        "AlertDialogFooter",
+        "AlertDialogTitle",
+        "AlertDialogDescription",
+        "AlertDialogAction",
+        "AlertDialogCancel"
+      ],
+      "summary": "",
+      "client": false,
+      "lines": 147,
+      "cases": [
+        "ui-alert-dialog"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "alert-dialog",
+        "purpose": "Radix modal that demands an answer before anything continues.",
+        "alsoFor": [
+          "Any destructive confirmation — delete, disconnect, revoke."
+        ],
+        "watchFor": [
+          "It traps focus and cannot be dismissed by clicking away, unlike Dialog. That is the whole difference; using it for a non-blocking message makes the product feel hostile."
+        ],
+        "notFor": [
+          "A form or a detail panel the reader may abandon. That is Dialog."
+        ]
+      }
+    },
+    {
+      "module": "alert",
+      "layer": "ui",
+      "import": "@skene/design-system/ui/alert",
+      "exports": [
+        "Alert",
+        "AlertTitle",
+        "AlertDescription"
+      ],
+      "summary": "",
+      "client": false,
+      "lines": 61,
+      "cases": [
+        "ui-alert"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "alert",
+        "purpose": "A static inline notice inside a page — not a toast, not a modal.",
+        "alsoFor": [
+          "An empty-state explanation or a persistent warning above a form."
+        ],
+        "watchFor": [
+          "Two variants only, default and destructive. There is no warning variant; an amber notice is a destructive one misused."
+        ],
+        "notFor": [
+          "A transient confirmation of something the reader just did. That is the toaster."
+        ]
+      }
+    },
+    {
+      "module": "badge",
+      "layer": "ui",
+      "import": "@skene/design-system/ui/badge",
+      "exports": [
+        "Badge"
+      ],
+      "summary": "",
+      "client": false,
+      "lines": 42,
+      "cases": [
+        "ui-badge"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "badge",
+        "purpose": "The product surface's status marker: a small rounded label with four variants.",
+        "alsoFor": [
+          "A row-level state in a table — Active, Pending, Archived."
+        ],
+        "watchFor": [
+          "On marketing bands this is the wrong chip. docs/sections.md §2 tabulates seven chip shapes and assigns each a job; Badge's is product status."
+        ],
+        "notFor": [
+          "A section-heading kicker on a marketing page. That is Eyebrow, which owns font.tracking.eyebrow."
+        ]
+      }
+    },
+    {
+      "module": "breadcrumb",
+      "layer": "ui",
+      "import": "@skene/design-system/ui/breadcrumb",
+      "exports": [
+        "Breadcrumb",
+        "BreadcrumbList",
+        "BreadcrumbItem",
+        "BreadcrumbLink",
+        "BreadcrumbPage",
+        "BreadcrumbSeparator",
+        "BreadcrumbEllipsis"
+      ],
+      "summary": "",
+      "client": false,
+      "lines": 110,
+      "cases": [
+        "ui-breadcrumb"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "breadcrumb",
+        "purpose": "The path back up a product hierarchy.",
+        "alsoFor": [
+          "A workspace trail — workspace, project, resource."
+        ],
+        "watchFor": [
+          "BreadcrumbPage is the current leaf and renders unlinked. Wrapping it in a link is the common mistake and reads as a no-op to the reader."
+        ],
+        "notFor": [
+          "The crumb line inside a drawn artifact. AppWindow takes it as a prop and ArtTitle styles it."
+        ]
+      }
+    },
+    {
+      "module": "button",
+      "layer": "ui",
+      "import": "@skene/design-system/ui/button",
+      "exports": [
+        "Button"
+      ],
+      "summary": "",
+      "client": false,
+      "lines": 62,
+      "cases": [
+        "ui-button"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "button",
+        "purpose": "The action primitive. Six variants, four sizes.",
+        "alsoFor": [
+          "Any action anywhere in either app — the marketing CTA and the workspace toolbar are the same component."
+        ],
+        "watchFor": [
+          "The primary variant carries a fixed brand-peach fill rather than the theme-split primary token. Inside a cream surface peach resolves to its light value, so pass the variant you actually want rather than assuming the dark-page one."
+        ],
+        "notFor": [
+          "A nav item in the marketing pill bar. That is PillNavLink."
+        ]
+      }
+    },
+    {
+      "module": "card",
+      "layer": "ui",
+      "import": "@skene/design-system/ui/card",
+      "exports": [
+        "Card",
+        "CardHeader",
+        "CardFooter",
+        "CardTitle",
+        "CardDescription",
+        "CardContent"
+      ],
+      "summary": "The card: shadcn's product container, and the flat marketing variant of the",
+      "client": false,
+      "lines": 142,
+      "cases": [
+        "ui-card",
+        "ui-card-surface"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "card",
+        "purpose": "The generic product container: header, content, footer. `variant=\"surface\"` is the marketing flavour of the same card — flat, `border-surface-border` over `bg-surface-1`, 24px of its own padding — which appeared inline eight times across skene-site's routes plus six near-copies that differed only by being an `<a>`.",
+        "alsoFor": [
+          "Any dashboard panel that is not a table and not a drawn artifact.",
+          "A flat marketing panel on a dark band, via `variant=\"surface\"`: a border rather than a shadow, per principles.md 16.",
+          "A whole card that is a link, via `asChild` with an `<a>` or a `next/link` inside — the `surface` variant already carries `block` and `no-underline`, so the call site adds neither."
+        ],
+        "watchFor": [
+          "It is themed, not chrome. On a fixed-dark marketing surface it follows the page theme rather than staying dark, which is usually not what a marketing band wants.",
+          "`surface` bakes in `p-[24px]`, which `default` deliberately does not — `default` expects `CardHeader`/`CardContent`/`CardFooter` to bring their own `p-6`. Composing the sub-parts inside a `surface` card double-pads; pass `p-0` or use `default`."
+        ],
+        "notFor": [
+          "A panel inside a drawn Skene Cloud artifact. That is AppPanel, which is the same object in the artifact register."
+        ]
+      }
+    },
+    {
+      "module": "checkbox",
+      "layer": "ui",
+      "import": "@skene/design-system/ui/checkbox",
+      "exports": [
+        "Checkbox"
+      ],
+      "summary": "",
+      "client": false,
+      "lines": 33,
+      "cases": [
+        "ui-checkbox"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "checkbox",
+        "purpose": "Radix checkbox with the package's focus ring.",
+        "alsoFor": [
+          "A multi-select filter list, or a consent row in a form."
+        ],
+        "watchFor": [
+          "It is a control, not a mark. The check glyph in CheckList is decorative and has no input under it."
+        ],
+        "notFor": [
+          "Rendering a list of included features. That is CheckList, which is typography with a peach tick."
+        ]
+      }
+    },
+    {
+      "module": "collapsible",
+      "layer": "ui",
+      "import": "@skene/design-system/ui/collapsible",
+      "exports": [
+        "Collapsible",
+        "CollapsibleTrigger",
+        "CollapsibleContent"
+      ],
+      "summary": "",
+      "client": false,
+      "lines": 12,
+      "cases": [
+        "ui-collapsible"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "collapsible",
+        "purpose": "Radix show/hide for one region.",
+        "alsoFor": [
+          "A sidebar section, or a details panel under a row."
+        ],
+        "watchFor": [
+          "Unstyled beyond the animation. Unlike Accordion it has no trigger chrome, which is why the sidebar uses it."
+        ],
+        "notFor": [
+          "A set of mutually exclusive panels. That is Accordion."
+        ]
+      }
+    },
+    {
+      "module": "command",
+      "layer": "ui",
+      "import": "@skene/design-system/ui/command",
+      "exports": [
+        "Command",
+        "CommandDialog",
+        "CommandInput",
+        "CommandList",
+        "CommandEmpty",
+        "CommandGroup",
+        "CommandItem",
+        "CommandShortcut",
+        "CommandSeparator"
+      ],
+      "summary": "",
+      "client": false,
+      "lines": 155,
+      "cases": [
+        "ui-command"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "command",
+        "purpose": "cmdk palette: a searchable list with groups and shortcuts.",
+        "alsoFor": [
+          "A workspace switcher or a jump-to-resource palette."
+        ],
+        "watchFor": [
+          "CommandDialog is the modal wrapper; Command alone renders inline. Picking the wrong one gives a palette that cannot be dismissed or one that never opens."
+        ],
+        "notFor": [
+          "Choosing one value from a short known list. That is Select."
+        ]
+      }
+    },
+    {
+      "module": "dialog",
+      "layer": "ui",
+      "import": "@skene/design-system/ui/dialog",
+      "exports": [
+        "Dialog",
+        "DialogPortal",
+        "DialogOverlay",
+        "DialogTrigger",
+        "DialogClose",
+        "DialogContent",
+        "DialogHeader",
+        "DialogFooter",
+        "DialogTitle",
+        "DialogDescription"
+      ],
+      "summary": "",
+      "client": false,
+      "lines": 132,
+      "cases": [
+        "ui-dialog"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "dialog",
+        "purpose": "Radix modal for a task the reader may abandon.",
+        "alsoFor": [
+          "A create/edit form, a detail view, a connect flow."
+        ],
+        "watchFor": [
+          "Content portals to document.body, so a light or dark class on an ancestor does not reach it. The theme has to be on the html element or on the content itself."
+        ],
+        "notFor": [
+          "A destructive confirmation. That is AlertDialog, which blocks until answered."
+        ]
+      }
+    },
+    {
+      "module": "dropdown-menu",
+      "layer": "ui",
+      "import": "@skene/design-system/ui/dropdown-menu",
+      "exports": [
+        "DropdownMenu",
+        "DropdownMenuTrigger",
+        "DropdownMenuContent",
+        "DropdownMenuItem",
+        "DropdownMenuCheckboxItem",
+        "DropdownMenuRadioItem",
+        "DropdownMenuLabel",
+        "DropdownMenuSeparator",
+        "DropdownMenuShortcut",
+        "DropdownMenuGroup",
+        "DropdownMenuPortal",
+        "DropdownMenuSub",
+        "DropdownMenuSubContent",
+        "DropdownMenuSubTrigger",
+        "DropdownMenuRadioGroup"
+      ],
+      "summary": "",
+      "client": false,
+      "lines": 215,
+      "cases": [
+        "ui-dropdown-menu"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "dropdown-menu",
+        "purpose": "Radix menu hung off a trigger.",
+        "alsoFor": [
+          "Row actions, a user menu, a filter with checkable items."
+        ],
+        "watchFor": [
+          "Also portalled — same theming caveat as Dialog."
+        ],
+        "notFor": [
+          "Top-level site navigation with rich panels. That is NavigationMenu."
+        ]
+      }
+    },
+    {
+      "module": "hover-card",
+      "layer": "ui",
+      "import": "@skene/design-system/ui/hover-card",
+      "exports": [
+        "HoverCard",
+        "HoverCardTrigger",
+        "HoverCardContent",
+        "HoverCardPortal"
+      ],
+      "summary": "",
+      "client": false,
+      "lines": 37,
+      "cases": [
+        "ui-hover-card"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "hover-card",
+        "purpose": "Preview on hover, no click.",
+        "alsoFor": [
+          "A definition or a record preview behind an identifier in a table."
+        ],
+        "watchFor": [
+          "Hover-only means touch devices never see it. Anything essential needs a click affordance as well."
+        ],
+        "notFor": [
+          "A one-line label for an icon button. That is Tooltip."
+        ]
+      }
+    },
+    {
+      "module": "input-group",
+      "layer": "ui",
+      "import": "@skene/design-system/ui/input-group",
+      "exports": [
+        "InputGroup",
+        "InputGroupAddon",
+        "InputGroupButton",
+        "InputGroupText",
+        "InputGroupInput",
+        "InputGroupTextarea"
+      ],
+      "summary": "",
+      "client": false,
+      "lines": 171,
+      "cases": [
+        "ui-input-group"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "input-group",
+        "purpose": "An input with addons welded to it — prefix, suffix, inline button.",
+        "alsoFor": [
+          "A URL field with a fixed scheme, a search box with a clear button, an amount with a currency."
+        ],
+        "watchFor": [
+          "The group owns the border and the focus ring; the inner input is borderless. Adding a border class to the input gives a double frame."
+        ],
+        "notFor": [
+          "A plain single field. That is Input."
+        ]
+      }
+    },
+    {
+      "module": "input",
+      "layer": "ui",
+      "import": "@skene/design-system/ui/input",
+      "exports": [
+        "Input"
+      ],
+      "summary": "",
+      "client": false,
+      "lines": 22,
+      "cases": [
+        "ui-input"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "input",
+        "purpose": "The single-line text field.",
+        "alsoFor": [
+          "Any form field on either surface."
+        ],
+        "watchFor": [
+          "On a workspace form prefer SettingsInput, which pairs it with its label and description at the density those screens use."
+        ],
+        "notFor": [
+          "A labelled field on a dense workspace settings screen. That is SettingsInput."
+        ]
+      }
+    },
+    {
+      "module": "label",
+      "layer": "ui",
+      "import": "@skene/design-system/ui/label",
+      "exports": [
+        "Label"
+      ],
+      "summary": "",
+      "client": false,
+      "lines": 21,
+      "cases": [
+        "ui-label"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "label",
+        "purpose": "The form label, wired to Radix's accessible name.",
+        "alsoFor": [
+          "Any control that is not already labelled by a settings field wrapper."
+        ],
+        "watchFor": [
+          "It is not the section kicker. A mono uppercase label above a band is Eyebrow."
+        ],
+        "notFor": [
+          "A kicker above a section heading. That is Eyebrow."
+        ]
+      }
+    },
+    {
+      "module": "navigation-menu",
+      "layer": "ui",
+      "import": "@skene/design-system/ui/navigation-menu",
+      "exports": [
+        "NavigationMenu",
+        "NavigationMenuList",
+        "NavigationMenuItem",
+        "NavigationMenuContent",
+        "NavigationMenuTrigger",
+        "NavigationMenuLink",
+        "NavigationMenuIndicator",
+        "NavigationMenuViewport"
+      ],
+      "summary": "",
+      "client": false,
+      "lines": 152,
+      "cases": [
+        "ui-navigation-menu"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "navigation-menu",
+        "purpose": "Radix top navigation with dropdown panels.",
+        "alsoFor": [
+          "A product or resources menu on the marketing site."
+        ],
+        "watchFor": [
+          "PillNav is the Skene marketing nav shell and does not use this — it is a translucent bar over the hero. These two solve different halves of the same page."
+        ],
+        "notFor": [
+          "The marketing site's own nav bar. That is PillNav."
+        ]
+      }
+    },
+    {
+      "module": "popover",
+      "layer": "ui",
+      "import": "@skene/design-system/ui/popover",
+      "exports": [
+        "Popover",
+        "PopoverTrigger",
+        "PopoverContent",
+        "PopoverAnchor"
+      ],
+      "summary": "",
+      "client": false,
+      "lines": 37,
+      "cases": [
+        "ui-popover"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "popover",
+        "purpose": "Radix floating panel anchored to a trigger.",
+        "alsoFor": [
+          "A date picker, a filter panel, a small inline form."
+        ],
+        "watchFor": [
+          "Portalled, like Dialog and DropdownMenu."
+        ],
+        "notFor": [
+          "A read-only preview that should not require a click. That is HoverCard."
+        ]
+      }
+    },
+    {
+      "module": "progress",
+      "layer": "ui",
+      "import": "@skene/design-system/ui/progress",
+      "exports": [
+        "Progress"
+      ],
+      "summary": "",
+      "client": false,
+      "lines": 32,
+      "cases": [
+        "ui-progress"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "progress",
+        "purpose": "A determinate bar with the brand gradient indicator.",
+        "alsoFor": [
+          "An upload, an import, a quota meter."
+        ],
+        "watchFor": [
+          "It is a control-surface bar, not the marketing funnel bar. MiniFunnel and FunnelRow carry label, value and state; this carries a number."
+        ],
+        "notFor": [
+          "A labelled proportional bar in a marketing artifact. That is MiniFunnel, or FunnelRow for the states."
+        ]
+      }
+    },
+    {
+      "module": "select",
+      "layer": "ui",
+      "import": "@skene/design-system/ui/select",
+      "exports": [
+        "Select",
+        "SelectContent",
+        "SelectGroup",
+        "SelectItem",
+        "SelectLabel",
+        "SelectScrollDownButton",
+        "SelectScrollUpButton",
+        "SelectSeparator",
+        "SelectTrigger",
+        "SelectValue"
+      ],
+      "summary": "",
+      "client": false,
+      "lines": 188,
+      "cases": [
+        "ui-select"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "select",
+        "purpose": "Radix select with the package's two sizes.",
+        "alsoFor": [
+          "Any choice from a short known list, on either surface."
+        ],
+        "watchFor": [
+          "Content is portalled; the sm size exists for dense workspace rows."
+        ],
+        "notFor": [
+          "A labelled select on a workspace settings screen. That is SettingsSelect."
+        ]
+      }
+    },
+    {
+      "module": "settings-field",
+      "layer": "ui",
+      "import": "@skene/design-system/ui/settings-field",
+      "exports": [
+        "SettingsInput",
+        "SettingsSelect",
+        "SettingsSwitch"
+      ],
+      "summary": "",
+      "client": false,
+      "lines": 198,
+      "cases": [
+        "ui-settings-field"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "settings-field",
+        "purpose": "The workspace form row: label, control, description, in one component.",
+        "alsoFor": [
+          "Any dense settings screen — three exports cover input, select and switch."
+        ],
+        "watchFor": [
+          "machine/components.yaml records these as preferred over raw Input/Select/Switch on workspace surfaces. Reaching past them is how a settings page drifts out of rhythm."
+        ],
+        "notFor": [
+          "A field on a marketing form or a modal, where the density does not apply. That is Input."
+        ]
+      }
+    },
+    {
+      "module": "sheet",
+      "layer": "ui",
+      "import": "@skene/design-system/ui/sheet",
+      "exports": [
+        "Sheet",
+        "SheetTrigger",
+        "SheetClose",
+        "SheetContent",
+        "SheetHeader",
+        "SheetTitle"
+      ],
+      "summary": "",
+      "client": false,
+      "lines": 102,
+      "cases": [
+        "ui-sheet"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "sheet",
+        "purpose": "A side panel that slides in from an edge.",
+        "alsoFor": [
+          "A detail drawer, or the mobile navigation on a narrow viewport."
+        ],
+        "watchFor": [
+          "It is a Dialog underneath, so the same portal and theming rules apply."
+        ],
+        "notFor": [
+          "A centred modal. That is Dialog."
+        ]
+      }
+    },
+    {
+      "module": "skeleton",
+      "layer": "ui",
+      "import": "@skene/design-system/ui/skeleton",
+      "exports": [
+        "Skeleton"
+      ],
+      "summary": "",
+      "client": false,
+      "lines": 16,
+      "cases": [
+        "ui-skeleton"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "skeleton",
+        "purpose": "A loading placeholder block.",
+        "alsoFor": [
+          "Any list, table or card that waits on a fetch."
+        ],
+        "watchFor": [
+          "Size it with utility classes to the shape it replaces; a skeleton that does not match the eventual layout makes the load look like a jump."
+        ],
+        "notFor": [
+          "A determinate wait where the fraction is known. That is Progress."
+        ]
+      }
+    },
+    {
+      "module": "slider",
+      "layer": "ui",
+      "import": "@skene/design-system/ui/slider",
+      "exports": [
+        "Slider"
+      ],
+      "summary": "",
+      "client": false,
+      "lines": 60,
+      "cases": [
+        "ui-slider"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "slider",
+        "purpose": "Radix range control.",
+        "alsoFor": [
+          "A threshold, a sampling rate, a numeric range filter."
+        ],
+        "watchFor": [
+          "It is an input. A read-only proportion is a bar, not a slider."
+        ],
+        "notFor": [
+          "Displaying a value rather than collecting one. That is Progress."
+        ]
+      }
+    },
+    {
+      "module": "sonner",
+      "layer": "ui",
+      "import": "@skene/design-system/ui/sonner",
+      "exports": [
+        "Toaster"
+      ],
+      "summary": "",
+      "client": false,
+      "lines": 30,
+      "cases": [],
+      "demo": null,
+      "usage": {
+        "module": "sonner",
+        "purpose": "The toast host. Mount once, near the root.",
+        "alsoFor": [
+          "Any transient confirmation or error the reader did not ask to read."
+        ],
+        "watchFor": [
+          "Configured so error toasts persist until dismissed. A destructive failure that vanishes after four seconds is a failure the reader never saw."
+        ],
+        "notFor": [
+          "A message that must stay on the page. That is Alert."
+        ]
+      }
+    },
+    {
+      "module": "switch",
+      "layer": "ui",
+      "import": "@skene/design-system/ui/switch",
+      "exports": [
+        "Switch"
+      ],
+      "summary": "",
+      "client": false,
+      "lines": 32,
+      "cases": [
+        "ui-switch"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "switch",
+        "purpose": "The instant on/off control.",
+        "alsoFor": [
+          "A feature toggle on a settings screen — no Save step."
+        ],
+        "watchFor": [
+          "BillingToggle is not this: it is a two-label segmented control for monthly/yearly, and it is the marketing surface's client boundary."
+        ],
+        "notFor": [
+          "A labelled toggle row on a workspace screen. That is SettingsSwitch."
+        ]
+      }
+    },
+    {
+      "module": "table",
+      "layer": "ui",
+      "import": "@skene/design-system/ui/table",
+      "exports": [
+        "Table",
+        "TableHeader",
+        "TableBody",
+        "TableFooter",
+        "TableHead",
+        "TableRow",
+        "TableCell",
+        "TableCaption"
+      ],
+      "summary": "",
+      "client": false,
+      "lines": 118,
+      "cases": [
+        "ui-table"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "table",
+        "purpose": "The semantic product table.",
+        "alsoFor": [
+          "Any real data grid on a workspace surface — sortable, paginated, selectable."
+        ],
+        "watchFor": [
+          "DataTable in the artifact layer composes this rather than restyling it, and ComparisonTable is a marketing object with its own rules. Three tables, three registers."
+        ],
+        "notFor": [
+          "A drawn Skene Cloud screen. That is DataTable, which composes this one at artifact density."
+        ]
+      }
+    },
+    {
+      "module": "tabs",
+      "layer": "ui",
+      "import": "@skene/design-system/ui/tabs",
+      "exports": [
+        "Tabs",
+        "TabsList",
+        "TabsTrigger",
+        "TabsContent"
+      ],
+      "summary": "",
+      "client": false,
+      "lines": 59,
+      "cases": [
+        "ui-tabs"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "tabs",
+        "purpose": "Mutually exclusive views, as a segmented control.",
+        "alsoFor": [
+          "Canvas/list, tokens/gallery — any either-or on one screen."
+        ],
+        "watchFor": [
+          "machine/components.yaml is explicit: do not hand-roll a segmented control from buttons and active classes. Controlled mode is needed when the panel renders outside TabsContent."
+        ],
+        "notFor": [
+          "An editorial row of surfaces where one is picked out. That is SurfaceTiles, which has no interaction."
+        ]
+      }
+    },
+    {
+      "module": "textarea",
+      "layer": "ui",
+      "import": "@skene/design-system/ui/textarea",
+      "exports": [
+        "Textarea"
+      ],
+      "summary": "",
+      "client": false,
+      "lines": 20,
+      "cases": [
+        "ui-textarea"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "textarea",
+        "purpose": "The multi-line field.",
+        "alsoFor": [
+          "Any free-text input — a description, a note, a message."
+        ],
+        "watchFor": [
+          "AskWidget already contains one, styled as a quiet fill with no border, and its own submit. Do not rebuild that composition."
+        ],
+        "notFor": [
+          "The marketing ask-us block. That is AskWidget."
+        ]
+      }
+    },
+    {
+      "module": "tooltip",
+      "layer": "ui",
+      "import": "@skene/design-system/ui/tooltip",
+      "exports": [
+        "Tooltip",
+        "TooltipTrigger",
+        "TooltipContent",
+        "TooltipProvider"
+      ],
+      "summary": "",
+      "client": false,
+      "lines": 35,
+      "cases": [
+        "ui-tooltip"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "tooltip",
+        "purpose": "A one-line label on hover or focus.",
+        "alsoFor": [
+          "Naming an icon-only button, or expanding a truncated cell."
+        ],
+        "watchFor": [
+          "TooltipProvider must wrap the tree once. Content is portalled, so theme classes on an ancestor do not reach it."
+        ],
+        "notFor": [
+          "A preview with structure rather than one line. That is HoverCard."
+        ]
+      }
+    },
+    {
+      "module": "dither",
+      "layer": "patterns",
+      "import": "@skene/design-system/patterns/dither",
+      "exports": [
+        "DitherOverlay",
+        "DitheredMedia"
+      ],
+      "summary": "The single most recognisable Skene surface treatment.",
+      "client": false,
+      "lines": 165,
+      "cases": [
+        "pattern-dithered-media"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "dither",
+        "purpose": "The Skene surface treatment: a halftone texture blended over photographic or video media, and the full hero composition built from it. DitherOverlay is the raw layer; DitheredMedia is media, dither, scrim, gradient and content in one.",
+        "alsoFor": [
+          "Any full-bleed media band, not only a hero — the `video` and `image` props are both optional and the composition renders with either.",
+          "Texture over your own stack: DitherOverlay takes a `src` and a `blend`, so it composes onto anything with a position context.",
+          "Joining a band to whatever follows it, by setting `fadeTo` to the next section's ground."
+        ],
+        "watchFor": [
+          "`scrim` is measured, not decorative. Video is not a background you can check once: the homepage hero measured 1.04:1 for peach display type over a bright frame. The default is 0.56 and setting 0 means you have measured the footage yourself.",
+          "`blend` defaults to soft-light because that is what reads as a print halftone. overlay is harsher and multiply just dims — both stop looking like the brand."
+        ],
+        "notFor": [
+          "A dark strip that fades into the page with no media over it. That is HeroBackdrop, which is this composition's subset.",
+          "A halftone field behind a mock inside a feature row. That is SectionBackdrop, which ships the three site textures."
+        ]
+      }
+    },
+    {
+      "module": "hero-backdrop",
+      "layer": "patterns",
+      "import": "@skene/design-system/patterns/hero-backdrop",
+      "exports": [
+        "HeroBackdrop"
+      ],
+      "summary": "A dark hero strip with a textured backdrop fading into the page.",
+      "client": false,
+      "lines": 67,
+      "cases": [
+        "pattern-hero-backdrop"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "hero-backdrop",
+        "purpose": "A dark hero strip: a background image at low opacity, a gradient fading to the page ground, and content above it.",
+        "alsoFor": [
+          "Any short banner that needs to sit on the page rather than end abruptly — a subpage header, a section lead-in.",
+          "A plain dark strip with no image at all: `image` is optional and the fade still renders."
+        ],
+        "watchFor": [
+          "`fadeTo` must match the ground of whatever follows, or the seam shows as a band edge."
+        ],
+        "notFor": [
+          "A full hero with video, dither and a measured scrim. That is DitheredMedia; this is its subset and the two are scoped by size, not by look."
+        ]
+      }
+    },
+    {
+      "module": "marketing",
+      "layer": "patterns",
+      "import": "@skene/design-system/patterns/marketing",
+      "exports": [
+        "PillNav",
+        "PillNavLink",
+        "Eyebrow",
+        "DisplayHeading",
+        "Accent",
+        "NumberedStep",
+        "SplitAuthLayout"
+      ],
+      "summary": "The page furniture that makes a marketing surface read as Skene: the floating",
+      "client": false,
+      "lines": 286,
+      "cases": [
+        "pattern-pill-nav",
+        "pattern-display-heading",
+        "pattern-numbered-step",
+        "pattern-split-auth"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "marketing",
+        "purpose": "The page furniture the marketing surface repeats: the nav bar over the hero, the display heading and its peach accent, the eyebrow kicker, the numbered step, and the split auth layout.",
+        "alsoFor": [
+          "Eyebrow above any band, not only a section: it owns font.tracking.eyebrow, which is the token that makes a kicker read as a label.",
+          "DisplayHeading at three sizes for anything that is the largest type on its band.",
+          "NumberedStep for any ordered list where the number is furniture rather than content — how-it-works, onboarding, a migration path.",
+          "SplitAuthLayout for any two-pane page, not only sign-in: a form on one side and a showcase on the other."
+        ],
+        "watchFor": [
+          "Eyebrow is built from chrome.surface.border and chrome.text.muted, which are invariant. On a cream band it renders near-invisible — Bridge hand-rolls an Eyebrow-shaped chip from the theme-aware role for exactly this reason.",
+          "PillNav sits OVER the hero rather than above it, so the media runs to the top of the viewport. Placing it in normal flow undoes the composition."
+        ],
+        "notFor": [
+          "A status marker on a product row. Eyebrow is a section kicker; Badge is the product surface's status chip."
+        ]
+      }
+    },
+    {
+      "module": "skene-mark",
+      "layer": "patterns",
+      "import": "@skene/design-system/patterns/skene-mark",
+      "exports": [
+        "SkeneMark",
+        "SkeneLockup"
+      ],
+      "summary": "The Skene symbol, as an element rather than a file path.",
+      "client": false,
+      "lines": 157,
+      "cases": [
+        "pattern-skene-mark"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "skene-mark",
+        "purpose": "The brand artwork as elements: the square symbol, and the horizontal lockup with the wordmark.",
+        "alsoFor": [
+          "Anywhere the product speaks for itself — an avatar, a card that says SKENE, a nav lockup. AgentCallout already defaults its avatar to it.",
+          "A favicon-shaped tile at any size: `size` moves the whole thing and `radius` only applies to the block tone, which is the one that brings its own ground."
+        ],
+        "watchFor": [
+          "`tone` names the GROUND, not the ink — onLight is the BLACK glyph. Naming it after the ink is what makes a caller pick the invisible variant.",
+          "SkeneLockup is sized by `height`, not `size`: the artwork is 1016×260, and one prop name meaning width in one component and height in the other ships at the wrong scale."
+        ],
+        "notFor": [
+          "A nav bar with no word beside the mark. Use SkeneLockup, which defaults its alt to Skene because there it IS the accessible name."
+        ]
+      }
+    },
+    {
+      "module": "terminal",
+      "layer": "patterns",
+      "import": "@skene/design-system/patterns/terminal",
+      "exports": [
+        "Terminal",
+        "TerminalLine"
+      ],
+      "summary": "A terminal / code frame.",
+      "client": false,
+      "lines": 55,
+      "cases": [
+        "pattern-terminal"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "terminal",
+        "purpose": "A terminal frame: traffic lights, a title, and monospace lines with an optional prompt.",
+        "alsoFor": [
+          "Any CLI transcript, install snippet or log excerpt on a marketing page.",
+          "A single command with no chrome around it, by rendering one TerminalLine inside your own container."
+        ],
+        "watchFor": [
+          "The frame is a CSS class in effects.css, not markup, so the look is available without importing the component. TerminalBlock does not use that class and its frame is 12px where this is 8px — the two terminals do not currently match."
+        ],
+        "notFor": [
+          "An install block with a copy button. That is TerminalBlock, which is the client-side sibling.",
+          "Framing a product mock rather than text. That is ProductWindow, which inverts to light by default."
+        ]
+      }
+    },
+    {
+      "module": "agent-callout",
+      "layer": "sections",
+      "import": "@skene/design-system/sections/agent-callout",
+      "exports": [
+        "AgentCallout"
+      ],
+      "summary": "The moment Skene speaks on the page: an avatar, the claim in bold, and the",
+      "client": false,
+      "lines": 114,
+      "cases": [
+        "section-agent-callout"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "agent-callout",
+        "purpose": "The verdict block: an avatar, a claim in bold, and the evidence under it, in a peach-bordered frame on its own tinted ground. It is the moment Skene speaks on the page.",
+        "alsoFor": [
+          "Any attributed statement — a customer quote, a reviewer's note, an assistant's summary. Nothing in it is Skene-specific except the default avatar.",
+          "A one-line callout with no kicker and no evidence: both slots are optional, which is exactly how the nested instance in the release window renders."
+        ],
+        "watchFor": [
+          "It paints its own near-black fill, which is why the invariant chrome.text.* roles are correct inside it. Give it a light variant and every text class in it has to move to the theme-aware role.",
+          "The evidence separators are content, not styling — pass the dots you want."
+        ],
+        "notFor": [
+          "A proposal rather than a verdict. That is RecommendationCard, which deliberately carries no status colour.",
+          "A measured state with a status. That is Finding."
+        ]
+      }
+    },
+    {
+      "module": "annotated-curve",
+      "layer": "sections",
+      "import": "@skene/design-system/sections/annotated-curve",
+      "exports": [
+        "AnnotatedCurve"
+      ],
+      "summary": "The rising curve with monospace callouts pinned to points on it.",
+      "client": false,
+      "lines": 249,
+      "cases": [
+        "section-annotated-curve"
+      ],
+      "demo": "/sections",
+      "usage": {
+        "module": "annotated-curve",
+        "purpose": "A narrative plotting frame: a Catmull-Rom spline drawn through hand-authored 0-100 percentage points, with HTML callout boxes pinned to the points that carry labels. The split is the whole design — the SVG is `aria-hidden` decoration and the callouts are an ordered list of real HTML, so the copy wraps, selects, finds, and is read in array order. It is for making an argument that has a *shape* (a rise, a dip, a recovery) where the copy is the payload and the curve is the frame the copy hangs on, not for showing measured values.",
+        "alsoFor": [
+          "Falling, dipping, or S-shaped stories, not just the rising one. `y` runs from the top (0 = top), so any progression is just a different y sequence, and `stroke` picks from a 5-token union (`brand-peach`, `brand-peach-deep`, `accent-violet`, `accent-blue`, `semantic-matcha`) — a decline in `semantic-error-red` is the one thing NOT available, since red is not in `CurveStrokeToken`.",
+          "Denser callout layouts by alternating sides. `place` takes `above | below | left | right` and `align` takes `start | center | end`, so callouts can zig-zag above and below the sweep, and a node near the frame edge can anchor its box by its own left or right edge instead of hanging outside. `offset` (default 14px) tunes the gap for all of them at once.",
+          "Shaping the sweep without adding content: a point with `label` omitted is an anchor — no marker, no box, no entry in the `<ol>`. That is how you get a curve that runs edge to edge, or a deliberate valley between two labelled peaks, with only two or three actual callouts.",
+          "Reshaping the band via `aspect` (default 2), which sets both the wrapper's `aspectRatio` and the derived viewBox height. A wide hero strip (`aspect={4}`) or a squarer inline figure (`aspect={1.2}`) both scale uniformly because `preserveAspectRatio` is `xMidYMid meet`.",
+          "Rich callouts, not just strings. `label` is a `ReactNode`, so a box can hold a figure plus a caption, a `Chip`, or emphasis markup; per-point `className` merges into the callout `<li>`, which is the intended place to override the default `max-w-[62%]` width for one long box."
+        ],
+        "watchFor": [
+          "No control-point API, and the spline is honest about it: the header states it can overshoot BETWEEN two points that are close in x and far apart in y. The documented fix is to spread the x values, not to fight it with anchors.",
+          "`aspect` is load-bearing, not layout sugar. The viewBox height is derived from it, and `preserveAspectRatio=\"xMidYMid meet\"` is chosen so node `<circle>`s stay circles — switching to `none` (the obvious way to fit an arbitrary box) scales x and y differently and renders every node as an ellipse. Setting a fixed height in `className` fights the inline `aspectRatio` style.",
+          "The callout boxes are deliberately opaque (`bg-surface-1`), because every box sits on a point that is ON the stroke by construction. Any translucency puts a peach line straight through the middle of a monospace label.",
+          "Reading order is array order, deliberately not sorted by x. The curve is `aria-hidden`, so the `<ol>` of callouts is the entire accessible content; reordering the `points` array for visual reasons silently reorders what a screen reader hears. Also note the boxes use mode-aware `surface.*` / `text.*`, so an always-dark instance inside a light page has to carry `dark` on its container."
+        ],
+        "notFor": [
+          "Actual data visualisation. There is no scale, no axis, no data binding — every coordinate is a hand-placed percentage, and the path is generated from those percentages. If numbers drive the shape, this will drift from them silently; use a real chart.",
+          "A step sequence that happens to be labelled. If there is no curve carrying the argument, use `JourneyTrack` (state per step) or `PipelineStepper` (progress through a running job); for a plain numbered list on the dark page, the `NumberedStep` pattern."
+        ]
+      }
+    },
+    {
+      "module": "artifact-shell",
+      "layer": "sections",
+      "import": "@skene/design-system/sections/artifact-shell",
+      "exports": [
+        "ArtFrame",
+        "ArtPanel",
+        "ArtTitle",
+        "AppWindow",
+        "PanelCaption",
+        "AppPanel",
+        "StatPill",
+        "DataTable",
+        "DataRow",
+        "DataCell"
+      ],
+      "summary": "The shell every artifact sits in: a textured field, a bordered frame, the",
+      "client": false,
+      "lines": 596,
+      "cases": [
+        "section-artifact-shell"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "artifact-shell",
+        "purpose": "The shell every drawn Skene Cloud artifact is built from: the textured field, the light app window, its panels, the status pill and the data table.",
+        "alsoFor": [
+          "Any product screenshot you would rather draw than capture — the real screen carries a customer's repository name and counts, and a drawing does not.",
+          "A table at product density on a marketing page, via DataTable, which composes ui/table rather than restyling it.",
+          "A dark panel with a bar, via ArtPanel, for anything that is chrome rather than app surface."
+        ],
+        "watchFor": [
+          "AppWindow drops its whole bar when neither crumb nor actions is given. Passing an empty element instead of undefined leaves a stray flex row that reads as a rendering fault.",
+          "AppWindow forces `light` on itself. That is load-bearing: the artifact is a light product screen on a dark marketing page, and without it every mode-aware token inside resolves for the wrong ground.",
+          "StatPill's vocabulary is bad | warn | ok, which is the same three semantic colours as Finding's good | warn | danger under different names."
+        ],
+        "notFor": [
+          "A window in the marketing register, with a 640px cap and a modal shadow. That is ProductWindow.",
+          "A halftone field on a marketing band. ArtFrame is the artifact-layer equivalent and loads the same three textures under different key names."
+        ]
+      }
+    },
+    {
+      "module": "ask-widget",
+      "layer": "sections",
+      "import": "@skene/design-system/sections/ask-widget",
+      "exports": [
+        "AskWidget"
+      ],
+      "summary": "The \"ask us anything\" prompt block — an attributed question, a box to answer",
+      "client": true,
+      "lines": 153,
+      "cases": [
+        "section-ask-widget"
+      ],
+      "demo": "/sections",
+      "usage": {
+        "module": "ask-widget",
+        "purpose": "The \"ask us anything\" prompt block: an attributed question rendered as the loud heading, a quiet borderless textarea that the heading labels via `aria-labelledby`, an AI-disclosure badge, and a small submit sized to its label in the bottom-right. It is the package's one genuinely interactive section — a controlled textarea plus a submit handler — and it lives in its own module specifically so `'use client'` does not spread to server-renderable siblings. The restraint is the design: it is a low-commitment probe, so a full-bleed primary button and a boxed input would make it read as a form rather than as a question.",
+        "alsoFor": [
+          "Any single free-text capture on a dark page — a waitlist \"what are you trying to fix?\", a feedback prompt, a qualification question. `question`, `lede`, `placeholder` and `submitLabel` are all props and nothing in the file is Skene-specific.",
+          "Unattributed use: omit `avatar` and `name`. The header row keeps its `min-h-[32px]` so the block's rhythm holds and the badge stays put on the right.",
+          "Non-AI contexts: `showAiBadge={false}` when no model is involved or the surrounding section already discloses it. `aiBadgeLabel` is a node, so the chip can carry \"BETA\" or an icon instead — but note the default `true` is a disclosure decision, not a styling default.",
+          "Prefilled or externally driven text — it is fully controlled through `value` / `onValueChange`, so a parent can seed it with an example prompt, restore a draft, or clear it after submit.",
+          "Rendering with no handler at all: `onSubmit` is optional and the form always `preventDefault`s, so the block is safe in a gallery or preview with nowhere to submit (the gallery case does exactly this)."
+        ],
+        "watchFor": [
+          "`chrome.text.*` and `chrome.surface.*` throughout are correct ONLY because the panel paints its own invariant ground. Drop this inside a `light` surface (a `LightSectionCard`, a `Bridge` band) or swap the fill for a mode-aware one and every text class in here becomes cream on cream. The peach submit is the exception — `brand.peach` / `brand.peach-text` move together.",
+          "`'use client'` is on the module, so whoever owns `value` becomes a client component too. Keep the owner in an island file; the gallery has `islands.tsx` precisely so pulling this in does not move every server-rendered sibling off the server path.",
+          "There is no pending, disabled, or error state and no submit gating — the button fires `onSubmit('')` on an empty textarea as happily as on a filled one. Adding a `pending`/`disabled` prop is a small change, but it IS a change; do not assume it is there.",
+          "The question renders as a fixed `<h3>` whose `useId` id is the textarea's only accessible name. Fine mid-page, wrong if this block is a page's primary heading — there is no `as` or `headingLevel` prop, and adding one is the small addition you would need."
+        ],
+        "notFor": [
+          "A real form — multiple fields, validation, or anything that posts to a route. The textarea has no `name`, the `<form>` has no `action`, and submit is always intercepted. Use the `ui/` primitives (`Textarea`, `Input`, `Button`) and own the form yourself.",
+          "A single-line capture like an email signup. The 104px `min-h`, `resize-none` textarea and clamp(1.6rem…2.35rem) heading are sized for a paragraph-length answer; for an email one-liner use an `Input` plus `Button` inside `FinalCta`'s `actions` slot."
+        ]
+      }
+    },
+    {
+      "module": "billing-toggle",
+      "layer": "sections",
+      "import": "@skene/design-system/sections/billing-toggle",
+      "exports": [
+        "BillingToggle"
+      ],
+      "summary": "Monthly / yearly switch. Its own module on purpose.",
+      "client": true,
+      "lines": 76,
+      "cases": [
+        "section-billing-toggle"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "billing-toggle",
+        "purpose": "The monthly/yearly switch, and the only `'use client'` file in the pricing section. It exists as its own module for a structural reason rather than a visual one: putting the directive in `plan-card.tsx` would drag the whole pure-markup card across the client boundary, so the interactivity was quarantined here (sections.md rule 4). It is fully controlled — `yearly` in, `onChange` out — and makes both word labels clickable, not just the 40px track, because the words are the obvious target.",
+        "alsoFor": [
+          "Any two-word binary switch — the pricing wording lives entirely in props. `monthlyLabel`/`yearlyLabel` are `ReactNode`, so \"USD / EUR\", \"Self-serve / Enterprise\", \"Cloud / Self-hosted\" all work with no code change.",
+          "Labels that carry a badge: since they are `ReactNode` and the row is `flex items-center gap-3`, `yearlyLabel={<>Billed yearly <Chip>-20%</Chip></>}` renders inline.",
+          "Driving more than one section from one switch. It holds no internal state, so a single `useState` in a page island can feed the `PlanGrid` prices and a comparison table from the same value — the demo (`docs-app/app/pricing-demo.tsx`) does exactly this pattern with one plan grid.",
+          "Placement and scale via `className`, which merges into the outer flex row through tailwind-merge: `mx-auto`, `justify-center`, `text-[12px]` all take."
+        ],
+        "watchFor": [
+          "`aria-label=\"Bill yearly\"` on the switch is hardcoded and not derived from `yearlyLabel`. Repurpose the labels and the accessible name still says \"Bill yearly\" — fixing that needs one small prop addition (`switchLabel` / `aria-label` passthrough).",
+          "Labels use invariant `chrome.text.*` (`text-chrome-text-primary` when active). Correct only on an always-dark surface; on a cream panel the active label is cream on cream. It is not safe inside a featured `PlanCard` or a `LightSectionCard`.",
+          "The knob positions `left-1` and `left-[26px]` are hand-fitted to the track's `h-6 w-11` and the knob's `size-4`, and only `left` is transitioned. Resizing the track via `className` leaves the knob travelling to the wrong stop.",
+          "Controlled-only: there is no `defaultYearly` and no internal state. Omit `onChange` wiring and you ship a switch that visibly does nothing.",
+          "It is the client boundary. Deep-import `@skene/design-system/sections/billing-toggle` rather than pulling it from the root barrel next to server-rendered siblings."
+        ],
+        "notFor": [
+          "A settings or form boolean — use `ui/switch` or `SettingsField`. This one has marketing-sized side labels, a pricing-specific hardcoded aria-label, and no form/name/id integration.",
+          "Three or more options (a third billing term, a segmented control). It is a two-state switch with `aria-checked`; use `ui/tabs` or the `PillNav` pattern instead."
+        ]
+      }
+    },
+    {
+      "module": "bridge",
+      "layer": "sections",
+      "import": "@skene/design-system/sections/bridge",
+      "exports": [
+        "BridgeNode",
+        "Bridge"
+      ],
+      "summary": "The bridge: GTM ↔ Skene ↔ Engineering. A cream band carrying three cards in a",
+      "client": false,
+      "lines": 267,
+      "cases": [
+        "section-bridge"
+      ],
+      "demo": "/sections",
+      "usage": {
+        "module": "bridge",
+        "purpose": "A whole cream band (a `<section>`, not a card) that lays N `BridgeNode` cards in a row, interleaves arrows between them, and inverts one of them to dark and lifts it. It exists to argue POSITION — that the featured thing sits between the others — and the tone difference is the argument, not styling: three cards in one tone read as three peers and the band says nothing. Structurally it is also the package's one doubly-nested inversion (`light` band, `dark` card inside it), so it doubles as the worked example of how the two subtree switches nest.",
+        "alsoFor": [
+          "Any node count, not just three. `Bridge` runs `Children.toArray` and emits N-1 arrows, and each node gets `flex-1 basis-0`, so a two-card before/after or a four-stage handoff works with no change.",
+          "A plain sequence band with no subject: omit `featured` on every `BridgeNode` and you get N peer cream cards joined by arrows — right for when the argument is order rather than position.",
+          "A cream heading block on a dark page. `eyebrow` + `title` + `lede` + `caption` render a centred, max-w-[880px] header independent of the cards; pass one child and no arrows are drawn at all.",
+          "`BridgeNode` is exported on its own and composes inside any other `light` surface (e.g. a `LightSectionCard` visual slot). Its non-featured styling — `bg-surface-0`, `border-chrome-line-on-light` — is written for a light ancestor.",
+          "Branding the subject card: `icon` takes any node (the live section uses a glyph, an inline SVG logo works), `items` takes three short fragments, and `title` composes with `<Accent>` because `brand.peach` is mode-aware and lands on its light value (#89684a) inside the band."
+        ],
+        "watchFor": [
+          "The `light` class on the root is unconditional and written first, and the featured card's `dark` is the counterpart. `cn` is tailwind-merge, so a `className` background WILL win over `bg-brand-light` while leaving `light` in place — override the fill with anything dark and you get exactly the invisible-text failure (`text.primary` #faf1e9 on #faf1e9) the file header documents.",
+          "Arrows are unconditional between children — there is no prop to suppress them. Anything you pass as a child that is not part of a left-to-right sequence still gets an arrow after it unless it is last.",
+          "`featured` is a per-node boolean with nothing enforcing exactly one. Two featured cards render two dark lifted cards and the band loses its point. Also note the lift is `md:-translate-y-3`: below `md` the row stacks and the featured card is dark but not raised.",
+          "The kicker is a hand-rolled Eyebrow-SHAPED chip, deliberately not `<Eyebrow>` — `Eyebrow` is built from `chrome.surface.border` / `chrome.text.muted`, which are invariant and render near-invisible on cream. The same trap applies to anything you pass into any slot that uses `chrome.text.*`.",
+          "The outer cards' fill is `bg-surface-0` (mode-aware → #fafafa inside the band), deliberately a shade off the band's cream `brand.light`. Do not \"fix\" it to `bg-brand-light` — the cards then disappear into the band."
+        ],
+        "notFor": [
+          "A generic 3-up feature or value grid. The arrows assert a relationship and the dark card asserts primacy; if you just want a row of peer cards use `ValueCards` (which argues by cost/gain contrast) or a plain grid of primitives.",
+          "Anything with state or progress. The arrows are static and `aria-hidden`, and there is no per-node status. For a job running now use `PipelineStepper` (done/active/pending); for funnel steps carrying health use `JourneyTrack`, whose connector is a gradient between the two states it joins."
+        ]
+      }
+    },
+    {
+      "module": "check-list",
+      "layer": "sections",
+      "import": "@skene/design-system/sections/check-list",
+      "exports": [
+        "CheckList",
+        "CheckItem"
+      ],
+      "summary": "The rule-separated feature list with a peach check.",
+      "client": false,
+      "lines": 72,
+      "cases": [
+        "section-check-list"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "check-list",
+        "purpose": "The rule-separated feature list with a peach check — the single highest-frequency element on a Skene marketing page, previously hand-written at every call site. `CheckList` is a bare `<ul>` that sets one CSS variable (`--check-rule`); `CheckItem` is an `<li>` whose separator is a *top border on each row* rather than a divider element, so a list of one still reads as part of its card instead of floating. The check is a real `aria-hidden` `<span>`, not a `::before`, precisely so a screen reader does not announce \"tick\" before every line.",
+        "alsoFor": [
+          "Any proof list in a section body, not just plan cards — the gallery uses it directly inside `FeatureRow` (dark, no flags) and inside `LightSectionCard` (`onLight`).",
+          "Requirement / \"what you get\" lists on light product chrome: nest it in a `ProductWindow` (whose `tone=\"light\"` default carries the `light` class) and pass `onLight`.",
+          "Rows with structure, not just strings. `CheckItem` children are `ReactNode`, so links, `<strong>`, or a trailing `<Chip>` all render, and the aria-hidden glyph keeps the announcement clean.",
+          "Two densities on the same page: `dense` (13px, `py-[11px]`) for card interiors, the default (14px, `py-3`) for section copy.",
+          "Per-row tweaks via `className` on `CheckItem` — `cn` is tailwind-merge, so `border-t-0` on the first row or a different `py-*` actually replaces the base utility."
+        ],
+        "watchFor": [
+          "`dense` does not propagate. It is a separate prop on `CheckList` (margin) and on `CheckItem` (padding + type size); set it on both or you get tight spacing with 14px text.",
+          "`onLight` does NOT create the light context — it only chooses between `--color-chrome-line-on-light` and `--color-chrome-line-subtle` for the rule. The peach check and the `text.*` type invert only if a `light` ancestor exists (featured `PlanCard`, `LightSectionCard`, light `ProductWindow`). On a bare cream `<div>` you must add `light` yourself, as the gallery case does.",
+          "The rule colour is an inline `style={{ borderTopColor: 'var(--check-rule)' }}` on every item, so a `border-*` colour utility in `className` will not override it — re-set `--check-rule` instead.",
+          "Every item carries `border-t`, including the first, so the list always opens with a hairline. That is intentional inside a card; strip it with `className=\"border-t-0\"` on the first `CheckItem` if the list stands alone.",
+          "Type is `text-text-muted-strong` (theme-aware) by design — swapping in a `chrome.text.*` class reintroduces the exact bug the header warns about."
+        ],
+        "notFor": [
+          "An interactive checklist or to-do list. There is no checked state, no input, and the glyph is `aria-hidden` — use `ui/checkbox` (or `SettingsField`) for anything the user toggles.",
+          "An included/not-included comparison. The ✓ glyph and its `text-brand-peach` colour are hardcoded with no icon or tone prop; a cross/dash row would need a code change (e.g. a `tone`/`icon` prop on `CheckItem`). `ComparisonTable`'s `TableCheck` / `TableDash` already do this."
+        ]
+      }
+    },
+    {
+      "module": "chip",
+      "layer": "sections",
+      "import": "@skene/design-system/sections/chip",
+      "exports": [
+        "Chip"
+      ],
+      "summary": "The 10px monospace chip.",
+      "client": false,
+      "lines": 106,
+      "cases": [
+        "section-chip"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "chip",
+        "purpose": "The 10px monospace uppercase rectangle, extracted from two copies that were written independently — `PlanCard`'s inline tier span and `ProductWindow`'s `WindowStatus` — which had already drifted apart on tracking before anyone noticed. Its job is to hold the geometry still: `tone` carries colour and nothing else, with tracking as the single declared exception. It exists as much to stop a third inline copy being written as to render the two that exist.",
+        "alsoFor": [
+          "An identity marker on either ground with `tone=\"neutral\"`. This is the one tone allowed to use invariant `chrome.surface-darker` / `brand.light`, because its fill is near-black on both the dark page AND the featured cream `PlanCard` — there is no inversion for an invariant token to get wrong.",
+          "A state marker inside a light surface with `tone=\"healthy\"` (matcha) or `tone=\"live\"` (violet). Both derive their fill through `color-mix` from mode-aware tokens, so they follow a `light` ancestor down to the light value rather than laying a dark-mode tint on cream — safe inside a light `ProductWindow` body or a cream card.",
+          "Wrapping in a narrower-vocabulary named component. `WindowStatus` (product-window.tsx:97) is the sanctioned template: it restricts `tone` to `'healthy' | 'live'`, pins its tracking override, and keeps the name callers actually look for. Do that again rather than adding an inline chip.",
+          "Matching an already-shipped rendering. `className` merges last via `cn`, so a `tracking-*` utility beats the base 0.08em — the documented, and only documented, override.",
+          "Non-string content: `children` is a `ReactNode`, so a glyph plus a word, or a count, works. `shrink-0` is in the base, so the chip is safe as the fixed item in a flex row opposite a title that wraps."
+        ],
+        "watchFor": [
+          "`className` merges last and therefore beats the base for *any* utility, but `tracking-*` is the only override this package sanctions. Changing `px-[7px]`, `py-1`, `rounded-[5px]` or `text-[10px]` at a call site re-forks the component the extraction exists to prevent.",
+          "Tracking is unreconciled on purpose: `Chip` holds the tier chip's 0.08em and `WindowStatus` overrides back to 0.05em, because both values shipped and were signed off in the browser. \"Fixing\" either one silently restyles a verified surface — about 5px across \"DASHBOARD: HEALTHY\", per the note at the override.",
+          "`healthy` and `live` set their colour in an inline `style` from the `TONES` table, so a `text-*` utility in `className` will not override them. Only `neutral` colours via classes.",
+          "Adding a tone is a row in `TONES`, never a branch at the call site — and the file's stated rule is to add one only the day something actually renders it. If you add a light-filled tone, do not copy `neutral`'s invariant `chrome.*` licence; that exemption depends on the fill being near-black on both grounds."
+        ],
+        "notFor": [
+          "General status on a product surface. `Badge` (ui) is the shadcn primitive for that; `Chip` is section furniture locked at 10px mono, and stretching it to product use will produce pressure to make the geometry variable — the one thing it is here to prevent.",
+          "A pill beside a heading. `StatChip` (a fact) or `MetaChip` (a promise) own that slot at `rounded-full` 12px; `WindowStatus` owns the window title bar's right-hand slot."
+        ]
+      }
+    },
+    {
+      "module": "comparison-table",
+      "layer": "sections",
+      "import": "@skene/design-system/sections/comparison-table",
+      "exports": [
+        "ComparisonRow",
+        "ComparisonTable",
+        "TableCheck",
+        "TableDash"
+      ],
+      "summary": "The capability comparison: one row per claim, one column per approach, with",
+      "client": false,
+      "lines": 277,
+      "cases": [
+        "section-comparison-table"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "comparison-table",
+        "purpose": "A real semantic `<table>` for capability comparison — one row per claim, one column per approach, with your column picked out. The featured column is washed in the head *and* every body cell so it reads as one continuous object top to bottom, and the header additionally turns peach so its identity is stated once in words rather than only in colour. The whole component is really the pairing of `min-width: 820px` on the table with `overflow-x: auto` + `tabIndex={0}` on the wrapper: a comparison that reflows into stacked cards stops being a comparison, so on narrow screens it keeps its shape and scrolls sideways instead.",
+        "alsoFor": [
+          "A plan or pricing feature matrix. `columns` and each row's `cells` are `React.ReactNode[]`, so prices, phrases and glyphs all drop in; `featuredIndex` marks the recommended plan.",
+          "A plain spec sheet with nothing highlighted — omit `featuredIndex` and no wash renders anywhere, head or body.",
+          "The same table on a cream band, via `onLight` — the only polarity prop, and it switches exactly one thing: `--table-rule` from `chrome.line.subtle` to `chrome.line.onLight`. Everything else is mode-aware already.",
+          "Highlighting a different column on one row: `ComparisonRow` accepts its own `featuredIndex`, and the table's injection uses `child.props.featuredIndex ?? featuredIndex`, so an explicit per-row value wins.",
+          "`ComparisonRow` rendered outside a `ComparisonTable` (its `featuredIndex` prop is documented for exactly this), and `TableCheck`/`TableDash` reused anywhere as accessible yes/no glyphs — both take a `label` prop precisely so a translated page can replace the English default.",
+          "A footnote or source line under the table via `caption` — it is a real `<caption>` with `[caption-side:bottom]`, so it names the table for assistive tech and reads as a note visually."
+        ],
+        "watchFor": [
+          "Never put `min-w-*` on the wrapper or `overflow` on the table. The source calls this out: swap them and the page body scrolls horizontally instead of the panel. `className` lands on the wrapper, so a stray `min-w` there is the easy mistake.",
+          "`featuredIndex` indexes `columns` *including* the leading row-header column, while body cells compute `featuredIndex === i + 1`. That is intentional (one index space for both) but it means `featuredIndex={0}` washes the header cell and nothing in the body — a half-marked column. Valid values start at 1.",
+          "Column widths are `w-[40%]` for the row header and `w-[20%]` for every other column regardless of how many there are. It is tuned for three answer columns; five answer columns declares 140% and the browser renegotiates it.",
+          "`featuredIndex` reaches rows by `cloneElement` over `Children.toArray`, not by context (deliberately — `createContext` would drag this static table across the client boundary to pass one number). Rows must be direct, valid element children: wrap them in a Fragment or a wrapper component and the injection silently stops. Similarly, the last-row rule removal is `[&>tr:last-child>*]:border-b-0` on the `<tbody>`, so a `<tfoot>` or an extra element in there breaks it.",
+          "The accessibility contract is load-bearing and easy to erode: `<th scope=\"col\">` in the head, `<th scope=\"row\">` per row, and glyph cells carrying an `sr-only` word — a cell whose entire content is `aria-hidden` reads as \"no data\", not \"no\". Keep `label` populated when you pass custom markers."
+        ],
+        "notFor": [
+          "An interactive or long data table — sorting, pagination, selection, hundreds of rows. This is static markup with no `use client`; use the `ui/table` primitive on a product surface.",
+          "A pricing layout where each column needs its own frame, tier chip and CTA button. That is `PlanCard`; a table column cannot hold an action."
+        ]
+      }
+    },
+    {
+      "module": "discovery-table",
+      "layer": "sections",
+      "import": "@skene/design-system/sections/discovery-table",
+      "exports": [
+        "DiscoveryTable"
+      ],
+      "summary": "The discovery artifact: Skene Cloud's Events table, drawn rather than",
+      "client": false,
+      "lines": 178,
+      "cases": [
+        "section-discovery-table"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "discovery-table",
+        "purpose": "The discovery artifact: the events Skene found, where it found them, and whether each one verified.",
+        "alsoFor": [
+          "Any found-things table with a per-row state — files scanned, endpoints discovered, records matched. Every column header is a prop and every cell is a node.",
+          "A table with no header bar at all: title, source, summary and actions are all optional and the window drops the bar when they are absent."
+        ],
+        "watchFor": [
+          "`foundAt` is the column allowed to be empty, and an empty cell is what breaks a table's alignment. The gallery case carries a row without one for that reason."
+        ],
+        "notFor": [
+          "A list of evaluations rather than of found events. That is EvaluatorList, which is the same window with a different column contract.",
+          "A settings or reference table. That is KeyValueTable."
+        ]
+      }
+    },
+    {
+      "module": "evaluator-check",
+      "layer": "sections",
+      "import": "@skene/design-system/sections/evaluator-check",
+      "exports": [
+        "CheckChip",
+        "CheckFigure",
+        "CheckOperand",
+        "CheckResult",
+        "EvaluatorCheck"
+      ],
+      "summary": "The evaluator's Check tab: a metric, the formula under it, one row per",
+      "client": false,
+      "lines": 335,
+      "cases": [
+        "section-evaluator-check"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "evaluator-check",
+        "purpose": "The evaluator's Check tab: a metric, the formula under it, one row per operand, and the results it produced.",
+        "alsoFor": [
+          "Any computed-value explanation — a score, a rate, a derived KPI. The formula is a slot, so the operands can be anything.",
+          "A metric with no formula at all: pass `metric` and `results` and leave the middle out."
+        ],
+        "watchFor": [
+          "CheckChip and TagChip are the same 11px mono tag under two names — recorded as a known duplicate in the source rather than laundered."
+        ],
+        "notFor": [
+          "The requirements a signal must meet, rather than the arithmetic. That is EvaluatorVerify.",
+          "A single score with no working shown. That is ScoreRing."
+        ]
+      }
+    },
+    {
+      "module": "evaluator-list",
+      "layer": "sections",
+      "import": "@skene/design-system/sections/evaluator-list",
+      "exports": [
+        "EvaluatorList",
+        "EvaluatorNote"
+      ],
+      "summary": "The Evaluator index: every evaluation in a workspace, and whether the signals",
+      "client": false,
+      "lines": 223,
+      "cases": [
+        "section-evaluator-list"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "evaluator-list",
+        "purpose": "The evaluator index: every evaluation in a workspace, and whether the signals it depends on were found.",
+        "alsoFor": [
+          "Any status list with a per-row check — jobs, monitors, integrations tests. Four columns, all named by prop.",
+          "Unframed, by passing `frame={false}` — the textured field is a placement decision, not a property of the artifact."
+        ],
+        "watchFor": [
+          "EvaluatorNote is exported from here and re-typed in three other files. Import it rather than adding a fourth copy."
+        ],
+        "notFor": [
+          "The two-pane version, list beside detail. That is EvaluatorPanel.",
+          "Found events rather than evaluations. That is DiscoveryTable."
+        ]
+      }
+    },
+    {
+      "module": "evaluator-panel",
+      "layer": "sections",
+      "import": "@skene/design-system/sections/evaluator-panel",
+      "exports": [
+        "EvaluatorPanel"
+      ],
+      "summary": "The whole Evaluator surface in one window: the index of evaluations, and one",
+      "client": false,
+      "lines": 250,
+      "cases": [
+        "section-evaluator-panel"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "evaluator-panel",
+        "purpose": "The two-pane evaluator: the index on one side, one evaluation's requirements on the other.",
+        "alsoFor": [
+          "Any master-detail artifact where the detail is a checklist — a rule and its conditions, a policy and its clauses.",
+          "The same list as EvaluatorList with a different detail pane, since `list` and `detail` are independent props."
+        ],
+        "watchFor": [
+          "Its VerifyRow and MetaPill are copied line-for-line from evaluator-verify. The source says so and defers the merge; do not add a third copy."
+        ],
+        "notFor": [
+          "Only the requirements, with no index beside them. That is EvaluatorVerify."
+        ]
+      }
+    },
+    {
+      "module": "evaluator-verify",
+      "layer": "sections",
+      "import": "@skene/design-system/sections/evaluator-verify",
+      "exports": [
+        "MetaPill",
+        "VerifyRow",
+        "EvaluatorVerify"
+      ],
+      "summary": "The Evaluator's Verify tab: a list of the signals an evaluation needs, each",
+      "client": false,
+      "lines": 261,
+      "cases": [
+        "section-evaluator-verify"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "evaluator-verify",
+        "purpose": "The requirements an evaluation depends on: one row per event, its verdict, and the fields it must carry.",
+        "alsoFor": [
+          "Any requirements checklist with nested sub-requirements — a schema contract, a compliance list, a validation report.",
+          "A flat list, by omitting `fields` on every requirement: the indent is what says which row to read, so uniform rows are a deliberate choice."
+        ],
+        "watchFor": [
+          "`tags` is free-form because the package does not know the product's vocabulary. That is also why nothing validates them."
+        ],
+        "notFor": [
+          "The same rows with the index beside them. That is EvaluatorPanel."
+        ]
+      }
+    },
+    {
+      "module": "faq-band",
+      "layer": "sections",
+      "import": "@skene/design-system/sections/faq-band",
+      "exports": [
+        "FaqBand",
+        "FaqRow"
+      ],
+      "summary": "The FAQ band: a heading column that stays put, and the questions beside it.",
+      "client": true,
+      "lines": 151,
+      "cases": [
+        "section-faq-band"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "faq-band",
+        "purpose": "The FAQ band: a heading column that stays put, and the questions beside it on a cream ground with a hairline per row and a round toggle.",
+        "alsoFor": [
+          "Any disclosure band on a marketing page — objections, a glossary, what's included.",
+          "Many rows open at once, via `multiple`, when the answers are short enough to scan together."
+        ],
+        "watchFor": [
+          "`light` on the root is unconditional and there is no dark variant. The band ships in one tone because every FAQ on both surfaces is the cream one.",
+          "It composes Radix directly rather than ui/accordion, whose trigger bakes in a chevron where this band's mark is a round plus."
+        ],
+        "notFor": [
+          "A disclosure list on a product surface. That is ui/accordion, the primitive underneath.",
+          "A static teaser grid of questions with no disclosure. That is QuestionGrid."
+        ]
+      }
+    },
+    {
+      "module": "feature-row",
+      "layer": "sections",
+      "import": "@skene/design-system/sections/feature-row",
+      "exports": [
+        "FeatureIcon",
+        "FeatureRow",
+        "FeatureStack"
+      ],
+      "summary": "The alternating feature row: copy on one side, a visual on the other, flipping",
+      "client": false,
+      "lines": 249,
+      "cases": [
+        "section-feature-row"
+      ],
+      "demo": "/sections",
+      "usage": {
+        "module": "feature-row",
+        "purpose": "A whole dark band of a page: a copy column (corner marker, ringed icon, title, italic lede, proof list, pinned actions) beside a visual panel, mirrored per row by `reverse`. The shape is an argument, not a layout — `title` + `lede` are the promise and `children` (usually a `CheckList`) is the proof, which is why the lede is its own slot rather than the first paragraph of the body. Ships with `FeatureStack` (the `grid gap-6` rhythm wrapper) and `FeatureIcon` (a ringed accent glyph in peach/violet/blue) so a three-row feature section is three prop sets rather than a re-derived grid.",
+        "alsoFor": [
+          "A one-off split band anywhere on the page — used without `FeatureStack`, with `n` and `icon` omitted, it is just copy-beside-visual; nothing couples it to a numbered list.",
+          "Framing something other than a ProductWindow: `visual` is an unconstrained ReactNode, so an `<img>`, a `Terminal`, an `AnnotatedCurve` or a chart all drop in, and omitting `texture`/`textureSrc` gives a plain `p-[34px]` panel instead of a halftone field.",
+          "Non-Skene artwork behind the visual: `textureSrc` takes any URL and overrides `texture`, so a consumer with its own texture gets the same inset behaviour without touching the three bundled site fields.",
+          "Body content that is not a checklist — `children` gets a full-width wrapper (deliberately `w-full`, not the prose measure) so a small table, a rule-separated spec list, or paragraphs reach the column edge.",
+          "Reusing `FeatureIcon` on its own: it is a separate export taking `accent`, `className` and any `children` glyph or SVG, so the same three-way colour coding works in cards or lists elsewhere.",
+          "Any marker in the corner slot: `n` is a ReactNode, so \"01\", \"Step 3\", a date, or a small `Eyebrow` all render in the mono top-right position."
+        ],
+        "watchFor": [
+          "Dark-surface only. The root is `bg-chrome-surface-1` and the title uses `text-chrome-text-primary` — invariant `chrome.*` tokens that by definition cannot follow a `light` ancestor (docs/sections.md rule 1). Adding `light` to `className` will not invert it.",
+          "`min-h-[600px]` applies at every breakpoint, and `actions` is pinned with `mt-auto` against that height. A short row will be mostly whitespace; `cn` is twMerge so `className=\"min-h-0\"` wins, but then the actions pinning stops meaning anything.",
+          "`reverse` only takes effect at `md:` (it sets `md:col-start-*`) — below md the copy column is always first. And it must be set explicitly per row: deriving it from an index breaks the moment a row is inserted or reordered, and these rows are content.",
+          "There is an always-on sheen over the visual cell — an `aria-hidden pointer-events-none` span with a hardcoded white 135° gradient. It is not a prop and cannot be switched off; harmless over a mock, visible over a photograph."
+        ],
+        "notFor": [
+          "A cream/inverted band — that is `LightSectionCard`, which is the same shape at opposite polarity and carries the load-bearing `light` class plus theme-aware `text.*` roles. Collapsing the two behind a `tone` prop was explicitly rejected in docs/sections.md.",
+          "A small icon-heading-blurb card in a 3-up grid. This is a full page band with a 600px floor and a two-column split; use `value-cards` or a `ui/card` composition."
+        ]
+      }
+    },
+    {
+      "module": "final-cta",
+      "layer": "sections",
+      "import": "@skene/design-system/sections/final-cta",
+      "exports": [
+        "FinalCta"
+      ],
+      "summary": "The closing band: full-bleed, centred, one heading and the actions.",
+      "client": false,
+      "lines": 95,
+      "cases": [
+        "section-final-cta",
+        "section-final-cta-eyebrow"
+      ],
+      "demo": "/sections",
+      "usage": {
+        "module": "final-cta",
+        "purpose": "The closing band: full-bleed, centred, one large heading, an optional lede and an actions row, over a textured dark backdrop. It appears twice on the live homepage and once per subpage, and every instance had previously been rebuilt by hand. The default backdrop (`pixel-bg.webp`, 143 KB) ships with the package and is resolved from the module itself, on the principle that the default should produce the section the site actually has rather than a stripped-down gradient the caller has to re-dress.",
+        "alsoFor": [
+          "Any full-bleed closing band, not just signup — `children` is the heading node and `actions` is a free slot, so waitlist, newsletter, \"book a demo\", or an end-of-doc band all fit without changes.",
+          "Per-page texture: `backdrop` takes any URL string (including a `data:` URI); `backdrop={false}` renders the gradient alone for a quieter band on a page that already has texture.",
+          "Non-button actions. The wrapper is `flex flex-col … sm:flex-row gap-3`, so an email input plus a submit button, or a client `<form>` island, drops in as `actions` while the band itself stays a server component.",
+          "Height and rhythm tuning via `className` — `min-h-*` and padding merge through tailwind-merge, so `min-h-[380px]` makes a mid-page band out of the same component."
+        ],
+        "watchFor": [
+          "Every colour is an inline `style`: the section background (`--color-chrome-surface-deep`) and the `linear-gradient(...) , url(...)` scrim with `saturate(70%)`. Utility classes in `className` lose to inline styles, so you cannot recolour or re-scrim it from the call site.",
+          "All type uses invariant `chrome.text.*`. This band is dark by construction — adding `light` will not invert it and will break any mode-aware node you pass into `actions`.",
+          "The heading is a hardcoded `<h2>` at `clamp(2.75rem, 5vw, 5rem)`. A page that needs this to be its `<h1>`, or a visibly smaller heading, needs a prop addition (`as`/`headingLevel`) rather than a class.",
+          "The default backdrop resolves via `new URL('../../assets/pixel-bg.webp', import.meta.url)`. Bundlers that understand that pattern (Next included) emit a real asset URL; one that does not will emit a broken path — pass an explicit URL or `false` as the escape hatch.",
+          "`min-h-[560px]` / `md:min-h-[610px]` plus `py-[90px]`: it is a whole band and will dominate a short page."
+        ],
+        "notFor": [
+          "A cream or inverted CTA panel, or an inline mid-page CTA card — use `LightSectionCard`, which is the documented choice for \"a cream panel with copy and buttons\" and carries the `light` class properly.",
+          "A hero. The fixed dark scrim, `<h2>`, and centred single-column layout are closing-band shape; use `DitheredMedia` for a full hero composition or `HeroBackdrop` for a hero strip."
+        ]
+      }
+    },
+    {
+      "module": "finding-card",
+      "layer": "sections",
+      "import": "@skene/design-system/sections/finding-card",
+      "exports": [
+        "Finding",
+        "MetricCard",
+        "Sparkline"
+      ],
+      "summary": "The audit primitives: a headline metric, its trend, and the per-step findings",
+      "client": false,
+      "lines": 134,
+      "cases": [
+        "section-finding-card"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "finding-card",
+        "purpose": "Three small pieces that together fill a product window with Skene's actual argument: `Finding` (a status-tagged row — tag, title, consequence), `MetricCard` (the headline number with a coloured delta), and `Sparkline` (an authored bar shape). The point of the set is the contradiction — a metric that looks fine above a list of steps that are unmeasured or renamed — so the status vocabulary is fixed at `good | warn | danger` bound to `semantic.matcha / warningAmber / errorRed`, the same three the dashboard uses. All content is props; nothing here knows what a Skene finding says.",
+        "alsoFor": [
+          "Any KPI tile: `MetricCard` takes `label`, `value`, `delta` and `trend` as ReactNodes and has no light/dark flag at all — it inherits colour from its parent — and `children` is an open slot under the number for whatever the caller wants there.",
+          "Status rows on the dark page: `Finding onLight={false}` switches the card to `chrome.line.subtle` / `chrome.surface.2` / `chrome.text.primary`, which is what you want directly on the page ground or inside a `tone=\"dark\"` ProductWindow.",
+          "Labelled list rows generally — `tag` is a ReactNode, not a number, so \"GAP\", \"01\", \"P2\" or \"PII\" all work; the same row shape serves audit results, a check-run summary, or a release-note list.",
+          "A compact one-line variant: `note` is optional, and with it omitted the grid collapses to tag plus title with no second row.",
+          "`Sparkline` on its own: it is a pure `bars: number[]` (clamped 0–100) plus a `highlight` index with no dependency on `MetricCard`, and `className` merges last (twMerge) so its `h-[74px]` and `mt-6` defaults are adjustable in a table cell or a card footer."
+        ],
+        "watchFor": [
+          "`Finding`'s tag column is a hard `grid-cols-[68px_1fr]`. The tag does not widen the column — a longer string wraps or overflows inside 68px, and the type is 9px mono uppercase sized for roughly \"STEP 3\".",
+          "`onLight` defaults to **true**, the opposite of most flags in this package, because the default frame is a light `ProductWindow`. Put a `Finding` on the dark page without `onLight={false}` and you get a white card. Note also that the light case is `bg-white`, not the cream `brand.light` of its parent — deliberate, so the card floats on the window's fill.",
+          "`Sparkline` is `aria-hidden` and is explicitly not a chart: no axes, no scale, and `highlight` is an index because the copy decides which bar matters, not the data. Anything a reader must actually read has to live in `MetricCard`'s `value` or `delta`.",
+          "`MetricCard`'s `trend` defaults to `'danger'`, so an unspecified delta renders red; and its numeral is intentionally `font-normal` at 2.6rem with tight tracking, because bolding it makes the page read like a dashboard instead of an argument about one."
+        ],
+        "notFor": [
+          "Real data visualization. `Sparkline` has no scale, axes, tooltips or empty state, and its values are authored — reach for an actual charting component when the numbers are measured.",
+          "Product-surface status inside the app. These are marketing components with hardcoded typographic scale and no loading/empty states; `ui/badge` is the shadcn status primitive for product surfaces (and `Eyebrow` is the section kicker — the three are not interchangeable)."
+        ]
+      }
+    },
+    {
+      "module": "flow-diagram",
+      "layer": "sections",
+      "import": "@skene/design-system/sections/flow-diagram",
+      "exports": [
+        "FlowDiagram",
+        "FlowNode",
+        "FlowEdge"
+      ],
+      "summary": "The flows path: the dominant route through a product, drawn as a line of",
+      "client": false,
+      "lines": 188,
+      "cases": [
+        "section-flow-diagram"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "flow-diagram",
+        "purpose": "Nodes in a row joined by arrows, with a value and a note on each edge.",
+        "alsoFor": [
+          "Any pipeline or path with a measurable step-to-step drop — a funnel, a queue, a state machine.",
+          "A plain sequence with unlabelled edges: `value` and `meta` are both optional."
+        ],
+        "watchFor": [
+          "It scrolls horizontally rather than wrapping, so a long chain stays a chain. That is deliberate and a wrap would read as two flows."
+        ],
+        "notFor": [
+          "Progress through named stages, with done/active/pending states. That is PipelineStepper.",
+          "Proportional bars rather than nodes. That is Funnel."
+        ]
+      }
+    },
+    {
+      "module": "footer",
+      "layer": "sections",
+      "import": "@skene/design-system/sections/footer",
+      "exports": [
+        "SiteFooter",
+        "FooterColumn",
+        "FooterLink",
+        "SocialLinks",
+        "SocialLink"
+      ],
+      "summary": "Site footer: a brand column, link columns, a bottom bar, and the oversized",
+      "client": false,
+      "lines": 145,
+      "cases": [
+        "section-footer"
+      ],
+      "demo": "/sections",
+      "usage": {
+        "module": "footer",
+        "purpose": "The site footer as a set of composable parts — `SiteFooter` (brand column, link columns, bottom bar), `FooterColumn`, `FooterLink`, `SocialLinks`, `SocialLink`. The part actually worth reusing is the oversized wordmark: 29vw at 1.7% opacity, clipped by the footer's own `overflow-hidden`, so it reads as texture at a glance and only resolves into a word if you look. Rendering it at a \"sensible\" size or opacity is the obvious change and it is wrong every time.",
+        "alsoFor": [
+          "The sub-components stand alone. `FooterColumn` is a self-contained `<nav>` with its own heading and grid, so a link cluster works in a mega-menu, a sitemap block, or a docs index without `SiteFooter` around it.",
+          "Router-aware links: `FooterColumn` children are `ReactNode`, so `next/link` (or any framework Link) can be used directly where client-side navigation matters — `FooterLink` is a plain `<a href>` with no `asChild`.",
+          "A bar-only footer. `brand`, `wordmark`, `copyright` and `legal` are all optional and the bottom bar only renders when `copyright || legal` is present, so a minimal legal strip is reachable.",
+          "`wordmark` takes any `ReactNode` — a product name, a single tagline word, an inline SVG — and it is `aria-hidden`, so it never enters the accessibility tree whatever you put there.",
+          "`brand` is a free slot: logo plus copy plus `SocialLinks` in the demo, but a newsletter form or a status badge fits the same column (`col-span-full lg:col-span-1`)."
+        ],
+        "watchFor": [
+          "`FooterColumn` does `aria-label={String(title)}`. Pass a string. Pass JSX and every column's landmark is labelled \"[object Object]\" — the gallery case casts `title as string` for this reason.",
+          "The link grid template is `lg:grid-cols-[1.7fr_repeat(3,1fr)]` — sized for brand plus exactly three columns — and it sits on an inner `<div>` that has no `className` hook. `className` lands on the `<footer>` root, so you cannot retemplate the columns from the call site; a fourth column wraps to a second row.",
+          "The wordmark's `color: rgba(255,255,255,0.017)` is an inline style, so `text-*` utilities cannot touch it, and the value is deliberate — see the file header before \"fixing\" it.",
+          "`overflow-hidden` on the root is what clips the wordmark, and it will equally clip anything absolutely positioned that you put in `brand` (a popover, a tooltip, a dropdown).",
+          "Everything is invariant `chrome.*` (`bg-chrome-surface-deep-2`, `chrome-text-muted-warm`), so the whole component assumes an always-dark page.",
+          "`SocialLink` requires `label` — the child is an icon, so without it the link has no accessible name. That requirement is in the type; do not work around it."
+        ],
+        "notFor": [
+          "An in-app or workspace footer, or any footer on a light page. The invariant `chrome.*` tokens cannot invert; build product-surface footers from `ui/card` / plain nav markup.",
+          "Primary site navigation. `FooterColumn` is a column of quiet 14px links with a label-sized `<h2>`; use the `PillNav` pattern from `patterns/marketing` for the top bar."
+        ]
+      }
+    },
+    {
+      "module": "funnel",
+      "layer": "sections",
+      "import": "@skene/design-system/sections/funnel",
+      "exports": [
+        "FunnelRow",
+        "Funnel"
+      ],
+      "summary": "The activation funnel: a chart that reports healthy while the collection layer",
+      "client": false,
+      "lines": 232,
+      "cases": [
+        "section-funnel"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "funnel",
+        "purpose": "The activation funnel as the reader's own dashboard would draw it: one bar per step, and three states because a broken number is not a low number.",
+        "alsoFor": [
+          "Any staged conversion chart where some steps are untrustworthy — onboarding, checkout, a signup path.",
+          "A plain proportional bar chart, by leaving every row `ok` and passing `fill`."
+        ],
+        "watchFor": [
+          "`broken` renders a hatch, not a short solid bar, and `unknown` renders an empty dashed track with no fill element at all. A zero bar would be a lie, which is why the value cell says not measured instead of 0.",
+          "It is built on the light app window on purpose: this chart is the reader's own tool, not a Skene screen. Giving it a Skene crumb breaks the argument."
+        ],
+        "notFor": [
+          "A small label/value/bar readout beside a journey track. That is MiniFunnel.",
+          "A determinate control-surface bar. That is ui/progress."
+        ]
+      }
+    },
+    {
+      "module": "glyph-badge",
+      "layer": "sections",
+      "import": "@skene/design-system/sections/glyph-badge",
+      "exports": [
+        "GlyphBadge"
+      ],
+      "summary": "The round disc a glyph sits in at the head of a row: a circle, a hairline, a",
+      "client": false,
+      "lines": 153,
+      "cases": [
+        "section-glyph-badge"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "glyph-badge",
+        "purpose": "The round disc a glyph sits in at the head of a row: a circle, a hairline, a peach mark centred in it, `aria-hidden` always. It is the disc `TrustFact` draws, lifted out so it is reachable without the `<li>`, the separating rule and the qualifier slot that come with a fact row. `tone` picks the ground — `tint` is the cream-panel pair (`chrome.line.onLight` over a 12% peach wash), `muted` is the themed pair that follows the page — and `size` is one number, written to `style` so the glyph inside keeps whatever type size it inherits.",
+        "alsoFor": [
+          "Any icon-led row, on cream or on the page ground: a status glyph, a numbered marker, a two- or three-letter code. Nothing here knows what the mark means, and the disc still renders when `children` is empty — which is what keeps a stack of rows aligned on their titles when only some of them carry one.",
+          "The 32px events-row badge skene-site keeps a local file for: `size={32}` with `tone=\"muted\"` and `font-mono` through `className` is that component, exactly.",
+          "A quiet initials or code disc — two or three characters, `tone=\"muted\"`. At that point it is a circle with the themed border over `bg-muted` and carries no state at all."
+        ],
+        "watchFor": [
+          "`size` is written to `style`, following `ScoreRing`, so a `size-*` / `h-*` / `w-*` utility passed through `className` cannot beat it: inline styles win and `cn` does not merge across the two. Pass the number.",
+          "`tint` is cream-only. Its hairline is `chrome.line.onLight` — the invariant dark rule made for a cream fill — and its wash is a 12% peach mix written inline. On the dark page that border is all but gone; `muted` is the tone for a themed ground.",
+          "`aria-hidden` is unconditional and there is no prop to lift it. Every glyph this has held is decoration beside a real title, and announcing \"check mark\" before the sentence only delays it. If your mark IS the content — an avatar identifying a person — it needs an element that will be read out.",
+          "Nothing scales with `size`. The glyph takes the ambient type size, because a tick and a three-letter city code do not want the same one — which is also why `TrustFact`'s 38px rendering did not move when the disc was extracted."
+        ],
+        "notFor": [
+          "The mark that carries a feature row's identity. `FeatureIcon` is 44px with an accent-tinted border at 47%, a 7px inset ring and a peach/violet/blue union, and it is deliberately not `aria-hidden`.",
+          "A whole fact row — the disc plus a title, a qualifier and the rule under it, as an `<li>`. That is `TrustFact`, which composes this at its defaults."
+        ]
+      }
+    },
+    {
+      "module": "integration-rows",
+      "layer": "sections",
+      "import": "@skene/design-system/sections/integration-rows",
+      "exports": [
+        "IntegrationRows"
+      ],
+      "summary": "The integrations artifact: Skene Cloud's connections screen, drawn rather",
+      "client": false,
+      "lines": 225,
+      "cases": [
+        "section-integration-rows"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "integration-rows",
+        "purpose": "The integrations artifact: what Skene is attached to, and whether each connection is live.",
+        "alsoFor": [
+          "Any connection or account list where the right-hand cell is a state — data sources, webhooks, installed apps.",
+          "A row whose supporting line is an identifier rather than a sentence, by passing a TagChip as the note — which is why `note` is a node.",
+          "An extra cell per row via `aside`, for a timestamp or a link."
+        ],
+        "watchFor": [
+          "It is rows, not a table, and that is load-bearing at 390px: the left cell is prose of varying length and the right is a pill whose width is its word. A table column has one width for every row."
+        ],
+        "notFor": [
+          "A real column contract with headers. That is DataTable.",
+          "Key/value reference data. That is KeyValueTable."
+        ]
+      }
+    },
+    {
+      "module": "journey-track",
+      "layer": "sections",
+      "import": "@skene/design-system/sections/journey-track",
+      "exports": [
+        "JourneyStep",
+        "JourneyTrack",
+        "MiniFunnel"
+      ],
+      "summary": "The journey track: the numbered steps of a funnel laid out as one line, each",
+      "client": false,
+      "lines": 258,
+      "cases": [
+        "section-journey-track"
+      ],
+      "demo": "/sections",
+      "usage": {
+        "module": "journey-track",
+        "purpose": "The numbered steps of a funnel on one line, where the connector between two steps is a gradient running from one step's status colour to the next's — the seam carries the state, not just the nodes. That is the section's argument, not a flourish: breakage happens *in the link* (an event that stops firing between checkout and confirmation), and the eye should find it before reading a label. The module also exports `MiniFunnel`, the small authored label/value/bar readout that usually sits beside the track.",
+        "alsoFor": [
+          "Any three-state pipeline, not just a purchase funnel: onboarding checklists, deploy stages, data-source health. States are the fixed `good | warn | danger` triple bound to matcha/amber/red — the same vocabulary `Finding` uses — and `note` is free prose, so the domain lives entirely in the caller's copy.",
+          "Building your own layout from `JourneyStep`, which is exported separately. Its `index` prop is a `ReactNode` and `JourneyTrack` merely fills in the 1-based position, so rendering steps directly lets you pass a glyph (✓, ✕, an icon) or your own numbering into the ring.",
+          "Both orientations with no prop: the track is a stacked column below `md` and a row from `md` up, and the connector's gradient angle rides a `--journey-connector-angle` custom property specifically because an inline style cannot hold a media query. You get vertical and horizontal for free — but only that pairing; forcing one orientation means overriding classes.",
+          "Server rendering and animated composition. There is no `use client` and no internal state — state arrives as props — so a track that advances composes by re-rendering, and it drops into a server component without pulling a client boundary around its siblings.",
+          "`MiniFunnel` on its own, anywhere a small ranked readout helps: quota usage, share-of-total, step drop-off. Its bar width is routed through the `--mini-funnel-fill` custom property rather than set on `width` directly, which is the deliberate seam for a wrapper to transition or override it (grow-on-scroll, staged entrance) without this component owning any animation or state."
+        ],
+        "watchFor": [
+          "The 34px ring size is hard-coded into the connector, not read from it: `ml-[17px]` stacked and `md:mt-[17px]` in a row are both half the ring. Resizing the ring via `JourneyStep`'s `className` leaves the connector aligned to the old centre.",
+          "This section owns no ground and carries no `light` / `dark` class of its own by design — every colour is a mode-aware role or derived from one, and nothing uses `chrome.text.*`. A caller putting it on a cream fill inside a dark page must put `light` on that band (rule 2), or `semantic.matcha` resolves to its dark value at 1.16:1 on cream.",
+          "The ring is `aria-hidden` and the label stays `text.primary` in *every* state — that is the rule the section exists to keep, not an oversight. So `note` is the only place the state is both announced and readable; a caller who omits it ships a broken step that only sighted readers can identify.",
+          "Two intentional non-obviousnesses that look like bugs: a `warn` end fades its connector to `surface.border` grey rather than contributing amber (an unmeasured step has no claim to make about the link), and `MiniFunnel`'s bars are `aria-hidden`, authored, and clamped 0-100 independently of `value` — the bar and the figure can disagree if the caller lets them."
+        ],
+        "notFor": [
+          "A measured funnel chart. `MiniFunnel` has no axis and no scale, the widths are authored rather than computed, and its fill is `brand.peach` on purpose so quantities never borrow the status triple. For a shape-at-a-glance trend use `Sparkline`; for real numbers use a chart.",
+          "A progress indicator for a running job, or an interactive wizard. `PipelineStepper` owns the `done | active | pending` vocabulary and emphasises the active step; `JourneyTrack` has no active state, no state at all, and no click handling."
+        ]
+      }
+    },
+    {
+      "module": "key-value-table",
+      "layer": "sections",
+      "import": "@skene/design-system/sections/key-value-table",
+      "exports": [
+        "KeyValueTable",
+        "MaskedValue",
+        "TableNote",
+        "TagChip"
+      ],
+      "summary": "The reference table: a fixed set of columns, a fixed set of rows, and nothing",
+      "client": false,
+      "lines": 292,
+      "cases": [
+        "section-key-value-table"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "key-value-table",
+        "purpose": "The reference table: keys and values at two densities, with a masked value, a note and the 11px tag chip.",
+        "alsoFor": [
+          "Any settings, environment or schema reference — the `reference` density drops the row fill and hover so it stops reading as a data grid.",
+          "A secret or token display via MaskedValue, which shows a prefix and a fixed number of dots.",
+          "Column-level formatting without touching cells: mono, muted, strong and nowrap are per-column flags."
+        ],
+        "watchFor": [
+          "TagChip is one of five names in this package for the same 11px mono tag. Prefer it, and do not add a sixth."
+        ],
+        "notFor": [
+          "A found-things table with per-row status. That is DiscoveryTable.",
+          "An interactive product grid. That is ui/table."
+        ]
+      }
+    },
+    {
+      "module": "lifecycle-canvas",
+      "layer": "sections",
+      "import": "@skene/design-system/sections/lifecycle-canvas",
+      "exports": [
+        "LifecycleCanvas"
+      ],
+      "summary": "The Lifecycle artifact: Skene Cloud's journey canvas, drawn rather than",
+      "client": false,
+      "lines": 253,
+      "cases": [
+        "section-lifecycle-canvas"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "lifecycle-canvas",
+        "purpose": "The lifecycle artifact: stages across the canvas, each holding milestones and the signals bound to them.",
+        "alsoFor": [
+          "Any two-level map — phases and their steps, epics and their stories, a journey and its moments.",
+          "A single-level row of stages, by omitting milestones entirely.",
+          "Binding names as chips, since `bindings` is a list of nodes."
+        ],
+        "watchFor": [
+          "It scrolls horizontally with a 190px column floor rather than wrapping, so a long lifecycle stays one canvas."
+        ],
+        "notFor": [
+          "A single line of steps with a state-carrying connector. That is JourneyTrack.",
+          "Nodes joined by arrows with per-edge values. That is FlowDiagram."
+        ]
+      }
+    },
+    {
+      "module": "light-section-card",
+      "layer": "sections",
+      "import": "@skene/design-system/sections/light-section-card",
+      "exports": [
+        "LightSectionCard"
+      ],
+      "summary": "The inverted section: one cream card carrying a whole section's worth of copy",
+      "client": false,
+      "lines": 143,
+      "cases": [
+        "section-light-section-card",
+        "light-section-card-steps"
+      ],
+      "demo": "/sections",
+      "usage": {
+        "module": "light-section-card",
+        "purpose": "The inverted band: one cream card carrying a whole section's worth of copy — heading, italic promise, a ruled proof block, actions — with an optional visual panel opposite. It is `FeatureRow` at the other polarity, and the polarity is the point: on a dark marketing page, flipping one band to cream is what marks it as the page's turn or offer rather than another feature row. Its `light` root is a load-bearing accessibility mechanism, which is why the two components were deliberately NOT collapsed behind a `tone` flag.",
+        "alsoFor": [
+          "A closing CTA panel: `title` + `lede` + `actions`, no `visual` and no `children`. Without `visual` the grid stays single-column and you get a plain cream panel — `docs/sections.md` names this as the alternative to `FinalCta` when you want a panel rather than a full-bleed textured band.",
+          "Media-left layouts via `reverse`, which mirrors the grid with `md:col-start-*` / `md:row-start-1` on both columns rather than reordering the DOM (reading order stays copy-first).",
+          "Any node in `visual` — an image, a `ProductWindow` of either tone, a chart, an `AnnotatedCurve`. The column is `grid place-items-center` with no padding of its own and the root is `overflow-hidden`, so a full-bleed photo reaches the rounded edge and an inset one just pads the node you pass.",
+          "`children` is a free body slot, not a list API: a `<CheckList onLight>`, prose, a small table. It is given full column width on purpose (not a prose measure) so a CheckList's rules run the width of the column.",
+          "`actions` is a slot rather than a label/href pair, so it takes one button, two, or a button plus fine print — and lets you pick a variant that survives the inversion."
+        ],
+        "watchFor": [
+          "`light` on the root is unconditional and first in the class list. Anything dark you nest has to re-assert `dark` itself: the gallery writes `<ProductWindow tone=\"dark\" className=\"dark\">`, because ProductWindow's dark branch sets `chrome.*` fills but adds no `dark` class of its own.",
+          "`brand.peach` inverts inside this card — #89684a, not #fec089 — so a default peach `<Button>` lands noticeably darker than the same button on the page around it. That is precisely why `actions` is a slot; pass the variant you actually want (the live section uses near-black buttons).",
+          "The horizontal rule and the whole lower block are gated on `hasProof = Boolean(children || actions)`. `title` + `lede` alone render a bare panel with no divider — that is deliberate (the rule can never appear with nothing under it), not a bug to patch.",
+          "The column ratios are hardcoded (`md:grid-cols-[1.1fr_0.9fr]`, mirrored to `[0.9fr_1.1fr]` when `reverse`), apply only at `md`+, and only when `visual` is passed. Below `md` it is one column, copy first, regardless of `reverse`."
+        ],
+        "notFor": [
+          "The same copy-plus-visual shape on a dark page — use `FeatureRow`. It now shares the `lede` / `actions` names deliberately, and the two were kept separate rather than merged behind a `tone` prop because the polarity difference is the `light` mechanism, not a style.",
+          "A card inside a grid, or a small light frame around a mock. This is a whole band: a `<section>` with an `h2` at `clamp(2rem,3.2vw,3.25rem)` and 50px/46px vertical padding. For a light frame around a screenshot use `ProductWindow tone=\"light\"`."
+        ]
+      }
+    },
+    {
+      "module": "mcp-block",
+      "layer": "sections",
+      "import": "@skene/design-system/sections/mcp-block",
+      "exports": [
+        "McpBlock",
+        "McpCode",
+        "McpTool"
+      ],
+      "summary": "The MCP artifact's panels: a config snippet you are meant to paste, and the",
+      "client": false,
+      "lines": 191,
+      "cases": [
+        "section-mcp-block"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "mcp-block",
+        "purpose": "A panel inside the MCP artifact: a config snippet to paste, or the list of tools the server answers with.",
+        "alsoFor": [
+          "Any code-plus-catalogue pairing — an API key block and its scopes, a config and its options.",
+          "A tool or endpoint list on its own, via McpTool rows inside a titled block."
+        ],
+        "watchFor": [
+          "It is one panel, not the window. The surface it depicts stacks two of these inside a single AppWindow, which is why there is no crumb prop here.",
+          "The code block takes themed tokens rather than chrome, because it is a settings screen and not a terminal."
+        ],
+        "notFor": [
+          "A terminal transcript with traffic lights. That is patterns/terminal.",
+          "An install snippet with a copy button. That is TerminalBlock."
+        ]
+      }
+    },
+    {
+      "module": "overview-tiles",
+      "layer": "sections",
+      "import": "@skene/design-system/sections/overview-tiles",
+      "exports": [
+        "OverviewTiles",
+        "OverviewTile"
+      ],
+      "summary": "The workspace Overview: a row of small tiles, each a caption, one number and a",
+      "client": false,
+      "lines": 136,
+      "cases": [
+        "section-overview-tiles"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "overview-tiles",
+        "purpose": "The workspace overview: a row of small tiles, each a caption, one number and what the number is made of.",
+        "alsoFor": [
+          "Any set of commensurable counts — four numbers that belong in one sweep. A tile that styled itself differently would read as the important one.",
+          "A ratio or a word instead of a count, since `value` is a node: 2 / 1 / 0 / 0 and On are both valid."
+        ],
+        "watchFor": [
+          "Its tile is byte-identical to CheckResult in evaluator-check — same root class string, same grid recipe at a different floor."
+        ],
+        "notFor": [
+          "One number as the subject of a whole panel. That is MetricCard.",
+          "A single fact beside a heading. That is StatChip."
+        ]
+      }
+    },
+    {
+      "module": "pipeline-stepper",
+      "layer": "sections",
+      "import": "@skene/design-system/sections/pipeline-stepper",
+      "exports": [
+        "PipelineStep",
+        "PipelineStepper"
+      ],
+      "summary": "The progress pipeline shown inside a product window while a long job runs.",
+      "client": false,
+      "lines": 181,
+      "cases": [
+        "section-pipeline-stepper"
+      ],
+      "demo": "/sections",
+      "usage": {
+        "module": "pipeline-stepper",
+        "purpose": "A labelled progress track: N steps with state rings, joined by connectors the STEPPER owns and fills from the state of the step on their left, above an optional title/subtitle. It was built for a long job running inside a light `ProductWindow`, and two decisions carry that job — connectors are derived rather than drawn per-step, so N dots read as one track filling left to right; and emphasis runs backwards from instinct, with the ACTIVE step taking the label weight and a peach halo while done steps recede to matcha, because a running job's question is \"what is it doing now\", not \"what has it finished\".",
+        "alsoFor": [
+          "Any step count and any mix of states — `steps` is a plain array and connectors are derived (N-1), so a five-step onboarding checklist or a two-step form indicator works unchanged.",
+          "Dark grounds via `onLight={false}`. The flag switches only the hairline token (`chrome.line.subtle` instead of `chrome.line.onLight`); everything legible already uses the theme-aware `text.*` role and follows a `light`/`dark` ancestor. Be aware the gallery case deliberately covers only the light path, so the dark rendering is supported by props but has no visual snapshot behind it.",
+          "A static \"how it works\" or completed-summary readout: `icon` per step replaces the ✓/dot with a number or glyph, and setting every step to `done` (or every step to `pending`) gives a finished or not-yet-started outline rather than a live job.",
+          "A bare track with no header: omit `title` and `subtitle` and only the `<ol>` renders (the `mt-5` is conditional), so it drops under a heading you own or into a card you already have.",
+          "`PipelineStep` is exported separately for a single-step readout — though standalone steps get no connectors, which is the whole reason the array API exists."
+        ],
+        "watchFor": [
+          "`aria-current=\"step\"` on the active step is the ONLY state exposed to assistive tech; the rings and glyphs are `aria-hidden` on purpose. Nothing is enforced, so two `active` steps emit two `aria-current=\"step\"`, and `done` vs `pending` is invisible to a screen reader — if completion must be announced, it has to be in the `label`.",
+          "The connector reads only the LEFT step's state, so an out-of-order array renders literally: a `done` after a `pending` draws a filled matcha rule leading into a hollow ring.",
+          "The geometry is hand-computed and interlocking: a fixed 38px ring, and connector offsets of `ml-[18px]` (stacked) and `sm:mt-[18px]` (row) that are exactly its centre. Change the ring size and the track stops aligning with the rings. Steps also cap at `sm:max-w-[160px]`.",
+          "The breakpoint is `sm`, not `md` (the header notes three labelled steps need roughly 390px), and the root padding is a fixed `p-[22px]` sized for a ProductWindow body — both are worth re-checking if you drop this into a narrower or differently-padded container."
+        ],
+        "notFor": [
+          "A funnel or journey diagram where each step carries health rather than progress — use `JourneyTrack`, whose connector is a gradient between the two states it joins so a break reads as happening in the link. PipelineStepper's connector is binary filled/not and its vocabulary is done/active/pending.",
+          "A self-advancing progress indicator. There is no `use client`, no timer, no internal state — deliberately, so the file stays server-renderable. Animating it means the parent owns the state and re-renders with new `steps`."
+        ]
+      }
+    },
+    {
+      "module": "plan-card",
+      "layer": "sections",
+      "import": "@skene/design-system/sections/plan-card",
+      "exports": [
+        "PlanGrid",
+        "PlanCard"
+      ],
+      "summary": "Pricing: the grid and the tier card. The monthly/yearly switch is the only",
+      "client": false,
+      "lines": 140,
+      "cases": [
+        "section-plan-card"
+      ],
+      "demo": "/sections",
+      "usage": {
+        "module": "plan-card",
+        "purpose": "A pricing tier card plus the grid that holds a row of them (`PlanGrid` + `PlanCard`). It is pure markup — no state, no client directive — because the only interactive part of a pricing section, the billing switch, was deliberately split into `billing-toggle.tsx` so this file stays server-renderable. The shape's real argument is comparison-by-inversion: `featured` flips one card to cream-on-dark, lifts it `md:-translate-y-3`, and drops a `--shadow-modal` on it, so a row of peers stops reading as peers and one of them becomes the recommendation.",
+        "alsoFor": [
+          "A billing/subscription panel in a product surface: `flag=\"Current plan\"`, `bestFor={{label: 'Renews', value: 'Sep 12'}}` as a generic labelled metadata block, `action` as a Manage button, `footnote` for the fine print.",
+          "Non-currency tiers. `price` is a `ReactNode` rendered in a `<strong>`, so \"Free\", \"Custom\", or \"Let's talk\" work as-is, and `unit` takes \"/seat\", \"/yr\", \"per repo\" — nothing in the component knows it is money.",
+          "Non-pricing package or offer cards — service tiers, plan-shaped feature bundles. `features` is an untyped `ReactNode` slot, so a `<dl>`, a `<Table>`, or plain paragraphs go in where the demo puts a `<CheckList>`.",
+          "Grids other than three-across. `PlanGrid` merges `className` through `cn` (clsx + tailwind-merge), so `md:grid-cols-2` or `lg:grid-cols-4` genuinely replaces the base `md:grid-cols-3` rather than fighting it.",
+          "Highlighting one item in any set of sibling cards — `featured` carries no pricing semantics, only the cream inversion and the lift."
+        ],
+        "watchFor": [
+          "`featured` applies the `light` class, and that is load-bearing, not decoration (sections.md rule 2). Anything you pass into `features`/`action`/`bestFor` must use the theme-aware `text.*` role; `chrome.text.*` is invariant and renders cream on the cream card, i.e. invisible. When `featured`, also pass `onLight` to a nested `CheckList`.",
+          "The tier marker is hardcoded `<Chip tone=\"neutral\">` — no prop reaches it. A healthy/live-toned tier marker needs one small prop addition (e.g. `tierTone?: ChipTone` forwarded to `Chip`).",
+          "The featured shadow is an inline `style={{ boxShadow: 'var(--shadow-modal)' }}`, so a `shadow-*` utility in `className` loses to it. Same for `bestFor`'s border colour, set inline from `--color-chrome-line-on-light`.",
+          "`PlanGrid` uses `items-start` on purpose: a stretched grid would re-equalise row height and cancel the featured card's `-translate-y-3`. Overriding to `items-stretch` silently kills the lift. Cards are held level by `min-h-[420px]` instead.",
+          "The price renders at `clamp(2.55rem, 4vw, 4rem)`. Long strings (\"Contact sales\", \"$1,299/mo\") wrap or crowd the `unit` at that size."
+        ],
+        "notFor": [
+          "A feature-by-feature comparison matrix across tiers — the card has no cell/row model. Use `sections/comparison-table` (`ComparisonTable`, `ComparisonRow`, `TableCheck`, `TableDash`); it is a deep import, not in the root barrel.",
+          "A generic content card or dashboard tile. The tier chip, oversized price and 420px floor are all pricing furniture — use `ui/card` for product surfaces, or `LightSectionCard` for a cream editorial panel."
+        ]
+      }
+    },
+    {
+      "module": "pr-review",
+      "layer": "sections",
+      "import": "@skene/design-system/sections/pr-review",
+      "exports": [
+        "PrReview"
+      ],
+      "summary": "The GitHub pull-request review artifact: the bot's comment on a PR, drawn",
+      "client": false,
+      "lines": 246,
+      "cases": [
+        "section-pr-review"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "pr-review",
+        "purpose": "The pull-request artifact: Skene's review on a PR, with findings by severity, a suggested fix and the file it lands in.",
+        "alsoFor": [
+          "Any review or audit output with ranked findings — a linter run, a security scan, a code review.",
+          "A passing review with no findings at all, via `status` and an empty issues list."
+        ],
+        "watchFor": [
+          "Severity maps high/medium/low onto the same three semantic colours as every other status vocabulary in the package, under a fourth set of names.",
+          "Its author badge is StatPill minus the dot, hand-rolled in a file that already imports StatPill eight lines earlier."
+        ],
+        "notFor": [
+          "The diff itself rather than the review around it. That is SideBySideDiff.",
+          "A single measured finding on a marketing band. That is Finding."
+        ]
+      }
+    },
+    {
+      "module": "product-window",
+      "layer": "sections",
+      "import": "@skene/design-system/sections/product-window",
+      "exports": [
+        "ProductWindow",
+        "WindowStatus",
+        "WindowToolbar",
+        "WindowChip"
+      ],
+      "summary": "The framed product mock: a customer's dashboard rendered inside a marketing",
+      "client": false,
+      "lines": 144,
+      "cases": [
+        "section-product-window"
+      ],
+      "demo": "/sections",
+      "usage": {
+        "module": "product-window",
+        "purpose": "The chrome that frames a product mock inside a marketing section: rounded border, modal shadow, and an optional title bar with a left title and a right `status` slot. Its default `tone=\"light\"` is the argument rather than a style choice — the page around it is Skene's dark chrome, so the thing inside the frame reads as the customer's own tool; a dark window on a dark page reads as a screenshot of Skene itself. Ships alongside `WindowStatus` (the title bar's chip), `WindowToolbar` (a filter/breadcrumb strip) and `WindowChip`.",
+        "alsoFor": [
+          "The deliberate opposite reading: `tone=\"dark\"` frames Skene's own surfaces (MCP output, a tracking plan, a CLI-adjacent view) on `chrome.surface.1`, and it is the mode `WindowToolbar` and `WindowChip` were built for.",
+          "Framing anything, not just a dashboard: `children` renders raw under the title bar, so `PipelineStepper`, a `Finding` list, a screenshot `<img>` or a table all fit — the gallery's `section-pipeline-stepper` case does exactly this.",
+          "A chromeless light island: omit both `title` and `status` and the whole header block does not render, leaving a cream, `light`-scoped, shadowed panel for when you need light-on-dark inversion smaller than a full `LightSectionCard`.",
+          "Any title-bar state marker: `status` is a ReactNode slot, and `WindowStatus` covers the two readings a window frame can express — default `healthy` (matcha) and `live` (violet) — while forwarding `className` merged last, so a caller's utility wins.",
+          "Standalone use outside a feature row: nothing couples it to `FeatureRow`; it is a self-contained `max-w-[640px]` block and the gallery renders it directly."
+        ],
+        "watchFor": [
+          "`tone=\"light\"` puts the `light` class on the root and that is load-bearing, not decoration: without it every mode-aware token inside — `semantic.matcha`, `errorRed`, `brand.peach` — resolves to its DARK value against the cream fill (matcha #d7f4ab on #faf1e9 is 1.16:1). It also inverts whatever you pass as `children`, so a default peach `Button` lands much darker in here than on the page.",
+          "`WindowToolbar` is a dark-window part despite living in this file: it hardcodes `border-chrome-line-subtle` and `text-chrome-text-muted-warm`, both invariant dark-surface tokens, so inside a light window the rule is near-invisible and the text colour is wrong. The window's own internal rules correctly switch to `chrome.line.onLight`.",
+          "`max-w-[640px]` is a class and can be overridden through `className` (cn is twMerge), but `boxShadow: var(--shadow-modal)` is an inline style and no class will beat it.",
+          "Nesting `tone=\"dark\"` inside a `light` ancestor needs `className=\"dark\"` to pin it — the gallery does this for the dark window inside `LightSectionCard`, because otherwise the light ancestor pins that window's mode-aware tokens to their light values in both page modes.",
+          "`WindowStatus` deliberately overrides the shared `Chip`'s `tracking-[0.08em]` back to `0.05em` to preserve its browser-verified rendering. If you touch chip geometry expecting one value everywhere, this is the declared exception."
+        ],
+        "notFor": [
+          "Code, CLI output or a diff — that is `Terminal` (monospace, traffic lights). components.yaml states the two read as different objects on purpose and should not be substituted.",
+          "A whole cream section band carrying copy and buttons. This is a frame with a 640px cap and no title/lede/actions slots; use `LightSectionCard`."
+        ]
+      }
+    },
+    {
+      "module": "question-grid",
+      "layer": "sections",
+      "import": "@skene/design-system/sections/question-grid",
+      "exports": [
+        "QuestionGrid",
+        "QuestionCard"
+      ],
+      "summary": "The question grid: a row of cards, each one a category tag over a question the",
+      "client": false,
+      "lines": 132,
+      "cases": [
+        "section-question-grid"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "question-grid",
+        "purpose": "A 1–4 column grid of near-empty cards, each one a mono category `tag` sitting at the top of the card with a question (or claim) below it and an optional answer. The card is deliberately a border, a 14px radius and a peach corner glow with no opaque fill — that is what lets it sit on a dark band or a cream one without needing a polarity class or a token audit. It exists for the \"here is what you'll actually be able to answer\" band, where the copy does all the work and the container must not compete with it.",
+        "alsoFor": [
+          "An FAQ or objection-handling teaser band: `tag` as the category (\"BILLING\", \"OBJECTION\"), `title` as the question, `children` as the short answer. Static only — see notFor.",
+          "A use-case or persona grid: `tag` as the audience (\"FOR ENGINEERS\"), `title` as the outcome. Same three slots, no change.",
+          "A 2-up or 4-up feature grid via the `columns` prop. `columns={4}` is not simply four across — the static map gives `grid-cols-1 md:grid-cols-2 lg:grid-cols-4`, which is the sensible ladder for four short cards.",
+          "A single full-width statement card with `columns={1}` — though the fixed 58px tag gap and `min-h` were tuned for a ~270px-wide card and will read as a lot of air at full bleed.",
+          "Clickable cards, by wrapping each `QuestionCard` in the caller's own `<a>`/`<Link>`. `className` is forwarded to the `<article>`, so hover/focus styling can be supplied from outside — but the component ships no interactive affordance of its own."
+        ],
+        "watchFor": [
+          "The `mb-[58px]` under the tag is a fixed margin, not `mt-auto`, and it is load-bearing: it is what makes the tag read as a label on the card rather than a kicker on the sentence, and what keeps every tag on one baseline across the row. It only works because the grid's default `items-stretch` gives the cards a shared row height — drop these into a flex row, or pass `items-start`, and the alignment goes.",
+          "Omitting `tag` removes the 58px with it, so the question floats at the top of a card still held open by `min-h-[230px] md:min-h-[270px]` — a visible void underneath. The card is designed to be tagged.",
+          "The tag colour is hardcoded `text-brand-peach`; there is no per-card accent. Colour-coding categories would need a small prop addition — a `tone`/`accent` prop feeding the tag's colour, mirroring `ValueCard`'s `TONE_ACCENT` map.",
+          "`COLUMN_CLASS` is a static 1|2|3|4 map because Tailwind cannot see an interpolated class name. Five or six columns is a compile error, not a runtime surprise — and fixing it means adding a map entry, not passing a number through.",
+          "Adding a background fill via `className` works (the corner glow is `backgroundImage`, a different property) but it is exactly the change the file header warns against: a filled card acquires its own ground, at which point it needs a `light`/`dark` class and every token inside it needs re-checking."
+        ],
+        "notFor": [
+          "A real FAQ accordion. There is no disclosure behaviour and no `use client` — this is props in, markup out. Use `ui/accordion`.",
+          "A stats or metrics band. The fixed tag gap and min-height are tuned for one line of question plus a sentence; a number and a unit leave the card mostly empty. Use `StatChip` or `ValueCards`."
+        ]
+      }
+    },
+    {
+      "module": "recommendation-card",
+      "layer": "sections",
+      "import": "@skene/design-system/sections/recommendation-card",
+      "exports": [
+        "RecommendationCard"
+      ],
+      "summary": "The proposal: what Skene suggests doing next, and what makes it worth doing.",
+      "client": false,
+      "lines": 80,
+      "cases": [
+        "section-recommendation-card"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "recommendation-card",
+        "purpose": "The proposal: what to do next, and what makes it worth doing. Deliberately without a status colour.",
+        "alsoFor": [
+          "Any suggestion block — a next step, a recommended setting, an upsell that should not look like an alert.",
+          "Qualifier chips under the body, via `meta`, which takes nodes so TagChip fits."
+        ],
+        "watchFor": [
+          "It carries no status colour on purpose. An amber pill on a suggestion teaches a reader who has learned that amber means drift to read the suggestion as a fault.",
+          "Its fill and hairline mix from currentColor, so it works on the light window it shipped in and on the dark page with no prop."
+        ],
+        "notFor": [
+          "A measured state. That is Finding, which owns the status vocabulary.",
+          "A verdict spoken by the product. That is AgentCallout — the same padding and eyebrow spec in a different voice."
+        ]
+      }
+    },
+    {
+      "module": "score-ring",
+      "layer": "sections",
+      "import": "@skene/design-system/sections/score-ring",
+      "exports": [
+        "ScoreRing"
+      ],
+      "summary": "The audit score: a partial arc on a track, with the value inside it.",
+      "client": false,
+      "lines": 129,
+      "cases": [
+        "section-score-ring"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "score-ring",
+        "purpose": "A score against a scale: a partial arc on a track with the value inside it.",
+        "alsoFor": [
+          "Any bounded score — coverage, health, completeness, a readiness percentage.",
+          "At any size, since the digits are sized from the ring: one prop moves the whole figure."
+        ],
+        "watchFor": [
+          "`status` binds the reserved good | warn | danger vocabulary and never peach: peach is the action colour, so a peach fault reads as a call to action.",
+          "The default is warn, not good, so a forgotten prop cannot paint a failing score in the reassurance colour.",
+          "`label` is required because the visible digits are aria-hidden — it is the accessible name, not decoration."
+        ],
+        "notFor": [
+          "A determinate bar on a product surface. That is ui/progress.",
+          "A number with a delta and a sparkline rather than a scale. That is MetricCard."
+        ]
+      }
+    },
+    {
+      "module": "section-backdrop",
+      "layer": "sections",
+      "import": "@skene/design-system/sections/section-backdrop",
+      "exports": [
+        "SectionBackdrop"
+      ],
+      "summary": "The halftone field a product mock sits on inside a feature row.",
+      "client": false,
+      "lines": 82,
+      "cases": [
+        "section-backdrop"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "section-backdrop",
+        "purpose": "The halftone field a panel floats on: a container that paints one of the three real site textures (`card1/2/3_bg.webp`) and insets its child by a percentage of the track width. The percentage is the whole design — the live panel is 84–92% of its container, and only a percentage holds that proportion at every width; a fixed padding turns the field into a coloured border on a short wide card. It is the narrowest of the package's four texture tools: field behind a mock inside a feature row, as opposed to `HeroBackdrop` (hero strip), `DitheredMedia` (whole hero composition) and `DitherOverlay` (the raw layer).",
+        "alsoFor": [
+          "Standalone use outside a feature row — the gallery's `section-backdrop` case renders three of them in a plain grid wrapping an arbitrary card, so any node can be the floating panel.",
+          "Consumer artwork: `src` takes any URL and overrides `texture`, which is the supported path for a page-specific image or for a consumer that does not have Skene's assets.",
+          "Retuning the float: `inset` is a plain number in percent (default 6) — raise it to make a small panel sit deeper in the field, lower it toward 0 for a near-full-bleed texture edge.",
+          "Choosing a field by subject: `texture` is `journey | github | schema` and the pairing is semantic, not a tint picker (journeys/funnels/measurement, GitHub/PRs/editor chrome, schema/connections/keys), so a reader who knows the live site meets the same backdrop behind the same kind of thing.",
+          "Shape and fill control via `className`, which merges onto the root — `rounded-xl` in the gallery, `h-full w-full` in how `FeatureRow` embeds it."
+        ],
+        "watchFor": [
+          "`minHeight: '22rem'` is set as an **inline style** and there is no `style` prop on `SectionBackdropProps`, so no Tailwind `min-h-*` in `className` can beat it — inline styles win and twMerge cannot reach them. Making it shorter needs one small prop addition to this file (a `minHeight` or a passthrough `style` prop); say so rather than fighting it from the call site.",
+          "`padding: ${inset}%` applies to all four sides, and CSS resolves percentage padding against the container's **width** in both axes — so a wide, short container gets large vertical padding from a small `inset`. The 22rem floor exists because without vertical room the texture only shows left and right, which is the border failure again in the other axis.",
+          "Children are flex items on a `flex items-center` root, not layers: exactly one node goes in the `relative w-full` z-1 wrapper. And there is no overlay element in this file — the texture is a CSS `background-image` on the container itself, so the header comment's \"aria-hidden, pointer-events-none\" describes `FeatureRow`'s sheen, not anything here to restyle.",
+          "Texture URLs are resolved with `new URL('../../assets/…', import.meta.url)` on purpose, so a bundler rewrites them and consumers need not copy files into their own `public/`. That assumes a bundler that handles `import.meta.url` asset references; unbundled Node resolution yields a `file://` path."
+        ],
+        "notFor": [
+          "A hero. Use `DitheredMedia` for a full hero composition or `HeroBackdrop` for a dark strip fading into the page — this component's 22rem floor and percentage inset are sized for a panel inside a row.",
+          "A plain tinted or gradient panel. It always loads a raster texture; use a div with a token background, or `DitherOverlay` if you want only the dither layer over your own stack."
+        ]
+      }
+    },
+    {
+      "module": "side-by-side-diff",
+      "layer": "sections",
+      "import": "@skene/design-system/sections/side-by-side-diff",
+      "exports": [
+        "DiffLine",
+        "DiffColumn",
+        "SideBySideDiff"
+      ],
+      "summary": "The two-column diff: what the coding agent wrote beside what the check",
+      "client": false,
+      "lines": 267,
+      "cases": [
+        "section-side-by-side-diff"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "side-by-side-diff",
+        "purpose": "Two columns of code with added and removed lines marked — what was written beside what was expected.",
+        "alsoFor": [
+          "Any before/after code comparison — a migration, a suggested fix, a config change.",
+          "A single column of annotated code, by rendering one DiffColumn.",
+          "Localised or relabelled markers via `addedLabel` and `removedLabel`."
+        ],
+        "watchFor": [
+          "It applies `dark` to itself: the diff is GitHub chrome and stays dark on a light page, which is what the vendor tokens are for.",
+          "Its column header is byte-identical to ArtPanel's bar, in a file that does not import it."
+        ],
+        "notFor": [
+          "The review around a diff — author, findings, fix. That is PrReview.",
+          "A plain code block with no diff semantics. That is McpCode."
+        ]
+      }
+    },
+    {
+      "module": "stat-chip",
+      "layer": "sections",
+      "import": "@skene/design-system/sections/stat-chip",
+      "exports": [
+        "StatChip",
+        "MetaChip"
+      ],
+      "summary": "The two small labels that recur beside headings: a fact, and a promise.",
+      "client": false,
+      "lines": 118,
+      "cases": [
+        "section-stat-chip"
+      ],
+      "demo": "/sections",
+      "usage": {
+        "module": "stat-chip",
+        "purpose": "Two small pills that sit beside headings: `StatChip` asserts something true right now (\"121 stars\"), `MetaChip` marks something not shipped yet (prose, a hairline divider, then a peach status word). They are two components rather than one with a `variant` precisely so a forgotten prop can never turn a roadmap item into a live claim about the product — two names cannot be defaulted into each other. Both derive their border and fill from `currentColor` via `color-mix`, which is what lets one chip survive both the dark page and the cream `LightSectionCard` with no `onLight` prop.",
+        "alsoFor": [
+          "Recolouring the entire chip by setting only the text colour. Because border (26%/22%) and fill (7%/6%) are `color-mix` on `currentColor`, passing e.g. `className=\"text-semantic-matcha\"` retints border, fill, and type together. That `currentColor` derivation IS the tone mechanism — there is no `tone` prop and none is needed.",
+          "`MetaChip` as a general \"description · marker\" chip. `status` is a `ReactNode`, not an enum — BETA, SOON, DEPRECATED, `v2.1`, a region code — rendered monospace, uppercased, tracked at 0.07em. The divider is a real 13px element rather than a `│` glyph, so it tracks the chip height whatever you put on either side.",
+          "Any leading mark, not just the shipped emoji. The `icon` slot is a `ReactNode` with `shrink-0`, so a small inline SVG or a coloured status dot drops in — but it is `aria-hidden`, so the visible text has to carry the whole meaning.",
+          "Composed content in `children` (also a `ReactNode`): a `<strong>` figure with a muted trailing word, a linked count, a short unit. Both chips are `inline-flex` `<span>`s, so they flow in prose and wrap cleanly in a `flex flex-wrap gap-3` row — the shape the gallery uses.",
+          "Dropping onto a cream surface unchanged. The type uses the mode-aware `text-muted-strong` / `text-muted` roles, so a `light` ancestor inverts everything including the derived edges. No variant, no second call site."
+        ],
+        "watchFor": [
+          "The border and background are inline `style` rules, so a `border-*` or `bg-*` utility passed via `className` loses to them. Change the colour by changing the text colour, not the border colour.",
+          "`MetaChip`'s status word is hardcoded `text-brand-peach` — it is the one part NOT derived from `currentColor`. Retinting the chip leaves the status peach, which is usually right and occasionally a surprise.",
+          "Never reach for `chrome.*` here. `chrome.text.*` is invariant cream by definition, and these chips render on cream; the whole colour scheme (including the derived edges) is built on the theme-aware `text.*` role for that reason. There is no mode-aware line token, which is exactly why the edges are derived rather than tokenised.",
+          "Geometry is `rounded-full`, 12px, non-mono — deliberately NOT the 10px mono rectangle of `Chip`/`WindowStatus`. `docs/sections.md` §2 point 3 records this as an open decision (adopt the window-chip geometry or justify the pill), so do not quietly \"harmonise\" one side of it."
+        ],
+        "notFor": [
+          "Product-surface state. These are section furniture next to headings; for a status marker in a UI use `Badge` (the shadcn primitive) or `Chip` / `WindowStatus` for the 10px mono rectangle.",
+          "A section-heading kicker. That is `Eyebrow` (pattern), which owns the `font.tracking.eyebrow` token — a different job at a different tracking."
+        ]
+      }
+    },
+    {
+      "module": "surface-tiles",
+      "layer": "sections",
+      "import": "@skene/design-system/sections/surface-tiles",
+      "exports": [
+        "SurfaceTiles",
+        "SurfaceTile",
+        "SurfaceDetail"
+      ],
+      "summary": "The surfaces Skene runs on, as a row of tiles — and the panel that explains",
+      "client": false,
+      "lines": 212,
+      "cases": [
+        "section-surface-tiles"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "surface-tiles",
+        "purpose": "The surfaces a product runs on, as a row of tiles with one picked out, and the panel that explains the chosen one.",
+        "alsoFor": [
+          "Any set of options where one is editorially highlighted — plans, integrations, entry points.",
+          "A command or identifier under the row, via SurfaceDetail's `code`, which renders a mono chip rather than a terminal.",
+          "Tinted icons per tile through `accent`, which reuses FeatureIcon's vocabulary plus a neutral."
+        ],
+        "watchFor": [
+          "`selected` carries the `light` class, which is the whole mechanism. Without it, cream type lands on a cream fill — the bug that shipped invisible twice in this package.",
+          "Selection is presentational. There is no onSelect and no internal state, so a real picker means the caller owns the state."
+        ],
+        "notFor": [
+          "Commensurable numbers rather than choices. That is OverviewTiles, where nothing can be selected.",
+          "Options that each need a price, a feature list and a CTA. That is PlanCard."
+        ]
+      }
+    },
+    {
+      "module": "terminal-block",
+      "layer": "sections",
+      "import": "@skene/design-system/sections/terminal-block",
+      "exports": [
+        "TerminalBlock"
+      ],
+      "summary": "The install block: a terminal frame holding one or more shell lines, each with",
+      "client": true,
+      "lines": 273,
+      "cases": [
+        "section-terminal-block"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "terminal-block",
+        "purpose": "The install block: a terminal frame holding one or more shell lines, each with its own copy button.",
+        "alsoFor": [
+          "Any copyable command list — install steps, a CLI walkthrough, a set of environment exports.",
+          "Output lines that are not copyable, by setting `copyable` false — which is how a transcript mixes commands and results.",
+          "A different visible string from what is copied, via `display` against `command`."
+        ],
+        "watchFor": [
+          "It is the client boundary and is deliberately absent from the root barrel: a use client directive on a re-exported module poisons the barrel for server rendering, which package-contract asserts against. Deep-import it.",
+          "It draws the terminal frame itself rather than using the skene-terminal class in effects.css, so it does not match patterns/terminal — 12px radius against 8px."
+        ],
+        "notFor": [
+          "A transcript with no copy affordance. That is patterns/terminal.",
+          "A config block to read rather than run. That is McpCode."
+        ]
+      }
+    },
+    {
+      "module": "traffic-lights",
+      "layer": "sections",
+      "import": "@skene/design-system/sections/traffic-lights",
+      "exports": [
+        "TrafficLights"
+      ],
+      "summary": "The window furniture: three 10px dots, red then yellow then green.",
+      "client": false,
+      "lines": 70,
+      "cases": [
+        "section-traffic-lights"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "traffic-lights",
+        "purpose": "The three window-chrome dots — red, yellow, green, 10px each — as one `aria-hidden` group at an 8px gap. It exists so a shell bar, an editor header or a GitHub file header can carry window furniture without hand-rolling three spans, which is what five files were doing: `TerminalBlock` and `PrReview` in this package, and two skene-site routes that each declared a local copy plus a comment saying the fix belonged upstream.",
+        "alsoFor": [
+          "Any drawn window header, not only a shell — an editor chrome bar, a browser mock, a GitHub file header. It carries no terminal semantics at all: it is three coloured circles in a flex row, and it needs no parent and no context.",
+          "A roomier bar, by passing `gap-*` — `cn` treats it as a `gap` conflict so the caller's value wins. That is how `PrReview` gets GitHub's 12px against the terminal bar's 8px, from the same component."
+        ],
+        "watchFor": [
+          "`className` lands on the WRAPPER. The three dots take invariant `terminal-chrome.traffic.*` tokens and are not reachable from outside — a recolourable red light is not a variant.",
+          "`patterns/terminal` draws the same three dots and does NOT use this: they are a `::before` with two box-shadows on `.skene-terminal` in `styles/effects.css`. A `Terminal` therefore has its lights whether or not you render this, and rendering both gives six. Which of the two terminals wins is the open `terminals` decision, and this component does not settle it.",
+          "There is no `size` prop. 10px is what both call sites shipped and what the CSS half draws; a fourth diameter would push the two terminals further apart rather than closer."
+        ],
+        "notFor": [
+          "Saying something. These are furniture and carry no state; a dot that means a state, with the word beside it, is `StatPill`, which binds bad | warn | ok to the semantic colours.",
+          "A whole terminal frame. `patterns/terminal` already paints its own lights in CSS — reach for this only when you are building the bar yourself."
+        ]
+      }
+    },
+    {
+      "module": "trust-panel",
+      "layer": "sections",
+      "import": "@skene/design-system/sections/trust-panel",
+      "exports": [
+        "TrustFact",
+        "TrustPanel"
+      ],
+      "summary": "The trust panel: a cream card split in two — the claim on the left, the facts",
+      "client": false,
+      "lines": 234,
+      "cases": [
+        "section-trust-panel",
+        "section-trust-panel-eyebrow"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "trust-panel",
+        "purpose": "A cream panel split into a claim and its evidence: heading, lede and a row of links on the left, a stack of `TrustFact` items on a deeper cream to the right. The split is the argument — the reassurance is not a paragraph asserting itself but a paragraph standing next to checkable facts, which is why the evidence track is the wider of the two (`0.9fr 1.1fr`). It is a fixed-polarity object: the root carries `light` unconditionally, so it is a cream card on a dark page, with a peach bloom rising from the bottom-left corner that the token system gets right on cream for free.",
+        "alsoFor": [
+          "Any claim-plus-itemised-proof panel, not just security: \"what's included\", \"how it works\", \"what we do with your data\". `title` + `lede` + `TrustFact`s is the shape, and no copy is baked in.",
+          "A single-column cream statement or CTA panel — omit `children` and the `md:grid-cols-[0.9fr_1.1fr]` template is not applied at all. That collapse is an explicit design decision in the source, not an accident.",
+          "A legal/footnote band: the `links` slot is a wrapped flex row that styles whatever anchors you pass (`underline`, `underline-offset-4`, hover to `text.primary`) without owning their hrefs or labels.",
+          "A plan-inclusions panel, using each `TrustFact`'s 38px `icon` circle for a check glyph and `children` for the limit or caveat.",
+          "`TrustFact` on its own inside any `<ul>` you own — it is exported, it is a self-contained `<li>` that draws its own separating rule, and it needs no context from `TrustPanel`. Cream surfaces only (see watchFor)."
+        ],
+        "watchFor": [
+          "`light` is unconditional and first in the class list. There is no dark variant and you cannot make one by overriding `className` — `bg-brand-light` is an invariant cream, and every mode-aware token in the subtree has already resolved for a cream ground.",
+          "`TrustFact`'s hairlines and its icon circle's border are `chrome-line-on-light` — an invariant dark rule at 14% designed for cream. Lifted onto a dark surface those rules and that circle are effectively invisible. The doc comment calls this out as the one deliberate exception to the theme-aware-tokens rule.",
+          "`children` renders directly inside the `<ul>` (chosen over an inner wrapper specifically to avoid `display: contents`, which several browsers still strip list semantics from). Pass `TrustFact`s, i.e. `<li>`s — a `<div>` or a wrapper component breaks the \"3 of 5\" a screen reader would otherwise give.",
+          "The fact separators live on the item (`border-b … first:pt-0 last:border-b-0 last:pb-0`), not on a divider element, so the stack must not also be spaced by a parent `gap` — that double-spaces the rhythm. The icon circle also renders when `icon` is absent, on purpose, to keep every title's left edge aligned.",
+          "`title` is capped at `max-w-[440px]` and `lede` at `max-w-[430px]`, and the glow is absolutely positioned inside the left cell only. Long copy will not fill the column, and the bloom never reaches the facts panel."
+        ],
+        "notFor": [
+          "A generic two-column band. Its polarity is fixed cream; for a dark band with copy on one side use `FeatureRow`, and for a cream one whose second track is a visual use `LightSectionCard` (its `visual` slot is what the facts column is not — the right track here is a `<ul>`).",
+          "Comparing facts across options. The facts are a single stack of peers with no column axis; that is `ComparisonTable`.",
+          "The 38px disc on its own, without the rule, the 22px rhythm and the qualifier slot a fact row brings. `TrustFact` composes `GlyphBadge` at its defaults, so a row that only wants the circle — at 38px or at 32 — should take the badge directly."
+        ]
+      }
+    },
+    {
+      "module": "value-cards",
+      "layer": "sections",
+      "import": "@skene/design-system/sections/value-cards",
+      "exports": [
+        "ValueCards",
+        "ValueCard"
+      ],
+      "summary": "The value band: a row of cards that argues by CONTRAST. A stack of cards",
+      "client": false,
+      "lines": 150,
+      "cases": [
+        "section-value-cards"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "value-cards",
+        "purpose": "A responsive card band whose argument is carried by tone rather than by copy: N cards stating what the current situation costs, then one stating what it becomes. `ValueCard` takes a mono `label`, a `title` line and an optional body, and the `tone` union (`'cost' | 'gain'`) is the only thing that moves — `cost` borrows `semantic.errorRed` for the label and a neutral 14% hairline, `gain` takes `brand.peach` with a 34% border and a left-to-right directional wash so the last card reads as an arrival rather than one more tile. It exists so a band can make a turn; a row of identically-weighted cards degrades into a feature list and says nothing.",
+        "alsoFor": [
+          "Any before/after or problem/payoff band: `label` is free text, so \"BEFORE\"/\"AFTER\", \"TODAY\"/\"WITH SKENE\", \"MANUAL\"/\"AUTOMATED\" all work with no code change — only `tone` decides the colour.",
+          "A risk or defect summary where every card is a `cost`: `tone` defaults to `'cost'`, so a stack of audit findings needs only `label` + `title` + body. (For a measured, instrumented state use `Finding` instead — see notFor.)",
+          "A plain neutral card grid: omit `label` entirely and leave `tone` at its default. With no label there is no accent on screen at all — you get a 14px-radius card, a 1.8% wash and a near-invisible hairline, i.e. a generic content card.",
+          "`ValueCards` on its own as a bare auto-fit grid wrapper. `children` is typed `React.ReactNode`, not `ValueCard[]`, so it will lay out any children at `repeat(auto-fit,minmax(240px,1fr))` from `md` up, single column below.",
+          "A three-tier emphasis band, by mixing labelled `cost` cards with unlabelled default cards and one `gain` — no third tone needed, because the label's presence is itself an axis."
+        ],
+        "watchFor": [
+          "`tone` defaults to `'cost'`. That is deliberate (costs are the majority of the band) but it means a forgotten `tone` renders a red label, not a neutral one.",
+          "The accent lands via inline `style={{ color: accent }}` on the label and inline `borderColor`/`backgroundImage` on the `<article>`. A `text-*` or `border-*` utility passed through `className` will not win against those; to retint, add a tone member to `TONE_ACCENT` rather than fighting it from the call site.",
+          "`ValueCards` deliberately carries no `light`/`dark` class — everything is derived from the mode-aware `text.primary` and `brand.peach`, so it inherits polarity. Per rule 2 in docs/sections.md, a caller putting this band on a cream panel inside a dark page still owes that panel its own `light` class, or the 1.8% wash and the hairline resolve to their dark values against cream.",
+          "The `gain` wash is directional — `linear-gradient(90deg, …, transparent 62%)` — and knows nothing about position. It always enters from the left edge, which reads as arrival only when the gain card is last in the row; below `md` the grid stacks to one column and the horizontal gradient stops doing any sequencing work at all.",
+          "`ValueCard` renders an `<article>` whose title is a `<strong>`, not a heading. The cards therefore never appear in the document outline. `title` is `React.ReactNode`, so pass your own `<h3>` if these need to be navigable."
+        ],
+        "notFor": [
+          "A row of equal-weight peers (a feature list, a set of capabilities). The whole point of the component is the tonal turn; used flat it is a worse plain card grid than `QuestionGrid` or `FeatureRow`.",
+          "Signalling a measured state. The `good | warn | danger` vocabulary bound to `semantic.matcha / warningAmber / errorRed` means an observed fact — that is `Finding` (or `ui/badge` on a product surface). `ValueCard`'s `cost` borrows `errorRed` for a marketing claim, and using it for real status teaches the reader that red means two different things."
+        ]
+      }
+    }
+  ],
+  "decisions": [
+    {
+      "id": "band-polarity",
+      "title": "A band with copy and a visual",
+      "status": "resolved",
+      "options": [
+        "FeatureRow",
+        "LightSectionCard"
+      ],
+      "verdict": "Kept both. Prop names standardised — FeatureRow moved to lede/actions.",
+      "detail": "Near-identical prop sets that disagreed on names for the same concepts: subtitle vs lede, action vs actions. The polarity difference is real — LightSectionCard carries the `light` class and inverts — so collapsing them behind a tone flag would hide a load-bearing accessibility mechanism behind something that looks like styling. Applied: FeatureRow renamed, all call sites updated.",
+      "evidence": [
+        "FeatureRow: title, lede, children, actions, visual, reverse",
+        "LightSectionCard: title, lede, children, actions, visual, reverse"
+      ]
+    },
+    {
+      "id": "chips",
+      "title": "Small labels",
+      "status": "partly-applied",
+      "options": [
+        "Chip",
+        "Badge",
+        "Eyebrow",
+        "StatChip",
+        "MetaChip",
+        "WindowStatus",
+        "WindowChip"
+      ],
+      "verdict": "Duplicate extracted: Chip, used by PlanCard’s tier marker and by WindowStatus. Badge and Eyebrow stay — different jobs. StatChip/MetaChip geometry still open.",
+      "detail": "Seven shapes, five radii, three sizes. PlanCard’s tier chip and WindowStatus were almost the same spec reached independently — rounded-[5px], font-mono, 10px, uppercase, px-[7px] py-1 — and disagreed on tracking alone, 0.05em against 0.08em. That is the tell that the cluster was unmanaged: it drifted in the column nobody was tabulating. Applied 2026-08-12 as sections/chip.tsx. The tracking difference is carried, not flattened — Chip holds 0.08em and WindowStatus overrides to 0.05em — because both values shipped and were verified in the browser, and picking a winner is a visual decision rather than a refactor.",
+      "evidence": [
+        "Badge          rounded-sm      —",
+        "Eyebrow        rounded-sm      —     mono upper",
+        "StatChip       rounded-full  12px",
+        "MetaChip       rounded-full  12px",
+        "Chip           rounded-[5px] 10px    mono upper   0.08em",
+        "WindowStatus   = Chip, tracking overridden to     0.05em",
+        "PlanCard tier  = Chip, neutral tone",
+        "WindowChip     rounded-md    11px    mono upper"
+      ]
+    },
+    {
+      "id": "texture",
+      "title": "Texture behind content",
+      "status": "resolved",
+      "options": [
+        "SectionBackdrop",
+        "HeroBackdrop",
+        "DitheredMedia",
+        "DitherOverlay"
+      ],
+      "verdict": "No overlap once scoped. Pick by what you are dressing.",
+      "detail": "SectionBackdrop is the field behind a mock inside a feature row. HeroBackdrop is a hero strip. DitheredMedia is a full hero composition. DitherOverlay is the raw layer for composing your own stack.",
+      "evidence": []
+    },
+    {
+      "id": "frames",
+      "title": "Framed content",
+      "status": "resolved",
+      "options": [
+        "ProductWindow",
+        "Terminal"
+      ],
+      "verdict": "No change. Different objects, read differently on purpose.",
+      "detail": "Terminal is monospace with traffic lights and frames code or CLI output. ProductWindow frames a product mock and inverts to light by default, where light means the customer’s tool rather than Skene’s.",
+      "evidence": []
+    },
+    {
+      "id": "steppers",
+      "title": "A track of steps",
+      "status": "resolved",
+      "options": [
+        "PipelineStepper",
+        "JourneyTrack"
+      ],
+      "verdict": "Kept both. The state vocabulary is the argument, not the geometry.",
+      "detail": "Measured 2026-08-13 and near-identical: p-[22px] against p-7 (the same 22.4px), the same title and subtitle specs, the same flex-to-row list, the same 55% border / 12% fill ring mix, and connectors whose ml-[N] is the ring diameter halved in both. What differs is what a step MEANS — done | active | pending is progress, good | warn | danger is health — and a component that carried both would have to be told which vocabulary it is speaking. Same verdict as band-polarity: the difference is real and it is not styling.",
+      "evidence": [
+        "PipelineStepper: 38px ring, ml-[18px] connector, done | active | pending",
+        "JourneyTrack: 34px ring, ml-[17px] connector, good | warn | danger"
+      ]
+    },
+    {
+      "id": "lifted-card",
+      "title": "A card lifted out of its row",
+      "status": "resolved",
+      "options": [
+        "PlanCard",
+        "BridgeNode"
+      ],
+      "verdict": "Kept both. The same card at inverted polarity.",
+      "detail": "Identical radius, padding, lift and shadow token, and the same kicker → title → mt-auto list structure. The only difference is which way the theme points: PlanCard featured is cream in a dark grid, BridgeNode featured is near-black in a cream band. Collapsing them behind a tone prop is the exact move band-polarity rejected — it puts the light/dark class, which is load-bearing for legibility, behind a flag that reads as styling.",
+      "evidence": [
+        "PlanCard featured: light border-brand-light bg-brand-light md:-translate-y-3, shadow-modal",
+        "BridgeNode featured: dark border-chrome-line-subtle bg-chrome-surface-1 md:-translate-y-3, shadow-modal"
+      ]
+    },
+    {
+      "id": "terminals",
+      "title": "A terminal frame",
+      "status": "decided",
+      "options": [
+        "Terminal",
+        "TerminalBlock"
+      ],
+      "verdict": "One object drawn twice, at 8px and 12px. Neither is deprecated; the radii need settling.",
+      "detail": "Same tokens, same 10px traffic lights, same mono body — but Terminal draws its frame from the .skene-terminal class in effects.css at 8px radius, and TerminalBlock draws its own through ArtPanel at 12px. Two terminals that do not match is worse than either. patterns/terminal is the documented one and has a case; TerminalBlock has the copy button, is the client boundary, and skene-site renders it on five routes. An @deprecated tag went on TerminalBlock briefly and was retracted the same day: it is the half with the feature, so the tag pointed readers away from the only one that could do the job. What actually needs settling is which radius wins, which is a visual decision and owed its own baseline movement.",
+      "evidence": [
+        "effects.css .skene-terminal: --radius-panel (8px), traffic lights as a ::before",
+        "TerminalBlock: ArtPanel rounded-xl (12px), three explicit size-[10px] spans"
+      ]
+    },
+    {
+      "id": "textured-field",
+      "title": "The halftone field",
+      "status": "decided",
+      "options": [
+        "ArtFrame",
+        "SectionBackdrop"
+      ],
+      "verdict": "Not equivalent, and not merged. Measured difference recorded.",
+      "detail": "They load the SAME three image files under different key names — gh/db/jr against github/schema/journey — and independently arrived at the same 6% inset and 22rem floor. But ArtFrame also carries rounded-xl, an opaque bg-surface-deep-2 under the texture, and a non-row padding variant, so a merge changes pixels rather than being the neutral consolidation it looks like. Anyone taking it must predict the baseline diffs in the PR description before running the suite.",
+      "evidence": [
+        "artifact-shell: { gh: card2_bg, db: card3_bg, jr: card1_bg }, p-[6%], min-h 22rem, rounded-xl, bg-surface-deep-2",
+        "section-backdrop: { journey: card1_bg, github: card2_bg, schema: card3_bg }, inset 6%, minHeight 22rem"
+      ]
+    },
+    {
+      "id": "shared-shell",
+      "title": "Tiles and cards that share a shell",
+      "status": "resolved",
+      "options": [
+        "OverviewTile",
+        "CheckResult",
+        "ValueCard",
+        "QuestionCard"
+      ],
+      "verdict": "Kept apart. Only the shell matches; the contents are different objects.",
+      "detail": "OverviewTile and CheckResult have a byte-identical root class string, and ValueCard and QuestionCard share a 14px radius and 22.4px padding. Measured further, the insides disagree on purpose: OverviewTile is a 9px mono caption over a 24px number, CheckResult an 11px sans caption over 14px bold; the two cards carry different peach washes and different height floors. Extracting the shell would mean one shared line of classes and two components that still cannot be substituted, so it was not done. StatChip and MetaChip WERE collapsed onto a private Pill base, because there the whole box matched and only three tokens differed.",
+      "evidence": [
+        "OverviewTile / CheckResult root: min-w-0 rounded-sm border border-border bg-card p-[12px]",
+        "OverviewTile caption 9px mono 0.9px vs CheckResult 11px sans 0.16em"
+      ]
+    },
+    {
+      "id": "note-strip",
+      "title": "The note under an artifact",
+      "status": "partly-applied",
+      "options": [
+        "EvaluatorNote",
+        "flow-diagram note",
+        "evaluator-check note"
+      ],
+      "verdict": "Two of four merged. Two differ for reasons worth keeping.",
+      "detail": "evaluator-verify now renders EvaluatorNote. evaluator-check keeps its own because it has no [&_code] rules — a <code> in its note renders as body text there and as mono foreground everywhere else, so adopting the shared part is a pixel change owed its own baseline movement. flow-diagram keeps a <p> where the shared part is a <div>, because prose under a figure is a paragraph.",
+      "evidence": [
+        "evaluator-list EvaluatorNote: mt-[12px] text-[12px] text-muted-foreground [&_code]:font-mono [&_code]:text-foreground [&_code]:wrap-anywhere",
+        "evaluator-check: the same strip with no [&_code] rules"
+      ]
+    }
+  ],
+  "unbuilt": [],
+  "gallery": {
+    "route": "/components",
+    "cases": 85
+  },
+  "counts": {
+    "modules": 79,
+    "exports": 248,
+    "ui": 30,
+    "patterns": 5,
+    "sections": 44,
+    "noVisual": 1,
+    "withUsage": 79
+  }
+}

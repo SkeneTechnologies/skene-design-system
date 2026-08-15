@@ -1,0 +1,4 @@
+/* The entire consumer wiring. If a primitive renders unstyled here, the
+   package's @source is broken — which is exactly what this app is for. */
+@import "tailwindcss";
+@import "@skene/design-system/styles.css";

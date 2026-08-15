@@ -1,0 +1,154 @@
+# Agent-enforceable rules for @skene/design-system.
+# Human narrative: docs/principles.md
+#
+# This file previously scoped itself to the Skene Cloud dashboard and listed
+# skene-marketing-website under `excludes`. That was correct while it lived in
+# the dashboard repo. Inside a shared package it was actively wrong: an agent
+# reading it would refuse to use the design system for half the estate it
+# exists to serve.
+
+version: "2.0.0"
+
+# The package serves every Skene surface. Four repos are in scope; two install
+# the package today. `installs: false` means a change here does not reach that
+# surface — it is estate to migrate, not estate to check for breakage.
+consumers:
+  - repo: skene-site
+    surface: site
+    installs: true
+    theme_default: dark
+    notes: >-
+      The largest consumer. Hardcodes `dark` on `<html>` in src/app/layout.tsx —
+      chosen, not inherited. Imports the package in 26 files: 22 of its 24
+      routes plus 4 shared components, reaching `sections/` 56 times,
+      `patterns/` 25 and `ui/` 21. Keeps 72 of its own visual baselines. Its
+      globals.css is 25 lines: `@import "tailwindcss"` then
+      `@import "@skene/design-system/styles.css"`, and no declarations at all,
+      so anything that renders wrong there is the package's, not the app's.
+  - repo: skene-marketing-website
+    installs: false
+    surface: site
+    theme_default: dark
+    notes: >-
+      Public marketing site, and the whole live site today — skene-site is wired
+      into no microfrontends routing on any branch, so nothing has moved off it
+      yet. Hardcodes `<html class="dark">`. Display type runs to 67px, well past
+      the dashboard's UI-density scale.
+      This entry read `installs: true` until 2026-08-14 and was wrong on the same
+      axis the skene-dashboard entry below gets right: zero
+      `@skene/design-system` matches in its package.json, its lockfile or its
+      source, on local main AND on origin/main. The belief came from PR #44,
+      which does add the dependency and is unmerged, blocked on a code-owner
+      review. A stale `node_modules/@skene` directory on disk makes the mistake
+      easy to repeat. So this package has ONE consumer, not two.
+      It is not empty estate: of its 138 components, 26 are already shipped here
+      under different names, 24 have no equivalent here at all, and 20 are dead.
+  - repo: skene-dashboard
+    surface: app
+    installs: false
+    theme_default: light
+    notes: >-
+      Signed-in workspace product. Dense, semantic. Wraps the sidebar,
+      onboarding and public chrome in `.dark`, and escapes back with `.light`.
+      Does NOT install the package: zero `@skene/design-system` matches in its
+      package.json, its lockfile or its source, verified 2026-08-13. It is
+      where these tokens and generators were written, and it still holds its
+      own copies — 30 files under components/ui/ that share a name with a
+      module in src/ui/, and a design-tokens.json at 1.3.0 against the
+      package's 2.7.0. So a change here reaches the dashboard only after a
+      migration that has not started; treat its divergence as unmeasured.
+  - repo: unidentified auth app
+    surface: site
+    installs: unknown
+    theme_default: dark
+    notes: >-
+      Serves /login and /signup at the same origin as the marketing site (see
+      skene-marketing-website DECISIONS.md D3). Has never been audited as a
+      design system consumer. Do not assume it follows these rules yet.
+
+priority_order:
+  - primitives from @skene/design-system/ui/*
+  - patterns from @skene/design-system/patterns/*
+  - Tailwind v4 utilities generated from the package @theme inline
+  - classes from @skene/design-system/effects.css
+  - app-local CSS, only for genuinely app-specific chrome
+
+must:
+  - import_primitives_from_the_package_not_a_local_copy
+  - use_cn_from_package_utils_for_class_merge
+  - use_lucide_react_for_icons
+  - use_tokens_over_literal_values
+  - wrap_dark_subtrees_in_dark_class
+  - ask_before_inventing_a_component_that_does_not_exist
+
+must_not:
+  - arbitrary_hex_in_classnames
+  - styled_components_for_new_features
+  - use_prefers_color_scheme          # theming is class-based, always
+  - redefine_package_tokens_in_app_css
+  - copy_a_primitive_into_an_app_to_tweak_it
+  - purple_gradients_or_ai_slop_layouts
+  - fonts_outside_geist
+  # Write the character. `&check;` shipped as six literal characters in
+  # skene-site while `&harr;` two rows away rendered correctly — the JSX entity
+  # table is a subset and differs by compiler. Verified 2026-08-13: this repo's
+  # own tsc emits "&check;" undecoded and "\u2194" decoded from adjacent text
+  # children, so it is a table gap, not an SWC quirk. Entities in PROPS never
+  # decode under any compiler. A literal glyph cannot be wrong.
+  - html_entities_in_jsx
+
+# The distinction that causes the most damage when got wrong.
+surface_roles:
+  chrome:
+    tokens: color.chrome.surface.*, color.chrome.text.*
+    behaviour: invariant, always dark
+    use_for: >-
+      Anything that should stay dark on a light page the way a terminal or a
+      code block does. Dashboard data tables, log panels, terminal frames.
+  themed:
+    tokens: color.surface.*, color.text.*
+    behaviour: mode-aware, inverts to a zinc ladder in light
+    use_for: page surfaces that should follow the theme.
+  warning: >-
+    These two share their dark values and diverge only in light, so picking the
+    wrong one looks correct until someone opens light mode. Collapsing them back
+    into one set breaks a consumer in either direction, which is why
+    __tests__/roles.test.ts fails the build if anyone tries.
+
+known_gaps:
+  - id: light_mode_brand_palette
+    detail: >-
+      The brand palette was drawn against dark surfaces. The figures this entry
+      used to quote — peach 1.53:1, matcha 1.16:1, amber 1.83:1, error-red
+      3.31:1 — are the UNFIXED values and are no longer what renders. 0.4.0
+      added light-mode variants for matcha, amber and error-red, and 0.5.1
+      added on-tint variants for their labels. The stale figures did real
+      damage: a section written from this table in 0.5.0 documented a contrast
+      risk with numbers that were two releases out of date, which sent someone
+      looking for the wrong problem.
+      STILL OPEN, but narrower than it reads: every one of the four now has a
+      light variant, color.brand.peach included (#89684a, 4.61:1 on surface.1
+      light), and __tests__/roles.test.ts asserts all four clear 4.5:1. What is
+      unfixed is that each light value is DERIVED — the least-darkened
+      hue-preserving value that cleared the floor — so the gap is aesthetic,
+      not accessible. KNOWN_GAPS in scripts/check-token-contrast.ts is the live
+      list and holds only the two shadcn destructive pairs; this entry is prose
+      and goes stale, so trust that file over this one.
+    consequence: >-
+      Do not put brand colour on a light themed surface. State colour is now
+      usable there: semantic.{errorRed,warningAmber,matcha} against a light
+      surface, and their *OnTint variants for a label on a 10% tint of the same
+      colour, which is what a StatPill is. Chrome surfaces are unaffected.
+  - id: sidebar_primary_is_shadcn_blue
+    status: closed
+    detail: >-
+      --sidebar-primary was oklch(0.488 0.243 264.376), shadcn's default blue.
+      It is now mode-aware: brand peach in dark, oklch(0.205 0 0) in light. The
+      token's own $description records the change. Kept here as a closed entry
+      because this list was read as open work while the value had already moved.
+    consequence: None outstanding.
+
+ask_first_when:
+  - a_needed_primitive_or_pattern_does_not_exist
+  - a_token_value_would_change
+  - a_surface_role_assignment_is_unclear

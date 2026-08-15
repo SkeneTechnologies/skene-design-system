@@ -1,0 +1,17 @@
+Copyright (c) 2026 Skene Technologies Oy. All rights reserved.
+
+This repository is public to read. It is not open source, and no licence to use,
+copy, modify or distribute this software is granted.
+
+Why the distinction is spelled out rather than left to `UNLICENSED` in
+package.json: a public GitHub repository with no LICENSE file is routinely read
+as permission, and this one carries brand assets — the Skene symbol and wordmark
+under `assets/`, and the palette they belong to — where that assumption is
+expensive to unwind later. The marks are trademarks of Skene Technologies Oy and
+are published here so the company's own surfaces have one copy to share, not for
+use elsewhere.
+
+The reasoning in the documentation is a different matter, and is offered freely:
+read it, argue with it, take the ideas.
+
+For any other use, ask: teemu@skene.ai

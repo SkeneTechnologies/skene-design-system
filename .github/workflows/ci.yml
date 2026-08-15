@@ -1,0 +1,116 @@
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+
+      # tokens:check, tokens:contrast, tests, build.
+      - name: Verify
+        run: npm run verify
+
+      # dist/ and the generated CSS are committed, because git-dependency
+      # installs need them present at the tag and there is no `prepare` script
+      # to build on install. Committed generated output is only trustworthy if
+      # something proves it matches its source.
+      - name: Generated output is honest
+        run: |
+          npm run tokens
+          npm run build
+          git diff --exit-code -- dist styles/tokens.css src/tokens \
+            || { echo "::error::dist/ or generated CSS is stale. Run 'npm run build' and commit."; exit 1; }
+
+      # 20 of the 30 primitives are client components. A build step that drops
+      # the directive produces "You're importing a component that needs
+      # useState" in the consumer, far from the cause. This is why the build is
+      # tsc and not a bundler, so it is worth asserting rather than trusting.
+      - name: '"use client" survives the build'
+        run: |
+          lost=0
+          for src in src/ui/*.tsx; do
+            head -1 "$src" | grep -q '"use client"' || continue
+            out="dist/ui/$(basename "${src%.tsx}").js"
+            head -1 "$out" | grep -q '"use client"' || { echo "::error file=$out::lost \"use client\""; lost=1; }
+          done
+          head -1 dist/index.js | grep -q '"use client"' \
+            && { echo "::error::barrel is client-poisoned; Card/Badge/Table/Alert would stop being server-renderable"; lost=1; }
+          exit $lost
+
+  changeset:
+    # The point is not automation, it is the gate: state the bump type at
+    # authoring time. Skipping that discipline is how 145 tokens got hand-pasted
+    # between two repos and then silently diverged.
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: A changeset is required for source changes
+        run: |
+          base="origin/${{ github.base_ref }}"
+          git fetch --quiet origin "${{ github.base_ref }}"
+          changed=$(git diff --name-only "$base"...HEAD)
+          touches_source=$(echo "$changed" | grep -E '^(src/|styles/|design-tokens\.json)' || true)
+          has_changeset=$(echo "$changed" | grep -E '^\.changeset/.*\.md$' || true)
+          if [ -n "$touches_source" ] && [ -z "$has_changeset" ]; then
+            echo "::error::This PR changes src/, styles/ or design-tokens.json without a changeset."
+            echo "Run 'npx changeset' and state the bump type. Consumers read these tokens by name;"
+            echo "a rename or a removal is a major, and TypeScript cannot catch it for them."
+            exit 1
+          fi
+          echo "ok"
+
+  visual:
+    # Runs in the same container the baselines were generated in, so the
+    # compared bytes come from an identical font stack. Baselines are committed
+    # as *-linux.png; a stray macOS run writes *-darwin.png, which is gitignored
+    # rather than allowed to overwrite them.
+    runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.62.1-noble
+      options: --user root
+    env:
+      NODE_ENV: production
+      NEXT_TELEMETRY_DISABLED: '1'
+      CI: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      # --include=dev is not belt-and-braces. This job sets NODE_ENV=production
+      # for the whole job, because `next build` emits a hybrid bundle that
+      # crashes prerendering without it — and npm ci under NODE_ENV=production
+      # skips devDependencies, so `npm run build` died on `tsx: not found`.
+      # Scoping the env to the build step instead would work, but the Playwright
+      # run needs it too; asking for dev deps explicitly is the smaller change.
+      - run: npm ci --include=dev --no-audit --no-fund
+      - run: npm run build
+      - run: npm ci --include=dev --no-audit --no-fund
+        working-directory: docs-app
+      - run: npx playwright test
+        working-directory: docs-app
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: package-visual-report
+          path: docs-app/test-results/
+          retention-days: 14

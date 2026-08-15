@@ -1,0 +1,113 @@
+# Accessibility contract — @skene/design-system
+#
+# This file scoped itself to the Skene Cloud dashboard and named a
+# `tests/visual/a11y` suite. Neither survived the move into a shared package:
+# the contract covers every consumer, and no such suite exists here. What
+# actually enforces it is below, and it is the whole list.
+#
+# Enforced by:
+#   - npm run tokens:contrast  (scripts/check-token-contrast.ts — the live gate)
+#   - __tests__/roles.test.ts  (the 4.5:1 floor on the brand palette in light)
+
+version: "2.0.0"
+
+theming:
+  mode: class_based  # NOT prefers-color-scheme
+  # Which mode seeds the bare `:root` is a build flag, not a constant: the
+  # generator takes --base-mode, and THIS package ships styles/tokens.css built
+  # with --base-mode dark. A dashboard that wants light-default re-runs the
+  # generator. This entry said `light` unconditionally, which described the
+  # dashboard's build and not the CSS the package actually ships.
+  base_mode_shipped: dark
+  classes:
+    is_dark: Switches subtree to dark palette
+    is_light: Escapes back to light inside .dark
+
+contrast:
+  standard: WCAG 2.2
+  floors:
+    body_text: 4.5
+    large_text: 3.0
+
+prefer_tokens_over_hex:
+  - { use: text-foreground, not: "text-[#faf1e9] or text-white" }
+  - { use: bg-background, not: "bg-[#0a0a0a]" }
+  - { use: bg-card, not: "bg-[#212121]" }
+  - { use: text-muted-foreground, not: "text-[#737373]" }
+  - { use: border-border, not: "border-[#363636]" }
+  - { use: bg-primary, not: "bg-[#EDC29C]" }
+
+fixed_dark_surfaces:
+  rule: Overlays/modals always dark regardless of page theme may use explicit hex
+  examples:
+    - "bg-[rgba(6,6,6,0.85)]"
+    - "bg-[#141414] text-white"
+
+interactive:
+  # The package ships no cursor rule: grep styles/ and there is none. The
+  # @layer base rule this used to cite is the DASHBOARD's globals.css, so in
+  # any other consumer the pointer is the app's job, not the package's.
+  - Buttons and links get cursor pointer from an app-level @layer base rule, where the app has one
+  - Do not add cursor-pointer manually unless overriding disabled state
+  - Radix primitives provide focus rings; do not remove
+
+pairs:
+  # Body text on surfaces — 4.5:1 floor
+  - { fg: text.primary, bg: surface.0, size: body, context: foreground on page bg }
+  - { fg: text.primary, bg: surface.1, size: body, context: foreground on card bg }
+  - { fg: text.primary, bg: surface.2, size: body, context: foreground on raised bg }
+  - { fg: text.muted, bg: surface.0, size: body, context: muted on page bg }
+  - { fg: text.muted, bg: surface.1, size: body, context: muted on card bg }
+  - { fg: text.muted, bg: surface.2, size: body, context: muted on raised bg }
+  - { fg: brand.peach, bg: surface.0, size: body, context: peach link on page bg }
+  - { fg: brand.peach, bg: surface.1, size: body, context: peach link on card bg }
+  - { fg: brand.peach-text, bg: brand.peach, size: body, context: pill body on peach }
+  - { fg: semantic.matcha, bg: surface.0, size: body, context: matcha status on page bg }
+  - { fg: semantic.matcha, bg: surface.1, size: body, context: matcha status on card bg }
+  - { fg: semantic.warning-amber, bg: surface.0, size: body, context: amber warning on page bg }
+  - { fg: semantic.warning-amber, bg: surface.1, size: body, context: amber warning on card bg }
+  - { fg: semantic.error-red, bg: surface.0, size: body, context: error on page bg }
+  - { fg: semantic.error-red, bg: surface.1, size: body, context: error on card bg }
+  # Large text — 3:1 floor
+  - { fg: brand.peach, bg: surface.darker, size: large, context: peach hero text }
+
+# `|*` means excused against EVERY background, which is stronger than it looks
+# and is not free. brand.peachDeep is #f97316 and INVARIANT, while brand.peach
+# and brand.peachText beside it are mode-aware — so the name reads as a sibling
+# of a token that adapts, and it does not. On 2026-08-15 skene-site coloured
+# four inline links inside a cream card with it and shipped 2.51:1 against a 4.5
+# floor, at three viewports. Nothing could catch it: this entry excuses the
+# token everywhere, and no CI-runnable gate renders a page.
+#
+# The skip stays, because the token is legitimately a gradient endpoint and a
+# dark-ground accent and a blanket pair would fail those. What changes is that
+# the cost is written down here and in the token's own $description, instead of
+# living in the heads of the two people who debugged it.
+skip_pairs:
+  - brand.peach-deep|*
+
+# This block restated peach 1.53:1, matcha 1.16:1, amber 1.83:1, error-red
+# 3.31:1 as if they were what renders. They are the UNFIXED values, already
+# disowned by machine/rules.yaml known_gaps as two releases out of date, and
+# __tests__/roles.test.ts now asserts the opposite. It also claimed
+# KNOWN_GAPS in scripts/check-token-contrast.ts enumerates these four; that set
+# holds two shadcn destructive pairs and none of them.
+known_gaps:
+  light_mode_brand_palette:
+    status: narrowed  # accessible, not yet designed
+    affects: [brand.peach, semantic.matcha, semantic.warningAmber, semantic.errorRed]
+    measured: >-
+      All four now carry a light variant and clear the 4.5:1 floor against
+      surface.1 light — peach 4.61:1 (#89684a), matcha 4.50:1, warningAmber
+      4.60:1, errorRed 4.56:1. Asserted by __tests__/roles.test.ts, so a
+      replacement that measures worse fails the build.
+    rule: >-
+      What remains open is aesthetic, not accessible: every light value is
+      DERIVED — the least-darkened hue-preserving value clearing the floor,
+      recorded in each token's $description — and no designer picked one. State
+      colour is usable on a light themed surface today, with the *OnTint
+      variants for a label on a 10% tint of the same colour. Chrome surfaces are
+      unaffected.
+    canon: >-
+      KNOWN_GAPS in scripts/check-token-contrast.ts is the live list; this entry
+      is prose and goes stale. Trust that file over this one.

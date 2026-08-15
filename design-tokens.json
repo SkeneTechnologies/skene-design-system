@@ -1,0 +1,979 @@
+{
+  "version": "2.7.0",
+  "lastUpdated": "2026-08-12",
+  "color": {
+    "brand": {
+      "peach": {
+        "$modes": {
+          "light": "#89684a",
+          "dark": "#fec089"
+        },
+        "$description": "Light value is DERIVED, not designed: the least-darkened hue-preserving value clearing 4.61:1 on surface.1 light. Replace with a designed colour that clears 4.5:1."
+      },
+      "peachText": {
+        "$modes": {
+          "light": "#faf1e9",
+          "dark": "#3b2402"
+        },
+        "$description": "Text ON a peach fill. Inverts with brand.peach: cream on the darker light-mode peach, near-black on the lighter dark-mode peach."
+      },
+      "bronze": {
+        "$value": "#8c6b47"
+      },
+      "gold": {
+        "$value": "#e8c260"
+      },
+      "light": {
+        "$value": "#faf1e9"
+      },
+      "peachDeep": {
+        "$value": "#f97316",
+        "$description": "INVARIANT, unlike brand.peach and brand.peachText beside it — the same #f97316 in both modes. The name reads as a sibling of brand.peach and it is not one, which is a trap: used as text on a cream ground it measures 2.51:1 against a 4.5 floor, and skene-site shipped exactly that on 2026-08-15 across four inline links at three viewports. This token is a gradient endpoint and a dark-ground accent. For text that must survive a light ancestor use brand.peach, which resolves #89684a inside `light`. Note the contrast gate cannot catch the misuse: `brand.peach-deep|*` is in skip_pairs, so it is excused against EVERY background."
+      }
+    },
+    "accent": {
+      "violet": {
+        "$value": "#c9a2dd",
+        "$description": "Feature-row icon tint. Promoted from the Stand demo capture; nothing in the package was within ΔE 52 (nearest was neon.engagement). Mode-invariant on purpose — drawn against dark surfaces only, like the rest of the brand palette."
+      },
+      "blue": {
+        "$value": "#9bbbd5",
+        "$description": "Feature-row icon tint. Promoted from the Stand demo capture; nearest existing was neon.engineering at ΔE 24.3, far too saturated to substitute. Mode-invariant — see accent.violet."
+      }
+    },
+    "chrome": {
+      "surface": {
+        "0": {
+          "$value": "#0a0a0a"
+        },
+        "1": {
+          "$value": "#171717"
+        },
+        "2": {
+          "$value": "#212121"
+        },
+        "3": {
+          "$value": "#4a4a4a"
+        },
+        "midGray": {
+          "$value": "#2a2a2a"
+        },
+        "darker": {
+          "$value": "#060606"
+        },
+        "deep": {
+          "$value": "#1a1a1a"
+        },
+        "deep2": {
+          "$value": "#0b0b0b"
+        },
+        "elevated": {
+          "$value": "#2c2c2c"
+        },
+        "border": {
+          "$value": "#363636"
+        }
+      },
+      "line": {
+        "subtle": {
+          "$value": "rgba(255, 255, 255, 0.12)",
+          "$description": "Default hairline between sections and on cards. Alpha rather than an opaque token because sections stack on four different grounds (surface.1, deep, deep2, surface.2) and an opaque border is correct on exactly one of them."
+        },
+        "strong": {
+          "$value": "rgba(255, 255, 255, 0.2)",
+          "$description": "Emphasised hairline — active/hovered card edges. See line.subtle for why alpha."
+        },
+        "onLight": {
+          "$value": "rgba(20, 20, 20, 0.14)",
+          "$description": "Hairline for the inverted case: dark rule on a cream/peach fill."
+        }
+      },
+      "text": {
+        "primary": {
+          "$value": "#faf1e9"
+        },
+        "muted": {
+          "$value": "#8c8c8c"
+        },
+        "mutedStrong": {
+          "$value": "rgba(255, 255, 255, 0.6)"
+        },
+        "mutedWeak": {
+          "$value": "rgba(255, 255, 255, 0.5)"
+        },
+        "mutedWarm": {
+          "$value": "rgba(250, 241, 233, 0.68)",
+          "$description": "Muted body copy that fades the brand cream (chrome.text.primary) rather than pure white. Preferred over text.muted/mutedStrong on marketing surfaces: the brand foreground is #faf1e9, so fading toward white drifts away from the brand as the text gets quieter."
+        },
+        "mutedWarmStrong": {
+          "$value": "rgba(250, 241, 233, 0.82)",
+          "$description": "The louder rung of mutedWarm — lede paragraphs and secondary headings."
+        },
+        "gray": {
+          "$value": "#a1a1a1"
+        },
+        "grayLight": {
+          "$value": "#c8cdd3"
+        },
+        "goldSoft": {
+          "$value": "#d4b050"
+        }
+      }
+    },
+    "surface": {
+      "0": {
+        "$modes": {
+          "light": "#fafafa",
+          "dark": "#0a0a0a"
+        }
+      },
+      "1": {
+        "$modes": {
+          "light": "#f4f4f5",
+          "dark": "#171717"
+        }
+      },
+      "2": {
+        "$modes": {
+          "light": "#ececef",
+          "dark": "#212121"
+        }
+      },
+      "3": {
+        "$modes": {
+          "light": "#d4d4d8",
+          "dark": "#4a4a4a"
+        }
+      },
+      "midGray": {
+        "$modes": {
+          "light": "#e7e7ea",
+          "dark": "#2a2a2a"
+        }
+      },
+      "darker": {
+        "$modes": {
+          "light": "#060606",
+          "dark": "#060606"
+        }
+      },
+      "deep": {
+        "$modes": {
+          "light": "#f0f0f0",
+          "dark": "#1a1a1a"
+        }
+      },
+      "deep2": {
+        "$modes": {
+          "light": "#e9e9e9",
+          "dark": "#0b0b0b"
+        }
+      },
+      "elevated": {
+        "$modes": {
+          "light": "#e4e4e7",
+          "dark": "#2c2c2c"
+        }
+      },
+      "border": {
+        "$modes": {
+          "light": "#e4e4e7",
+          "dark": "#363636"
+        }
+      }
+    },
+    "text": {
+      "primary": {
+        "$modes": {
+          "light": "#0a0a0a",
+          "dark": "#faf1e9"
+        }
+      },
+      "muted": {
+        "$modes": {
+          "light": "#525252",
+          "dark": "#8c8c8c"
+        }
+      },
+      "mutedStrong": {
+        "$modes": {
+          "light": "rgba(0, 0, 0, 0.7)",
+          "dark": "rgba(255, 255, 255, 0.6)"
+        }
+      },
+      "mutedWeak": {
+        "$modes": {
+          "light": "rgba(0, 0, 0, 0.55)",
+          "dark": "rgba(255, 255, 255, 0.5)"
+        }
+      },
+      "gray": {
+        "$modes": {
+          "light": "#4b5563",
+          "dark": "#a1a1a1"
+        }
+      },
+      "grayLight": {
+        "$modes": {
+          "light": "#6b7280",
+          "dark": "#c8cdd3"
+        }
+      },
+      "goldSoft": {
+        "$value": "#d4b050"
+      }
+    },
+    "semantic": {
+      "matcha": {
+        "$modes": {
+          "light": "#677552",
+          "dark": "#d7f4ab"
+        },
+        "$description": "Light value is DERIVED, not designed: the least-darkened hue-preserving value clearing 4.5:1 on surface.1 light. Replace with a designed colour that clears 4.5:1."
+      },
+      "matchaDeep": {
+        "$value": "#1a3300"
+      },
+      "warningAmber": {
+        "$modes": {
+          "light": "#886a2f",
+          "dark": "#e6b450"
+        },
+        "$description": "Light value is DERIVED, not designed: the least-darkened hue-preserving value clearing 4.6:1 on surface.1 light. Replace with a designed colour that clears 4.5:1."
+      },
+      "errorRed": {
+        "$modes": {
+          "light": "#c44239",
+          "dark": "#f25246"
+        },
+        "$description": "Light value is DERIVED, not designed: the least-darkened hue-preserving value clearing 4.56:1 on surface.1 light. Replace with a designed colour that clears 4.5:1."
+      },
+      "destructive": {
+        "$value": "var(--destructive)"
+      },
+      "errorRedOnTint": {
+        "$modes": {
+          "light": "#b33c34",
+          "dark": "#f25246"
+        },
+        "$description": "Text on a 10% tint of semantic.errorRed, which is what a StatPill label sits on. DERIVED, not designed: the least-darkened hue-preserving value clearing 4.6:1 on that ground, measured off the rendered pill rather than off the surface ladder. It exists because the light variant of semantic.errorRed was derived against surface.1 and a tinted pill is a different, warmer ground: the label landed at 3.98 and 4.36 against a 4.5:1 floor. Dark is unchanged from the base token; the dark tint is dark and the base value already clears there. Replace with a designed colour. Re-derived in 0.5.2 against EVERY ground the label is observed on, not one sampled ground. The 0.5.1 values were derived against a 10%% tint; StatPill's `ok` uses a 12%% fill and the artifacts sit on more than one card colour, so matcha landed at 4.24 and amber at 4.21 on grounds the derivation had never seen."
+      },
+      "warningAmberOnTint": {
+        "$modes": {
+          "light": "#7e622b",
+          "dark": "#e6b450"
+        },
+        "$description": "Text on a 10% tint of semantic.warningAmber, which is what a StatPill label sits on. DERIVED, not designed: the least-darkened hue-preserving value clearing 4.6:1 on that ground, measured off the rendered pill rather than off the surface ladder. It exists because the light variant of semantic.warningAmber was derived against surface.1 and a tinted pill is a different, warmer ground: the label landed at 4.45 against a 4.5:1 floor. Dark is unchanged from the base token; the dark tint is dark and the base value already clears there. Replace with a designed colour. Re-derived in 0.5.2 against EVERY ground the label is observed on, not one sampled ground. The 0.5.1 values were derived against a 10%% tint; StatPill's `ok` uses a 12%% fill and the artifacts sit on more than one card colour, so matcha landed at 4.24 and amber at 4.21 on grounds the derivation had never seen."
+      },
+      "matchaOnTint": {
+        "$modes": {
+          "light": "#5d694a",
+          "dark": "#d7f4ab"
+        },
+        "$description": "Text on a 10% tint of semantic.matcha, which is what a StatPill label sits on. DERIVED, not designed: the least-darkened hue-preserving value clearing 4.6:1 on that ground, measured off the rendered pill rather than off the surface ladder. It exists because the light variant of semantic.matcha was derived against surface.1 and a tinted pill is a different, warmer ground: the label landed at 4.26 against a 4.5:1 floor. Dark is unchanged from the base token; the dark tint is dark and the base value already clears there. Replace with a designed colour. Re-derived in 0.5.2 against EVERY ground the label is observed on, not one sampled ground. The 0.5.1 values were derived against a 10%% tint; StatPill's `ok` uses a 12%% fill and the artifacts sit on more than one card colour, so matcha landed at 4.24 and amber at 4.21 on grounds the derivation had never seen."
+      }
+    },
+    "neon": {
+      "engineering": {
+        "$value": "#80eaff"
+      },
+      "marketing": {
+        "$value": "#ff007f"
+      },
+      "sales": {
+        "$value": "#ff3131"
+      },
+      "success": {
+        "$value": "#39ff14"
+      },
+      "product": {
+        "$value": "#ffaa00"
+      },
+      "engagement": {
+        "$value": "#8b5cf6"
+      }
+    },
+    "terminalChrome": {
+      "trafficRed": {
+        "$value": "#ff5f56"
+      },
+      "trafficYellow": {
+        "$value": "#ffbd2e"
+      },
+      "trafficGreen": {
+        "$value": "#27c93f"
+      },
+      "trafficGreenAlt": {
+        "$value": "#58d845"
+      },
+      "terminalRed": {
+        "$value": "#ff5555"
+      },
+      "githubDarkBg": {
+        "$value": "#0d1117"
+      },
+      "githubDarkSurface": {
+        "$value": "#161b22"
+      },
+      "githubBorder": {
+        "$value": "#30363d"
+      },
+      "githubText": {
+        "$value": "#c9d1d9"
+      },
+      "vscodeTeal": {
+        "$value": "#4ec9b0"
+      },
+      "tailwindEmerald": {
+        "$value": "#22c55e"
+      },
+      "warmTan": {
+        "$value": "#ac8b5d"
+      },
+      "githubLightBg": {
+        "$value": "#f6f8fa",
+        "$description": "Primer canvas.subtle. The PR-comment mockups on the homepage render GitHub light, and the package only had Primer dark."
+      },
+      "githubLightSurface": {
+        "$value": "#ffffff",
+        "$description": "Primer canvas.default — the comment body itself."
+      },
+      "githubLightBorder": {
+        "$value": "#d0d7de",
+        "$description": "Primer border.default."
+      },
+      "githubLightText": {
+        "$value": "#1f2328",
+        "$description": "Primer fg.default."
+      },
+      "githubLightMuted": {
+        "$value": "#656d76",
+        "$description": "Primer fg.muted — timestamps, \"commented 2 days ago\"."
+      },
+      "githubLightSubtle": {
+        "$value": "#59636e",
+        "$description": "Primer fg.subtle."
+      },
+      "githubSuccessFg": {
+        "$value": "#1a7f37",
+        "$description": "Primer success.fg — the green check on a passing run."
+      },
+      "githubSuccessBg": {
+        "$value": "#dafbe1",
+        "$description": "Primer success.subtle."
+      },
+      "githubDangerFg": {
+        "$value": "#cf222e",
+        "$description": "Primer danger.fg — a failing check."
+      },
+      "githubDangerBg": {
+        "$value": "#ffcecb",
+        "$description": "Primer danger.subtle."
+      },
+      "githubDangerEmphasis": {
+        "$value": "#82071e",
+        "$description": "Primer danger.emphasis."
+      },
+      "supabaseGreen": {
+        "$value": "#3ecf8e",
+        "$description": "Supabase brand green. Used only inside Supabase panel mockups; it is their identity, not ours."
+      }
+    },
+    "legacy": {
+      "peach": {
+        "$value": "#edc29c"
+      },
+      "peachHover": {
+        "$value": "#ebdccf"
+      },
+      "primaryForeground": {
+        "$value": "#060606"
+      }
+    },
+    "terminal": {
+      "bg": {
+        "$value": "#1e1e1e"
+      },
+      "bar": {
+        "$value": "#2d2d30"
+      },
+      "rail": {
+        "$value": "#252526"
+      },
+      "border": {
+        "$value": "#3e3e3e"
+      },
+      "text": {
+        "$value": "#cccccc"
+      },
+      "muted": {
+        "$value": "#858585"
+      }
+    }
+  },
+  "font": {
+    "family": {
+      "sans": {
+        "$value": "Geist, ui-sans-serif, system-ui"
+      },
+      "mono": {
+        "$value": "Geist Mono, ui-monospace, monospace"
+      }
+    },
+    "size": {
+      "sectionCaption": {
+        "$value": "9px"
+      },
+      "pill": {
+        "$value": "11px"
+      },
+      "bodySm": {
+        "$value": "12px"
+      },
+      "body": {
+        "$value": "13px"
+      },
+      "label": {
+        "$value": "14px"
+      },
+      "ui": {
+        "$value": "14px"
+      },
+      "lede": {
+        "$value": "15px"
+      },
+      "modalTitle": {
+        "$value": "16px"
+      },
+      "stageHeader": {
+        "$value": "18px"
+      },
+      "cardTitle": {
+        "$value": "20px"
+      },
+      "h2": {
+        "$value": "24px"
+      },
+      "subhero": {
+        "$value": "26px"
+      },
+      "displaySm": {
+        "$value": "28px"
+      },
+      "h1": {
+        "$value": "30px"
+      },
+      "display": {
+        "$value": "34px"
+      },
+      "displayMd": {
+        "$value": "44px"
+      },
+      "displayLg": {
+        "$value": "52px"
+      },
+      "marketingXl": {
+        "$value": "32px"
+      },
+      "marketingXxl": {
+        "$value": "48px"
+      },
+      "marketingHero": {
+        "$value": "67px"
+      }
+    },
+    "weight": {
+      "regular": {
+        "$value": "400"
+      },
+      "medium": {
+        "$value": "500"
+      },
+      "semibold": {
+        "$value": "600"
+      },
+      "bold": {
+        "$value": "700"
+      }
+    },
+    "tracking": {
+      "sectionCaption": {
+        "$value": "0.9px"
+      },
+      "eyebrow": {
+        "$value": "0.16em"
+      },
+      "displayTight": {
+        "$value": "-0.02em"
+      },
+      "displayTighter": {
+        "$value": "-0.024em"
+      },
+      "displayTightest": {
+        "$value": "-0.035em"
+      }
+    },
+    "lineHeight": {
+      "tight": {
+        "$value": "1.15"
+      },
+      "snug": {
+        "$value": "1.25"
+      },
+      "normal": {
+        "$value": "1.5"
+      },
+      "relaxed": {
+        "$value": "1.625"
+      }
+    }
+  },
+  "spacing": {
+    "1": {
+      "$value": "4px"
+    },
+    "2": {
+      "$value": "8px"
+    },
+    "3": {
+      "$value": "12px"
+    },
+    "4": {
+      "$value": "16px"
+    },
+    "6": {
+      "$value": "24px"
+    },
+    "8": {
+      "$value": "32px"
+    },
+    "12": {
+      "$value": "48px"
+    },
+    "16": {
+      "$value": "64px"
+    },
+    "24": {
+      "$value": "96px"
+    },
+    "32": {
+      "$value": "128px"
+    },
+    "0.5": {
+      "$value": "2px"
+    }
+  },
+  "radius": {
+    "none": {
+      "$value": "0px"
+    },
+    "input": {
+      "$value": "6px"
+    },
+    "nav": {
+      "$value": "5.2px"
+    },
+    "tight": {
+      "$value": "7.2px"
+    },
+    "panel": {
+      "$value": "8px"
+    },
+    "lg": {
+      "$value": "10px"
+    },
+    "xl": {
+      "$value": "12px"
+    },
+    "2xl": {
+      "$value": "16px",
+      "$description": "Marketing card radius. The ladder below this was drawn for dense dashboard chrome and stops at 12px; marketing surfaces are visibly rounder and were forced to hardcode 16px."
+    },
+    "3xl": {
+      "$value": "24px",
+      "$description": "Large marketing panel radius — hero cards, plan tiles."
+    },
+    "pill": {
+      "$value": "9999px"
+    },
+    "full": {
+      "$value": "9999px"
+    }
+  },
+  "shadow": {
+    "panel": {
+      "$value": "0 0 0 1px rgba(10,10,10,0.1)"
+    },
+    "popover": {
+      "$value": "0 10px 15px -3px rgba(0,0,0,0.4)"
+    },
+    "modal": {
+      "$value": "0 25px 50px -12px rgba(0,0,0,0.5)"
+    },
+    "terminal": {
+      "$value": "0 32px 64px -16px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(255,255,255,0.02)"
+    }
+  },
+  "duration": {
+    "instant": {
+      "$value": "100ms"
+    },
+    "short": {
+      "$value": "200ms"
+    },
+    "medium": {
+      "$value": "300ms"
+    },
+    "long": {
+      "$value": "1500ms"
+    }
+  },
+  "easing": {
+    "out": {
+      "$value": "ease-out"
+    },
+    "in": {
+      "$value": "ease-in"
+    },
+    "inOut": {
+      "$value": "ease-in-out"
+    }
+  },
+  "breakpoint": {
+    "sm": {
+      "$value": "640px"
+    },
+    "md": {
+      "$value": "768px"
+    },
+    "lg": {
+      "$value": "1024px"
+    },
+    "xl": {
+      "$value": "1280px"
+    },
+    "2xl": {
+      "$value": "1440px"
+    }
+  },
+  "layout": {
+    "sidebarWidth": {
+      "$value": "158px"
+    },
+    "dashboard": {
+      "pageGutter": {
+        "sm": {
+          "$value": "16px"
+        },
+        "md": {
+          "$value": "24px"
+        },
+        "lg": {
+          "$value": "32px"
+        }
+      },
+      "panelPadding": {
+        "$value": "16px"
+      },
+      "tableRowHeight": {
+        "$value": "36px"
+      },
+      "tableHeaderHeight": {
+        "$value": "32px"
+      },
+      "tabStripHeight": {
+        "$value": "32px"
+      },
+      "breadcrumbHeight": {
+        "$value": "28px"
+      },
+      "sectionGap": {
+        "$value": "24px"
+      },
+      "heroPadY": {
+        "$value": "24px"
+      }
+    },
+    "maxContent": {
+      "prose": {
+        "$value": "768px"
+      },
+      "default": {
+        "$value": "1280px"
+      },
+      "wide": {
+        "$value": "1408px"
+      }
+    }
+  },
+  "$conventions": {
+    "image": {
+      "heroPoster": {
+        "$value": "AVIF preferred / WebP fallback / JPEG fallback"
+      },
+      "heroVideo": {
+        "$value": "preload=metadata + poster + autoplay loop muted playsInline"
+      },
+      "rasterDefault": {
+        "$value": "next/image with explicit width+height, lazy by default, `priority` only on the hero image"
+      },
+      "icon": {
+        "$value": "lucide-react via experimental.optimizePackageImports"
+      }
+    },
+    "sectionPaddingY": {
+      "sm": {
+        "$value": "48px / 64px (md+)"
+      },
+      "md": {
+        "$value": "64px / 96px"
+      },
+      "lg": {
+        "$value": "96px / 128px"
+      },
+      "xl": {
+        "$value": "128px / 160px"
+      }
+    }
+  },
+  "$antiPatterns": {
+    "tailwindGreen400": {
+      "$value": "#4ade80"
+    },
+    "peachTypo": {
+      "$value": "#fac089"
+    },
+    "tailwindZinc400": {
+      "$value": "#a1a1aa"
+    },
+    "tailwindViolet500": {
+      "$value": "#8b5cf6"
+    },
+    "tailwindEmerald500": {
+      "$value": "#22c55e"
+    }
+  },
+  "shadcn": {
+    "$cssPrefix": "",
+    "background": {
+      "$modes": {
+        "light": "#f4f4f4",
+        "dark": "oklch(0.145 0 0)"
+      },
+      "$description": "Light is the dashboard's #f4f4f4, not shadcn's pure white. The dashboard is the light-default surface and ships this in production; marketing was oklch(1 0 0) and repaints."
+    },
+    "foreground": {
+      "$modes": {
+        "light": "oklch(0.145 0 0)",
+        "dark": "oklch(0.985 0 0)"
+      }
+    },
+    "card": {
+      "$modes": {
+        "light": "oklch(1 0 0)",
+        "dark": "oklch(0.205 0 0)"
+      }
+    },
+    "cardForeground": {
+      "$modes": {
+        "light": "oklch(0.145 0 0)",
+        "dark": "oklch(0.985 0 0)"
+      }
+    },
+    "popover": {
+      "$modes": {
+        "light": "oklch(1 0 0)",
+        "dark": "oklch(0.205 0 0)"
+      }
+    },
+    "popoverForeground": {
+      "$modes": {
+        "light": "oklch(0.145 0 0)",
+        "dark": "oklch(0.985 0 0)"
+      }
+    },
+    "primary": {
+      "$value": "#fec089"
+    },
+    "primaryForeground": {
+      "$value": "#060606"
+    },
+    "primaryHover": {
+      "$value": "#ebdccf",
+      "$description": "The dashboard's hover peach. Marketing used #fdd4aa and repaints."
+    },
+    "primaryBronze": {
+      "$value": "#8c6b47"
+    },
+    "primaryGold": {
+      "$value": "#e8c260"
+    },
+    "primaryRgb": {
+      "$value": "254, 192, 137"
+    },
+    "secondary": {
+      "$modes": {
+        "light": "oklch(0.97 0 0)",
+        "dark": "oklch(0.269 0 0)"
+      }
+    },
+    "secondaryForeground": {
+      "$modes": {
+        "light": "oklch(0.205 0 0)",
+        "dark": "oklch(0.985 0 0)"
+      },
+      "$description": "The neutral on-secondary label: shadcn's own semantics, and the dashboard's. Marketing used this name for a brand-peach label instead, which is a different role, not a different value — see secondaryForegroundAccent."
+    },
+    "secondaryForegroundAccent": {
+      "$modes": {
+        "light": "#89684a",
+        "dark": "#fec089"
+      },
+      "$description": "A brand-peach label on the secondary chip. Marketing's meaning for --secondary-foreground, given its own name so both roles survive: the dashboard puts a neutral near-black label on a light secondary button, marketing puts a peach one on a dark chip. Same name, two roles — the same trap as chrome.* vs surface.*. Values track color.brand.peach per mode; 9.45:1 dark, 4.65:1 light."
+    },
+    "muted": {
+      "$modes": {
+        "light": "oklch(0.97 0 0)",
+        "dark": "oklch(0.269 0 0)"
+      }
+    },
+    "mutedForeground": {
+      "$modes": {
+        "light": "oklch(0.538 0 0)",
+        "dark": "oklch(0.708 0 0)"
+      },
+      "$description": "Light darkened from shadcn's stock oklch(0.556 0 0), which is 4.35:1 on muted and fails AA. Darkened again in 0.5.2, from oklch(0.546 0 0) to oklch(0.538 0 0): 0.546 was the least-darkened value clearing 4.5:1 ON MUTED, and it was never checked against `card`, where it measures 4.49:1 and fails. That produced 42 contrast failures across the marketing site, in every component putting quiet text on a card — a breadcrumb, a table caption, a figure label. 0.538 clears 4.64:1 on card and more on muted, which is lighter. Same mistake the semantic *OnTint tokens made in 0.5.1: derived against one ground, shipped onto several."
+    },
+    "accent": {
+      "$modes": {
+        "light": "oklch(0.97 0 0)",
+        "dark": "oklch(0.269 0 0)"
+      }
+    },
+    "accentForeground": {
+      "$modes": {
+        "light": "oklch(0.205 0 0)",
+        "dark": "oklch(0.985 0 0)"
+      }
+    },
+    "destructive": {
+      "$value": "oklch(0.656 0.198 28.1)",
+      "$description": "Invariant, matching the dashboard, and exactly color.semantic.errorRed (#f25246) — the two were the same colour under two names. Marketing mode-split it per upstream shadcn and repaints. Note this LOWERS light-mode contrast against a white label from 4.77:1 to 3.46:1; both modes are now KNOWN_GAPS under D5, whose fix is a single design call on the fill instead of two unrelated reds."
+    },
+    "destructiveForeground": {
+      "$value": "#ffffff",
+      "$description": "White, invariant. 4.77:1 on the light destructive; 2.89:1 on the dark one, which is a KNOWN_GAP in the contrast gate. The fix is to darken --destructive in dark, not this: shadcn's dark destructive is a light red picked to be legible as *text*, and both Button implementations then paint it as a fill via `bg-destructive text-destructive-foreground`. Darkening the label instead was tried and made the label invisible in the marketing gallery. Changing the fill is a visible design call across both apps."
+    },
+    "border": {
+      "$modes": {
+        "light": "oklch(0.922 0 0)",
+        "dark": "oklch(1 0 0 / 10%)"
+      }
+    },
+    "input": {
+      "$modes": {
+        "light": "oklch(0.922 0 0)",
+        "dark": "oklch(1 0 0 / 15%)"
+      }
+    },
+    "ring": {
+      "$modes": {
+        "light": "oklch(0.708 0 0)",
+        "dark": "oklch(0.556 0 0)"
+      }
+    },
+    "chart1": {
+      "$modes": {
+        "light": "oklch(0.646 0.222 41.116)",
+        "dark": "oklch(0.488 0.243 264.376)"
+      }
+    },
+    "chart2": {
+      "$modes": {
+        "light": "oklch(0.6 0.118 184.704)",
+        "dark": "oklch(0.696 0.17 162.48)"
+      }
+    },
+    "chart3": {
+      "$modes": {
+        "light": "oklch(0.398 0.07 227.392)",
+        "dark": "oklch(0.769 0.188 70.08)"
+      }
+    },
+    "chart4": {
+      "$modes": {
+        "light": "oklch(0.828 0.189 84.429)",
+        "dark": "oklch(0.627 0.265 303.9)"
+      }
+    },
+    "chart5": {
+      "$modes": {
+        "light": "oklch(0.769 0.188 70.08)",
+        "dark": "oklch(0.645 0.246 16.439)"
+      }
+    },
+    "sidebar": {
+      "$modes": {
+        "light": "oklch(0.985 0 0)",
+        "dark": "oklch(0.205 0 0)"
+      }
+    },
+    "sidebarForeground": {
+      "$modes": {
+        "light": "oklch(0.145 0 0)",
+        "dark": "oklch(0.985 0 0)"
+      }
+    },
+    "sidebarAccent": {
+      "$modes": {
+        "light": "oklch(0.97 0 0)",
+        "dark": "oklch(0.269 0 0)"
+      }
+    },
+    "sidebarAccentForeground": {
+      "$modes": {
+        "light": "oklch(0.205 0 0)",
+        "dark": "oklch(0.985 0 0)"
+      }
+    },
+    "sidebarBorder": {
+      "$modes": {
+        "light": "oklch(0.922 0 0)",
+        "dark": "oklch(1 0 0 / 10%)"
+      }
+    },
+    "sidebarRing": {
+      "$modes": {
+        "light": "oklch(0.708 0 0)",
+        "dark": "oklch(0.556 0 0)"
+      }
+    },
+    "sidebarPrimary": {
+      "$modes": {
+        "light": "oklch(0.205 0 0)",
+        "dark": "#fec089"
+      },
+      "$description": "Was oklch(0.488 0.243 264.376), shadcn's default blue. Now brand peach in dark."
+    },
+    "sidebarPrimaryForeground": {
+      "$modes": {
+        "light": "oklch(0.985 0 0)",
+        "dark": "#060606"
+      },
+      "$description": "Inverts with sidebarPrimary. Light keeps shadcn's near-white on the near-black sidebarPrimary; dark needs near-black because sidebarPrimary is now brand peach, and the inherited near-white sat on it at 1.55:1."
+    },
+    "switchThumb": {
+      "$value": "oklch(1 0 0)"
+    },
+    "tooltipBorder": {
+      "$modes": {
+        "light": "#1f2937",
+        "dark": "oklch(1 0 0 / 0.3)"
+      }
+    },
+    "warning": {
+      "$value": "#edc29c",
+      "$description": "Legacy peach, matching the dashboard. Marketing had brand peach #fec089 here, which collapsed the brand/legacy distinction the token file has always drawn."
+    }
+  }
+}

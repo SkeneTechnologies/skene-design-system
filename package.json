@@ -1,0 +1,138 @@
+{
+  "name": "@skene/design-system",
+  "version": "0.9.10",
+  "description": "Skene design system: tokens, Tailwind v4 theme, components, and the machine-readable contracts an agent reads before writing UI.",
+  "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SkeneTechnologies/skene-design-system.git"
+  },
+  "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "files": [
+    "dist",
+    "src",
+    "styles",
+    "machine",
+    "docs",
+    "design-tokens.json",
+    "README.md",
+    "CHANGELOG.md",
+    "assets",
+    "scripts",
+    "__tests__"
+  ],
+  "exports": {
+    "./tokens": {
+      "types": "./dist/tokens/index.d.ts",
+      "default": "./dist/tokens/index.js"
+    },
+    "./tokens.json": "./design-tokens.json",
+    "./asset-urls": {
+      "types": "./dist/asset-urls.d.ts",
+      "default": "./dist/asset-urls.js"
+    },
+    "./styles.css": "./styles/index.css",
+    "./tokens.css": "./styles/tokens.css",
+    "./machine/*": "./machine/*",
+    "./docs/*": "./docs/*",
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./ui/*": {
+      "types": "./dist/ui/*.d.ts",
+      "default": "./dist/ui/*.js"
+    },
+    "./utils": {
+      "types": "./dist/lib/utils.d.ts",
+      "default": "./dist/lib/utils.js"
+    },
+    "./effects.css": "./styles/effects.css",
+    "./patterns/*": {
+      "types": "./dist/patterns/*.d.ts",
+      "default": "./dist/patterns/*.js"
+    },
+    "./sections/*": {
+      "types": "./dist/sections/*.d.ts",
+      "default": "./dist/sections/*.js"
+    },
+    "./assets/*": "./assets/*"
+  },
+  "scripts": {
+    "tokens": "tsx scripts/generate-css-vars.mts --target styles/tokens.css --base-mode dark && tsx scripts/generate-tokens-ts.mts && node scripts/generate-token-docs.mjs",
+    "tokens:check": "tsx scripts/generate-css-vars.mts --target styles/tokens.css --base-mode dark --check && node scripts/generate-token-docs.mjs --check",
+    "tokens:contrast": "tsx scripts/check-token-contrast.ts",
+    "inventory": "node scripts/build-inventory.mjs",
+    "context": "node scripts/build-context.mjs",
+    "context:check": "node scripts/build-context.mjs --check",
+    "build": "npm run tokens && npm run inventory && npm run context && tsc -p tsconfig.build.json",
+    "test": "vitest run",
+    "verify": "npm run tokens:check && npm run tokens:contrast && npm run context:check && npm test && npm run build",
+    "visual": "VISUAL_MODE=verify bash scripts/visual.sh",
+    "visual:update": "bash scripts/visual.sh"
+  },
+  "peerDependencies": {
+    "next-themes": ">=0.4.0",
+    "react": ">=19.0.0",
+    "react-dom": ">=19.0.0",
+    "tailwindcss": ">=4.1.0"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.31.1",
+    "@tailwindcss/cli": "^4.3.3",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "js-yaml": "^4.1.0",
+    "semver": "^7.6.0",
+    "tailwindcss": "^4.3.3",
+    "tsx": "^4.19.2",
+    "typescript": "^5",
+    "vitest": "^4.1.3"
+  },
+  "publishConfig": {
+    "access": "restricted"
+  },
+  "dependencies": {
+    "@radix-ui/react-accordion": "^1.2.12",
+    "@radix-ui/react-alert-dialog": "^1.1.15",
+    "@radix-ui/react-checkbox": "^1.3.3",
+    "@radix-ui/react-collapsible": "^1.1.12",
+    "@radix-ui/react-dialog": "^1.1.15",
+    "@radix-ui/react-dropdown-menu": "^2.1.16",
+    "@radix-ui/react-hover-card": "^1.1.15",
+    "@radix-ui/react-label": "^2.1.8",
+    "@radix-ui/react-navigation-menu": "^1.2.14",
+    "@radix-ui/react-popover": "^1.1.15",
+    "@radix-ui/react-progress": "^1.1.8",
+    "@radix-ui/react-select": "^2.2.6",
+    "@radix-ui/react-separator": "^1.1.8",
+    "@radix-ui/react-slider": "^1.3.6",
+    "@radix-ui/react-slot": "^1.2.4",
+    "@radix-ui/react-switch": "^1.2.6",
+    "@radix-ui/react-tabs": "^1.1.13",
+    "@radix-ui/react-tooltip": "^1.2.8",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "cmdk": "^1.1.1",
+    "lucide-react": "^0.545.0",
+    "sonner": "^2.0.7",
+    "tailwind-merge": "^3.3.1",
+    "tailwindcss-animate": "^1.0.7"
+  },
+  "peerDependenciesMeta": {
+    "next-themes": {
+      "optional": true
+    }
+  },
+  "overrides": {
+    "react": "$react",
+    "react-dom": "$react-dom"
+  }
+}

@@ -1,0 +1,128 @@
+# @skene/design-system — layout contracts
+#
+# The T-code templates below are dashboard-specific and their paths point into
+# skene-dashboard, not this package. They are kept because the Figma anchors are
+# the only record of which frame each template implements, but they are NOT
+# shipped here yet. Promoting them is tracked as P5. Verified 2026-08-14: no
+# file in this repository imports or references any of them outside this block
+# and the ux-patterns.md table that mirrors it, so nothing here breaks if they
+# never land — they are a note to whoever does the dashboard migration.
+
+# Layout system — Skene Cloud workspace dashboard
+# Human reference: docs/ux-patterns.md §6b, §7, §17 — inside this package that
+# path has no `design-system/` prefix, which is the dashboard's own layout.
+
+version: "1.0.0"
+authority:
+  spacing: tailwind  # p-*, gap-*, m-*
+  radius: [rounded-sm, rounded-md, rounded-lg, rounded-xl, rounded-full]
+  panels: shadcn Card or rounded-lg border border-border bg-card
+  sidebar_width: w-60  # 240px — components/dashboard/Sidenav.tsx
+
+deprecated:
+  layout_tokens:
+    - lib/design-tokens.ts layout.*
+    - tokens.layout.dashboard.*
+  radius_vars:
+    - --radius-nav
+    - --radius-tight
+    - --radius-panel
+    - --radius-input
+  classes:
+    - rounded-nav
+    - rounded-panel
+  sidebar_legacy: 158px
+
+templates:
+  T1:
+    component: SettingsTemplate
+    path: components/workspace/templates/SettingsTemplate.tsx
+    purpose: Two-pane settings (vertical tabs + content)
+    figma_anchors: ["63:1655", "63:1822", "63:2009", "63:2212", "63:2371"]
+  T2:
+    component: ListTemplate
+    path: components/workspace/templates/ListTemplate.tsx
+    purpose: Table + filter bar via DashboardPageShell
+    figma_anchors: ["63:1024", "63:1252"]
+  T2-canvas:
+    component: CanvasTemplate
+    path: components/workspace/templates/CanvasTemplate.tsx
+    purpose: Full-bleed agent-canvas, mission-designer
+  T3:
+    components: [DetailTemplate, WizardTemplate]
+    paths:
+      - components/workspace/templates/DetailTemplate.tsx
+      - components/workspace/templates/WizardTemplate.tsx
+    purpose: Step-driven / onboarding flows
+    figma_anchors: ["63:2542"]
+  T4:
+    component: DashboardTemplate
+    path: components/workspace/templates/DashboardTemplate.tsx
+    purpose: Overview canvas with rich chrome
+    figma_anchors: ["63:583"]
+
+page_gutters:
+  source: components/dashboard/DashboardPageShell.tsx
+  pattern: gap-4 px-4 py-6 sm:px-6 lg:px-8
+
+spacing_scale:
+  base: "--spacing: 0.2rem"
+  steps:
+    - { step: "0.5", px: "2px", css_var: "--spacing-0-5" }
+    - { step: "1", px: "4px", css_var: "--spacing-1" }
+    - { step: "2", px: "8px", css_var: "--spacing-2" }
+    - { step: "3", px: "12px", css_var: "--spacing-3" }
+    - { step: "4", px: "16px", css_var: "--spacing-4" }
+    - { step: "6", px: "24px", css_var: "--spacing-6" }
+    - { step: "8", px: "32px", css_var: "--spacing-8" }
+    - { step: "12", px: "48px", css_var: "--spacing-12" }
+    - { step: "16", px: "64px", css_var: "--spacing-16" }
+    - { step: "24", px: "96px", css_var: "--spacing-24" }
+    - { step: "32", px: "128px", css_var: "--spacing-32" }
+
+radius_scale:
+  base: "--radius: 0.625rem"
+  canonical:
+    - { utility: rounded-sm, approx: "6px" }
+    - { utility: rounded-md, approx: "8px" }
+    - { utility: rounded-lg, approx: "10px" }
+    - { utility: rounded-xl, approx: "14px" }
+    - { utility: rounded-full, approx: pill }
+
+breakpoints:
+  - { prefix: sm, min_width: "640px", css_var: "--breakpoint-sm" }
+  - { prefix: md, min_width: "768px", css_var: "--breakpoint-md" }
+  - { prefix: lg, min_width: "1024px", css_var: "--breakpoint-lg" }
+  - { prefix: xl, min_width: "1280px", css_var: "--breakpoint-xl" }
+  - { prefix: 2xl, min_width: "1440px", css_var: "--breakpoint-2xl" }
+
+layout_widths:
+  - { utility: w-panel, px: "400px" }
+  - { utility: w-journey-node, px: "360px" }
+  - { utility: w-overview-dock, px: "480px" }
+  - { utility: min-w-panel-lg, px: "640px" }
+  - { utility: min-w-journey-list, px: "720px" }
+
+max_widths:
+  - max-w-5xl
+  - max-w-7xl
+  - max-w-full
+
+workspace_classes:
+  workspace-page-inset:
+    definition: "flex: 1 1 0%; min-height: 0; padding: var(--spacing-4)"
+    unified: "flex-1 min-h-0 p-4"
+  workspace-panel:
+    status: deprecated
+    replacement: Card with overflow-hidden rounded-lg shadow-none
+
+# coverage_canon named documentation/figma-coverage.json. Neither that file nor
+# a documentation/ directory exists in this repository — it never came across
+# with the templates. It lives in
+# skene-dashboard, which is also where the templates it indexes live, so the
+# pointer is only resolvable from there. Recorded as unresolvable rather than
+# left as a path an agent will try to read and get nothing from.
+coverage_canon:
+  file: figma-coverage.json
+  repo: skene-dashboard
+  present_here: false

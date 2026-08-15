@@ -1,0 +1,70 @@
+/* The consumer entry point.
+ *
+ *   @import "tailwindcss";                      <- stays in the APP, exactly once
+ *   @import "@skene/design-system/styles.css";
+ *
+ * `@import "tailwindcss"` deliberately is NOT here. Preflight and utility
+ * generation must happen once, in the app, and importing it from a dependency
+ * stylesheet produces either a duplicate import error or double preflight.
+ */
+
+@import "./tokens.css";
+@import "./effects.css";
+
+/* Tailwind v4's automatic content detection hard-excludes node_modules, and
+   there is no config file to override that in. Without an explicit @source, the
+   package's own components contribute no classes and every primitive renders
+   unstyled in the consuming app.
+
+   Declaring it HERE rather than in each app matters: @source resolves relative
+   to the file it appears in, and carries a per-import base path, so this points
+   at the package's own dist no matter how deep the consumer's stylesheet sits.
+   The dashboard's CSS is at app/globals.css and the marketing site's at
+   src/app/globals.css — one `../` apart — and neither has to know that.
+
+   The glob is explicit rather than a bare directory: given a directory Tailwind
+   applies its own extension heuristics and ignore rules, and would also re-read
+   the .d.ts files. */
+@source "../dist/**/*.js";
+
+@plugin "tailwindcss-animate";
+
+/* Theming is class-based, never prefers-color-scheme. Both consuming apps put
+   the theme class on a subtree rather than the document — the dashboard wraps
+   its sidebar, onboarding and public chrome in `.dark` and escapes back out
+   with `.light` — so keying off the OS setting would be wrong. Matching the
+   element itself as well as its descendants is what lets the two nest in
+   either direction, arbitrarily deep. */
+@custom-variant dark (&:is(.dark, .dark *));
+@custom-variant light (&:is(.light, .light *));
+
+@theme {
+  /* NON-DEFAULT. Tailwind v4 ships 0.25rem, and in v4 the spacing scale is
+     dynamic: `p-4` emits calc(var(--spacing) * 4). Both apps have shipped at
+     0.2rem for their whole life, so restoring the default would grow every
+     padding, margin, gap, width and height by 25% at once — which presents as
+     "the layout is subtly wrong everywhere" rather than as an obvious break.
+     Do not change this without measuring both apps. */
+  --spacing: 0.2rem;
+
+  /* The base of the shadcn radius ladder below. */
+  --radius: 0.625rem;
+}
+
+@theme inline {
+  /* The canonical radius ladder. Deliberately hand-written, not generated:
+     design-tokens.json also carries named radius tokens (radius.lg: 10px,
+     radius.xl: 12px, plus the deprecated nav/tight/panel/input rungs) which
+     land in :root as plain custom properties. Registering those with Tailwind
+     instead would silently shrink rounded-xl from 14px to 12px. */
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  /* Fonts are the consumer's job: next/font is a Next-only build-time API and
+     has to be called from the app's own layout. The package only states the
+     variable names it expects. Both apps already satisfy this contract. */
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
