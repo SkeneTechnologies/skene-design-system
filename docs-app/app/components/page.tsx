@@ -1626,6 +1626,49 @@ export default function ComponentGalleryPage() {
         </SiteFooter>
       </Case>
 
+      {/* The three-column case above was the only one, which is why the grid
+          could hardcode `repeat(3,1fr)` for months without anyone seeing it.
+          skene-site ships four columns and its fourth wrapped under the brand.
+          This is that shape — the consumer's actual columns, in their order. */}
+      <Case name="section-footer-four-columns" width="w-[1120px]">
+        <SiteFooter
+          wordmark="Skene"
+          copyright="© 2026 Skene. All rights reserved."
+          legal="Privacy Policy"
+          brand={
+            <div>
+              <span className="text-[15px] text-chrome-text-primary">Skene</span>
+              <p className="mt-5 max-w-[250px] text-[14px] text-chrome-text-muted-warm">
+                Product analytics in your own Supabase.
+              </p>
+              <SocialLinks>
+                <SocialLink href="#" label="LinkedIn">
+                  in
+                </SocialLink>
+                <SocialLink href="#" label="GitHub">
+                  gh
+                </SocialLink>
+              </SocialLinks>
+            </div>
+          }
+        >
+          {[
+            ['Product', ['How it works', 'Features', 'Integrations', 'Pricing']],
+            ['Developers', ['Documentation', 'Open source', 'MCP server']],
+            ['Resources', ['Blog', 'Glossary', 'Playbooks', 'Releases']],
+            ['Company', ['About', 'Community', 'Contact']],
+          ].map(([title, links]) => (
+            <FooterColumn key={title as string} title={title as string}>
+              {(links as string[]).map((l) => (
+                <FooterLink key={l} href="#">
+                  {l}
+                </FooterLink>
+              ))}
+            </FooterColumn>
+          ))}
+        </SiteFooter>
+      </Case>
+
       {/* ------------------------------------------------ product artifacts */}
       {/* The sixteen below had no case until 2026-08-13, which meant no
           baseline: they are drawn Skene Cloud screens, they never appear on a

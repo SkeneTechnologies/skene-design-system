@@ -1,5 +1,17 @@
 # @skene/design-system
 
+## 0.9.11
+
+### Patch Changes
+
+- `SiteFooter`'s column grid follows the number of link columns it is given. It was `lg:grid-cols-[1.7fr_repeat(3,1fr)]` — brand plus exactly three — so skene-site, which passes four (Product, Developers, Resources, Company), had its fourth column wrap onto a second row and sit left-aligned under the brand. It read as a broken footer rather than as a capacity limit, which is what it was.
+
+  Nothing failed. A grid with fewer tracks than items is valid CSS, so typecheck, lint, build and every test in this package stayed green while the rendered page was wrong. The only case in `docs-app` passed three columns, which is why the hardcoded three survived: the gallery agreed with the component instead of testing it. There is now a four-column case beside it.
+
+  The track list is a lookup table of whole class strings rather than a template literal, because Tailwind scans source text — an interpolated class name generates no rule and, like every class that generates nothing, does not warn. A test greps this file for the five literals instead of trusting the rendered string, since a rendered string is right in exactly the case the CSS is missing.
+
+  Counted with `Children.toArray`, not `Children.count`: count includes `null`, so `{flag ? <FooterColumn/> : null}` would reserve a track for a column that is not there. Clamped at five, past which a column is narrower than the link text it holds.
+
 ## 0.9.10
 
 ### Patch Changes

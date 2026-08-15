@@ -1,3 +1,5 @@
+import { Children } from 'react'
+
 import { cn } from '../lib/utils.js'
 
 /**
@@ -25,6 +27,31 @@ export interface SiteFooterProps {
   children: React.ReactNode
 }
 
+/**
+ * The `lg` track list, keyed by how many link columns were passed.
+ *
+ * Whole class strings, never interpolated: Tailwind scans this file's source
+ * text, so building the track list with a template literal would emit a class
+ * name that no stylesheet contains, and — as always with a class that generates
+ * nothing — would not warn. The footer would fall back to one column and look
+ * like a different bug. `footer-columns.test.tsx` greps this file for the five
+ * literals rather than trusting the rendered string, for exactly that reason.
+ *
+ * The brand keeps 1.7fr at every count. At four columns on the 1280px shell
+ * that leaves it ~310px, which still holds the logo, its line of copy and the
+ * social row; below that the `md` two-column layout has already taken over.
+ */
+const COLUMNS: Record<number, string> = {
+  1: 'lg:grid-cols-[1.7fr_repeat(1,1fr)]',
+  2: 'lg:grid-cols-[1.7fr_repeat(2,1fr)]',
+  3: 'lg:grid-cols-[1.7fr_repeat(3,1fr)]',
+  4: 'lg:grid-cols-[1.7fr_repeat(4,1fr)]',
+  5: 'lg:grid-cols-[1.7fr_repeat(5,1fr)]',
+}
+
+/** Past five, the columns are narrower than their own link text. */
+const MAX_COLUMNS = 5
+
 export function SiteFooter({
   brand,
   wordmark,
@@ -33,6 +60,11 @@ export function SiteFooter({
   className,
   children,
 }: SiteFooterProps) {
+  // `Children.toArray` and not `Children.count`: count includes `null`, so a
+  // consumer rendering `{flag ? <FooterColumn/> : null}` would reserve a track
+  // for a column that is not there. toArray drops null, undefined and booleans.
+  const linkColumns = Math.min(Children.toArray(children).length, MAX_COLUMNS)
+
   return (
     <footer
       className={cn(
@@ -41,7 +73,17 @@ export function SiteFooter({
       )}
     >
       <div className="relative z-10 mx-auto max-w-[1280px]">
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-[1.7fr_repeat(3,1fr)] lg:gap-[60px]">
+        {/*
+          The column count follows the children. It used to be
+          `lg:grid-cols-[1.7fr_repeat(3,1fr)]` — brand plus exactly THREE — and a
+          consumer passing four link columns had its fourth wrap onto a second
+          row, left-aligned under the brand, which reads as a layout bug rather
+          than as a capacity limit. skene-site ships four (Product, Developers,
+          Resources, Company) and looked broken for it.
+          The child count is the honest input: the grid should describe what it
+          was given, not what it was designed around.
+        */}
+        <div className={cn('grid gap-8 md:grid-cols-2 lg:gap-[60px]', COLUMNS[linkColumns])}>
           {brand ? <div className="col-span-full lg:col-span-1">{brand}</div> : null}
           {children}
         </div>

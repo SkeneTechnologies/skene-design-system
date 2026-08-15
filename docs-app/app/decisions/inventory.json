@@ -1794,7 +1794,7 @@
       ],
       "summary": "Site footer: a brand column, link columns, a bottom bar, and the oversized",
       "client": false,
-      "lines": 145,
+      "lines": 187,
       "cases": [
         "section-footer"
       ],
@@ -2820,7 +2820,7 @@
   "unbuilt": [],
   "gallery": {
     "route": "/components",
-    "cases": 85
+    "cases": 86
   },
   "counts": {
     "modules": 79,
