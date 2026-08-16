@@ -88,3 +88,26 @@ describe('FeatureRow without a title', () => {
     expect(html).toContain('01')
   })
 })
+
+describe('FeatureRow visual inset', () => {
+  it('spends 34px a side when the card is split', () => {
+    for (const bp of ['md', 'lg', 'xl'] as const) {
+      expect(row({ splitAt: bp })).toContain('p-[34px]')
+    }
+  })
+
+  it('spends 16px when it is stacked, because nothing sits beside the visual', () => {
+    // 68px reclaimed, on exactly the artifacts that chose `never` for being too
+    // wide to sit beside anything. Measured: a five-stage LifecycleCanvas at
+    // 1440 got 946px of strip against the 998 it needs.
+    expect(row({ splitAt: 'never' })).toContain('p-[16px]')
+    expect(row({ splitAt: 'never' })).not.toContain('p-[34px]')
+  })
+
+  it('does not apply either when the visual sits on a texture', () => {
+    // `SectionBackdrop` owns its own inset; the padded wrapper is the fallback.
+    const t = row({ splitAt: 'never', texture: 'journey' })
+    expect(t).not.toContain('p-[16px]')
+    expect(t).not.toContain('p-[34px]')
+  })
+})

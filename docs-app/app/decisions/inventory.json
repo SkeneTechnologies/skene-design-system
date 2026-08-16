@@ -1646,7 +1646,7 @@
       ],
       "summary": "The alternating feature row: copy on one side, a visual on the other, flipping",
       "client": false,
-      "lines": 317,
+      "lines": 343,
       "cases": [
         "section-feature-row"
       ],

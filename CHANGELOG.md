@@ -1,5 +1,17 @@
 # @skene/design-system
 
+## 0.9.14
+
+### Patch Changes
+
+- `FeatureRow`'s visual inset is 16px when the card is stacked, 34px when it is split. Split cards are unchanged, so the homepage does not move.
+
+  The inset exists to separate the visual from the copy column beside it. Under `splitAt="never"` there is no column beside it — the copy is above — so 68px is spent on nothing, and it is spent on exactly the artifacts that chose `never` because they were too wide to sit beside anything.
+
+  Measured on the widest one, a five-stage `LifecycleCanvas` at 1440: the card hands the artifact 1092px and the scrolling strip ends with 946 against the 998 it needs. The 146px between the two is this 68px plus `ArtFrame`'s 96 and `AppPanel`'s 48. Those two are the artifact's own material and its app chrome and are not available; this one is layout for an arrangement that is not in use.
+
+  Not zero: the visual still has to read as sitting ON the card rather than as the card's own edge, and 16px is the smallest gap that survives the 24px radius without the corner clipping the frame. `SectionBackdrop` is unaffected — it owns its own inset and the padded wrapper is the fallback branch.
+
 ## 0.9.13
 
 ### Patch Changes

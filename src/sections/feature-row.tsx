@@ -273,7 +273,33 @@ export function FeatureRow({
             {visual}
           </SectionBackdrop>
         ) : (
-          <div className="grid w-full place-items-center p-[34px]">{visual}</div>
+          // 34px when the card is SPLIT, 16px when it is stacked.
+          //
+          // The inset exists to separate the visual from the copy column beside
+          // it. Under `splitAt="never"` there is no column beside it — the copy
+          // is above — so 34px a side is 68px spent on nothing, and it is spent
+          // on exactly the artifacts that chose `never` because they were too
+          // wide to sit beside anything.
+          //
+          // Measured on the widest one, a five-stage `LifecycleCanvas` at 1440:
+          // the card hands the artifact 1092px and the scrolling strip ends up
+          // with 946 against the 998 it needs. The 146px between them is this
+          // 68px plus `ArtFrame`'s 96 and `AppPanel`'s 48. Those two are the
+          // artifact's own material and its app chrome; this one is layout for
+          // an arrangement that is not in use. Reclaiming it is the only 36px
+          // available without touching what the artifact IS.
+          //
+          // Not zero: the visual still needs to read as sitting ON the card
+          // rather than as the card's own edge, and 16px is the smallest gap
+          // that survives the 24px radius without the corner clipping the frame.
+          <div
+            className={cn(
+              'grid w-full place-items-center',
+              splitAt === 'never' ? 'p-[16px]' : 'p-[34px]',
+            )}
+          >
+            {visual}
+          </div>
         )}
         {/*
           The sheen. Sits above the visual but must never eat its clicks.
