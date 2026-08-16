@@ -1613,7 +1613,7 @@
       ],
       "summary": "The FAQ band: a heading column that stays put, and the questions beside it.",
       "client": true,
-      "lines": 151,
+      "lines": 178,
       "cases": [
         "section-faq-band"
       ],

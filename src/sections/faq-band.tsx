@@ -140,7 +140,34 @@ export function FaqRow({ question, children, className }: FaqRowProps) {
         </AccordionPrimitive.Trigger>
       </AccordionPrimitive.Header>
 
-      <AccordionPrimitive.Content className="overflow-hidden data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down">
+      {/*
+        `forceMount`, and the reason is the whole point of this site rather than
+        a preference.
+
+        Without it Radix renders the answer only while the row is open, so a
+        closed FAQ ships its QUESTIONS to the DOM and none of its ANSWERS. On
+        `/pricing` that measured as five questions present and five answers
+        absent: the text existed in the RSC flight payload, which is a
+        JSON-escaped blob inside a `<script>`, and nowhere in the rendered
+        document. Anything reading the page as text — a crawler, an agent, a
+        reader-mode extractor — got the questions and nothing else.
+
+        That is not acceptable on a marketing surface for a company whose whole
+        argument is that data can look present and not be. `forceMount` keeps
+        the answer mounted; `data-[state=closed]:hidden` collapses it. Hidden
+        content is still in the document and still indexed, which is the
+        distinction that matters here.
+
+        THE COST IS THE HEIGHT ANIMATION, and it is paid deliberately. A
+        force-mounted node cannot both animate its height and rest at zero
+        without JS sequencing the two, so the open/close transition is now the
+        `+` rotating into `×` and nothing else. Five answers existing beats a
+        200ms ease on a panel nobody watches twice.
+      */}
+      <AccordionPrimitive.Content
+        forceMount
+        className="overflow-hidden data-[state=closed]:hidden"
+      >
         <div className="max-w-[640px] pb-6 pr-12 text-[14px] leading-relaxed text-text-muted">
           {children}
         </div>

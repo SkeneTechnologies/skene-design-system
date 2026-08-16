@@ -1,5 +1,17 @@
 # @skene/design-system
 
+## 0.9.13
+
+### Patch Changes
+
+- `FaqBand` ships its answers. Radix mounts `Accordion.Content` only while a row is open, so a closed FAQ put its QUESTIONS in the document and none of its ANSWERS. Measured on the first adopter's `/pricing`: five questions in the DOM, five answers absent from it — the text existed in the RSC flight payload, a JSON-escaped blob inside a `<script>`, and nowhere in the rendered page. Anything reading the page as text got half the content.
+
+  That is not a nicety for a company whose whole argument is that data can look present and not be. `forceMount` keeps the answer mounted and `data-[state=closed]:hidden` collapses it; hidden content is in the document and is indexed, which is the distinction that matters.
+
+  The cost is the height animation, paid deliberately. A force-mounted node cannot both animate its height and rest at zero without JS sequencing the two, so the open/close transition is now the `+` rotating into `×` and nothing else. Five answers existing beats a 200ms ease on a panel nobody watches twice.
+
+  Four assertions on the server render with every row closed, which is the state a crawler, an agent and a reader-mode extractor all see.
+
 ## 0.9.12
 
 ### Patch Changes
