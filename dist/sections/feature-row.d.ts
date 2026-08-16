@@ -57,6 +57,28 @@ declare const SPLIT: {
         readonly copyReverse: "xl:col-start-2 xl:row-start-1";
         readonly visualReverse: "xl:col-start-1 xl:row-start-1";
     };
+    /**
+     * Never: one column at every width, copy above the visual, inside the same
+     * card. `reverse` is inert here — there is no second track to move to.
+     *
+     * This is the shape for a visual too wide to live in a half track at any
+     * viewport, which is a real category rather than an escape hatch. Measured on
+     * the second adopter: a five-stage LifecycleCanvas wants 998px, a FlowDiagram
+     * 812px, a four-column evaluator table about 1000px. The widest split this
+     * component offers hands the visual roughly 640-700px, so those clip at every
+     * breakpoint — and they clip silently, because the panels scroll horizontally
+     * inside `overflow-hidden` chrome with an overlay scrollbar. Nothing
+     * announces it; a column simply ends mid-word.
+     *
+     * Empty strings and not an omitted key, so `SPLIT[splitAt]` stays total and
+     * the render path needs no branch.
+     */
+    readonly never: {
+        readonly grid: "";
+        readonly gridReverse: "";
+        readonly copyReverse: "";
+        readonly visualReverse: "";
+    };
 };
 export type FeatureRowSplit = keyof typeof SPLIT;
 export interface FeatureRowProps {
@@ -64,8 +86,32 @@ export interface FeatureRowProps {
     reverse?: boolean;
     /** Monospace marker in the corner, e.g. "01". */
     n?: React.ReactNode;
+    /**
+     * A label above the title, inside the copy column. Pass an `<Eyebrow>`.
+     *
+     * The homepage stack does not need one — three rows share a single eyebrow
+     * and heading above the whole stack. Every other adopter is a lone row
+     * standing in for a whole section, where the eyebrow is that section's own
+     * and belongs with the heading it labels. Putting it above the card instead
+     * splits the head across the card's edge.
+     *
+     * A slot rather than a string so this component does not have to import
+     * `Eyebrow`, and so a caller can pass a link or a chip in its place.
+     */
+    eyebrow?: React.ReactNode;
     icon?: React.ReactNode;
-    title: React.ReactNode;
+    /**
+     * Optional, because a row is sometimes only its visual.
+     *
+     * It was required, and the second adopter has four sections carrying an
+     * eyebrow and no heading and one carrying no text at all. Supplying a string
+     * to satisfy the type would mean writing marketing copy to satisfy a
+     * component, which is the tail wagging the dog and, in that repository,
+     * against its own rules. With no title the heading element is not rendered at
+     * all rather than rendered empty: an empty `h2` is a heading to every outline
+     * reader and to nothing else.
+     */
+    title?: React.ReactNode;
     /**
      * The italic line under the title. On the live cards this is the promise
      * ("Connect once. Skene adds the tracking you're missing") and the checklist
@@ -108,9 +154,20 @@ export interface FeatureRowProps {
      * silently loses to it. See the comment on the SPLIT table.
      */
     splitAt?: FeatureRowSplit;
+    /**
+     * The title's heading level. `h3` is the default and what the homepage
+     * renders: three rows sitting under the band's own `<h2>`.
+     *
+     * A lone row IS the section, so its title is that section's `<h2>` under the
+     * page `<h1>`, and leaving it an `h3` skips a level — invisible on screen,
+     * plainly wrong to anything reading the outline. Not derived from whether
+     * `eyebrow` is set, because the two answer different questions and a rule
+     * that guesses is a rule nobody can override when it guesses wrong.
+     */
+    titleAs?: 'h2' | 'h3';
     className?: string;
 }
-export declare function FeatureRow({ reverse, n, icon, title, lede, children, actions, visual, texture, textureSrc, sheen, splitAt, className, }: FeatureRowProps): import("react").JSX.Element;
+export declare function FeatureRow({ reverse, n, eyebrow, icon, title, lede, children, actions, visual, texture, textureSrc, sheen, splitAt, titleAs, className, }: FeatureRowProps): import("react").JSX.Element;
 /** Vertical stack of rows at the section's rhythm. */
 export declare function FeatureStack({ className, children, }: {
     className?: string;

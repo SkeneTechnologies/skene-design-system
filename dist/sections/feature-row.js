@@ -53,9 +53,32 @@ const SPLIT = {
         copyReverse: 'xl:col-start-2 xl:row-start-1',
         visualReverse: 'xl:col-start-1 xl:row-start-1',
     },
+    /**
+     * Never: one column at every width, copy above the visual, inside the same
+     * card. `reverse` is inert here — there is no second track to move to.
+     *
+     * This is the shape for a visual too wide to live in a half track at any
+     * viewport, which is a real category rather than an escape hatch. Measured on
+     * the second adopter: a five-stage LifecycleCanvas wants 998px, a FlowDiagram
+     * 812px, a four-column evaluator table about 1000px. The widest split this
+     * component offers hands the visual roughly 640-700px, so those clip at every
+     * breakpoint — and they clip silently, because the panels scroll horizontally
+     * inside `overflow-hidden` chrome with an overlay scrollbar. Nothing
+     * announces it; a column simply ends mid-word.
+     *
+     * Empty strings and not an omitted key, so `SPLIT[splitAt]` stays total and
+     * the render path needs no branch.
+     */
+    never: {
+        grid: '',
+        gridReverse: '',
+        copyReverse: '',
+        visualReverse: '',
+    },
 };
-export function FeatureRow({ reverse = false, n, icon, title, lede, children, actions, visual, texture, textureSrc, sheen = true, splitAt = 'md', className, }) {
-    return (_jsxs("div", { className: cn('grid min-h-[600px] overflow-hidden rounded-2xl border border-chrome-line-subtle bg-chrome-surface-1', reverse ? SPLIT[splitAt].gridReverse : SPLIT[splitAt].grid, className), children: [_jsxs("div", { className: cn('relative flex flex-col items-start px-12 pb-[46px] pt-[50px]', reverse && SPLIT[splitAt].copyReverse), children: [n ? (_jsx("span", { className: "absolute right-6 top-[22px] font-mono text-[11px] text-chrome-text-muted-warm", children: n })) : null, icon ? _jsx("div", { className: "mb-[54px]", children: icon }) : null, _jsx("h3", { className: "mb-4 max-w-[420px] text-[clamp(1.75rem,2.4vw,2.55rem)] leading-tight text-chrome-text-primary", children: title }), lede ? (_jsx("p", { className: "mb-6 max-w-[470px] text-[14px] italic text-chrome-text-muted-warm", children: lede })) : null, children ? (
+export function FeatureRow({ reverse = false, n, eyebrow, icon, title, lede, children, actions, visual, texture, textureSrc, sheen = true, splitAt = 'md', titleAs = 'h3', className, }) {
+    const Title = titleAs;
+    return (_jsxs("div", { className: cn('grid min-h-[600px] overflow-hidden rounded-2xl border border-chrome-line-subtle bg-chrome-surface-1', reverse ? SPLIT[splitAt].gridReverse : SPLIT[splitAt].grid, className), children: [_jsxs("div", { className: cn('relative flex flex-col items-start px-12 pb-[46px] pt-[50px]', reverse && SPLIT[splitAt].copyReverse), children: [n ? (_jsx("span", { className: "absolute right-6 top-[22px] font-mono text-[11px] text-chrome-text-muted-warm", children: n })) : null, icon ? _jsx("div", { className: "mb-[54px]", children: icon }) : null, eyebrow ? _jsx("div", { className: "mb-[24px]", children: eyebrow }) : null, title ? (_jsx(Title, { className: "mb-4 max-w-[420px] text-[clamp(1.75rem,2.4vw,2.55rem)] leading-tight text-chrome-text-primary", children: title })) : null, lede ? (_jsx("p", { className: "mb-6 max-w-[470px] text-[14px] italic text-chrome-text-muted-warm", children: lede })) : null, children ? (
                     // Full-width, not max-w: a CheckList's rules run the width of the
                     // column on the live cards, and constraining them to the prose measure
                     // leaves the rules stopping short of the text they separate.

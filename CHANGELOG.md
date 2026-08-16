@@ -1,5 +1,23 @@
 # @skene/design-system
 
+## 0.9.12
+
+### Patch Changes
+
+- `FeatureRow` gains `titleAs` and `eyebrow`, because its second adopter is shaped differently from its first.
+
+  The homepage renders three rows under one band `<h2>`, so an `<h3>` title and no per-row eyebrow are exactly right there. skene-site's subpages render ONE row as the whole section: its title is that section's `<h2>` under the page `<h1>`, and its eyebrow labels that heading. Adopting the component unchanged would have demoted the section heading on nine routes — a change nothing on screen shows and every outline reader sees — and pushed each section's eyebrow outside the card, splitting the head across the card's edge.
+
+  `titleAs` defaults to `h3`, so no existing caller moves. It is NOT derived from whether `eyebrow` is set: the two answer different questions, and a rule that guesses is one nobody can override when it guesses wrong.
+
+  `eyebrow` is a slot rather than a string, so this component does not have to import `Eyebrow` and a caller can pass a chip or a link instead. Its 24px gap sits on a block wrapper and never on the slot, because `Eyebrow` is `inline-block` and its own bottom margin does not collapse — the defect that once put one page's section heads at 48px while its siblings sat at 24.
+
+- `splitAt` gains `never`, and `title` becomes optional. Same adopter, same reason: a component written around one caller meeting a second one shaped differently.
+
+  `never` is one column at every width — copy above the visual, inside the same card — and it exists because a visual too wide for a half track is a real category rather than an escape hatch. Measured: a five-stage `LifecycleCanvas` wants 998px, a `FlowDiagram` 812px, a four-column evaluator table about 1000px. The widest split this component offers hands the visual roughly 640–700px, so all three clip at every breakpoint, and they clip **silently** — the panels scroll inside `overflow-hidden` chrome with an overlay scrollbar, so nothing announces it and a column simply ends mid-word. `reverse` is inert under `never`; there is no second track to move to. Empty strings rather than an omitted key, so the `SPLIT` lookup stays total and the render path needs no branch.
+
+  `title` is optional because a row is sometimes only its visual: the second adopter has four sections carrying an eyebrow and no heading, and one carrying no text at all. Requiring a string would mean writing marketing copy to satisfy a type. With no title the heading element is not rendered at all rather than rendered empty — an empty `h2` is a heading to every outline reader and to nothing else.
+
 ## 0.9.11
 
 ### Patch Changes

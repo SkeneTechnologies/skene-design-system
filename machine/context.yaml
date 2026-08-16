@@ -2140,8 +2140,9 @@ modules:
       FeatureRow:
         reverse: { type: boolean, default: "false" }
         n: { type: React.ReactNode }
+        eyebrow: { type: React.ReactNode }
         icon: { type: React.ReactNode }
-        title: { type: React.ReactNode, required: true }
+        title: { type: React.ReactNode }
         lede: { type: React.ReactNode }
         children: { type: React.ReactNode }
         actions: { type: React.ReactNode }
@@ -2150,6 +2151,7 @@ modules:
         textureSrc: { type: string }
         sheen: { type: boolean, default: "true" }
         splitAt: { type: FeatureRowSplit, default: "'md'" }
+        titleAs: { type: "'h2' | 'h3'", default: "'h3'" }
     useFor: >-
       A whole dark band of a page: a copy column (corner marker, ringed icon,
       title, italic lede, proof list, pinned actions) beside a visual panel,

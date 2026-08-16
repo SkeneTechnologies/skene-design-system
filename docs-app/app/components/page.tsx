@@ -1098,6 +1098,32 @@ export default function ComponentGalleryPage() {
         </FeatureRow>
       </Case>
 
+      {/* The second arrangement, and the second adopter's shape. The case above
+          is the homepage: three rows under one band heading, so an `h3` title,
+          no per-row eyebrow, and a visual that fits a half track. This one is a
+          lone row standing in for a whole section — its own eyebrow, its title
+          as the section `h2`, and a visual too wide to be split at any width.
+          Both are `FeatureRow`; only the props differ. */}
+      <Case name="section-feature-row-stacked" width="w-[1120px]">
+        <FeatureRow
+          splitAt="never"
+          titleAs="h2"
+          sheen={false}
+          eyebrow={<Eyebrow>The PR check</Eyebrow>}
+          title="What step 03 looks like on a release."
+          visual={
+            <ProductWindow
+              title="Activation funnel · Last 28 days"
+              status={<WindowStatus>Dashboard: healthy</WindowStatus>}
+            >
+              <MetricCard label="Trial activation" value="31.4%" delta="↓ 8.2%" trend="danger">
+                <Sparkline bars={[74, 81, 77, 72, 55, 51, 47, 45]} highlight={4} />
+              </MetricCard>
+            </ProductWindow>
+          }
+        />
+      </Case>
+
       <Case name="section-final-cta" width="w-[1120px]">
         <FinalCta
           lede="A renamed event passes every test, ships green, and sits broken for weeks."
