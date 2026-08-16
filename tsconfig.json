@@ -19,6 +19,8 @@
   "include": [
     "src",
     "scripts",
-    "__tests__"
+    "__tests__",
+    "stories",
+    ".storybook"
   ]
 }

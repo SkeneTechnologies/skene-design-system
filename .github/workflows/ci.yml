@@ -114,3 +114,67 @@ jobs:
           name: package-visual-report
           path: docs-app/test-results/
           retention-days: 14
+
+  chromatic:
+    # Hosted visual review of the Storybook, which is a different question from
+    # the `visual` job above and does not replace it.
+    #
+    #   `visual`  compares committed PNGs of whole SECTIONS in composition,
+    #             byte-for-byte, in a pinned container. It answers "did this
+    #             change anything", with no opinion about whether the change is
+    #             good, and it fails hard.
+    #   Chromatic diffs the same stories a human can then OPEN, at every state
+    #             the args expose, and asks someone to accept or reject. It
+    #             answers "is this change intended".
+    #
+    # The second is what was missing when two paragraphs shipped at 1.00:1: the
+    # composition that produced it was rendered by no test at any width, so
+    # there was nothing for a diff to move. `stories/feature-row.stories.tsx`
+    # now renders exactly that case.
+    #
+    # `--exit-zero-on-changes` is deliberate and is the reason this job is
+    # advisory. A visual change is a question for a reviewer, not a build
+    # failure; the build already fails on the things that are unambiguously
+    # wrong. Chromatic's own UI is where a change gets accepted, and it blocks
+    # the PR through its own required check rather than through this exit code.
+    runs-on: ubuntu-latest
+    # Skips cleanly on forks, where secrets are not available and the run would
+    # fail with an authentication error that reads like a real defect.
+    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository }}
+    # Job level, not step level, and that placement is the whole trick: a step's
+    # `if:` is evaluated BEFORE that step's own `env:` is applied, so a token
+    # declared on the step is empty to the step's own condition and the guard
+    # below would always take the "no token" branch. The `secrets` context is
+    # not readable from `if:` at all, which is why it is lifted here first.
+    env:
+      CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Chromatic reads git history to find the baseline commit. A shallow
+          # clone makes every build look like the first one, so every story
+          # reports as new and the diff is worthless.
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      # Stories import through `@skene/design-system/...`, which resolves to
+      # `dist/`. Without a build the Storybook renders the committed dist and a
+      # source-only change is invisible to the diff — the exact failure this
+      # job exists to prevent.
+      - run: npm run build
+      - name: Chromatic
+        if: ${{ env.CHROMATIC_PROJECT_TOKEN != '' }}
+        run: npx chromatic --exit-zero-on-changes
+      - name: No Chromatic token
+        if: ${{ env.CHROMATIC_PROJECT_TOKEN == '' }}
+        run: |
+          echo "::notice::CHROMATIC_PROJECT_TOKEN is not set, so visual review did not run."
+          echo "Create the project at chromatic.com against this repository and add the"
+          echo "token as a repository secret. Until then the Storybook still builds below,"
+          echo "so a broken story is caught here even without the hosted diff."
+      # Runs whether or not the token exists: a story that throws is a defect in
+      # the package, and it should fail here rather than in a reviewer's browser.
+      - run: npm run storybook:build

@@ -1,0 +1,34 @@
+/* Storybook's stylesheet entry, and the whole consumer wiring in two lines.
+ *
+ * These are the same two imports `docs-app/app/globals.css` carries, in the
+ * same order, and for the same reason its comment gives: if a primitive renders
+ * unstyled in here, the package's `@source` is broken. A gallery that quietly
+ * styles itself some other way would hide exactly the defect it exists to show.
+ *
+ * `@import "tailwindcss"` belongs HERE and not in `styles/index.css` — that file
+ * says so at the top and is the consumer contract. Storybook is a consumer.
+ *
+ * The `@source` line is the part that is easy to get wrong. Tailwind v4 scans
+ * for class names, and it has no reason to look inside `dist/`, where the
+ * components' compiled class strings actually live. `docs-app` gets this for
+ * free because the package's own `styles/index.css` carries a `@source` for
+ * `dist`. Stories add a second place class names come from — the story files
+ * themselves — and those need scanning too, or a class written only in a story
+ * silently produces no CSS and the story renders wrong while everything passes.
+ */
+@import "tailwindcss";
+@import "@skene/design-system/styles.css";
+
+@source "../src/**/*.tsx";
+@source "../stories/**/*.tsx";
+
+/* The decorator paints a ground, but only inside its own box. Storybook's
+ * document is white underneath, so a short story leaves a white band below it
+ * and a `layout: 'centered'` one is framed in white. That reads as a component
+ * defect when it is a canvas default, and the a11y addon samples the DOCUMENT
+ * background for elements that do not set one — so leaving it white makes axe
+ * report contrast against a ground the component will never see. */
+html,
+body {
+  background: var(--color-chrome-surface-deep);
+}
