@@ -1,0 +1,61 @@
+import type { Meta, StoryObj } from '@storybook/react-vite'
+import React from 'react'
+
+import { Chip } from '@skene/design-system/sections/chip'
+
+/**
+ * The 10px monospace uppercase rectangle.
+ *
+ * Extracted from two copies written independently — `PlanCard`'s tier span and
+ * `ProductWindow`'s `WindowStatus` — which had already drifted apart on tracking
+ * before anyone noticed. Its job is to hold the geometry still: `tone` carries
+ * colour and nothing else, with tracking as the single declared exception. It
+ * exists as much to stop a third inline copy being written as to render the two
+ * that exist.
+ */
+const meta = {
+  title: 'Sections/Chip',
+  component: Chip,
+  parameters: { layout: 'centered' },
+  argTypes: {
+    tone: { control: 'inline-radio', options: ['neutral', 'healthy', 'live', 'outline'] },
+  },
+  args: { children: 'PRO' },
+} satisfies Meta<typeof Chip>
+
+export default meta
+type Story = StoryObj<typeof meta>
+
+export const Neutral: Story = { args: { tone: 'neutral' } }
+export const Healthy: Story = { args: { tone: 'healthy', children: 'HEALTHY' } }
+export const Live: Story = { args: { tone: 'live', children: 'LIVE' } }
+export const Outline: Story = { args: { tone: 'outline', children: 'BETA' } }
+
+const TONES = ['neutral', 'healthy', 'live', 'outline'] as const
+
+/** All four together — the frame that catches geometry drifting between tones. */
+export const AllTones: Story = {
+  render: () => (
+    <div className="flex flex-wrap items-center gap-2">
+      {TONES.map((t) => (
+        <Chip key={t} tone={t}>
+          {t}
+        </Chip>
+      ))}
+    </div>
+  ),
+}
+
+export const OnLight: Story = {
+  render: () => (
+    <div className="light rounded-xl bg-brand-light p-6">
+      <div className="flex flex-wrap items-center gap-2">
+        {TONES.map((t) => (
+          <Chip key={t} tone={t}>
+            {t}
+          </Chip>
+        ))}
+      </div>
+    </div>
+  ),
+}

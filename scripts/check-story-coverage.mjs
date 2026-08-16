@@ -4,12 +4,18 @@
  *
  * ## Why this is not "every component must have a story, full stop"
  *
- * There are 44 sections and 30 UI components in this package and, on the day
- * this landed, twelve of them had stories. A rule that fails the build on
- * sixty-two files does not get those files written; it gets the rule deleted,
- * or `--max-warnings` raised, or the job marked `continue-on-error`. That is
- * the observed fate of every all-at-once lint rule introduced against a large
- * existing surface.
+ * There are 44 sections and 30 UI components in this package. On the day this
+ * landed, twelve of them had stories and the other 62 went into the backlog,
+ * because a rule that fails the build on sixty-two files does not get those
+ * files written — it gets the rule deleted, or `--max-warnings` raised, or the
+ * job marked `continue-on-error`. That is the observed fate of every
+ * all-at-once lint rule introduced against a large existing surface.
+ *
+ * The backlog reached zero later the same day, so the ratchet is currently a
+ * plain "every module has a story" rule. Leaving the mechanism in place is
+ * deliberate: it is what lets the next person defer ONE component honestly,
+ * in a file with their reason in the commit, instead of the two things that
+ * happen otherwise — the story never written, or the whole check disabled.
  *
  * So the rule this enforces is the one that can actually hold:
  *

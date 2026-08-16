@@ -178,3 +178,28 @@ jobs:
       # Runs whether or not the token exists: a story that throws is a defect in
       # the package, and it should fail here rather than in a reviewer's browser.
       - run: npm run storybook:build
+
+      # Building a story is not running it. A story that type-checks and bundles
+      # can still throw on mount, and it caught exactly that on the run it was
+      # added: AgentCallout wraps `children` in its own `<p>`, so a story passing
+      # a `<p>` produced nesting the browser silently repaired.
+      #
+      # Playwright's browser lives in docs-app, which is where the visual suite
+      # already keeps it — installed here rather than adding a second copy at
+      # the root.
+      - run: npm ci --include=dev --no-audit --no-fund
+        working-directory: docs-app
+      - run: npx playwright install --with-deps chromium
+        working-directory: docs-app
+      # `storybook dev` rather than a static file server: it is already a
+      # dependency, so nothing is fetched from the network at job time. The
+      # story list still comes from the build above — `stories:render` reads
+      # `storybook-static/index.json`.
+      - name: Every story renders
+        run: |
+          npm run storybook &
+          for i in $(seq 1 60); do
+            curl -sf -o /dev/null http://localhost:6006/iframe.html && break
+            sleep 2
+          done
+          npm run stories:render

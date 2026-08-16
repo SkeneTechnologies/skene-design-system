@@ -30,8 +30,8 @@ That resolves to `dist/`, which means:
 
 ## Coverage is a ratchet, not a gate
 
-`npm run stories:check` (part of `npm run verify`). 12 of 74 modules have stories;
-the other 62 are listed in `BACKLOG.json`.
+`npm run stories:check` (part of `npm run verify`). **74 of 74 modules have
+stories; `BACKLOG.json` is empty.**
 
 - A component **not** in the backlog must have a story. New components cannot
   land without one.
@@ -39,9 +39,27 @@ the other 62 are listed in `BACKLOG.json`.
   check until the entry is removed (`npm run stories:check -- --write`).
 - A backlog entry for a deleted module also fails, so the list cannot go stale.
 
-The reason it is not "every component, starting now": a rule that fails on 62
-files gets deleted, not satisfied. See the header of
+The mechanism stays even though the backlog is empty. It is what lets the next
+person defer one component honestly — an entry, and a reason in the commit —
+rather than the two things that happen when the only option is "write it now":
+the story never gets written, or the check gets disabled. See the header of
 `scripts/check-story-coverage.mjs`.
+
+## Stories are rendered, not just built
+
+`npm run stories:render` (needs `npm run storybook:build` and a running
+Storybook) loads all 318 stories and fails on anything that throws, logs a
+console error, or renders empty.
+
+`storybook build` compiles stories; it does not run them. The gap is real: this
+gate immediately caught `AgentCallout` wrapping `children` in its own `<p>`, so
+a story passing a `<p>` produced invalid nesting that the browser repaired by
+closing the outer paragraph early. Type-checked, bundled, wrong.
+
+Its settle is worth not "simplifying": it waits for `#storybook-root` to have
+content rather than sleeping. A fixed 220ms flagged 32 stories — exactly the
+first two of every client component, because a cold lazy chunk renders later
+than a warm one. All 32 were the harness's fault.
 
 ## The stories that are load-bearing
 

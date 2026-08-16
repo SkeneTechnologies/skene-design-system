@@ -80,7 +80,8 @@
     "storybook": "storybook dev -p 6006 --no-open",
     "storybook:build": "storybook build",
     "stories:check": "node scripts/check-story-coverage.mjs",
-    "chromatic": "chromatic --exit-zero-on-changes"
+    "chromatic": "chromatic --exit-zero-on-changes",
+    "stories:render": "node scripts/check-stories-render.mjs"
   },
   "peerDependencies": {
     "next-themes": ">=0.4.0",
