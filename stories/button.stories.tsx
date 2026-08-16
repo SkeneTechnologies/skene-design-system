@@ -8,22 +8,38 @@ import { Button } from '@skene/design-system/ui/button'
  *
  * ## What the matrix below is actually for
  *
- * A rendered-pixel contrast harness reported the primary button at 3.17:1
- * against a 4.5 floor, and it was wrong. `text-brand-peach-text` is `#3b2402`
- * on `bg-brand-peach` `#fec089`: **9.11:1**, nowhere near the floor. The
- * reported `rgb(150,109,65)` is that peach at roughly 58% over the page's
- * `rgb(6,6,6)` — an antialiased pixel on the button's rounded EDGE, sampled as
- * if it were a ground.
+ * A rendered-pixel contrast harness in the consumer repo reported the primary
+ * button below the 4.5 floor, repeatedly, at readings that did not agree with
+ * each other: 3.17 on macOS, then 1.24 and 1.57 in a pinned Linux container on
+ * different routes and widths.
  *
- * That is a documented false-reading mode of the harness, and it points at a
- * real limitation rather than a real defect: a diff-based sampler cannot tell a
- * glyph's ground from its neighbour's edge. Nothing about the button changed,
- * and nothing should — relaxing a gate around a control already at 9.11:1
- * would be adjusting the instrument to fit the reading.
+ * The button is not the defect. `text-brand-peach-text` is `#3b2402` on
+ * `bg-brand-peach` `#fec089` — **9.11:1**, computed, nowhere near the floor.
+ * What the spread of readings identifies is WHICH ground each sample hit:
  *
- * What Storybook adds is the check the harness cannot do: every variant at
- * every size, on both grounds, in one frame, where a human and a visual diff
- * both see the actual rendered colours instead of one sampled pixel.
+ *   - `#3b2402` on the page ground `#060606` is **1.39:1** — the band the
+ *     container produced. That is the button's ink with its fill not yet
+ *     painted.
+ *   - `#3b2402` on that peach at ~58% over the same ground is **3.35:1** — the
+ *     band macOS produced. That is a pixel on the rounded edge.
+ *
+ * Both are the sampler reading a ground the glyph does not sit on, and neither
+ * survives re-measurement: the container's harness rejected all four of its own
+ * suspects on a second sample. A defect that vanishes when you look again is a
+ * settle problem in the instrument.
+ *
+ * (An earlier note here blamed antialiasing alone. It explains the 3.35 band
+ * and not the 1.39 one, and an antialiased edge is a stable geometric fact that
+ * would land in the same place every run. Timing covers both; edge geometry
+ * covers one.)
+ *
+ * Nothing about the button changed and nothing should — relaxing a gate around
+ * a control already at 9.11:1 would be adjusting the instrument to fit the
+ * reading.
+ *
+ * What Storybook adds is a check with no timing in it: every variant at every
+ * size, on both grounds, in one frame, where a human and a visual diff see the
+ * rendered colours rather than one sampled pixel.
  */
 const meta = {
   title: 'UI/Button',

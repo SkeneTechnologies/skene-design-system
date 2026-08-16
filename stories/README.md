@@ -64,8 +64,9 @@ change to them is a question someone has to answer.
 - **`lifecycle-canvas` — Unpinned.** The other half of the first item: 998px of
   rail in a 570px track when the wrapper is not `w-full`.
 - **`button` — Matrix.** Every variant at every size on both grounds, because a
-  pixel harness reported the primary at 3.17:1 when it is 9.11:1 — it sampled an
-  antialiased edge as if it were a ground.
+  pixel harness reported the primary below floor at three different readings
+  when it is 9.11:1 — each one a ground the glyph does not sit on. See the
+  file header for which reading maps to which ground.
 
 ## Theme
 
