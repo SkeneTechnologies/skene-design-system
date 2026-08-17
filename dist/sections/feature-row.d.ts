@@ -165,9 +165,32 @@ export interface FeatureRowProps {
      * that guesses is a rule nobody can override when it guesses wrong.
      */
     titleAs?: 'h2' | 'h3';
+    /**
+     * Which type scale the title takes.
+     *
+     * `row` is `clamp(1.75rem, 2.4vw, 2.55rem)` — fluid, 28px to 40.8px — and is
+     * what the homepage renders: three rows under one band heading, where the row
+     * title is the largest thing in its own card and wants to breathe with the
+     * viewport.
+     *
+     * `section` is a flat 32px, `--font-size-marketing-xl`, which is what
+     * `DisplayHeading size="section"` emits. Use it when the row IS a section, so
+     * its title sits at the same size as every other section heading on the page.
+     *
+     * THE DEFECT THIS CLOSES IS NOT A CONSTANT OFFSET. The two scales cross at a
+     * 1333px viewport: above it the card heading is larger than its siblings,
+     * below it smaller, and at 1024 it is 28px against their 32. Ten of the
+     * nineteen adopting routes render both on one page, and `/product/how-it-works`
+     * renders only the card scale — internally consistent and inconsistent with
+     * the other eighteen. Measuring at one width makes this look like 2.56px of
+     * nothing; measuring across the breakpoint is what shows it inverting.
+     *
+     * Default `row`, so no existing caller moves.
+     */
+    titleScale?: 'row' | 'section';
     className?: string;
 }
-export declare function FeatureRow({ reverse, n, eyebrow, icon, title, lede, children, actions, visual, texture, textureSrc, sheen, splitAt, titleAs, className, }: FeatureRowProps): import("react").JSX.Element;
+export declare function FeatureRow({ reverse, n, eyebrow, icon, title, lede, children, actions, visual, texture, textureSrc, sheen, splitAt, titleAs, titleScale, className, }: FeatureRowProps): import("react").JSX.Element;
 /** Vertical stack of rows at the section's rhythm. */
 export declare function FeatureStack({ className, children, }: {
     className?: string;

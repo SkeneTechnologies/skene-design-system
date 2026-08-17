@@ -1,5 +1,21 @@
 # @skene/design-system
 
+## 0.9.15
+
+### Patch Changes
+
+- `FeatureRow` gains `titleScale`, and the defect it closes is not a constant offset.
+
+  `row` is the fluid `clamp(1.75rem, 2.4vw, 2.55rem)` and stays the default, so the homepage does not move. `section` is a flat 32px — `--font-size-marketing-xl`, exactly what `DisplayHeading size="section"` emits — for the case where the row IS a section rather than one of three inside one.
+
+  The two scales **cross at a 1333px viewport**. Above it a card heading is larger than the section headings beside it; below it smaller; at 1024 it is 28px against their 32. Ten of the nineteen adopting routes render both on one page, and one route renders only the card scale, which makes it internally consistent and inconsistent with the other eighteen. Measured at a single width this looks like 2.56px of nothing, which is why it survived a review: the measurement has to cross the breakpoint to show it inverting.
+
+- `PlanCard` gains `tierAs`, so a plan's name can reach the document outline.
+
+  Unset by default, and unset is right for the homepage preview, where three cards sit under a section heading that already names the row. `/pricing` is the case this exists for: there the three tier names ARE the page's structure — the prototype had them as `<h2>`s — and rendering them only as chips left that page's outline running `h1` straight to its section headings with nothing naming a single tier, on the page whose entire subject is the three tiers.
+
+  It **wraps** the chip rather than replacing it, so nothing moves on screen. The heading carries `m-0`: a UA heading margin would re-centre the `items-center` chip row and shift the `flag` beside it.
+
 ## 0.9.14
 
 ### Patch Changes

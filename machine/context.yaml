@@ -2133,6 +2133,7 @@ modules:
     polarity: inherits
     seen: [section-feature-row]
     overrides: [style, className]
+    customProperties: [--font-size-marketing-xl]
     props:
       FeatureIcon:
         accent: { type: FeatureAccent, default: "'peach'" }
@@ -2152,6 +2153,7 @@ modules:
         sheen: { type: boolean, default: "true" }
         splitAt: { type: FeatureRowSplit, default: "'md'" }
         titleAs: { type: "'h2' | 'h3'", default: "'h3'" }
+        titleScale: { type: "'row' | 'section'", default: "'row'" }
     useFor: >-
       A whole dark band of a page: a copy column (corner marker, ringed icon,
       title, italic lede, proof list, pinned actions) beside a visual panel,
@@ -3260,6 +3262,7 @@ modules:
         children: { type: React.ReactNode, required: true }
       PlanCard:
         tier: { type: React.ReactNode, required: true }
+        tierAs: { type: "'h2' | 'h3'" }
         flag: { type: React.ReactNode }
         price: { type: React.ReactNode, required: true }
         unit: { type: React.ReactNode }

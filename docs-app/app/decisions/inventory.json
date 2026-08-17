@@ -1646,7 +1646,7 @@
       ],
       "summary": "The alternating feature row: copy on one side, a visual on the other, flipping",
       "client": false,
-      "lines": 343,
+      "lines": 377,
       "cases": [
         "section-feature-row"
       ],
@@ -2171,7 +2171,7 @@
       ],
       "summary": "Pricing: the grid and the tier card. The monthly/yearly switch is the only",
       "client": false,
-      "lines": 140,
+      "lines": 164,
       "cases": [
         "section-plan-card"
       ],

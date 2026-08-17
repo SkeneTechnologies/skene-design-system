@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs'
+
 import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
 
@@ -109,5 +111,34 @@ describe('FeatureRow visual inset', () => {
     const t = row({ splitAt: 'never', texture: 'journey' })
     expect(t).not.toContain('p-[16px]')
     expect(t).not.toContain('p-[34px]')
+  })
+})
+
+describe('FeatureRow title scale', () => {
+  it('is the fluid row clamp by default, so the homepage does not move', () => {
+    expect(row()).toContain('text-[clamp(1.75rem,2.4vw,2.55rem)]')
+  })
+
+  it('takes the flat section scale on request', () => {
+    const html = row({ titleScale: 'section' })
+    expect(html).toContain('text-[length:var(--font-size-marketing-xl)]')
+    expect(html).not.toContain('clamp(1.75rem,2.4vw,2.55rem)')
+  })
+
+  it('emits one size and never both', () => {
+    // The bug this guards is a className that appends rather than replaces:
+    // two font sizes on one element resolve by source order in the emitted
+    // stylesheet, which is not a thing a caller can reason about.
+    for (const scale of ['row', 'section'] as const) {
+      const m = row({ titleScale: scale }).match(/<h3 class="([^"]+)"/)
+      const sizes = (m?.[1] ?? '').split(/\s+/).filter((c) => /^text-\[/.test(c))
+      expect(sizes).toHaveLength(1)
+    }
+  })
+
+  it('spells both scales literally, so Tailwind can see them', () => {
+    const src = readFileSync(new URL('../src/sections/feature-row.tsx', import.meta.url), 'utf8')
+    expect(src).toContain("'text-[length:var(--font-size-marketing-xl)]'")
+    expect(src).toContain("'text-[clamp(1.75rem,2.4vw,2.55rem)]'")
   })
 })

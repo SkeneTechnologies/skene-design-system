@@ -76,9 +76,13 @@ const SPLIT = {
         visualReverse: '',
     },
 };
-export function FeatureRow({ reverse = false, n, eyebrow, icon, title, lede, children, actions, visual, texture, textureSrc, sheen = true, splitAt = 'md', titleAs = 'h3', className, }) {
+export function FeatureRow({ reverse = false, n, eyebrow, icon, title, lede, children, actions, visual, texture, textureSrc, sheen = true, splitAt = 'md', titleAs = 'h3', titleScale = 'row', className, }) {
     const Title = titleAs;
-    return (_jsxs("div", { className: cn('grid min-h-[600px] overflow-hidden rounded-2xl border border-chrome-line-subtle bg-chrome-surface-1', reverse ? SPLIT[splitAt].gridReverse : SPLIT[splitAt].grid, className), children: [_jsxs("div", { className: cn('relative flex flex-col items-start px-12 pb-[46px] pt-[50px]', reverse && SPLIT[splitAt].copyReverse), children: [n ? (_jsx("span", { className: "absolute right-6 top-[22px] font-mono text-[11px] text-chrome-text-muted-warm", children: n })) : null, icon ? _jsx("div", { className: "mb-[54px]", children: icon }) : null, eyebrow ? _jsx("div", { className: "mb-[24px]", children: eyebrow }) : null, title ? (_jsx(Title, { className: "mb-4 max-w-[420px] text-[clamp(1.75rem,2.4vw,2.55rem)] leading-tight text-chrome-text-primary", children: title })) : null, lede ? (_jsx("p", { className: "mb-6 max-w-[470px] text-[14px] italic text-chrome-text-muted-warm", children: lede })) : null, children ? (
+    // Whole class strings, never interpolated — Tailwind scans source text.
+    const TITLE_SIZE = titleScale === 'section'
+        ? 'text-[length:var(--font-size-marketing-xl)]'
+        : 'text-[clamp(1.75rem,2.4vw,2.55rem)]';
+    return (_jsxs("div", { className: cn('grid min-h-[600px] overflow-hidden rounded-2xl border border-chrome-line-subtle bg-chrome-surface-1', reverse ? SPLIT[splitAt].gridReverse : SPLIT[splitAt].grid, className), children: [_jsxs("div", { className: cn('relative flex flex-col items-start px-12 pb-[46px] pt-[50px]', reverse && SPLIT[splitAt].copyReverse), children: [n ? (_jsx("span", { className: "absolute right-6 top-[22px] font-mono text-[11px] text-chrome-text-muted-warm", children: n })) : null, icon ? _jsx("div", { className: "mb-[54px]", children: icon }) : null, eyebrow ? _jsx("div", { className: "mb-[24px]", children: eyebrow }) : null, title ? (_jsx(Title, { className: cn('mb-4 max-w-[420px] leading-tight text-chrome-text-primary', TITLE_SIZE), children: title })) : null, lede ? (_jsx("p", { className: "mb-6 max-w-[470px] text-[14px] italic text-chrome-text-muted-warm", children: lede })) : null, children ? (
                     // Full-width, not max-w: a CheckList's rules run the width of the
                     // column on the live cards, and constraining them to the prose measure
                     // leaves the rules stopping short of the text they separate.
