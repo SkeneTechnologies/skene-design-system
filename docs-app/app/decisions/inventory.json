@@ -2510,6 +2510,40 @@
       }
     },
     {
+      "module": "surface-cards",
+      "layer": "sections",
+      "import": "@skene/design-system/sections/surface-cards",
+      "exports": [
+        "SurfaceCards"
+      ],
+      "summary": "The four-ways-in grid: a small set of peer cards on a textured field, one of",
+      "client": false,
+      "lines": 187,
+      "cases": [],
+      "demo": null,
+      "usage": {
+        "module": "surface-cards",
+        "purpose": "A compact grid of peer cards on a textured field, one of them drawn cream, where every card carries its own detail: the “ways in” band, four surfaces two across.",
+        "alsoFor": [
+          "Any two-to-four item set of alternatives where one is editorially led — entry points, plans, channels. Nothing in it is homepage-specific.",
+          "Which cell is the cream one is the caller's, so the lit card can follow the page's argument instead of always being the first.",
+          "A plain panel with no artwork behind it, by omitting the texture — the grid does not depend on the field.",
+          "A command or endpoint per card, as a mono chip whose hairline is mixed from the card's own ink so it holds on the cream cell and the ink ones alike."
+        ],
+        "watchFor": [
+          "The featured card carries `light` and the other cards carry `dark`, and both are load-bearing. Without them a mode-aware token keeps the wrong value — `text.primary` resolves to #faf1e9 on a #faf1e9 fill, which is not dim, it is absent.",
+          "The chip reads as tested, which is exactly why it is optional. Pass one only where the exact string is verifiable in a source; an absent chip is not a hole in the design.",
+          "The glyph is a character, never a named HTML entity. JSX entity tables are per-compiler and `machine/rules.yaml` bans them outright.",
+          "The grid is literally two across at `sm` and one below it, not `auto-fit`. Four tracks in a ~640px band give each card 139px, and every two-word title wraps."
+        ],
+        "notFor": [
+          "A row of tiles with ONE panel under it explaining whichever tile is chosen. That is `SurfaceTiles` with `SurfaceDetail` as a sibling. Use that when one surface is being explained, and this when all of them are, each in its own card.",
+          "Cards that argue by contrast — N of them naming what the situation costs, then one naming what it becomes. These cards are peers; the tone here marks the lit one rather than turning the argument.",
+          "A whole band: a copy column beside a visual panel, at band scale. Its copy column alone carries 38.4px of side padding, wider than the content a 223px cell holds. This grid is what goes IN a FeatureRow's visual, not a nest of four more."
+        ]
+      }
+    },
+    {
       "module": "surface-tiles",
       "layer": "sections",
       "import": "@skene/design-system/sections/surface-tiles",
@@ -2854,12 +2888,12 @@
     "cases": 87
   },
   "counts": {
-    "modules": 80,
-    "exports": 250,
+    "modules": 81,
+    "exports": 251,
     "ui": 30,
     "patterns": 5,
-    "sections": 45,
-    "noVisual": 2,
-    "withUsage": 80
+    "sections": 46,
+    "noVisual": 3,
+    "withUsage": 81
   }
 }

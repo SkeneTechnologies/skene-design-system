@@ -19,7 +19,7 @@
 #   the root merges yours through cn; use client means it carries the directive.
 
 version: "1.0.0"
-counts: { modules: 80, ui: 30, patterns: 5, sections: 45, authored: 80, assets: 11 }
+counts: { modules: 81, ui: 30, patterns: 5, sections: 46, authored: 81, assets: 11 }
 
 modules:
   ui/accordion:
@@ -4046,6 +4046,90 @@ modules:
           the `font.tracking.eyebrow` token — a different job at a different
           tracking.
     sameAs: [sections/chip#Chip]
+  sections/surface-cards:
+    import: "@skene/design-system/sections/surface-cards"
+    exports: [SurfaceCards]
+    composes: [same-layer/glyph-badge]
+    polarity: applies-both
+    seen: []
+    overrides: [style, className]
+    customProperties: [--font-size-body, --font-size-ui, --font-size-body-sm]
+    props:
+      SurfaceCards:
+        surfaces: { type: "SurfaceCardItem[]", required: true }
+        featured: { type: number, default: 0 }
+        texture: { type: string }
+    types:
+      SurfaceCardItem:
+        id: { type: string, required: true }
+        icon: { type: React.ReactNode }
+        title: { type: React.ReactNode, required: true }
+        context: { type: React.ReactNode }
+        detail: { type: React.ReactNode, required: true }
+        code: { type: string }
+    useFor: >-
+      A compact grid of peer cards on a textured field, one of them drawn
+      cream, where every card carries its own detail: the “ways in” band, four
+      surfaces two across.
+    alsoFor:
+      - claim: >-
+          Any two-to-four item set of alternatives where one is editorially
+          led — entry points, plans, channels. Nothing in it is
+          homepage-specific.
+        via: prop SurfaceCards.surfaces
+      - claim: >-
+          Which cell is the cream one is the caller's, so the lit card can
+          follow the page's argument instead of always being the first.
+        via: prop SurfaceCards.featured
+      - claim: >-
+          A plain panel with no artwork behind it, by omitting the texture —
+          the grid does not depend on the field.
+        via: prop SurfaceCards.texture
+      - claim: >-
+          A command or endpoint per card, as a mono chip whose hairline is
+          mixed from the card's own ink so it holds on the cream cell and the
+          ink ones alike.
+        via: type SurfaceCardItem.code
+    watchFor:
+      - note: >-
+          The featured card carries `light` and the other cards carry `dark`,
+          and both are load-bearing. Without them a mode-aware token keeps the
+          wrong value — `text.primary` resolves to #faf1e9 on a #faf1e9 fill,
+          which is not dim, it is absent.
+        via: prop SurfaceCards.featured
+      - note: >-
+          The chip reads as tested, which is exactly why it is optional. Pass
+          one only where the exact string is verifiable in a source; an absent
+          chip is not a hole in the design.
+        via: type SurfaceCardItem.code
+      - note: >-
+          The glyph is a character, never a named HTML entity. JSX entity
+          tables are per-compiler and `machine/rules.yaml` bans them outright.
+        via: type SurfaceCardItem.icon
+      - note: >-
+          The grid is literally two across at `sm` and one below it, not
+          `auto-fit`. Four tracks in a ~640px band give each card 139px, and
+          every two-word title wraps.
+        via: prop SurfaceCards.surfaces
+    notFor:
+      - instead: SurfaceTile
+        why: >-
+          A row of tiles with ONE panel under it explaining whichever tile is
+          chosen. That is `SurfaceTiles` with `SurfaceDetail` as a sibling.
+          Use that when one surface is being explained, and this when all of
+          them are, each in its own card.
+      - instead: ValueCard
+        why: >-
+          Cards that argue by contrast — N of them naming what the situation
+          costs, then one naming what it becomes. These cards are peers; the
+          tone here marks the lit one rather than turning the argument.
+      - instead: FeatureRow
+        why: >-
+          A whole band: a copy column beside a visual panel, at band scale.
+          Its copy column alone carries 38.4px of side padding, wider than the
+          content a 223px cell holds. This grid is what goes IN a FeatureRow's
+          visual, not a nest of four more.
+    sameAs: [sections/surface-tiles#SurfaceTile]
   sections/surface-tiles:
     import: "@skene/design-system/sections/surface-tiles"
     exports: [SurfaceTiles, SurfaceTile, SurfaceDetail]
