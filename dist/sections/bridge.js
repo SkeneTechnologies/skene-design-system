@@ -70,9 +70,13 @@ export function BridgeNode({ label, title, items, icon, featured = false, classN
                 // inside a `light` band, and without the class every token in it
                 // stays at its light value on a near-black fill.
                 'dark border-chrome-line-subtle bg-chrome-surface-1 md:-translate-y-3'
-            : 'border-chrome-line-on-light bg-surface-0', className), style: featured ? { boxShadow: 'var(--shadow-modal)' } : undefined, children: [icon ? (_jsx("div", { className: "mb-5 flex text-brand-peach", "aria-hidden": true, children: icon })) : null, label ? (_jsx("span", { className: "font-mono text-[10px] uppercase tracking-[0.08em] text-text-muted", children: label })) : null, title ? (_jsx("p", { className: cn('mt-3 leading-snug', featured
+            : 'border-chrome-line-on-light bg-surface-0', className), style: featured ? { boxShadow: 'var(--shadow-modal)' } : undefined, children: [icon ? (_jsx("div", { className: "mb-5 flex text-brand-peach", "aria-hidden": true, children: icon })) : null, label ? (_jsx("span", { className: "font-mono text-[10px] uppercase tracking-[0.08em] text-text-muted", children: label })) : null, title ? (_jsx("p", { 
+                // SIZE FIRST, so twMerge does not eat `leading-snug`: font-size and
+                // line-height share a conflict group there, and a later `text-*`
+                // wins the whole group. See the same note on `FeatureRow`'s title.
+                className: cn(featured
                     ? 'text-[19px] font-medium text-text-primary'
-                    : 'text-[17px] italic text-text-muted-strong'), children: title })) : null, items && items.length > 0 ? (
+                    : 'text-[17px] italic text-text-muted-strong', 'mt-3 leading-snug'), children: title })) : null, items && items.length > 0 ? (
             // `mt-auto` rather than a fixed gap: the three cards share a row height,
             // so pushing the block down aligns all three rules on one line instead of
             // letting a longer question shove one card's rule out of step.

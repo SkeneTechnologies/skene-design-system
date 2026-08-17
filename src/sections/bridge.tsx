@@ -122,11 +122,14 @@ export function BridgeNode({
 
       {title ? (
         <p
+          // SIZE FIRST, so twMerge does not eat `leading-snug`: font-size and
+          // line-height share a conflict group there, and a later `text-*`
+          // wins the whole group. See the same note on `FeatureRow`'s title.
           className={cn(
-            'mt-3 leading-snug',
             featured
               ? 'text-[19px] font-medium text-text-primary'
               : 'text-[17px] italic text-text-muted-strong',
+            'mt-3 leading-snug',
           )}
         >
           {title}

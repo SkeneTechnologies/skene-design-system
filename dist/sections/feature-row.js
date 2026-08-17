@@ -110,7 +110,37 @@ export function FeatureRow({ reverse = false, n, eyebrow, icon, title, lede, chi
       false for all of them and none of their markup moves.
     */
     const copyOnly = !visual && !texture && !textureSrc;
-    return (_jsxs("div", { className: cn('grid overflow-hidden rounded-2xl border border-chrome-line-subtle bg-chrome-surface-1', !copyOnly && 'min-h-[600px]', !copyOnly && (reverse ? SPLIT[splitAt].gridReverse : SPLIT[splitAt].grid), className), children: [_jsxs("div", { className: cn('relative flex flex-col items-start px-12 pb-[46px] pt-[50px]', reverse && SPLIT[splitAt].copyReverse), children: [n ? (_jsx("span", { className: "absolute right-6 top-[22px] font-mono text-[11px] text-chrome-text-muted-warm", children: n })) : null, icon ? _jsx("div", { className: "mb-[54px]", children: icon }) : null, eyebrow ? _jsx("div", { className: "mb-[24px]", children: eyebrow }) : null, title ? (_jsx(Title, { className: cn('mb-4 max-w-[420px] leading-tight text-chrome-text-primary', TITLE_SIZE), children: title })) : null, lede ? (_jsx("p", { className: "mb-6 max-w-[470px] text-[14px] italic text-chrome-text-muted-warm", children: lede })) : null, children ? (
+    return (_jsxs("div", { className: cn('grid overflow-hidden rounded-2xl border border-chrome-line-subtle bg-chrome-surface-1', !copyOnly && 'min-h-[600px]', !copyOnly && (reverse ? SPLIT[splitAt].gridReverse : SPLIT[splitAt].grid), className), children: [_jsxs("div", { className: cn('relative flex flex-col items-start px-12 pb-[46px] pt-[50px]', reverse && SPLIT[splitAt].copyReverse), children: [n ? (_jsx("span", { className: "absolute right-6 top-[22px] font-mono text-[11px] text-chrome-text-muted-warm", children: n })) : null, icon ? _jsx("div", { className: "mb-[54px]", children: icon }) : null, eyebrow ? _jsx("div", { className: "mb-[24px]", children: eyebrow }) : null, title ? (_jsx(Title
+                    // ORDER IS LOAD-BEARING AND IT COST A REGRESSION. `cn` is twMerge,
+                    // which puts font-size and line-height in ONE conflict group,
+                    // because a Tailwind `text-lg` sets both. So a `text-*` utility
+                    // appearing AFTER `leading-tight` deletes it.
+                    //
+                    // 0.9.20 extracted the size into `TITLE_SIZE` and appended it,
+                    // which moved `leading-tight` in front of it and dropped the
+                    // leading from every row heading. The class list was identical in
+                    // content and wrong in sequence: the heading kept its size and lost
+                    // its 1.25 leading, so the two lines of a wrapped title spread and
+                    // pushed the whole copy column down. Caught by the visual suite —
+                    // no type, lint or unit check can see a twMerge deletion.
+                    //
+                    // The size goes FIRST so `leading-tight` stays last and survives.
+                    , { 
+                        // ORDER IS LOAD-BEARING AND IT COST A REGRESSION. `cn` is twMerge,
+                        // which puts font-size and line-height in ONE conflict group,
+                        // because a Tailwind `text-lg` sets both. So a `text-*` utility
+                        // appearing AFTER `leading-tight` deletes it.
+                        //
+                        // 0.9.20 extracted the size into `TITLE_SIZE` and appended it,
+                        // which moved `leading-tight` in front of it and dropped the
+                        // leading from every row heading. The class list was identical in
+                        // content and wrong in sequence: the heading kept its size and lost
+                        // its 1.25 leading, so the two lines of a wrapped title spread and
+                        // pushed the whole copy column down. Caught by the visual suite —
+                        // no type, lint or unit check can see a twMerge deletion.
+                        //
+                        // The size goes FIRST so `leading-tight` stays last and survives.
+                        className: cn(TITLE_SIZE, 'mb-4 max-w-[420px] leading-tight text-chrome-text-primary'), children: title })) : null, lede ? (_jsx("p", { className: "mb-6 max-w-[470px] text-[14px] italic text-chrome-text-muted-warm", children: lede })) : null, children ? (
                     // Full-width, not max-w: a CheckList's rules run the width of the
                     // column on the live cards, and constraining them to the prose measure
                     // leaves the rules stopping short of the text they separate.

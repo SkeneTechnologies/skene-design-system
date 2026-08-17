@@ -115,11 +115,16 @@ export function LightSectionCard({
       >
         {/* Whole class strings, never interpolated: Tailwind scans source text. */}
         <h2
+          // SIZE FIRST. `cn` is twMerge and it puts font-size and line-height in
+          // one conflict group, so a `text-*` utility appearing AFTER
+          // `leading-[1.08]` deletes it. Verified against tailwind-merge
+          // directly: both branches below dropped the leading when they came
+          // second. Same defect as `FeatureRow`'s title, same fix.
           className={cn(
-            'max-w-[520px] leading-[1.08] tracking-[-0.02em] text-text-primary',
             titleScale === 'section'
               ? 'text-[length:var(--font-size-marketing-xl)]'
               : 'text-[clamp(2rem,3.2vw,3.25rem)]',
+            'max-w-[520px] leading-[1.08] tracking-[-0.02em] text-text-primary',
           )}
         >
           {title}

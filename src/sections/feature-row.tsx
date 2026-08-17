@@ -307,9 +307,23 @@ export function FeatureRow({
         {eyebrow ? <div className="mb-[24px]">{eyebrow}</div> : null}
         {title ? (
           <Title
+            // ORDER IS LOAD-BEARING AND IT COST A REGRESSION. `cn` is twMerge,
+            // which puts font-size and line-height in ONE conflict group,
+            // because a Tailwind `text-lg` sets both. So a `text-*` utility
+            // appearing AFTER `leading-tight` deletes it.
+            //
+            // 0.9.20 extracted the size into `TITLE_SIZE` and appended it,
+            // which moved `leading-tight` in front of it and dropped the
+            // leading from every row heading. The class list was identical in
+            // content and wrong in sequence: the heading kept its size and lost
+            // its 1.25 leading, so the two lines of a wrapped title spread and
+            // pushed the whole copy column down. Caught by the visual suite —
+            // no type, lint or unit check can see a twMerge deletion.
+            //
+            // The size goes FIRST so `leading-tight` stays last and survives.
             className={cn(
-              'mb-4 max-w-[420px] leading-tight text-chrome-text-primary',
               TITLE_SIZE,
+              'mb-4 max-w-[420px] leading-tight text-chrome-text-primary',
             )}
           >
             {title}
