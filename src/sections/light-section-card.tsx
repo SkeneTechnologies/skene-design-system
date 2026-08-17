@@ -57,6 +57,20 @@ import { cn } from '../lib/utils.js'
 export interface LightSectionCardProps {
   /** Section heading, e.g. "Four ways to plug Skene in." */
   title: React.ReactNode
+  /**
+   * Which type scale the title takes. `display` is this card's own fluid
+   * `clamp(2rem, 3.2vw, 3.25rem)` and stays the default.
+   *
+   * `section` is a flat `--font-size-marketing-xl`, the same token
+   * `DisplayHeading size="section"` emits, for a tonal band sitting among
+   * ordinary section bands. This is the THIRD section-heading scale the estate
+   * grew and the last one measured: `design-system-gaps.md` §2 already named it
+   * — "a tonal band's heading is not on the same scale as the section headings
+   * around it" — and closing `FeatureRow`'s in 0.9.15 is what left this one
+   * alone on the page. Measured across two routes: 32.77px at 1024, 42.66 at
+   * 1333, 46.08 at 1440, against a flat 32 on every band beside it.
+   */
+  titleScale?: 'display' | 'section'
   /** The italic line under the title — the promise, not the explanation. */
   lede?: React.ReactNode
   /** Body copy under the rule. A `<CheckList onLight>` fits here. */
@@ -75,6 +89,7 @@ export interface LightSectionCardProps {
 
 export function LightSectionCard({
   title,
+  titleScale = 'display',
   lede,
   children,
   actions,
@@ -98,7 +113,15 @@ export function LightSectionCard({
           reverse && visual && 'md:col-start-2 md:row-start-1',
         )}
       >
-        <h2 className="max-w-[520px] text-[clamp(2rem,3.2vw,3.25rem)] leading-[1.08] tracking-[-0.02em] text-text-primary">
+        {/* Whole class strings, never interpolated: Tailwind scans source text. */}
+        <h2
+          className={cn(
+            'max-w-[520px] leading-[1.08] tracking-[-0.02em] text-text-primary',
+            titleScale === 'section'
+              ? 'text-[length:var(--font-size-marketing-xl)]'
+              : 'text-[clamp(2rem,3.2vw,3.25rem)]',
+          )}
+        >
           {title}
         </h2>
         {lede ? (

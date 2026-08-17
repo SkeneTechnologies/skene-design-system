@@ -39,3 +39,39 @@ describe('PlanCard tier heading', () => {
     expect(card({ tierAs: 'h3' })).toMatch(/<h3 class="m-0"/)
   })
 })
+
+// ---------------------------------------------------------------------------
+
+import { LightSectionCard } from '../src/sections/light-section-card.js'
+
+/**
+ * The third section-heading scale, and the last one measured.
+ *
+ * `design-system-gaps.md` §2 named it before it was measured — "a tonal band's
+ * heading is not on the same scale as the section headings around it" — and
+ * closing `FeatureRow`'s scale is what left this one alone on the page. On two
+ * routes it renders 32.77px at 1024, 42.66 at 1333 and 46.08 at 1440 against a
+ * flat 32 on every band beside it.
+ */
+const tonal = (props = {}) =>
+  renderToStaticMarkup(<LightSectionCard title="Start with the truth." {...props} />)
+
+describe('LightSectionCard title scale', () => {
+  it('is its own display clamp by default', () => {
+    expect(tonal()).toContain('text-[clamp(2rem,3.2vw,3.25rem)]')
+  })
+
+  it('takes the flat section scale on request', () => {
+    const html = tonal({ titleScale: 'section' })
+    expect(html).toContain('text-[length:var(--font-size-marketing-xl)]')
+    expect(html).not.toContain('clamp(2rem,3.2vw,3.25rem)')
+  })
+
+  it('emits one size and never both', () => {
+    for (const scale of ['display', 'section'] as const) {
+      const m = tonal({ titleScale: scale }).match(/<h2 class="([^"]+)"/)
+      const sizes = (m?.[1] ?? '').split(/\s+/).filter((c) => /^text-\[/.test(c))
+      expect(sizes).toHaveLength(1)
+    }
+  })
+})

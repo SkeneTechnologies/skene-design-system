@@ -1,5 +1,15 @@
 # @skene/design-system
 
+## 0.9.16
+
+### Patch Changes
+
+- `LightSectionCard` gains `titleScale`, closing the third and last section-heading scale.
+
+  `display` is this card's own fluid `clamp(2rem, 3.2vw, 3.25rem)` and stays the default. `section` is a flat `--font-size-marketing-xl`, the same token `DisplayHeading size="section"` emits.
+
+  `design-system-gaps.md` §2 named this before anyone measured it — "a tonal band's heading is not on the same scale as the section headings around it" — and closing `FeatureRow`'s scale in 0.9.15 is what left it alone on the page. Measured on two routes after that release: 32.77px at 1024, 42.66 at 1333, 46.08 at 1440, against a flat 32 on every band beside it. Three components were each answering "how big is a section heading" differently; now one token does.
+
 ## 0.9.15
 
 ### Patch Changes

@@ -2974,9 +2974,11 @@ modules:
     polarity: applies-light
     seen: [section-light-section-card, light-section-card-steps]
     overrides: [style, className]
+    customProperties: [--font-size-marketing-xl]
     props:
       LightSectionCard:
         title: { type: React.ReactNode, required: true }
+        titleScale: { type: "'display' | 'section'", default: "'display'" }
         lede: { type: React.ReactNode }
         children: { type: React.ReactNode }
         actions: { type: React.ReactNode }

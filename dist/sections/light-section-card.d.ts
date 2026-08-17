@@ -54,6 +54,20 @@
 export interface LightSectionCardProps {
     /** Section heading, e.g. "Four ways to plug Skene in." */
     title: React.ReactNode;
+    /**
+     * Which type scale the title takes. `display` is this card's own fluid
+     * `clamp(2rem, 3.2vw, 3.25rem)` and stays the default.
+     *
+     * `section` is a flat `--font-size-marketing-xl`, the same token
+     * `DisplayHeading size="section"` emits, for a tonal band sitting among
+     * ordinary section bands. This is the THIRD section-heading scale the estate
+     * grew and the last one measured: `design-system-gaps.md` §2 already named it
+     * — "a tonal band's heading is not on the same scale as the section headings
+     * around it" — and closing `FeatureRow`'s in 0.9.15 is what left this one
+     * alone on the page. Measured across two routes: 32.77px at 1024, 42.66 at
+     * 1333, 46.08 at 1440, against a flat 32 on every band beside it.
+     */
+    titleScale?: 'display' | 'section';
     /** The italic line under the title — the promise, not the explanation. */
     lede?: React.ReactNode;
     /** Body copy under the rule. A `<CheckList onLight>` fits here. */
@@ -69,5 +83,5 @@ export interface LightSectionCardProps {
     reverse?: boolean;
     className?: string;
 }
-export declare function LightSectionCard({ title, lede, children, actions, visual, reverse, className, }: LightSectionCardProps): import("react").JSX.Element;
+export declare function LightSectionCard({ title, titleScale, lede, children, actions, visual, reverse, className, }: LightSectionCardProps): import("react").JSX.Element;
 //# sourceMappingURL=light-section-card.d.ts.map

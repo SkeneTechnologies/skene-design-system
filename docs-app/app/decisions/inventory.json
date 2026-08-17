@@ -2032,7 +2032,7 @@
       ],
       "summary": "The inverted section: one cream card carrying a whole section's worth of copy",
       "client": false,
-      "lines": 143,
+      "lines": 166,
       "cases": [
         "section-light-section-card",
         "light-section-card-steps"
