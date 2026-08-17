@@ -870,6 +870,10 @@
      "via": "prop FeatureRow.visual"
     },
     {
+     "claim": "A grid cell's own type scale: `titleScale=\"cell\"` renders the title at `--font-size-card-title` (20px), the token skene-site's cards already carried. Added in 0.9.20 with the grid-cell role, because `row` is a 28-40.8px clamp and `/resources/glossary`'s eighteen terms would each have had a heading larger than the section heading above them.",
+     "via": "prop FeatureRow.titleScale"
+    },
+    {
      "claim": "A cell in a 2-up or 3-up grid of small cards, which `ui/card` used to own on marketing pages. Since 0.9.19 `render_marketing_cards_as_feature_row` makes this the only marketing card, and the copy-only path is what makes it affordable: a cell with no visual has no 600px floor, so skene-site's 18 glossary terms stay near their 159px each instead of becoming 11,232px of stacked bands. One component, and deliberately not one picture - a copy-only cell and a row with a visual are the same card at two densities.",
      "via": "prop FeatureRow.visual"
     },

@@ -79,9 +79,13 @@ const SPLIT = {
 export function FeatureRow({ reverse = false, n, eyebrow, icon, title, lede, children, actions, visual, texture, textureSrc, sheen = true, splitAt = 'md', titleAs = 'h3', titleScale = 'row', className, }) {
     const Title = titleAs;
     // Whole class strings, never interpolated — Tailwind scans source text.
-    const TITLE_SIZE = titleScale === 'section'
-        ? 'text-[length:var(--font-size-marketing-xl)]'
-        : 'text-[clamp(1.75rem,2.4vw,2.55rem)]';
+    // A lookup and not a ternary chain, so a fourth scale is one line and cannot
+    // be added by nesting. Whole class strings, never interpolated.
+    const TITLE_SIZE = {
+        section: 'text-[length:var(--font-size-marketing-xl)]',
+        cell: 'text-[length:var(--font-size-card-title)]',
+        row: 'text-[clamp(1.75rem,2.4vw,2.55rem)]',
+    }[titleScale];
     /*
       A row with nothing to show. See
       `documentation/20260817_feature_row_copy_only.md`.

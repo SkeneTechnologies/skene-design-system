@@ -2184,7 +2184,7 @@ modules:
     polarity: inherits
     seen: [section-feature-row]
     overrides: [style, className]
-    customProperties: [--font-size-marketing-xl]
+    customProperties: [--font-size-marketing-xl, --font-size-card-title]
     props:
       FeatureIcon:
         accent: { type: FeatureAccent, default: "'peach'" }
@@ -2204,7 +2204,7 @@ modules:
         sheen: { type: boolean, default: "true" }
         splitAt: { type: FeatureRowSplit, default: "'md'" }
         titleAs: { type: "'h2' | 'h3'", default: "'h3'" }
-        titleScale: { type: "'row' | 'section'", default: "'row'" }
+        titleScale: { type: "'row' | 'section' | 'cell'", default: "'row'" }
     useFor: >-
       A whole dark band of a page: a copy column (corner marker, ringed icon,
       title, italic lede, proof list, pinned actions) beside a visual panel,
@@ -2232,6 +2232,14 @@ modules:
           `reverse` go inert rather than erroring, so a consumer can pass them
           uniformly across a mixed set.
         via: prop FeatureRow.visual
+      - claim: >-
+          A grid cell's own type scale: `titleScale="cell"` renders the title
+          at `--font-size-card-title` (20px), the token skene-site's cards
+          already carried. Added in 0.9.20 with the grid-cell role, because
+          `row` is a 28-40.8px clamp and `/resources/glossary`'s eighteen
+          terms would each have had a heading larger than the section heading
+          above them.
+        via: prop FeatureRow.titleScale
       - claim: >-
           A cell in a 2-up or 3-up grid of small cards, which `ui/card` used
           to own on marketing pages. Since 0.9.19

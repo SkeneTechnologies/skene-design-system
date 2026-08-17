@@ -185,9 +185,17 @@ export interface FeatureRowProps {
      * the other eighteen. Measuring at one width makes this look like 2.56px of
      * nothing; measuring across the breakpoint is what shows it inverting.
      *
+     * `cell` is the third, added in 0.9.20 when `render_marketing_cards_as_feature_row`
+     * made this component the grid cell too. A cell is not a band: skene-site's
+     * cards carried `--font-size-card-title` (20px) and taking `row` would have
+     * rendered them at 28-40.8px, so `/resources/glossary`'s eighteen terms would
+     * each have had a heading larger than the section heading above them. The
+     * token is the one those cards already used, so this is adopting a value
+     * rather than inventing one.
+     *
      * Default `row`, so no existing caller moves.
      */
-    titleScale?: 'row' | 'section';
+    titleScale?: 'row' | 'section' | 'cell';
     className?: string;
 }
 export declare function FeatureRow({ reverse, n, eyebrow, icon, title, lede, children, actions, visual, texture, textureSrc, sheen, splitAt, titleAs, titleScale, className, }: FeatureRowProps): import("react").JSX.Element;

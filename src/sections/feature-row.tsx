@@ -213,9 +213,17 @@ export interface FeatureRowProps {
    * the other eighteen. Measuring at one width makes this look like 2.56px of
    * nothing; measuring across the breakpoint is what shows it inverting.
    *
+   * `cell` is the third, added in 0.9.20 when `render_marketing_cards_as_feature_row`
+   * made this component the grid cell too. A cell is not a band: skene-site's
+   * cards carried `--font-size-card-title` (20px) and taking `row` would have
+   * rendered them at 28-40.8px, so `/resources/glossary`'s eighteen terms would
+   * each have had a heading larger than the section heading above them. The
+   * token is the one those cards already used, so this is adopting a value
+   * rather than inventing one.
+   *
    * Default `row`, so no existing caller moves.
    */
-  titleScale?: 'row' | 'section'
+  titleScale?: 'row' | 'section' | 'cell'
   className?: string
 }
 
@@ -239,10 +247,13 @@ export function FeatureRow({
 }: FeatureRowProps) {
   const Title = titleAs
   // Whole class strings, never interpolated — Tailwind scans source text.
-  const TITLE_SIZE =
-    titleScale === 'section'
-      ? 'text-[length:var(--font-size-marketing-xl)]'
-      : 'text-[clamp(1.75rem,2.4vw,2.55rem)]'
+  // A lookup and not a ternary chain, so a fourth scale is one line and cannot
+  // be added by nesting. Whole class strings, never interpolated.
+  const TITLE_SIZE = {
+    section: 'text-[length:var(--font-size-marketing-xl)]',
+    cell: 'text-[length:var(--font-size-card-title)]',
+    row: 'text-[clamp(1.75rem,2.4vw,2.55rem)]',
+  }[titleScale]
   /*
     A row with nothing to show. See
     `documentation/20260817_feature_row_copy_only.md`.
