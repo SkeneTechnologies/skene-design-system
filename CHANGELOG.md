@@ -1,5 +1,19 @@
 # @skene/design-system
 
+## 0.9.17
+
+### Minor-in-spirit, patch in fact
+
+- `Code` and `PROSE_CODE` — the inline identifier chip, extracted from **seven** copies.
+
+  Six route files in skene-site declared it byte-for-byte identically (verified by comparing the emitted class string, not by eye) and a seventh spelling existed as a descendant selector for prose the author cannot reach element by element. One mark, two mechanisms, seven copies, on a site where an event name appears in nearly every paragraph. The oldest open entry on that repository's gap list.
+
+  `Chip`, `TagChip`, `Badge`, `TerminalBlock` and `McpBlock` were each checked and rejected for a stated reason before this was added; nothing in the 74 existing gallery modules rendered an inline `<code>`. `documentation/20260817_code_component_design.md` has the working.
+
+  **Each variant pins its own mode class, and the contrast gate is what proved that necessary.** Measured across both modes: the default is 10.06:1 as rendered and 4.30:1 in the mode it is never meant to be in; `onLight` is 17.75:1 as rendered and **1.00:1** — the same colour, not merely low contrast — in the mode it is never meant to be in. "Never meant to" is a hope about where a caller puts it, not a guarantee, so `dark` and `light` are carried on the branches themselves. The measured number is now the rendered number wherever the chip lands.
+
+  This is the inverse of the `brand.peachDeep` failure in 0.9.9: there an invariant token was assumed to adapt; here mode-aware tokens are made deterministic.
+
 ## 0.9.16
 
 ### Patch Changes

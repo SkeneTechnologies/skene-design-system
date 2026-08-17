@@ -237,6 +237,18 @@ const PAIRS: Pair[] = [
   { fg: 'brand.peach', bg: 'surface.0', size: 'body', context: 'peach link on page bg' },
   { fg: 'brand.peach', bg: 'surface.1', size: 'body', context: 'peach link on card bg' },
 
+  // `Code`, both grounds. BODY size and not large: this mark sits inside a
+  // sentence, so it takes the 4.5 floor rather than 3.0. The second pair is the
+  // reason `onLight` exists — `brand.peach` is mode-aware and `surface.2` is
+  // not, so a chip inheriting its way onto cream would put brown ink on a
+  // near-black box, and only a measured pair says so.
+  //
+  // Each variant PINS its mode, so only one of the two rows per pair is a state
+  // the component can render. The crossed rows are waived below by name, with
+  // the measurement kept here so the waiver is arguable rather than assumed.
+  { fg: 'brand.peach', bg: 'surface.2', size: 'body', context: 'Code chip on its own fill' },
+  { fg: 'text.primary', bg: 'brand.light', size: 'body', context: 'Code chip, onLight' },
+
   // Pill text on peach background (e.g. "Recommended" pills).
   { fg: 'brand.peach-text', bg: 'brand.peach', size: 'body', context: 'pill body on peach' },
 
@@ -318,6 +330,23 @@ const SKIP_PAIRS: Set<string> = new Set([
  * palette will want it; delete it if that never happens.
  */
 const KNOWN_GAPS: Set<string> = new Set([
+  // `Code`, both crossed rows. NOT a gap in the component — a limitation of
+  // measuring a token pair when the component PINS the mode it renders in.
+  //
+  // `Code` carries `dark` on its default branch and `light` on `onLight`, so
+  // each variant resolves its own tokens wherever a caller drops it. The two
+  // rows below are each variant scored in the mode it can no longer be in:
+  //
+  //   light|brand.peach|surface.2      4.30:1  default, pinned to dark  (10.06 as rendered)
+  //   dark|text.primary|brand.light    1.00:1  onLight, pinned to light (17.75 as rendered)
+  //
+  // Kept here rather than in SKIP_PAIRS, and kept as PAIRS rather than deleted,
+  // because the numbers are the argument for the pinning. Delete these two only
+  // together with the mode classes; a future edit that removes `dark`/`light`
+  // from the component makes both rows real again, and this list is where that
+  // is written down.
+  'light|brand.peach|surface.2',
+  'dark|text.primary|brand.light',
   // White on shadcn's dark --destructive (#ff6467) is 2.89:1. Real, and not
   // fixable from the foreground side: darkening the label to #060606 clears
   // 7.02:1 on paper but rendered as near-black-on-near-black in the marketing
