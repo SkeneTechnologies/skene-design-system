@@ -11,6 +11,30 @@ import { Button } from '@skene/design-system/ui/button'
  * Every prop is a control. That is the point of this file rather than a second
  * copy of `docs-app`: the states below include ones no page currently renders,
  * and two of them are states that shipped defects to production.
+ *
+ * ## Since 0.9.19 this is the ONLY marketing card
+ *
+ * `render_marketing_cards_as_feature_row` in `machine/rules.yaml` routes every
+ * card on a marketing page here — the band, the 2-up and 3-up grid cell, and
+ * the band that used to be cream. It reverses the two `notFor` entries this
+ * component carried until 0.9.19. `ui/card` keeps product surfaces;
+ * `LightSectionCard` keeps everything non-marketing.
+ *
+ * The copy-only path is what makes that affordable rather than absurd: a cell
+ * with no `visual` has no 600px floor, so 18 glossary terms stay near 159px
+ * each instead of becoming 11,232px of stacked bands. One component at two
+ * densities, deliberately not one picture.
+ *
+ * ## Two things that bite on conversion, both found by reading rather than by a gate
+ *
+ * **`titleAs` defaults to `h3` here and to `h2` on `LightSectionCard`.** A
+ * straight swap silently demotes a section heading. No check caught it; it was
+ * found in the rendered outline. Pass `titleAs="h2"` when converting one.
+ *
+ * **This renders a `<div>`; `LightSectionCard` renders a `<section>`.** Two
+ * domPaths broke on that alone. A band's own `<section>` is unaffected, so a
+ * page keeps its landmarks and loses a nested one it should not have had — but
+ * anything selecting on the old path breaks.
  */
 const meta = {
   title: 'Sections/FeatureRow',
@@ -35,6 +59,12 @@ const meta = {
       control: 'boolean',
       description:
         'The 10% white wash over the visual. Turn it off when the visual carries a light-on-dark status mark; it raises the ground under one.',
+    },
+    titleScale: {
+      control: 'inline-radio',
+      options: ['row', 'section', 'cell'],
+      description:
+        'Heading size. `row` is the band clamp (28–40.8px), `section` matches DisplayHeading size="section" (32px flat), `cell` is 20px for a grid cell. Default `row`.',
     },
     reverse: { control: 'boolean' },
     texture: { control: 'inline-radio', options: [undefined, 'journey', 'github', 'schema'] },
@@ -178,6 +208,78 @@ export const CopyOnlyBesideAVisualRow: Story = {
     </div>
   ),
   args: { ...copy, sheen: false },
+}
+
+/**
+ * The grid cell — the shape 0.9.19 routed here and 0.9.20 sized.
+ *
+ * Copy-only, so no 600px floor, and `titleScale="cell"` at 20px. Without that
+ * scale a cell takes the row clamp and renders at 28–40.8px, which on
+ * `/resources/glossary` gave every one of eighteen terms a heading larger than
+ * the section heading above it. The token is `--font-size-card-title`, the one
+ * those cards already carried, so this adopts a value rather than inventing one.
+ */
+export const GridCells: Story = {
+  name: 'Grid cells (titleScale="cell")',
+  parameters: { layout: 'fullscreen' },
+  args: { ...copy, titleScale: 'cell' },
+  render: () => (
+    <div className="grid gap-4 bg-chrome-surface-0 p-10 md:grid-cols-3">
+      {[
+        ['Collection layer', 'Where events are written in your own code, before anything is sent.'],
+        ['Milestone', 'A named step in a journey. Bound to one event, or to nothing.'],
+        ['Drift', 'A signal that changed shape without anyone deciding it should.'],
+      ].map(([title, body]) => (
+        <FeatureRow key={title} titleScale="cell" title={title} lede={body} sheen={false} />
+      ))}
+    </div>
+  ),
+}
+
+/**
+ * The same three cells at the default `row` scale — the defect 0.9.20 closed.
+ * Compare the heading size against `GridCells`: in a real page these sit under
+ * a 32px section heading, so this renders each term LARGER than the heading
+ * that introduces them.
+ */
+export const GridCellsAtRowScale: Story = {
+  name: 'Grid cells without titleScale (defect)',
+  parameters: { layout: 'fullscreen' },
+  args: { ...copy, titleScale: 'row' },
+  render: () => (
+    <div className="grid gap-4 bg-chrome-surface-0 p-10 md:grid-cols-3">
+      {[
+        ['Collection layer', 'Where events are written in your own code, before anything is sent.'],
+        ['Milestone', 'A named step in a journey. Bound to one event, or to nothing.'],
+        ['Drift', 'A signal that changed shape without anyone deciding it should.'],
+      ].map(([title, body]) => (
+        <FeatureRow key={title} title={title} lede={body} sheen={false} />
+      ))}
+    </div>
+  ),
+}
+
+/**
+ * All three scales at one width, which is the comparison that shows they are
+ * not a constant offset. `row` and `section` cross at a 1333px viewport: above
+ * it the card heading is larger than its siblings, below it smaller.
+ */
+export const TitleScales: Story = {
+  parameters: { layout: 'fullscreen' },
+  args: { ...copy },
+  render: () => (
+    <div className="grid gap-4 bg-chrome-surface-0 p-10">
+      {(['row', 'section', 'cell'] as const).map((scale) => (
+        <FeatureRow
+          key={scale}
+          titleScale={scale}
+          title={`titleScale="${scale}"`}
+          lede="The same string at each of the three scales."
+          sheen={false}
+        />
+      ))}
+    </div>
+  ),
 }
 
 function Placeholder({

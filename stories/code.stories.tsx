@@ -21,6 +21,7 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const InASentence: Story = {
+  args: { children: 'events_tracked' },
   render: () => (
     <p className="max-w-[62ch] text-chrome-text-muted-strong">
       Say an update stops sending <Code>plan_tier</Code> with a usage signal. The signal keeps
@@ -31,6 +32,7 @@ export const InASentence: Story = {
 
 /** The case the component exists for: several marks in one paragraph. */
 export const SeveralInOneParagraph: Story = {
+  args: { children: 'events_tracked' },
   render: () => (
     <p className="max-w-[62ch] text-chrome-text-muted-strong">
       It takes one of two inputs, never both: a directory of exported{' '}
@@ -45,6 +47,7 @@ export const SeveralInOneParagraph: Story = {
  * replaced by inheritance and the mark is invisible inside a tonal band.
  */
 export const OnCream: Story = {
+  args: { children: 'events_tracked' },
   render: () => (
     <div className="light rounded-3xl bg-brand-light p-10">
       <p className="max-w-[62ch] text-text-muted">
@@ -60,6 +63,7 @@ export const OnCream: Story = {
  * the recipe is a descendant selector on the containing block.
  */
 export const InProseTheCallerDoesNotAuthor: Story = {
+  args: { children: 'events_tracked' },
   render: () => (
     <div
       className={`max-w-[62ch] text-chrome-text-muted-strong ${PROSE_CODE}`}

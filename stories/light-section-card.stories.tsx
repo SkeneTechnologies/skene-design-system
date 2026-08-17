@@ -9,6 +9,32 @@ import { Button } from '@skene/design-system/ui/button'
  * `LightSectionCard` — a cream panel in a dark page. It forces `light` on its
  * own subtree, which is the whole point of it and also the whole hazard: any
  * child built for ink now sits on cream.
+ *
+ * ## SCOPE NARROWED IN 0.9.19 — this is no longer a marketing section band
+ *
+ * `render_marketing_cards_as_feature_row` gives that role to `FeatureRow`
+ * alone: a page that alternates one repeating object cannot also alternate
+ * polarity without the cream band reading as a second system. What remains here
+ * is every non-marketing use — product surfaces, gallery cases, and any
+ * dark-document context needing a correctly-inverted cream subtree, which is
+ * the part no other component does.
+ *
+ * The export and the `light` mechanism are unchanged. Nothing below is dead;
+ * the stories are simply no longer a pattern to copy onto a marketing page.
+ *
+ * ## If you are converting one to `FeatureRow`, three things bite
+ *
+ * 1. **`titleAs` defaults differ** — `h2` here, `h3` on `FeatureRow`. A straight
+ *    swap silently demotes a section heading, and no gate catches it. Pass
+ *    `titleAs="h2"`.
+ * 2. **This renders a `<section>`; `FeatureRow` renders a `<div>`.** Anything
+ *    selecting on the old domPath breaks. The band's own `<section>` is
+ *    unaffected, so the page keeps its landmarks and loses a nested one it
+ *    should not have had.
+ * 3. **Removing `light` is never a one-line change.** A cream ground carries
+ *    compensations — a near-black primary button, an on-light hairline on an
+ *    outline button, `onLight` on every `NumberedStep`. On skene-site's homepage
+ *    two of three would have shipped as near-black on near-black.
  */
 const meta = {
   title: 'Sections/LightSectionCard',
