@@ -80,6 +80,21 @@ must:
   - use_tokens_over_literal_values
   - wrap_dark_subtrees_in_dark_class
   - ask_before_inventing_a_component_that_does_not_exist
+  # One card on a marketing surface, and it is FeatureRow. A consumer that
+  # renders a card any other way is rendering a second visual system on the
+  # same page, which is what this rule exists to stop — skene-site had three
+  # at once (50 FeatureRows, 51 Card variant="surface" grid cells, 2
+  # LightSectionCards) and a reader could tell from the frame whether a
+  # section happened to have a product surface.
+  #
+  # This REVERSES the two notFor entries feature-row carried until 0.9.19.
+  # See documentation/20260817_feature_row_as_the_marketing_card.md for what
+  # was checked, and for the cost: a grid cell converts as a copy-only row so
+  # it keeps its height, which means "one card" is one component and not one
+  # picture.
+  #
+  # Product surfaces are out of scope. This is about marketing pages.
+  - render_marketing_cards_as_feature_row
 
 must_not:
   - arbitrary_hex_in_classnames

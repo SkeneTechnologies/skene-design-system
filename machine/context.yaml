@@ -173,10 +173,15 @@ modules:
         asChild: { type: boolean; }
     useFor: >-
       The generic product container: header, content, footer.
-      `variant="surface"` is the marketing flavour of the same card — flat,
+      `variant="surface"` is the flat flavour of the same card —
       `border-surface-border` over `bg-surface-1`, 24px of its own padding —
       which appeared inline eight times across skene-site's routes plus six
-      near-copies that differed only by being an `<a>`.
+      near-copies that differed only by being an `<a>`. SCOPE NARROWED IN
+      0.9.19: `surface` is no longer the marketing grid cell.
+      `render_marketing_cards_as_feature_row` routes those to `FeatureRow`,
+      whose copy-only path renders a content-height row so a 2-up grid does
+      not gain a 600px floor per cell. On product surfaces this component is
+      unchanged and remains the default container.
     alsoFor:
       - claim: >-
           Any dashboard panel that is not a table and not a drawn artifact.
@@ -2228,6 +2233,27 @@ modules:
           uniformly across a mixed set.
         via: prop FeatureRow.visual
       - claim: >-
+          A cell in a 2-up or 3-up grid of small cards, which `ui/card` used
+          to own on marketing pages. Since 0.9.19
+          `render_marketing_cards_as_feature_row` makes this the only
+          marketing card, and the copy-only path is what makes it affordable:
+          a cell with no visual has no 600px floor, so skene-site's 18
+          glossary terms stay near their 159px each instead of becoming
+          11,232px of stacked bands. One component, and deliberately not one
+          picture - a copy-only cell and a row with a visual are the same card
+          at two densities.
+        via: prop FeatureRow.visual
+      - claim: >-
+          The band that used to be cream. `LightSectionCard` keeps its export
+          and its `light` mechanism for product and gallery use, but a
+          marketing page that alternates one repeating object cannot also
+          alternate polarity without the cream band reading as a second
+          system. Removing `light` from such a call site is not cosmetic:
+          every mode-aware token in the subtree keeps its dark value against a
+          cream fill, and `text.primary` lands at #faf1e9 on #faf1e9, which is
+          absent rather than dim.
+        via: prop FeatureRow.texture
+      - claim: >-
           Framing something other than a ProductWindow: `visual` is an
           unconstrained ReactNode, so an `<img>`, a `Terminal`, an
           `AnnotatedCurve` or a chart all drop in, and omitting
@@ -2281,17 +2307,19 @@ modules:
           visible over a photograph.
         via: prop FeatureRow.visual
     notFor:
-      - instead: LightSectionCard
-        why: >-
-          A cream/inverted band — that is `LightSectionCard`, which is the
-          same shape at opposite polarity and carries the load-bearing `light`
-          class plus theme-aware `text.*` roles. Collapsing the two behind a
-          `tone` prop was explicitly rejected in docs/sections.md.
       - instead: Card
         why: >-
-          A small icon-heading-blurb card in a 3-up grid. This is a full page
-          band with a 600px floor and a two-column split; use `value-cards` or
-          a `ui/card` composition.
+          A container on a PRODUCT surface — a workspace panel, a settings
+          block, anything inside Skene Cloud.
+          `render_marketing_cards_as_feature_row` in machine/rules.yaml scopes
+          this component to marketing pages and nothing else; `ui/card`
+          remains the generic product container it has always been.
+      - instead: AppPanel
+        why: >-
+          A panel INSIDE a drawn artifact. An artifact's own chrome is
+          `AppPanel` within `ArtifactShell`; this component is what the
+          artifact sits in, not what it is made of. Nesting one in the other
+          puts a 600px marketing band inside a depiction.
   sections/final-cta:
     import: "@skene/design-system/sections/final-cta"
     exports: [FinalCta]
@@ -3045,11 +3073,16 @@ modules:
       The inverted band: one cream card carrying a whole section's worth of
       copy — heading, italic promise, a ruled proof block, actions — with an
       optional visual panel opposite. It is `FeatureRow` at the other
-      polarity, and the polarity is the point: on a dark marketing page,
-      flipping one band to cream is what marks it as the page's turn or offer
-      rather than another feature row. Its `light` root is a load-bearing
-      accessibility mechanism, which is why the two components were
-      deliberately NOT collapsed behind a `tone` flag.
+      polarity, and its `light` root is a load-bearing accessibility
+      mechanism, which is why the two were deliberately NOT collapsed behind a
+      `tone` flag. SCOPE NARROWED IN 0.9.19: this is no longer a marketing
+      section band. `render_marketing_cards_as_feature_row` gives that role to
+      `FeatureRow` alone, because a page that alternates one repeating object
+      cannot also alternate polarity without the cream band reading as a
+      second system. What remains is every non-marketing use — product
+      surfaces, gallery cases, and any dark-document context needing a
+      correctly-inverted cream subtree, which is the part no other component
+      does.
     alsoFor:
       - claim: >-
           A closing CTA panel: `title` + `lede` + `actions`, no `visual` and
