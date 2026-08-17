@@ -263,7 +263,7 @@ export function FeatureRow({
     `splitAt` and `reverse` go inert here rather than erroring, so a consumer
     migrating a mixed set of bands does not have to strip props per band.
 
-    Every one of the 31 live cards in skene-site passes a `visual`, so this is
+    Every one of the 29 live cards in skene-site passes a `visual`, so this is
     false for all of them and none of their markup moves.
   */
   const copyOnly = !visual && !texture && !textureSrc

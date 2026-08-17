@@ -1,12 +1,12 @@
 # `FeatureRow` without a visual
 
-**Status:** design, pre-implementation
+**Status:** shipped in v0.9.18 (`b7ba744`).
 **Raised by:** skene-site, which was asked to make every section on every route the
-same object and found that twenty of them cannot be.
+same object and found that twenty-one of them could not be.
 
 ## The problem, counted
 
-`skene-site` renders 31 `FeatureRow` cards across 23 routes. It also renders **20
+`skene-site` renders 29 `FeatureRow` cards across 13 routes. It also renders **21
 copy-only bands** on 13 routes — an eyebrow and a heading beside two or three
 paragraphs, no product surface — and those sit bare on the page ground.
 
@@ -68,7 +68,7 @@ boolean and should be split; this one has no decision in it.
 
 ### Blast radius
 
-Zero for existing callers. Every one of the 31 live cards passes a `visual`, so
+Zero for existing callers. Every one of the 29 live cards passes a `visual`, so
 `copyOnly` is false for all of them and every branch above is the current
 behaviour. The change can only affect a call that renders wrong today.
 
@@ -76,10 +76,10 @@ behaviour. The change can only affect a call that renders wrong today.
 
 1. A story for the copy-only row beside a normal one, so the gallery shows the two
    shapes at the same width and a regression is visible rather than inferred.
-2. The existing rendered gates in skene-site: 31 cards must measure byte-identical
+2. The existing rendered gates in skene-site: 29 cards must measure byte-identical
    class strings and unchanged heights. A card that moves means `copyOnly` is
    leaking into the visual path.
-3. In skene-site, after adoption: `agent:content` reports `changed: no`. Twenty
+3. In skene-site, after adoption: `agent:content` reports `changed: no`. Twenty-one
    bands changing shape must move no word of copy.
 4. `pixel_contrast` and the overflow gate at 390 / 768 / 1440. The copy column
    goes from roughly half the card to all of it, which is a real reflow.
