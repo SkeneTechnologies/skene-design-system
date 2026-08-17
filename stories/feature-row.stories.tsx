@@ -142,9 +142,42 @@ export const SheenOverAStatusPill: Story = {
   },
 }
 
-/** Prose only. The template's `splitAt: 'never'` case is this shape. */
+/**
+ * Prose only — no `visual`, no `texture`.
+ *
+ * This story predates the behaviour it now documents, and for that whole time it
+ * was rendering the defect: a 600px card with the copy in the left 45% and an
+ * empty cell filling the right 55%. The case was captured and nobody read what it
+ * was showing, which is worth more as a note than the fix is. A gallery case only
+ * catches what someone looks at.
+ *
+ * The row now drops its second cell, its `min-h-[600px]` floor and its split grid
+ * class, so it is a single column sized to its copy. `splitAt` and `reverse` are
+ * inert here and left in the controls deliberately — a consumer migrating a mixed
+ * set of bands passes them uniformly, and they must be harmless rather than an
+ * error.
+ */
 export const NoVisual: Story = {
   args: { ...copy, visual: undefined, texture: undefined },
+}
+
+/**
+ * The two shapes at one width, which is the comparison the fix has to survive.
+ *
+ * A copy-only row must read as the same object as the row above it — same border,
+ * same radius, same fill, same copy-column padding — and differ only by not having
+ * a panel. If the second card ever grows a 600px floor again, or the first one
+ * loses its visual cell, this case shows it side by side rather than leaving it to
+ * be inferred from two separate screenshots.
+ */
+export const CopyOnlyBesideAVisualRow: Story = {
+  render: (args) => (
+    <div className="grid gap-6 bg-chrome-surface-0 p-10">
+      <FeatureRow {...args} title="With a visual" visual={<Placeholder width={420} label="A product panel" />} />
+      <FeatureRow {...args} title="Without one" visual={undefined} texture={undefined} />
+    </div>
+  ),
+  args: { ...copy, sheen: false },
 }
 
 function Placeholder({

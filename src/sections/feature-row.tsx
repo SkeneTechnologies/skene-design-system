@@ -243,11 +243,36 @@ export function FeatureRow({
     titleScale === 'section'
       ? 'text-[length:var(--font-size-marketing-xl)]'
       : 'text-[clamp(1.75rem,2.4vw,2.55rem)]'
+  /*
+    A row with nothing to show. See
+    `documentation/20260817_feature_row_copy_only.md`.
+
+    Derived rather than a prop, because there is exactly one sensible rendering
+    for a row with no visual and no texture, so there is no decision left for a
+    caller to make. This is the opposite call from `PlanCard`'s `featured`,
+    which bundles three independent decisions behind one boolean; this bundles
+    none.
+
+    Three things follow, and each is the absence of something that only earns
+    its place when a panel exists: no second cell (not an empty one), no
+    `min-h-[600px]`, and no split grid class. The floor is the one worth
+    spelling out — it exists to stop a product panel being cropped by a short
+    copy column, and with no panel it produces exactly the dead air it was
+    added to prevent.
+
+    `splitAt` and `reverse` go inert here rather than erroring, so a consumer
+    migrating a mixed set of bands does not have to strip props per band.
+
+    Every one of the 31 live cards in skene-site passes a `visual`, so this is
+    false for all of them and none of their markup moves.
+  */
+  const copyOnly = !visual && !texture && !textureSrc
   return (
     <div
       className={cn(
-        'grid min-h-[600px] overflow-hidden rounded-2xl border border-chrome-line-subtle bg-chrome-surface-1',
-        reverse ? SPLIT[splitAt].gridReverse : SPLIT[splitAt].grid,
+        'grid overflow-hidden rounded-2xl border border-chrome-line-subtle bg-chrome-surface-1',
+        !copyOnly && 'min-h-[600px]',
+        !copyOnly && (reverse ? SPLIT[splitAt].gridReverse : SPLIT[splitAt].grid),
         className,
       )}
     >
@@ -293,73 +318,75 @@ export function FeatureRow({
         {actions ? <div className="mt-auto">{actions}</div> : null}
       </div>
 
-      <div
-        className={cn(
-          'relative grid min-w-0 place-items-center',
-          reverse && SPLIT[splitAt].visualReverse,
-        )}
-      >
-        {texture || textureSrc ? (
-          // The field fills the cell and the mock floats on it — SectionBackdrop
-          // owns the inset, because it has to be a percentage of the track and
-          // this component does not know how wide that is.
-          <SectionBackdrop texture={texture} src={textureSrc} className="h-full w-full">
-            {visual}
-          </SectionBackdrop>
-        ) : (
-          // 34px when the card is SPLIT, 16px when it is stacked.
-          //
-          // The inset exists to separate the visual from the copy column beside
-          // it. Under `splitAt="never"` there is no column beside it — the copy
-          // is above — so 34px a side is 68px spent on nothing, and it is spent
-          // on exactly the artifacts that chose `never` because they were too
-          // wide to sit beside anything.
-          //
-          // Measured on the widest one, a five-stage `LifecycleCanvas` at 1440:
-          // the card hands the artifact 1092px and the scrolling strip ends up
-          // with 946 against the 998 it needs. The 146px between them is this
-          // 68px plus `ArtFrame`'s 96 and `AppPanel`'s 48. Those two are the
-          // artifact's own material and its app chrome; this one is layout for
-          // an arrangement that is not in use. Reclaiming it is the only 36px
-          // available without touching what the artifact IS.
-          //
-          // Not zero: the visual still needs to read as sitting ON the card
-          // rather than as the card's own edge, and 16px is the smallest gap
-          // that survives the 24px radius without the corner clipping the frame.
-          <div
-            className={cn(
-              'grid w-full place-items-center',
-              splitAt === 'never' ? 'p-[16px]' : 'p-[34px]',
-            )}
-          >
-            {visual}
-          </div>
-        )}
-        {/*
-          The sheen. Sits above the visual but must never eat its clicks.
+      {copyOnly ? null : (
+        <div
+          className={cn(
+            'relative grid min-w-0 place-items-center',
+            reverse && SPLIT[splitAt].visualReverse,
+          )}
+        >
+          {texture || textureSrc ? (
+            // The field fills the cell and the mock floats on it — SectionBackdrop
+            // owns the inset, because it has to be a percentage of the track and
+            // this component does not know how wide that is.
+            <SectionBackdrop texture={texture} src={textureSrc} className="h-full w-full">
+              {visual}
+            </SectionBackdrop>
+          ) : (
+            // 34px when the card is SPLIT, 16px when it is stacked.
+            //
+            // The inset exists to separate the visual from the copy column beside
+            // it. Under `splitAt="never"` there is no column beside it — the copy
+            // is above — so 34px a side is 68px spent on nothing, and it is spent
+            // on exactly the artifacts that chose `never` because they were too
+            // wide to sit beside anything.
+            //
+            // Measured on the widest one, a five-stage `LifecycleCanvas` at 1440:
+            // the card hands the artifact 1092px and the scrolling strip ends up
+            // with 946 against the 998 it needs. The 146px between them is this
+            // 68px plus `ArtFrame`'s 96 and `AppPanel`'s 48. Those two are the
+            // artifact's own material and its app chrome; this one is layout for
+            // an arrangement that is not in use. Reclaiming it is the only 36px
+            // available without touching what the artifact IS.
+            //
+            // Not zero: the visual still needs to read as sitting ON the card
+            // rather than as the card's own edge, and 16px is the smallest gap
+            // that survives the 24px radius without the corner clipping the frame.
+            <div
+              className={cn(
+                'grid w-full place-items-center',
+                splitAt === 'never' ? 'p-[16px]' : 'p-[34px]',
+              )}
+            >
+              {visual}
+            </div>
+          )}
+          {/*
+            The sheen. Sits above the visual but must never eat its clicks.
 
-          Switchable because it is 10% white over WHATEVER the caller put in the
-          visual panel, and 10% white is enough to take a label under the WCAG
-          floor. skene-site measured its `PrReview` "changes requested" pill at
-          3.801:1 at 390, 3.896 at 768 and 4.230 at 1440 with the sheen on,
-          against 4.510 with it suppressed — sixteen below-floor readings created
-          by adopting this component and nothing else, with a clean control on
-          two routes that had not adopted it. Their workaround was
-          `[&>div>span[aria-hidden]]:opacity-0`, child-scoped because a bare
-          `span[aria-hidden]` matches seven to eleven nodes inside `PrReview`.
-          A caller should not have to reach into this component's DOM to turn
-          off a decoration.
-        */}
-        {sheen ? (
-          <span
-            aria-hidden
-            className="pointer-events-none absolute inset-0"
-            style={{
-              background: 'linear-gradient(135deg, rgba(255,255,255,0.10), transparent 60%)',
-            }}
-          />
-        ) : null}
-      </div>
+            Switchable because it is 10% white over WHATEVER the caller put in the
+            visual panel, and 10% white is enough to take a label under the WCAG
+            floor. skene-site measured its `PrReview` "changes requested" pill at
+            3.801:1 at 390, 3.896 at 768 and 4.230 at 1440 with the sheen on,
+            against 4.510 with it suppressed — sixteen below-floor readings created
+            by adopting this component and nothing else, with a clean control on
+            two routes that had not adopted it. Their workaround was
+            `[&>div>span[aria-hidden]]:opacity-0`, child-scoped because a bare
+            `span[aria-hidden]` matches seven to eleven nodes inside `PrReview`.
+            A caller should not have to reach into this component's DOM to turn
+            off a decoration.
+          */}
+          {sheen ? (
+            <span
+              aria-hidden
+              className="pointer-events-none absolute inset-0"
+              style={{
+                background: 'linear-gradient(135deg, rgba(255,255,255,0.10), transparent 60%)',
+              }}
+            />
+          ) : null}
+        </div>
+      )}
     </div>
   )
 }

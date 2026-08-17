@@ -82,11 +82,35 @@ export function FeatureRow({ reverse = false, n, eyebrow, icon, title, lede, chi
     const TITLE_SIZE = titleScale === 'section'
         ? 'text-[length:var(--font-size-marketing-xl)]'
         : 'text-[clamp(1.75rem,2.4vw,2.55rem)]';
-    return (_jsxs("div", { className: cn('grid min-h-[600px] overflow-hidden rounded-2xl border border-chrome-line-subtle bg-chrome-surface-1', reverse ? SPLIT[splitAt].gridReverse : SPLIT[splitAt].grid, className), children: [_jsxs("div", { className: cn('relative flex flex-col items-start px-12 pb-[46px] pt-[50px]', reverse && SPLIT[splitAt].copyReverse), children: [n ? (_jsx("span", { className: "absolute right-6 top-[22px] font-mono text-[11px] text-chrome-text-muted-warm", children: n })) : null, icon ? _jsx("div", { className: "mb-[54px]", children: icon }) : null, eyebrow ? _jsx("div", { className: "mb-[24px]", children: eyebrow }) : null, title ? (_jsx(Title, { className: cn('mb-4 max-w-[420px] leading-tight text-chrome-text-primary', TITLE_SIZE), children: title })) : null, lede ? (_jsx("p", { className: "mb-6 max-w-[470px] text-[14px] italic text-chrome-text-muted-warm", children: lede })) : null, children ? (
+    /*
+      A row with nothing to show. See
+      `documentation/20260817_feature_row_copy_only.md`.
+  
+      Derived rather than a prop, because there is exactly one sensible rendering
+      for a row with no visual and no texture, so there is no decision left for a
+      caller to make. This is the opposite call from `PlanCard`'s `featured`,
+      which bundles three independent decisions behind one boolean; this bundles
+      none.
+  
+      Three things follow, and each is the absence of something that only earns
+      its place when a panel exists: no second cell (not an empty one), no
+      `min-h-[600px]`, and no split grid class. The floor is the one worth
+      spelling out — it exists to stop a product panel being cropped by a short
+      copy column, and with no panel it produces exactly the dead air it was
+      added to prevent.
+  
+      `splitAt` and `reverse` go inert here rather than erroring, so a consumer
+      migrating a mixed set of bands does not have to strip props per band.
+  
+      Every one of the 31 live cards in skene-site passes a `visual`, so this is
+      false for all of them and none of their markup moves.
+    */
+    const copyOnly = !visual && !texture && !textureSrc;
+    return (_jsxs("div", { className: cn('grid overflow-hidden rounded-2xl border border-chrome-line-subtle bg-chrome-surface-1', !copyOnly && 'min-h-[600px]', !copyOnly && (reverse ? SPLIT[splitAt].gridReverse : SPLIT[splitAt].grid), className), children: [_jsxs("div", { className: cn('relative flex flex-col items-start px-12 pb-[46px] pt-[50px]', reverse && SPLIT[splitAt].copyReverse), children: [n ? (_jsx("span", { className: "absolute right-6 top-[22px] font-mono text-[11px] text-chrome-text-muted-warm", children: n })) : null, icon ? _jsx("div", { className: "mb-[54px]", children: icon }) : null, eyebrow ? _jsx("div", { className: "mb-[24px]", children: eyebrow }) : null, title ? (_jsx(Title, { className: cn('mb-4 max-w-[420px] leading-tight text-chrome-text-primary', TITLE_SIZE), children: title })) : null, lede ? (_jsx("p", { className: "mb-6 max-w-[470px] text-[14px] italic text-chrome-text-muted-warm", children: lede })) : null, children ? (
                     // Full-width, not max-w: a CheckList's rules run the width of the
                     // column on the live cards, and constraining them to the prose measure
                     // leaves the rules stopping short of the text they separate.
-                    _jsx("div", { className: "mb-[26px] w-full text-chrome-text-muted-warm", children: children })) : null, actions ? _jsx("div", { className: "mt-auto", children: actions }) : null] }), _jsxs("div", { className: cn('relative grid min-w-0 place-items-center', reverse && SPLIT[splitAt].visualReverse), children: [texture || textureSrc ? (
+                    _jsx("div", { className: "mb-[26px] w-full text-chrome-text-muted-warm", children: children })) : null, actions ? _jsx("div", { className: "mt-auto", children: actions }) : null] }), copyOnly ? null : (_jsxs("div", { className: cn('relative grid min-w-0 place-items-center', reverse && SPLIT[splitAt].visualReverse), children: [texture || textureSrc ? (
                     // The field fills the cell and the mock floats on it — SectionBackdrop
                     // owns the inset, because it has to be a percentage of the track and
                     // this component does not know how wide that is.
@@ -112,7 +136,7 @@ export function FeatureRow({ reverse = false, n, eyebrow, icon, title, lede, chi
                     // that survives the 24px radius without the corner clipping the frame.
                     _jsx("div", { className: cn('grid w-full place-items-center', splitAt === 'never' ? 'p-[16px]' : 'p-[34px]'), children: visual })), sheen ? (_jsx("span", { "aria-hidden": true, className: "pointer-events-none absolute inset-0", style: {
                             background: 'linear-gradient(135deg, rgba(255,255,255,0.10), transparent 60%)',
-                        } })) : null] })] }));
+                        } })) : null] }))] }));
 }
 /** Vertical stack of rows at the section's rhythm. */
 export function FeatureStack({ className, children, }) {

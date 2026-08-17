@@ -2217,6 +2217,17 @@ modules:
           copy-beside-visual; nothing couples it to a numbered list.
         via: export FeatureStack
       - claim: >-
+          A copy-only band with no product surface at all. Omit `visual`,
+          `texture` and `textureSrc` and the row drops its second cell, its
+          600px floor and its split grid class, so it is one column sized to
+          its copy rather than a half-filled card. This is what lets a page of
+          mixed bands read as one object: skene-site has 20 copy-only bands
+          against 31 with visuals, and until 0.9.18 the copy-only ones sat
+          bare on the page ground beside bordered cards. `splitAt` and
+          `reverse` go inert rather than erroring, so a consumer can pass them
+          uniformly across a mixed set.
+        via: prop FeatureRow.visual
+      - claim: >-
           Framing something other than a ProductWindow: `visual` is an
           unconstrained ReactNode, so an `<img>`, a `Terminal`, an
           `AnnotatedCurve` or a chart all drop in, and omitting
