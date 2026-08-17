@@ -1305,7 +1305,7 @@
       ],
       "summary": "The bridge: GTM ↔ Skene ↔ Engineering. A cream band carrying three cards in a",
       "client": false,
-      "lines": 267,
+      "lines": 270,
       "cases": [
         "section-bridge"
       ],
@@ -1673,7 +1673,7 @@
       ],
       "summary": "The alternating feature row: copy on one side, a visual on the other, flipping",
       "client": false,
-      "lines": 415,
+      "lines": 429,
       "cases": [
         "section-feature-row"
       ],
@@ -2063,7 +2063,7 @@
       ],
       "summary": "The inverted section: one cream card carrying a whole section's worth of copy",
       "client": false,
-      "lines": 166,
+      "lines": 171,
       "cases": [
         "section-light-section-card",
         "light-section-card-steps"
