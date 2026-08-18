@@ -2294,6 +2294,40 @@ export default function ComponentGalleryPage() {
         </Bridge>
       </Case>
 
+      <Case name="section-finding-tag" width="w-[880px]">
+        {/* Ask r: the tag alone, at the 9px it actually renders, on both
+            grounds and in all three states.
+
+            `section-finding-card` already renders these, and it did NOT drift
+            when the tag was repainted — measured, not assumed. The suite scores
+            a pixel as different only above a YIQ delta of 56, and the tint move
+            from 18% to 12% is about 45, so those thousand-odd pixels are not
+            counted at all; what remains is a scatter of antialiased 9px glyph
+            edges, under the ratio budget. Which is the honest reason the
+            computed test in `__tests__` is the guard here and this case is not.
+
+            What the case is for: the state is now visible to a person and to
+            the a11y panel at the size it actually ships, on both grounds, in
+            all three states, with nothing else in the frame to read past.
+
+            The light column carries `light` rather than only a cream fill.
+            `onLight` switches the CARD, not the token mode, and the pair that
+            was measured at 3.88 / 3.94 / 4.00 is the LIGHT value of each status
+            token on a tint of itself — which is what a consumer gets inside a
+            `ProductWindow`, and what this column reproduces in either sweep. */}
+        <div className="grid grid-cols-2 gap-6">
+          <div className="light grid gap-2 rounded-md bg-brand-light p-4">
+            <Finding status="good" tag="VERIFIED" title="repo_connected" />
+            <Finding status="warn" tag="CHANGED" title="checkout_started" />
+            <Finding status="danger" tag="MISSING" title="signup_started" />
+          </div>
+          <div className="dark grid gap-2 rounded-md bg-chrome-surface-1 p-4">
+            <Finding onLight={false} status="good" tag="VERIFIED" title="repo_connected" />
+            <Finding onLight={false} status="warn" tag="CHANGED" title="checkout_started" />
+            <Finding onLight={false} status="danger" tag="MISSING" title="signup_started" />
+          </div>
+        </div>
+      </Case>
     </main>
   )
 }

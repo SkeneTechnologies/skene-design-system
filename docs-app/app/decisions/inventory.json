@@ -1753,7 +1753,7 @@
       ],
       "summary": "The audit primitives: a headline metric, its trend, and the per-step findings",
       "client": false,
-      "lines": 134,
+      "lines": 175,
       "cases": [
         "section-finding-card"
       ],
@@ -2885,7 +2885,7 @@
   "unbuilt": [],
   "gallery": {
     "route": "/components",
-    "cases": 88
+    "cases": 89
   },
   "counts": {
     "modules": 81,

@@ -52,6 +52,39 @@ export const TitleOnly: Story = {
   args: { status: 'good', tag: 'VERIFIED', title: 'page_view', className: 'w-[420px]' },
 }
 
+/**
+ * Every status on both grounds, tags only — the case ask r filed.
+ *
+ * The tag renders at 9px, which is small text under WCAG 2.2 by any reading,
+ * and it used to be full-strength status ink on an 18% tint of its own hue.
+ * Measured off real pixels by a consumer: 3.88 danger, 3.94 good, 4.00 warn,
+ * against a 4.5:1 floor. It now takes the on-tint ink on a 12% tint and
+ * measures 4.90 / 5.03 / 4.90 on the light card.
+ *
+ * Open the a11y panel on this one. The dark card's `danger` is the pair that
+ * still does not clear — 4.06 — and it is recorded rather than fixed, because
+ * closing it needs a token value or a surface role this component does not own.
+ * See `__tests__/finding-tag-contrast.test.ts`, which computes all six.
+ */
+export const Tags: Story = {
+  args: { status: 'danger', tag: 'MISSING', title: 'placeholder' },
+  parameters: { layout: 'padded' },
+  render: () => (
+    <div className="grid gap-6 md:grid-cols-2">
+      <div className="light grid gap-2 rounded-xl bg-brand-light p-4">
+        {(['good', 'warn', 'danger'] as const).map((s) => (
+          <Finding key={s} status={s} tag={s.toUpperCase()} title="signup_started" />
+        ))}
+      </div>
+      <div className="dark grid gap-2 rounded-xl bg-chrome-surface-1 p-4">
+        {(['good', 'warn', 'danger'] as const).map((s) => (
+          <Finding key={s} onLight={false} status={s} tag={s.toUpperCase()} title="signup_started" />
+        ))}
+      </div>
+    </div>
+  ),
+}
+
 export const OnLight: Story = {
   args: { ...Danger.args, onLight: true },
   decorators: [
