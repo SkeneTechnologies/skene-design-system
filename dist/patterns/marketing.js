@@ -1,21 +1,13 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { cn } from '../lib/utils.js';
 /**
- * Floating pill navigation.
+ * The page furniture that makes a marketing surface read as Skene: the floating
+ * pill nav, the eyebrow chip, the numbered step, the display heading.
  *
- * Sits over the hero rather than above it, so the media runs to the top of the
- * viewport. The translucent fill plus blur is what keeps the links legible over
- * arbitrary photography without a solid bar.
+ * Each of these is on the live site and was previously reproducible only by
+ * copying markup out of skene-marketing-website.
  */
-export function PillNav({ brand, actions, className, children }) {
-    return (_jsxs("div", { className: cn('absolute inset-x-0 top-0 z-20 flex items-center justify-between gap-4 p-4', className), children: [_jsxs("nav", { className: "flex items-center gap-1 rounded-xl px-3 py-2 backdrop-blur-md", style: {
-                    background: 'color-mix(in oklab, var(--color-chrome-surface-0) 55%, transparent)',
-                    border: '1px solid color-mix(in oklab, var(--color-chrome-text-primary) 8%, transparent)',
-                }, children: [brand ? _jsx("span", { className: "flex items-center gap-2 lg:mr-3", children: brand }) : null, _jsx("span", { className: "hidden items-center gap-1 lg:flex", children: children })] }), actions ? _jsx("div", { className: "flex items-center gap-2", children: actions }) : null] }));
-}
-export function PillNavLink({ href, children, className, }) {
-    return (_jsx("a", { href: href, className: cn('rounded-lg px-3 py-1.5 text-[13px] text-chrome-text-primary/80 transition-colors', 'hover:bg-white/5 hover:text-chrome-text-primary', className), children: children }));
-}
+export { PillNav, PillNavLink } from './pill-nav.js';
 /**
  * The bordered chip above a page heading ("HOW IT WORKS").
  *

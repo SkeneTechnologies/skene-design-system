@@ -19,7 +19,7 @@
 #   the root merges yours through cn; use client means it carries the directive.
 
 version: "1.0.0"
-counts: { modules: 81, ui: 30, patterns: 5, sections: 46, authored: 81, assets: 11 }
+counts: { modules: 84, ui: 30, patterns: 8, sections: 46, authored: 84, assets: 11 }
 
 modules:
   ui/accordion:
@@ -835,15 +835,12 @@ modules:
   patterns/marketing:
     import: "@skene/design-system/patterns/marketing"
     exports: [PillNav, PillNavLink, Eyebrow, DisplayHeading, Accent, NumberedStep, SplitAuthLayout]
+    composes: [same-layer/pill-nav]
     polarity: inherits
     seen: [pattern-pill-nav, pattern-display-heading, pattern-numbered-step, pattern-split-auth]
     overrides: [style, className]
     customProperties: [--font-size-pill, --font-tracking-eyebrow, --font-size-marketing-hero, --font-size-marketing-xxl, --font-size-marketing-xl, --font-line-height-tight, --font-size-card-title]
     props:
-      PillNav:
-        brand: { type: React.ReactNode }
-        actions: { type: React.ReactNode }
-        children: { type: React.ReactNode, required: true }
       Eyebrow:
         children: { type: React.ReactNode, required: true }
       DisplayHeading:
@@ -900,6 +897,115 @@ modules:
         why: >-
           A status marker on a product row. Eyebrow is a section kicker; Badge
           is the product surface's status chip.
+  patterns/pill-nav-frosted:
+    import: "@skene/design-system/patterns/pill-nav-frosted"
+    exports: [PILL]
+    polarity: inherits
+    seen: []
+    useFor: >-
+      The two constants PillNav and its drawer share: the frosted wash that
+      keeps links legible over arbitrary photography, and the absolute and
+      sticky position classes.
+    alsoFor:
+      - claim: >-
+          The same frosted wash on chrome that sits beside the nav and has to
+          match it, rather than each surface re-deriving the colour-mix.
+        via: export PILL_NAV_FROSTED_STYLE
+      - claim: >-
+          Reading the position contract without importing the component, for a
+          layout that has to reserve or overlay the same space.
+        via: export PILL_NAV_POSITION
+    notFor:
+      - instead: PillNav
+        why: >-
+          Restyling the nav. A bar that needs a different wash is a different
+          component, and copying these values into an app to tweak them is the
+          primitive-copy rule.
+  patterns/pill-nav-mobile-menu:
+    import: "@skene/design-system/patterns/pill-nav-mobile-menu"
+    exports: [PillNavMobileMenuToggle, PillNavMobileMenuLayers]
+    client: true
+    composes: [same-layer/pill-nav-frosted]
+    polarity: inherits
+    seen: []
+    overrides: [className, use client]
+    props:
+      PillNavMobileMenuToggle:
+        isOpen: { type: boolean, required: true }
+        onOpenChange: { type: "(open: boolean) => void", required: true }
+        panelId: { type: string, required: true }
+      PillNavMobileMenuLayers:
+        links: { type: "PillNavMobileLink[]", required: true }
+        actions: { type: React.ReactNode }
+        isOpen: { type: boolean, required: true }
+        onOpenChange: { type: "(open: boolean) => void", required: true }
+        panelId: { type: string, required: true }
+    types:
+      PillNavMobileLink:
+        href: { type: string, required: true }
+        label: { type: React.ReactNode, required: true }
+        active: { type: boolean }
+    useFor: >-
+      The drawer layers behind PillNav's mobile navigation: the Menu and Close
+      toggle, the backdrop, and the bordered link list with the actions
+      repeated in its footer.
+    alsoFor:
+      - claim: >-
+          A drawer for a nav that is not PillNav: the layers take their links
+          and open state as props, so a different bar can reuse the same
+          panel, backdrop and toggle.
+        via: export PillNavMobileMenuLayers
+      - claim: >-
+          The toggle on its own, for a bar that wants the Menu and Close
+          affordance and its aria wiring without the package's panel.
+        via: export PillNavMobileMenuToggle
+    notFor:
+      - instead: PillNav
+        why: >-
+          The assembled nav. PillNav collects its links from PillNavLink
+          children and owns the open state, so reach past it only when the bar
+          itself is different.
+      - instead: Sheet
+        why: >-
+          A general side panel for application UI. This drawer is marketing
+          chrome and is sized and styled for a nav.
+  patterns/pill-nav:
+    import: "@skene/design-system/patterns/pill-nav"
+    exports: [PillNav, PillNavLink]
+    client: true
+    composes: [same-layer/pill-nav-frosted, same-layer/pill-nav-mobile-menu]
+    polarity: inherits
+    seen: [pattern-pill-nav]
+    overrides: [className, use client]
+    props:
+      PillNav:
+        brand: { type: React.ReactNode }
+        actions: { type: React.ReactNode }
+        position: { type: "'absolute' | 'sticky'", default: "'absolute'" }
+        children: { type: React.ReactNode, required: true }
+    useFor: >-
+      The marketing site's top navigation: a frosted pill floating over hero
+      media, with a full-screen drawer below md so a phone gets the links
+      rather than the CTA alone.
+    alsoFor:
+      - claim: >-
+          Sticky chrome on a page with no hero to overlay, where the bar
+          should stay visible as the page scrolls.
+        via: prop PillNav.position
+      - claim: >-
+          Marking the current route, so the nav says where the reader is
+          rather than only where they can go.
+        via: prop PillNavLink.active
+    notFor:
+      - instead: NavigationMenu
+        why: >-
+          Application chrome. This is drawn against marketing ground and
+          overlays hero media; a signed-in header belongs to
+          ui/navigation-menu.
+      - instead: SkeneMark
+        why: >-
+          A logo. The package ships none through this component, so `brand` is
+          a slot and the mark comes from patterns/skene-mark or the app.
   patterns/skene-mark:
     import: "@skene/design-system/patterns/skene-mark"
     exports: [SkeneMark, SkeneLockup]

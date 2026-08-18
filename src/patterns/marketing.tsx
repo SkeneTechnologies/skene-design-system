@@ -8,75 +8,7 @@ import { cn } from '../lib/utils.js'
  * copying markup out of skene-marketing-website.
  */
 
-export interface PillNavProps {
-  /** Brand mark. The package ships no logo, so pass one. */
-  brand?: React.ReactNode
-  /** Right-hand actions: sign in, primary CTA. */
-  actions?: React.ReactNode
-  className?: string
-  children: React.ReactNode
-}
-
-/**
- * Floating pill navigation.
- *
- * Sits over the hero rather than above it, so the media runs to the top of the
- * viewport. The translucent fill plus blur is what keeps the links legible over
- * arbitrary photography without a solid bar.
- */
-export function PillNav({ brand, actions, className, children }: PillNavProps) {
-  return (
-    <div className={cn('absolute inset-x-0 top-0 z-20 flex items-center justify-between gap-4 p-4', className)}>
-      <nav
-        className="flex items-center gap-1 rounded-xl px-3 py-2 backdrop-blur-md"
-        style={{
-          background: 'color-mix(in oklab, var(--color-chrome-surface-0) 55%, transparent)',
-          border: '1px solid color-mix(in oklab, var(--color-chrome-text-primary) 8%, transparent)',
-        }}
-      >
-        {brand ? <span className="flex items-center gap-2 lg:mr-3">{brand}</span> : null}
-        {/*
-          The links are hidden below 1024px, and without this the nav is the
-          only thing on any Skene page that overflows a phone. Eight links plus
-          a CTA measure 646px against a 390px viewport, so every route scrolls
-          sideways — one defect, repeated on all of them.
-
-          It went unseen because docs-app shoots a single 1280x900 viewport, so
-          nothing in this repository has ever rendered this component narrow.
-
-          1024px matches the live site, whose nav links are display:none below
-          900px and whose layout switches at 1025px. Hiding rather than
-          collapsing is also what the live site does. It leaves a phone with no
-          navigation beyond the CTA, which is a real gap and a design decision
-          rather than a bug to fix silently here.
-        */}
-        <span className="hidden items-center gap-1 lg:flex">{children}</span>
-      </nav>
-      {actions ? <div className="flex items-center gap-2">{actions}</div> : null}
-    </div>
-  )
-}
-
-export function PillNavLink({
-  href, children, className,
-}: {
-  href: string
-  children: React.ReactNode
-  className?: string
-}) {
-  return (
-    <a
-      href={href}
-      className={cn(
-        'rounded-lg px-3 py-1.5 text-[13px] text-chrome-text-primary/80 transition-colors',
-        'hover:bg-white/5 hover:text-chrome-text-primary',
-        className,
-      )}
-    >
-      {children}
-    </a>
-  )
-}
+export { PillNav, PillNavLink, type PillNavProps } from './pill-nav.js'
 
 export interface EyebrowProps {
   className?: string

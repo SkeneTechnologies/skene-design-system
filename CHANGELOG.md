@@ -1,5 +1,42 @@
 # @skene/design-system
 
+## 0.9.24
+
+### Patch Changes
+
+- **`PillNav` gains a mobile drawer, and `PillNav` moves out of `patterns/marketing`.**
+
+  `PillNav` hid its links below 1024px, which left a phone with the brand mark and
+  the CTA and no navigation at all. That was deliberate when it landed: the bar
+  overflowed every viewport below about 650px, hiding matched what
+  skene-marketing-website's live site does, and it was recorded as a design
+  decision rather than a bug. It is still a phone with no way to reach twenty-four
+  routes.
+
+  Below `md` (768px) the bar now carries a Menu toggle that opens a full-screen
+  drawer: backdrop fade, a bordered list of the same links, and `actions` repeated
+  in the drawer footer so the CTA survives the transition. `PillNav` collects the
+  list from its own `PillNavLink` children, so a caller that already renders the
+  desktop nav gets the mobile one with no second link array to keep in step. The
+  toggle and the panel are wired through `aria-controls` and `aria-expanded`
+  against an id from `useId`.
+
+  **Two new props.** `PillNav` takes `position`, `'absolute' | 'sticky'`,
+  defaulting to `absolute` so existing callers are unchanged. `absolute` is the
+  overlay-the-hero behaviour the component has always had; `sticky` is for a
+  surface with no hero media to sit over, and it is the shape a consumer had been
+  reaching for with an `!important` className override. `PillNavLink` takes
+  `active`, which marks the current route in both the bar and the drawer.
+
+  **Where it lives.** `PillNav` and `PillNavLink` are now `patterns/pill-nav`,
+  with the drawer layers in `patterns/pill-nav-mobile-menu` and the frosted wash
+  and the two position class strings in `patterns/pill-nav-frosted`.
+  `patterns/marketing` re-exports all three names, so
+  `from '@skene/design-system/patterns/marketing'` keeps working and no consumer
+  has to move an import. The split is because the nav is now a client component
+  with state, and leaving it inside `marketing` would have pulled `Eyebrow`,
+  `DisplayHeading` and `NumberedStep` across the client boundary with it.
+
 ## 0.9.23
 
 ### Patch Changes
@@ -16,11 +53,11 @@ Three API requests filed by skene-site against this package, applied as filed ra
 
 - **`Finding`'s tag was ink on a tint of itself** (ask r). At 9px, `color: STATUS_TOKEN[status]` on `color-mix(in oklab, <that same colour> 18%, transparent)`. Measured off real pixels by the consumer, nine failures across three states against a 4.5:1 floor:
 
-  | state  | ink              | ground             | was  | now  |
-  | ------ | ---------------- | ------------------ | ---- | ---- |
-  | danger | `rgb(196,66,57)` | `rgb(244,221,219)` | 3.88 | 4.90 |
-  | good   | `rgb(103,117,82)`| `rgb(228,230,224)` | 3.94 | 5.03 |
-  | warn   | `rgb(136,106,47)`| `rgb(234,228,218)` | 4.00 | 4.90 |
+  | state  | ink               | ground             | was  | now  |
+  | ------ | ----------------- | ------------------ | ---- | ---- |
+  | danger | `rgb(196,66,57)`  | `rgb(244,221,219)` | 3.88 | 4.90 |
+  | good   | `rgb(103,117,82)` | `rgb(228,230,224)` | 3.94 | 5.03 |
+  | warn   | `rgb(136,106,47)` | `rgb(234,228,218)` | 4.00 | 4.90 |
 
   `StatPill` had this defect in 0.5.1 and this fix — the label takes a token derived against the ground it is actually on — but held the split privately, and `finding-card` then shipped the identical bug. The split is now `STATUS_TINT_TOKEN` in `src/lib/status.ts`, beside the map it is the counterpart to.
 
@@ -35,7 +72,6 @@ Three API requests filed by skene-site against this package, applied as filed ra
 `__tests__/finding-tag-contrast.test.tsx` does that in the package. It renders the component, reads the two colours, the tint percentage, the card fill class and the type size back out of the emitted markup, evaluates the `color-mix` through oklab, composites over the fill and scores all six rendered pairs. Nothing in it transcribes the source, so a later edit changes what it measures rather than leaving it measuring the old thing. Its compositing agrees with the browser byte for byte: the new baseline PNG carries 526 / 660 / 575 pixels of the three computed grounds and none of the old ones.
 
 Worth knowing separately, because it is the reason that test exists rather than a snapshot: **the visual suite did not drift on this repaint.** `section-finding-card` renders all six tags and compared clean. `toHaveScreenshot` counts a pixel as different only above a YIQ delta of 56, and the tint move from 18% to 12% is about 45 — so the tinted area is not counted at all, and what remains is a scatter of antialiased 9px glyph edges under the ratio budget. A colour change small enough to fail AA is also small enough to pass this gate.
-
 
 ## 0.9.17
 

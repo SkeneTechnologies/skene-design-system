@@ -5,27 +5,7 @@
  * Each of these is on the live site and was previously reproducible only by
  * copying markup out of skene-marketing-website.
  */
-export interface PillNavProps {
-    /** Brand mark. The package ships no logo, so pass one. */
-    brand?: React.ReactNode;
-    /** Right-hand actions: sign in, primary CTA. */
-    actions?: React.ReactNode;
-    className?: string;
-    children: React.ReactNode;
-}
-/**
- * Floating pill navigation.
- *
- * Sits over the hero rather than above it, so the media runs to the top of the
- * viewport. The translucent fill plus blur is what keeps the links legible over
- * arbitrary photography without a solid bar.
- */
-export declare function PillNav({ brand, actions, className, children }: PillNavProps): import("react").JSX.Element;
-export declare function PillNavLink({ href, children, className, }: {
-    href: string;
-    children: React.ReactNode;
-    className?: string;
-}): import("react").JSX.Element;
+export { PillNav, PillNavLink, type PillNavProps } from './pill-nav.js';
 export interface EyebrowProps {
     className?: string;
     children: React.ReactNode;
