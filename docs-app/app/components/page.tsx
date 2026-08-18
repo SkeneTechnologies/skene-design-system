@@ -2256,6 +2256,44 @@ export default function ComponentGalleryPage() {
           </div>
         </LightSectionCard>
       </Case>
+
+      <Case name="section-bridge-untitled" width="w-[1120px]">
+        {/* Ask q: the band with no title, no eyebrow and no lede — a `Bridge`
+            used as an ARTIFACT rather than as a section. `title` was required
+            and rendered an unconditional `<h2>`, so a band placed inside a
+            `FeatureRow` had to print the row's own heading a second time and
+            gave that `<section>` two `<h2>`s.
+
+            Appended rather than folded into `section-bridge`: that case exists
+            for the doubly nested inversion, which needs the eyebrow, the
+            heading and the caption to have anything to invert. This one exists
+            for their ABSENCE, and a case cannot prove both.
+
+            What the baseline is holding is the spacing, not the missing text.
+            The head block is a zero-height div when it is empty and the card
+            row's 56px top margin is measured from it, so the failure this
+            catches is a band that opens with an empty slot where a heading did
+            not render. */}
+        <Bridge caption="Every answer traces back to an event in your own database.">
+          <BridgeNode
+            label="GTM"
+            title={<>&ldquo;Why did activation drop last week?&rdquo;</>}
+            items={['Asks in plain language', 'Needs the number to hold']}
+          />
+          <BridgeNode
+            featured
+            label="Skene"
+            title="Checks every event against the schema it lands in."
+            items={['Reads the repo and the database', 'Comments on the pull request']}
+          />
+          <BridgeNode
+            label="Engineering"
+            title={<>&ldquo;It passed every test. What broke?&rdquo;</>}
+            items={['Renames a field mid-sprint', 'Ships green']}
+          />
+        </Bridge>
+      </Case>
+
     </main>
   )
 }

@@ -54,6 +54,45 @@ export const FeaturedNodeOnly: Story = {
   },
 }
 
+/**
+ * No title, no eyebrow, no lede — the band as an ARTIFACT rather than a
+ * section.
+ *
+ * The case ask q filed: inside a `FeatureRow` the row already carries the
+ * section `<h2>`, so a band that also renders one gives that `<section>` two,
+ * and a band with nothing of its own to say has nothing to pass. Nothing
+ * heading-shaped renders here, and the cards must sit directly under the
+ * band's own padding — no empty centred div, no 56px slot where a heading was
+ * not.
+ */
+export const NoTitle: Story = {
+  args: {
+    children: (
+      <>
+        <BridgeNode
+          label="Your stack"
+          title="Where events are written"
+          items={['Next.js routes', 'API handlers']}
+        />
+        <BridgeNode label="Skene" title="Reads and checks" featured items={['Scan', 'Diff']} />
+        <BridgeNode
+          label="What you get"
+          title="A map you can act on"
+          items={['Missing steps', 'Owners and lines']}
+        />
+      </>
+    ),
+  },
+}
+
+/** `h3`, for a band nested under a heading it does not own. */
+export const TitleAsH3: Story = {
+  args: {
+    ...Default.args,
+    titleAs: 'h3',
+  },
+}
+
 /** No items — the node is a label and a title. */
 export const NodesWithoutItems: Story = {
   args: {

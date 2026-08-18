@@ -1435,7 +1435,8 @@ modules:
         featured: { type: boolean, default: "false" }
       Bridge:
         eyebrow: { type: React.ReactNode }
-        title: { type: React.ReactNode, required: true }
+        title: { type: React.ReactNode }
+        titleAs: { type: "'h2' | 'h3'", default: "'h2'" }
         lede: { type: React.ReactNode }
         caption: { type: React.ReactNode }
         children: { type: React.ReactNode, required: true }

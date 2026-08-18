@@ -1305,7 +1305,7 @@
       ],
       "summary": "The bridge: GTM ↔ Skene ↔ Engineering. A cream band carrying three cards in a",
       "client": false,
-      "lines": 270,
+      "lines": 335,
       "cases": [
         "section-bridge"
       ],
@@ -2885,7 +2885,7 @@
   "unbuilt": [],
   "gallery": {
     "route": "/components",
-    "cases": 87
+    "cases": 88
   },
   "counts": {
     "modules": 81,

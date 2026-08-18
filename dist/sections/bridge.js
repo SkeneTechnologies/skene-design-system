@@ -90,7 +90,16 @@ function BridgeArrow() {
         // row. One glyph, rotated — not two glyphs toggled by breakpoint.
         'my-1 rotate-90 md:my-0 md:rotate-0'), children: _jsx("svg", { width: "26", height: "12", viewBox: "0 0 26 12", fill: "none", focusable: "false", children: _jsx("path", { d: "M0 6h23M18.5 1.5 23 6l-4.5 4.5", stroke: "currentColor", strokeWidth: "1", strokeLinecap: "round", strokeLinejoin: "round" }) }) }));
 }
-export function Bridge({ eyebrow, title, lede, caption, children, className }) {
+export function Bridge({ eyebrow, title, titleAs = 'h2', lede, caption, children, className, }) {
+    const Title = titleAs;
+    /*
+      The head block is three optional parts, so it exists only when one of them
+      does. An empty `text-center` div is zero pixels tall and looks harmless, but
+      the card row's top margin is measured from it and would survive as 56px of
+      nothing under the band's own 88px of padding — which is exactly the hole a
+      title-less band would otherwise have shipped with.
+    */
+    const head = Boolean(eyebrow || title || lede);
     // toArray drops nulls and falses, so a conditionally rendered node cannot
     // leave an arrow pointing at a gap.
     const nodes = Children.toArray(children);
@@ -105,7 +114,7 @@ export function Bridge({ eyebrow, title, lede, caption, children, className }) {
     });
     return (_jsx("section", { className: cn(
         // `light` first, and never conditional — see the file header.
-        'light bg-brand-light px-6 py-[88px] md:py-[112px]', className), children: _jsxs("div", { className: "mx-auto max-w-[1140px]", children: [_jsxs("div", { className: "text-center", children: [eyebrow ? (
+        'light bg-brand-light px-6 py-[88px] md:py-[112px]', className), children: _jsxs("div", { className: "mx-auto max-w-[1140px]", children: [head ? (_jsxs("div", { className: "text-center", children: [eyebrow ? (
                         // `<Eyebrow>` with its two colour tokens swapped for the theme-aware
                         // pair. It used to be a hand-rolled copy of the same span — same
                         // geometry, same two inline styles — because Eyebrow's own colours
@@ -114,5 +123,10 @@ export function Bridge({ eyebrow, title, lede, caption, children, className }) {
                         // the copy: twMerge replaces the border and text utilities, the
                         // 11px/0.16em inline styles come from the component, and the
                         // rendering is unchanged.
-                        _jsx(Eyebrow, { className: "border-chrome-line-on-light text-text-muted", children: eyebrow })) : null, _jsx("h2", { className: cn('mx-auto max-w-[880px] text-[clamp(2rem,3.4vw,3.4rem)] font-normal leading-[1.08] tracking-[-0.02em] text-text-primary', eyebrow && 'mt-6'), children: title }), lede ? (_jsx("p", { className: "mx-auto mt-5 max-w-[660px] text-[16px] leading-relaxed text-text-muted", children: lede })) : null] }), _jsx("div", { className: "mt-14 flex flex-col items-stretch gap-4 md:flex-row md:gap-3", children: row }), caption ? (_jsx("p", { className: "mx-auto mt-10 max-w-[720px] text-center text-[13px] text-text-muted", children: caption })) : null] }) }));
+                        _jsx(Eyebrow, { className: "border-chrome-line-on-light text-text-muted", children: eyebrow })) : null, title ? (_jsx(Title, { className: cn('mx-auto max-w-[880px] text-[clamp(2rem,3.4vw,3.4rem)] font-normal leading-[1.08] tracking-[-0.02em] text-text-primary', eyebrow && 'mt-6'), children: title })) : null, lede ? (
+                        // The top margin is the gap BETWEEN two things, so it belongs to
+                        // the pair rather than to the lede. With nothing above it there is
+                        // nothing to be spaced from, and 20px of it would read as the slot
+                        // where the missing heading used to be.
+                        _jsx("p", { className: cn('mx-auto max-w-[660px] text-[16px] leading-relaxed text-text-muted', (eyebrow || title) && 'mt-5'), children: lede })) : null] })) : null, _jsx("div", { className: cn('flex flex-col items-stretch gap-4 md:flex-row md:gap-3', head && 'mt-14'), children: row }), caption ? (_jsx("p", { className: "mx-auto mt-10 max-w-[720px] text-center text-[13px] text-text-muted", children: caption })) : null] }) }));
 }
