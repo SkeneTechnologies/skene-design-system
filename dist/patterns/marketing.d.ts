@@ -85,6 +85,22 @@ export interface NumberedStepProps {
      * role.
      */
     bodyTone?: 'muted' | 'primary';
+    /**
+     * The title's heading level. `h3` is the default and what
+     * `/product/how-it-works` renders below its band heading: a stack of steps
+     * sitting under the section's own `<h2>`.
+     *
+     * A band whose steps ARE the section has no `<h2>` above them, so an `h3`
+     * there skips a level straight from the page `<h1>` — invisible on screen,
+     * plainly wrong to anything reading the outline, and measured by skene-site
+     * as the only heading-level skip across its 24 routes.
+     *
+     * Spelled and defaulted like `FeatureRow`'s, because three components
+     * answering the same question should not answer it three ways. Not derived
+     * from any other prop: a rule that guesses is a rule nobody can override when
+     * it guesses wrong.
+     */
+    titleAs?: 'h2' | 'h3';
     className?: string;
     children?: React.ReactNode;
 }
@@ -114,7 +130,7 @@ export interface NumberedStepProps {
  * `false`, which is the dark-band behaviour every current caller renders, so
  * nothing rebaselines.
  */
-export declare function NumberedStep({ n, title, onLight, bodyTone, className, children, }: NumberedStepProps): import("react").JSX.Element;
+export declare function NumberedStep({ n, title, onLight, bodyTone, titleAs, className, children, }: NumberedStepProps): import("react").JSX.Element;
 export interface SplitAuthLayoutProps {
     /** The form column. Dark, narrow, centred. */
     form: React.ReactNode;

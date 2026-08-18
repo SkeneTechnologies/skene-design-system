@@ -855,6 +855,7 @@ modules:
         title: { type: React.ReactNode, required: true }
         onLight: { type: boolean, default: "false" }
         bodyTone: { type: "'muted' | 'primary'", default: "'muted'" }
+        titleAs: { type: "'h2' | 'h3'", default: "'h3'" }
         children: { type: React.ReactNode }
       SplitAuthLayout:
         form: { type: React.ReactNode, required: true }

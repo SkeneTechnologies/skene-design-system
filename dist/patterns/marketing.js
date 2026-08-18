@@ -76,8 +76,9 @@ export function Accent({ className, children }) {
  * `false`, which is the dark-band behaviour every current caller renders, so
  * nothing rebaselines.
  */
-export function NumberedStep({ n, title, onLight = false, bodyTone = 'muted', className, children, }) {
-    return (_jsxs("div", { className: cn('grid grid-cols-[auto_1fr] gap-x-4 gap-y-2', className), children: [_jsx("span", { "aria-hidden": "true", className: "font-mono text-brand-peach", style: { fontSize: 'var(--font-size-card-title)' }, children: n }), _jsx("h3", { className: onLight ? 'text-text-primary' : 'text-chrome-text-primary', style: { fontSize: 'var(--font-size-marketing-xl)' }, children: title }), children ? (_jsx("div", { className: cn('col-start-2 max-w-2xl text-[14px] leading-relaxed', onLight
+export function NumberedStep({ n, title, onLight = false, bodyTone = 'muted', titleAs = 'h3', className, children, }) {
+    const Title = titleAs;
+    return (_jsxs("div", { className: cn('grid grid-cols-[auto_1fr] gap-x-4 gap-y-2', className), children: [_jsx("span", { "aria-hidden": "true", className: "font-mono text-brand-peach", style: { fontSize: 'var(--font-size-card-title)' }, children: n }), _jsx(Title, { className: onLight ? 'text-text-primary' : 'text-chrome-text-primary', style: { fontSize: 'var(--font-size-marketing-xl)' }, children: title }), children ? (_jsx("div", { className: cn('col-start-2 max-w-2xl text-[14px] leading-relaxed', onLight
                     ? bodyTone === 'primary'
                         ? 'text-text-primary'
                         : 'text-text-muted'
