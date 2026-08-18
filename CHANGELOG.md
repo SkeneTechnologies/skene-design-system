@@ -1,5 +1,42 @@
 # @skene/design-system
 
+## 0.9.23
+
+### Patch Changes
+
+Three API requests filed by skene-site against this package, applied as filed rather than worked around. All three are component mechanics; each landed as its own commit.
+
+- **`NumberedStep` gains `titleAs`** (ask p). It hardcoded `<h3>`, which is right where the steps sit under a band `<h2>` and wrong where the steps ARE the band. skene-site's `/product/how-it-works` band 1 is three steps beside a decorative texture with no heading of its own, so that page's outline runs `h1` straight to `h3` — the only heading-level skip across its 24 routes, and not something a caller can reach: `className` cannot change a rendered element, and giving the band a heading it does not have would be writing copy to satisfy markup.
+
+  Spelled and defaulted like `FeatureRow.titleAs` — same union, same `'h3'` default, so no existing caller moves. `PlanCard`'s is the second precedent and a deliberately different shape: `tierAs` wraps a `Chip` rather than a title and defaults to undefined, because a plan card renders no heading unless asked. The two that name a title now agree.
+
+- **`Bridge`'s `title` is optional and takes `titleAs`** (ask q). It was required and rendered an unconditional `<h2>`, so a band placed inside a `FeatureRow` on `/developers` — where the row already carries the section `<h2>` — printed the same sentence twice and gave one `<section>` two `<h2>`s. An artifact with no title of its own has nothing to pass.
+
+  **The spacing is the half that would have shipped broken.** The head block is a centred div holding three optional parts; drop the title and it is still there at zero height, still owning the card row's 56px top margin — an empty slot under the band's own 88px of padding, which reads exactly like a heading that failed to render. The head block, the row's top margin and the lede's own top margin are each conditional now.
+
+- **`Finding`'s tag was ink on a tint of itself** (ask r). At 9px, `color: STATUS_TOKEN[status]` on `color-mix(in oklab, <that same colour> 18%, transparent)`. Measured off real pixels by the consumer, nine failures across three states against a 4.5:1 floor:
+
+  | state  | ink              | ground             | was  | now  |
+  | ------ | ---------------- | ------------------ | ---- | ---- |
+  | danger | `rgb(196,66,57)` | `rgb(244,221,219)` | 3.88 | 4.90 |
+  | good   | `rgb(103,117,82)`| `rgb(228,230,224)` | 3.94 | 5.03 |
+  | warn   | `rgb(136,106,47)`| `rgb(234,228,218)` | 4.00 | 4.90 |
+
+  `StatPill` had this defect in 0.5.1 and this fix — the label takes a token derived against the ground it is actually on — but held the split privately, and `finding-card` then shipped the identical bug. The split is now `STATUS_TINT_TOKEN` in `src/lib/status.ts`, beside the map it is the counterpart to.
+
+  **The ink swap alone is not enough, and that had to be measured.** At 18% the on-tint inks land 4.49 / 4.66 / 4.53 — danger misses by 0.01. Those values were derived against a 10% tint and re-derived in 0.5.2 against every ground observed up to `StatPill`'s 12% fill; 18% is a ground none of them saw, which is 0.5.2's own mistake arriving from the other side. So the fill returns to 12%, inside the band they cover.
+
+  **One pair still does not clear and is recorded rather than waived.** On the dark card `danger` measures 4.06. `Finding`'s dark fill is `chrome.surface.2`; the dark on-tint values are the base tokens, derived on `surface.1` — one rung darker — where the same ink at 12% measures 4.55. Closing it needs a new dark on-tint value or a different surface role, both ask-first under `machine/rules.yaml`, so it is asserted at its measured value instead.
+
+### The gate this needed, and why it is not `tokens:contrast`
+
+`npm run tokens:contrast` scores declared token PAIRS. `Finding`'s tag has no pair: its background is computed at render time by `color-mix` from its foreground, so no row for it exists and adding one would mean that table evaluating `color-mix`. It surfaced only because a consumer rendered the component and measured pixels.
+
+`__tests__/finding-tag-contrast.test.tsx` does that in the package. It renders the component, reads the two colours, the tint percentage, the card fill class and the type size back out of the emitted markup, evaluates the `color-mix` through oklab, composites over the fill and scores all six rendered pairs. Nothing in it transcribes the source, so a later edit changes what it measures rather than leaving it measuring the old thing. Its compositing agrees with the browser byte for byte: the new baseline PNG carries 526 / 660 / 575 pixels of the three computed grounds and none of the old ones.
+
+Worth knowing separately, because it is the reason that test exists rather than a snapshot: **the visual suite did not drift on this repaint.** `section-finding-card` renders all six tags and compared clean. `toHaveScreenshot` counts a pixel as different only above a YIQ delta of 56, and the tint move from 18% to 12% is about 45 — so the tinted area is not counted at all, and what remains is a scatter of antialiased 9px glyph edges under the ratio budget. A colour change small enough to fail AA is also small enough to pass this gate.
+
+
 ## 0.9.17
 
 ### Minor-in-spirit, patch in fact
