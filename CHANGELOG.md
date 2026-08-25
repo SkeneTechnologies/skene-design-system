@@ -1,5 +1,16 @@
 # @skene/design-system
 
+## 0.10.0
+
+### Minor Changes
+
+- fb566c6: Add LogoRow/LogoSlot (the proof strip whose slots are empty by design) and TeamCard/TeamGrid.
+
+### Patch Changes
+
+- cf0d9be: Correct the stale PR-surface claim to GitHub App in card-animation-integrations and integrations-highlight; add the first PillNavMobileMenu stories.
+- 4b375c7: Correct the stale docs-app copy to the GitHub App claim, author machine context for the integrationsField asset, and rebaseline the visual suite.
+
 ## 0.9.24
 
 ### Patch Changes
