@@ -48,7 +48,7 @@ export function AskWidgetCase() {
       name="Teemu"
       question="Would Skene work with your stack?"
       lede="Name your tools. We'll show what Skene can check, how it connects, and where it won't fit."
-      placeholder="For example: Next.js, Supabase, GitHub Actions, PostHog"
+      placeholder="For example: Next.js, Supabase, Vercel, PostHog"
       submitLabel="Check my setup"
       value={value}
       onValueChange={setValue}

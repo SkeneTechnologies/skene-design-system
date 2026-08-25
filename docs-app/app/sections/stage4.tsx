@@ -50,7 +50,7 @@ export function Stage4() {
         name="Teemu"
         question="Would Skene work with your stack?"
         lede="Name your tools. We'll show what Skene can check, how it connects, and where it won't fit."
-        placeholder="For example: Next.js, Supabase, GitHub Actions, PostHog"
+        placeholder="For example: Next.js, Supabase, Vercel, PostHog"
         submitLabel="Check my setup"
         value={ask}
         onValueChange={setAsk}
@@ -68,7 +68,7 @@ export function Stage4() {
 
       <LightSectionCard
         title="Four ways to plug Skene in."
-        lede="Ask questions from your coding agent (MCP server). Run it on every pull request (GitHub Action). Call it from your own scripts (Cloud API)."
+        lede="Ask questions from your coding agent (MCP server). Run it on every pull request (GitHub App). Call it from your own scripts (Cloud API)."
         actions={
           <>
             <Button>Start free</Button>

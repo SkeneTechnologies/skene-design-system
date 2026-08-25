@@ -10,7 +10,7 @@ gsap.registerPlugin(ScrollTrigger);
 /** Resolved from this module so Vite emits a browser URL, not a file:// path. */
 const INTEGRATIONS_TEXTURE = new URL('../../assets/plugin.png', import.meta.url).href;
 /**
- * The PR surface is a GitHub App that posts reviews; no GitHub Action ships.
+ * The PR surface is a GitHub App that posts reviews; nothing ships as an Actions workflow.
  * The marketing site corrected this on 2026-08-19 — keep the `gh` card and its
  * detail on the App, or the dead `uses: skene-ai/action@v1` claim regresses.
  */

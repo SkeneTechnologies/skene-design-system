@@ -3201,6 +3201,11 @@
       "notFor": "See githubField. The pairing follows the live site so the same backdrop always sits behind the same kind of artifact."
     },
     {
+      "key": "integrationsField",
+      "useFor": "The field behind the integrations card animation. CardAnimationIntegrations and IntegrationsHighlight load it by default, so a caller passing `backgroundImage` is choosing to replace it.",
+      "notFor": "A SectionBackdrop texture — it is not one of the three card fields, and at 4.4MB it is the heaviest file in the package. Reach for it only through the animation that ships it."
+    },
+    {
       "key": "pixelField",
       "useFor": "The closing-CTA backdrop, and only that. FinalCta loads it by default, so a caller passing backdrop is usually re-specifying what it already does.",
       "notFor": "A section backdrop. It is weighted for full-bleed type at the foot of a page, not for a panel inset."
