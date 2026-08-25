@@ -75,6 +75,21 @@ export interface PlanCardProps {
   /** Fine print under the CTA. */
   footnote?: React.ReactNode
   featured?: boolean
+  /**
+   * Which material the `featured` promotion uses. `light` — the default, and
+   * what every existing caller renders — is the dark-page inversion: cream
+   * fill, `light` class, lift and shadow. `dark` is the same promotion for a
+   * CREAM ground: on a light panel the cream inversion is cream-on-cream, so
+   * the card inverts the other way — the invariant near-black
+   * `chrome.surface.1` fill with the `dark` class pinning every mode-aware
+   * token in the subtree to its dark value, exactly the pinning the gallery
+   * writes for a dark window inside a light card. Lift and `--shadow-modal`
+   * are shared; only the material flips. Ignored when `featured` is off.
+   *
+   * When `featuredTone="dark"`, a nested `CheckList` wants its default (dark)
+   * rendering, NOT `onLight` — the inverse of the cream card's requirement.
+   */
+  featuredTone?: 'light' | 'dark'
   className?: string
 }
 
@@ -90,6 +105,7 @@ export function PlanCard({
   action,
   footnote,
   featured = false,
+  featuredTone = 'light',
   className,
 }: PlanCardProps) {
   return (
@@ -97,8 +113,12 @@ export function PlanCard({
       className={cn(
         'flex min-h-[420px] flex-col rounded-2xl border p-7',
         featured
-          ? // See the file header: `light` is load-bearing, not a theme preference.
-            'light border-brand-light bg-brand-light text-chrome-surface-1 md:-translate-y-3'
+          ? featuredTone === 'dark'
+            ? // The cream-ground promotion: the unfeatured card's own invariant
+              // near-black fill, with `dark` pinning the subtree — see the prop.
+              'dark border-chrome-line-subtle bg-chrome-surface-1 text-text-primary md:-translate-y-3'
+            : // See the file header: `light` is load-bearing, not a theme preference.
+              'light border-brand-light bg-brand-light text-chrome-surface-1 md:-translate-y-3'
           : 'border-chrome-line-subtle bg-chrome-surface-1 text-text-primary',
         className,
       )}
@@ -140,9 +160,13 @@ export function PlanCard({
         <div
           className="mb-6 mt-auto grid gap-[3px] border-t pt-5"
           style={{
-            borderTopColor: featured
-              ? 'var(--color-chrome-line-on-light)'
-              : 'var(--color-chrome-line-subtle)',
+            // The dark-toned promotion keeps the dark card's own rule: the
+            // on-light rule is a dark line designed for cream and would vanish
+            // against `chrome.surface.1`.
+            borderTopColor:
+              featured && featuredTone !== 'dark'
+                ? 'var(--color-chrome-line-on-light)'
+                : 'var(--color-chrome-line-subtle)',
           }}
         >
           <span className="font-mono text-[10px] uppercase tracking-[0.07em] text-text-muted">

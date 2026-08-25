@@ -99,6 +99,37 @@ export const Grid: Story = {
 }
 
 /**
+ * The featured promotion on a CREAM ground: `featuredTone="dark"`. The default
+ * cream inversion would be cream-on-cream here, so the featured card inverts
+ * the other way — near-black, `dark`-pinned, same lift and shadow. Note the
+ * nested `CheckList`-shaped bullets keep their DEFAULT rendering; `onLight` is
+ * the cream card's requirement, not this one's.
+ */
+export const FeaturedDarkOnCream: Story = {
+  name: 'featuredTone="dark" on cream',
+  render: () => (
+    <div className="light rounded-3xl border border-chrome-line-on-light bg-brand-light p-8">
+      <PlanGrid className="mt-0">
+        <PlanCard
+          {...(Free.args as React.ComponentProps<typeof PlanCard>)}
+          className="border-chrome-line-on-light bg-white"
+        />
+        <PlanCard
+          {...(ProFeatured.args as React.ComponentProps<typeof PlanCard>)}
+          featuredTone="dark"
+        />
+        <PlanCard
+          {...(Enterprise.args as React.ComponentProps<typeof PlanCard>)}
+          className="border-chrome-line-on-light bg-white"
+        />
+      </PlanGrid>
+    </div>
+  ),
+  args: ProFeatured.args,
+  parameters: { layout: 'fullscreen' },
+}
+
+/**
  * The defect story. `features` given as a bare string instead of an element.
  *
  * This scored 1.13:1 in production. The mechanism is worth knowing because it

@@ -4,7 +4,7 @@ import { useId } from 'react';
 import * as AccordionPrimitive from '@radix-ui/react-accordion';
 import { Eyebrow } from '../patterns/marketing.js';
 import { cn } from '../lib/utils.js';
-export function FaqBand({ eyebrow, title, note, children, multiple, className }) {
+export function FaqBand({ eyebrow, title, note, actions, children, multiple, className }) {
     const rows = (_jsx("div", { className: "border-b border-chrome-line-on-light", children: children }));
     return (_jsxs("section", { className: cn(
         // `light` first, never conditional — see the file header.
@@ -14,7 +14,7 @@ export function FaqBand({ eyebrow, title, note, children, multiple, className })
                     // px-2. Nothing could have caught it — three copies of one span, and
                     // the token was only ever a default. This is the same override Bridge
                     // uses, and it moves this chip by 1px of type and 1.6px of padding.
-                    _jsx(Eyebrow, { className: "border-chrome-line-on-light text-text-muted", children: eyebrow })) : null, _jsx("h2", { className: cn('max-w-[420px] text-[clamp(1.9rem,2.8vw,2.75rem)] leading-[1.1] tracking-[-0.02em] text-text-primary', eyebrow && 'mt-5'), children: title }), note ? _jsx("p", { className: "mt-4 max-w-[380px] text-[14px] text-text-muted", children: note }) : null] }), multiple ? (_jsx(AccordionPrimitive.Root, { type: "multiple", children: rows })) : (_jsx(AccordionPrimitive.Root, { type: "single", collapsible: true, children: rows }))] }));
+                    _jsx(Eyebrow, { className: "border-chrome-line-on-light text-text-muted", children: eyebrow })) : null, _jsx("h2", { className: cn('max-w-[420px] text-[clamp(1.9rem,2.8vw,2.75rem)] leading-[1.1] tracking-[-0.02em] text-text-primary', eyebrow && 'mt-5'), children: title }), note ? _jsx("p", { className: "mt-4 max-w-[380px] text-[14px] text-text-muted", children: note }) : null, actions ? (_jsx("div", { className: "mt-6 flex flex-wrap items-center gap-3", children: actions })) : null] }), multiple ? (_jsx(AccordionPrimitive.Root, { type: "multiple", children: rows })) : (_jsx(AccordionPrimitive.Root, { type: "single", collapsible: true, children: rows }))] }));
 }
 export function FaqRow({ question, children, className }) {
     // Radix needs a stable value per item and the caller has no reason to invent

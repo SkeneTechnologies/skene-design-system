@@ -37,7 +37,7 @@ custom properties, 127 in agreement and 12 in genuine conflict.
 Consumed as a git dependency, so there is no npm registry and no npm token:
 
 ```jsonc
-"@skene/design-system": "git+https://github.com/SkeneTechnologies/skene-design-system.git#semver:^0.9.0"
+"@skene/design-system": "git+https://github.com/SkeneTechnologies/skene-design-system.git#semver:^0.10.0"
 ```
 
 npm resolves `semver:` against git **tags**, and `package-lock.json` pins the
@@ -68,7 +68,9 @@ git push origin main && git push origin v<version>
 
 Verified by installing this package from a clean directory with only the git
 dependency in `package.json`: the range above resolves to the highest matching
-tag and pins the commit. Re-verified against `^0.9.0`, which resolves `v0.9.24`.
+tag and pins the commit. At `^0.10.0` the range resolves `v0.10.0` — a tag the release that bumped
+package.json still owes; until it is pushed, the range installs nothing, which
+is exactly the failure mode the note above describes.
 (This sentence read `v0.3.0` for six releases — the same drift the note above
 warns about, in the paragraph that warns about it.)
 

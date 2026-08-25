@@ -52,7 +52,7 @@
  *
  * Content is props; no `use client` — props in, markup out.
  */
-export type ValueTone = 'cost' | 'gain';
+export type ValueTone = 'cost' | 'gain' | 'neutral';
 export interface ValueCardsProps {
     /** `ValueCard`s, in argument order — the costs, then the gain. */
     children: React.ReactNode;
@@ -64,7 +64,10 @@ export interface ValueCardProps {
     label?: React.ReactNode;
     /** The card's one line. */
     title: React.ReactNode;
-    /** `cost` states a problem (danger label); `gain` states the payoff (peach). */
+    /**
+     * `cost` states a problem (danger label); `gain` states the payoff (peach);
+     * `neutral` states neither — a flat peer with a muted label.
+     */
     tone?: ValueTone;
     /** The body line under the title — the consequence, or the mechanism. */
     children?: React.ReactNode;

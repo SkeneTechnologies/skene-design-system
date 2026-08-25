@@ -991,7 +991,7 @@
       ],
       "summary": "A dark hero strip with a textured backdrop fading into the page.",
       "client": false,
-      "lines": 67,
+      "lines": 95,
       "cases": [
         "pattern-hero-backdrop"
       ],
@@ -1001,7 +1001,8 @@
         "purpose": "A dark hero strip: a background image at low opacity, a gradient fading to the page ground, and content above it.",
         "alsoFor": [
           "Any short banner that needs to sit on the page rather than end abruptly — a subpage header, a section lead-in.",
-          "A plain dark strip with no image at all: `image` is optional and the fade still renders."
+          "A plain dark strip with no image at all: `image` is optional and the fade still renders.",
+          "The textured split header — eyebrow, h1 and lede in a narrow track with an artifact beside them, the dither strip behind both. A recipe, not an export: wrap a two-column grid in `children` with `image` set to the dithered asset; the header comment carries the markup and skene-marketing-website's `page-shell.tsx` (`flat-split`) is the reference implementation. The grid's ratios and wrap width are page decisions, which is why the package ships the ground and not the grid."
         ],
         "watchFor": [
           "`fadeTo` must match the ground of whatever follows, or the seam shows as a band edge."
@@ -1399,7 +1400,7 @@
       ],
       "summary": "The PR surface is a GitHub App that posts reviews; nothing ships as an Actions workflow.",
       "client": true,
-      "lines": 343,
+      "lines": 352,
       "cases": [],
       "demo": null,
       "usage": {
@@ -1467,7 +1468,7 @@
       ],
       "summary": "The 10px monospace chip.",
       "client": false,
-      "lines": 106,
+      "lines": 130,
       "cases": [
         "section-chip"
       ],
@@ -1480,7 +1481,8 @@
           "A state marker inside a light surface with `tone=\"healthy\"` (matcha) or `tone=\"live\"` (violet). Both derive their fill through `color-mix` from mode-aware tokens, so they follow a `light` ancestor down to the light value rather than laying a dark-mode tint on cream — safe inside a light `ProductWindow` body or a cream card.",
           "Wrapping in a narrower-vocabulary named component. `WindowStatus` (product-window.tsx:97) is the sanctioned template: it restricts `tone` to `'healthy' | 'live'`, pins its tracking override, and keeps the name callers actually look for. Do that again rather than adding an inline chip.",
           "Matching an already-shipped rendering. `className` merges last via `cn`, so a `tracking-*` utility beats the base 0.08em — the documented, and only documented, override.",
-          "Non-string content: `children` is a `ReactNode`, so a glyph plus a word, or a count, works. `shrink-0` is in the base, so the chip is safe as the fixed item in a flex row opposite a title that wraps."
+          "Non-string content: `children` is a `ReactNode`, so a glyph plus a word, or a count, works. `shrink-0` is in the base, so the chip is safe as the fixed item in a flex row opposite a title that wraps.",
+          "A breakage or defect marker with `tone=\"danger\"`. Its recipe deviates from `healthy`/`live` on purpose: the ink is the on-tint token (`--color-semantic-error-red-on-tint`), the split `StatPill` and `Finding` both shipped without and measured below the floor for, and the tint is 12% — inside the band those tokens were measured for. Both halves are mode-aware, so it holds inside a light `ProductWindow` as well as on the page."
         ],
         "watchFor": [
           "`className` merges last and therefore beats the base for *any* utility, but `tracking-*` is the only override this package sanctions. Changing `px-[7px]`, `py-1`, `rounded-[5px]` or `text-[10px]` at a call site re-forks the component the extraction exists to prevent.",
@@ -1588,7 +1590,7 @@
         ],
         "notFor": [
           "A list of evaluations rather than of found events. That is EvaluatorList, which is the same window with a different column contract.",
-          "A settings or reference table. That is KeyValueTable."
+          "A settings or reference table, or any table of three columns or fewer. That is KeyValueTable's job — it owns per-column formatting at two densities and a headerless `<dl>` rendering — while this module is the fixed four-column discovery artifact: event, type, where it was found, whether it verified. Narrowing it re-derives KeyValueTable with the discovery chrome attached."
         ]
       }
     },
@@ -1727,7 +1729,7 @@
       ],
       "summary": "The FAQ band: a heading column that stays put, and the questions beside it.",
       "client": true,
-      "lines": 178,
+      "lines": 190,
       "cases": [
         "section-faq-band"
       ],
@@ -1737,7 +1739,8 @@
         "purpose": "The FAQ band: a heading column that stays put, and the questions beside it on a cream ground with a hairline per row and a round toggle.",
         "alsoFor": [
           "Any disclosure band on a marketing page — objections, a glossary, what's included.",
-          "Many rows open at once, via `multiple`, when the answers are short enough to scan together."
+          "Many rows open at once, via `multiple`, when the answers are short enough to scan together.",
+          "A heading column that closes with a CTA: `actions` renders under the note (or under the title when there is no note), so the wireframes' head button beside the questions no longer needs a hand-built column. Pass the variant that survives the cream ground — the same inversion caveat as the answers' links."
         ],
         "watchFor": [
           "`light` on the root is unconditional and there is no dark variant. The band ships in one tone because every FAQ on both surfaces is the cream one.",
@@ -2076,7 +2079,7 @@
       ],
       "summary": "The journey track: the numbered steps of a funnel laid out as one line, each",
       "client": false,
-      "lines": 258,
+      "lines": 275,
       "cases": [
         "section-journey-track"
       ],
@@ -2089,7 +2092,8 @@
           "Building your own layout from `JourneyStep`, which is exported separately. Its `index` prop is a `ReactNode` and `JourneyTrack` merely fills in the 1-based position, so rendering steps directly lets you pass a glyph (✓, ✕, an icon) or your own numbering into the ring.",
           "Both orientations with no prop: the track is a stacked column below `md` and a row from `md` up, and the connector's gradient angle rides a `--journey-connector-angle` custom property specifically because an inline style cannot hold a media query. You get vertical and horizontal for free — but only that pairing; forcing one orientation means overriding classes.",
           "Server rendering and animated composition. There is no `use client` and no internal state — state arrives as props — so a track that advances composes by re-rendering, and it drops into a server component without pulling a client boundary around its siblings.",
-          "`MiniFunnel` on its own, anywhere a small ranked readout helps: quota usage, share-of-total, step drop-off. Its bar width is routed through the `--mini-funnel-fill` custom property rather than set on `width` directly, which is the deliberate seam for a wrapper to transition or override it (grow-on-scroll, staged entrance) without this component owning any animation or state."
+          "`MiniFunnel` on its own, anywhere a small ranked readout helps: quota usage, share-of-total, step drop-off. Its bar width is routed through the `--mini-funnel-fill` custom property rather than set on `width` directly, which is the deliberate seam for a wrapper to transition or override it (grow-on-scroll, staged entrance) without this component owning any animation or state.",
+          "A verified or annotated track without composing steps by hand: each step's `glyph` replaces the ring's 1-based number (a ✓ on a proven step, per step, so a track can mix glyphed and numbered rings) while `JourneyTrack` still owns the connectors — the seam gradients keep deriving from the states with no re-derivation at the call site."
         ],
         "watchFor": [
           "The 34px ring size is hard-coded into the connector, not read from it: `ml-[17px]` stacked and `md:mt-[17px]` in a row are both half the ring. Resizing the ring via `JourneyStep`'s `className` leaves the connector aligned to the old centre.",
@@ -2115,7 +2119,7 @@
       ],
       "summary": "The reference table: a fixed set of columns, a fixed set of rows, and nothing",
       "client": false,
-      "lines": 292,
+      "lines": 370,
       "cases": [
         "section-key-value-table"
       ],
@@ -2126,7 +2130,8 @@
         "alsoFor": [
           "Any settings, environment or schema reference — the `reference` density drops the row fill and hover so it stops reading as a data grid.",
           "A secret or token display via MaskedValue, which shows a prefix and a fixed number of dots.",
-          "Column-level formatting without touching cells: mono, muted, strong and nowrap are per-column flags."
+          "Column-level formatting without touching cells: mono, muted, strong and nowrap are per-column flags.",
+          "The headerless key/value list — a settings readout whose column headings would only repeat what every row already says. `headerless` renders the same rows and column flags as a semantic `<dl>` (the term, then one `<dd>` per value column) rather than a table with visually hidden headers; the file header records why `sr-only` `<th>`s were rejected."
         ],
         "watchFor": [
           "TagChip is one of five names in this package for the same 11px mono tag. Prefer it, and do not add a sixth."
@@ -2177,7 +2182,7 @@
       ],
       "summary": "The inverted section: one cream card carrying a whole section's worth of copy",
       "client": false,
-      "lines": 171,
+      "lines": 191,
       "cases": [
         "section-light-section-card",
         "light-section-card-steps"
@@ -2191,7 +2196,8 @@
           "Media-left layouts via `reverse`, which mirrors the grid with `md:col-start-*` / `md:row-start-1` on both columns rather than reordering the DOM (reading order stays copy-first).",
           "Any node in `visual` — an image, a `ProductWindow` of either tone, a chart, an `AnnotatedCurve`. The column is `grid place-items-center` with no padding of its own and the root is `overflow-hidden`, so a full-bleed photo reaches the rounded edge and an inset one just pads the node you pass.",
           "`children` is a free body slot, not a list API: a `<CheckList onLight>`, prose, a small table. It is given full column width on purpose (not a prose measure) so a CheckList's rules run the width of the column.",
-          "`actions` is a slot rather than a label/href pair, so it takes one button, two, or a button plus fine print — and lets you pick a variant that survives the inversion."
+          "`actions` is a slot rather than a label/href pair, so it takes one button, two, or a button plus fine print — and lets you pick a variant that survives the inversion.",
+          "An eyebrowed band: `eyebrow` renders the package `Eyebrow` above the title with the on-cream overrides applied inside the card — the caller passes content, never colour, and cannot reintroduce the invisible-chrome-ink-on-cream trap the trust-panel story documents."
         ],
         "watchFor": [
           "`light` on the root is unconditional and first in the class list. Anything dark you nest has to re-assert `dark` itself: the gallery writes `<ProductWindow tone=\"dark\" className=\"dark\">`, because ProductWindow's dark branch sets `chrome.*` fills but adds no `dark` class of its own.",
@@ -2348,7 +2354,7 @@
       ],
       "summary": "Pricing: the grid and the tier card. The monthly/yearly switch is the only",
       "client": false,
-      "lines": 164,
+      "lines": 188,
       "cases": [
         "section-plan-card"
       ],
@@ -2361,7 +2367,8 @@
           "Non-currency tiers. `price` is a `ReactNode` rendered in a `<strong>`, so \"Free\", \"Custom\", or \"Let's talk\" work as-is, and `unit` takes \"/seat\", \"/yr\", \"per repo\" — nothing in the component knows it is money.",
           "Non-pricing package or offer cards — service tiers, plan-shaped feature bundles. `features` is an untyped `ReactNode` slot, so a `<dl>`, a `<Table>`, or plain paragraphs go in where the demo puts a `<CheckList>`.",
           "Grids other than three-across. `PlanGrid` merges `className` through `cn` (clsx + tailwind-merge), so `md:grid-cols-2` or `lg:grid-cols-4` genuinely replaces the base `md:grid-cols-3` rather than fighting it.",
-          "Highlighting one item in any set of sibling cards — `featured` carries no pricing semantics, only the cream inversion and the lift."
+          "Highlighting one item in any set of sibling cards — `featured` carries no pricing semantics, only the cream inversion and the lift.",
+          "The featured promotion on a CREAM ground: `featuredTone=\"dark\"` inverts the card to the invariant near-black fill with the `dark` class pinning every mode-aware token in the subtree, same lift and `--shadow-modal` — because the default cream inversion is cream-on-cream inside a light panel. A nested `CheckList` then wants its default rendering, not `onLight`."
         ],
         "watchFor": [
           "`featured` applies the `light` class, and that is load-bearing, not decoration (sections.md rule 2). Anything you pass into `features`/`action`/`bestFor` must use the theme-aware `text.*` role; `chrome.text.*` is invariant and renders cream on the cream card, i.e. invisible. When `featured`, also pass `onLight` to a nested `CheckList`.",
@@ -2829,7 +2836,7 @@
       ],
       "summary": "The trust panel: a cream card split in two — the claim on the left, the facts",
       "client": false,
-      "lines": 234,
+      "lines": 253,
       "cases": [
         "section-trust-panel",
         "section-trust-panel-eyebrow"
@@ -2843,11 +2850,12 @@
           "A single-column cream statement or CTA panel — omit `children` and the `md:grid-cols-[0.9fr_1.1fr]` template is not applied at all. That collapse is an explicit design decision in the source, not an accident.",
           "A legal/footnote band: the `links` slot is a wrapped flex row that styles whatever anchors you pass (`underline`, `underline-offset-4`, hover to `text.primary`) without owning their hrefs or labels.",
           "A plan-inclusions panel, using each `TrustFact`'s 38px `icon` circle for a check glyph and `children` for the limit or caveat.",
-          "`TrustFact` on its own inside any `<ul>` you own — it is exported, it is a self-contained `<li>` that draws its own separating rule, and it needs no context from `TrustPanel`. Cream surfaces only (see watchFor)."
+          "`TrustFact` on its own inside any `<ul>` you own — it is exported, it is a self-contained `<li>` that draws its own separating rule, and it needs no context from `TrustPanel`. Cream surfaces only (see watchFor).",
+          "A fact row on a dark band: `TrustFact tone=\"muted\"` swaps the row's two invariant pieces of on-light chrome — the separating rule and the disc — for their theme-following pair (`border`, `GlyphBadge tone=\"muted\"`), so the stack is legible outside the cream panel while the default `tint` rendering inside it is untouched."
         ],
         "watchFor": [
           "`light` is unconditional and first in the class list. There is no dark variant and you cannot make one by overriding `className` — `bg-brand-light` is an invariant cream, and every mode-aware token in the subtree has already resolved for a cream ground.",
-          "`TrustFact`'s hairlines and its icon circle's border are `chrome-line-on-light` — an invariant dark rule at 14% designed for cream. Lifted onto a dark surface those rules and that circle are effectively invisible. The doc comment calls this out as the one deliberate exception to the theme-aware-tokens rule.",
+          "`TrustFact`'s hairlines and its icon circle's border are `chrome-line-on-light` — an invariant dark rule at 14% designed for cream. Lifted onto a dark surface those rules and that circle are effectively invisible. The doc comment calls this out as the one deliberate exception to the theme-aware-tokens rule. Since 0.11.0 that is what `TrustFact`'s `tone=\"muted\"` exists for — the theme-following pair for any other ground.",
           "`children` renders directly inside the `<ul>` (chosen over an inner wrapper specifically to avoid `display: contents`, which several browsers still strip list semantics from). Pass `TrustFact`s, i.e. `<li>`s — a `<div>` or a wrapper component breaks the \"3 of 5\" a screen reader would otherwise give.",
           "The fact separators live on the item (`border-b … first:pt-0 last:border-b-0 last:pb-0`), not on a divider element, so the stack must not also be spaced by a parent `gap` — that double-spaces the rhythm. The icon circle also renders when `icon` is absent, on purpose, to keep every title's left edge aligned.",
           "`title` is capped at `max-w-[440px]` and `lede` at `max-w-[430px]`, and the glow is absolutely positioned inside the left cell only. Long copy will not fill the column, and the bloom never reaches the facts panel."
@@ -2869,7 +2877,7 @@
       ],
       "summary": "The value band: a row of cards that argues by CONTRAST. A stack of cards",
       "client": false,
-      "lines": 150,
+      "lines": 162,
       "cases": [
         "section-value-cards"
       ],
@@ -2882,7 +2890,8 @@
           "A risk or defect summary where every card is a `cost`: `tone` defaults to `'cost'`, so a stack of audit findings needs only `label` + `title` + body. (For a measured, instrumented state use `Finding` instead — see notFor.)",
           "A plain neutral card grid: omit `label` entirely and leave `tone` at its default. With no label there is no accent on screen at all — you get a 14px-radius card, a 1.8% wash and a near-invisible hairline, i.e. a generic content card.",
           "`ValueCards` on its own as a bare auto-fit grid wrapper. `children` is typed `React.ReactNode`, not `ValueCard[]`, so it will lay out any children at `repeat(auto-fit,minmax(240px,1fr))` from `md` up, single column below.",
-          "A three-tier emphasis band, by mixing labelled `cost` cards with unlabelled default cards and one `gain` — no third tone needed, because the label's presence is itself an axis."
+          "A three-tier emphasis band, by mixing labelled `cost` cards with unlabelled default cards and one `gain` — no third tone needed, because the label's presence is itself an axis.",
+          "A row of labelled flat peers: `tone=\"neutral\"` keeps the mono kicker but takes `text.muted` for it and claims neither a defect nor a payoff — three use-case cards can carry labels without any of them reading as a cost, and mixing one `gain` back in restores the turn."
         ],
         "watchFor": [
           "`tone` defaults to `'cost'`. That is deliberate (costs are the majority of the band) but it means a forgotten `tone` renders a red label, not a neutral one.",

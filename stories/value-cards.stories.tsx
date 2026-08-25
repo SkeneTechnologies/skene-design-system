@@ -50,6 +50,29 @@ export const Three: Story = {
   },
 }
 
+/**
+ * `neutral` peers: labelled cards that claim neither a defect nor a payoff.
+ * The label is `text.muted` — no red, no verdict — and one `gain` at the end
+ * still restores the turn.
+ */
+export const NeutralPeers: Story = {
+  args: {
+    children: (
+      <>
+        <ValueCard label="Growth" title="Did activation fall after the release?" tone="neutral">
+          Know whether the drop is real before you redesign onboarding.
+        </ValueCard>
+        <ValueCard label="Lifecycle" title="What should trigger the next message?" tone="neutral">
+          Know which signal a campaign is wired to.
+        </ValueCard>
+        <ValueCard label="Revenue" title="Which seats convert?" tone="neutral">
+          Know what the upgrade path actually looks like.
+        </ValueCard>
+      </>
+    ),
+  },
+}
+
 /** No label, no body — title only. */
 export const TitleOnly: Story = {
   args: {

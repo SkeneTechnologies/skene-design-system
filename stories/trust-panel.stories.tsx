@@ -105,3 +105,29 @@ export const SingleColumn: Story = {
 export const ClaimOnly: Story = {
   args: { title: Default.args.title, lede: Default.args.lede, children: facts },
 }
+
+/**
+ * `TrustFact` outside the panel, on the dark page: `tone="muted"` swaps the
+ * two invariant pieces of on-light chrome — the separating rule and the disc —
+ * for their theme-following pair. At the default `tint` these rows would keep
+ * their type and lose the rule and the circle against this ground.
+ */
+export const FactsOnDark: Story = {
+  render: () => (
+    <div className="p-8">
+      <ul className="m-0 max-w-[520px] list-none p-0">
+        <TrustFact tone="muted" icon="⌂" title="Your systems remain the source of truth">
+          Skene reads; it does not become the store.
+        </TrustFact>
+        <TrustFact tone="muted" icon="✓" title="Every finding is reviewable">
+          File and line, on the pull request.
+        </TrustFact>
+        <TrustFact tone="muted" icon="⇄" title="One engine, four ways to connect">
+          CLI, MCP, GitHub App, API.
+        </TrustFact>
+      </ul>
+    </div>
+  ),
+  args: { title: Default.args.title },
+  parameters: { layout: 'fullscreen' },
+}

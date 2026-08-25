@@ -53,6 +53,10 @@
         {
           "claim": "A plain dark strip with no image at all: `image` is optional and the fade still renders.",
           "via": "prop HeroBackdrop.image"
+        },
+        {
+          "claim": "The textured split header — eyebrow, h1 and lede in a narrow track with an artifact beside them, the dither strip behind both. A recipe, not an export: wrap a two-column grid in `children` with `image` set to the dithered asset; the header comment carries the markup and skene-marketing-website's `page-shell.tsx` (`flat-split`) is the reference implementation. The grid's ratios and wrap width are page decisions, which is why the package ships the ground and not the grid.",
+          "via": "prop HeroBackdrop.children"
         }
       ],
       "watchFor": [
@@ -661,6 +665,10 @@
         {
           "claim": "Non-string content: `children` is a `ReactNode`, so a glyph plus a word, or a count, works. `shrink-0` is in the base, so the chip is safe as the fixed item in a flex row opposite a title that wraps.",
           "via": "prop Chip.children"
+        },
+        {
+          "claim": "A breakage or defect marker with `tone=\"danger\"`. Its recipe deviates from `healthy`/`live` on purpose: the ink is the on-tint token (`--color-semantic-error-red-on-tint`), the split `StatPill` and `Finding` both shipped without and measured below the floor for, and the tint is 12% — inside the band those tokens were measured for. Both halves are mode-aware, so it holds inside a light `ProductWindow` as well as on the page.",
+          "via": "prop Chip.tone"
         }
       ],
       "watchFor": [
@@ -810,7 +818,7 @@
         },
         {
           "instead": "KeyValueTable",
-          "why": "A settings or reference table. That is KeyValueTable."
+          "why": "A settings or reference table, or any table of three columns or fewer. That is KeyValueTable's job — it owns per-column formatting at two densities and a headerless `<dl>` rendering — while this module is the fixed four-column discovery artifact: event, type, where it was found, whether it verified. Narrowing it re-derives KeyValueTable with the discovery chrome attached."
         }
       ]
     },
@@ -940,6 +948,10 @@
         {
           "claim": "Many rows open at once, via `multiple`, when the answers are short enough to scan together.",
           "via": "prop FaqBand.multiple"
+        },
+        {
+          "claim": "A heading column that closes with a CTA: `actions` renders under the note (or under the title when there is no note), so the wireframes' head button beside the questions no longer needs a hand-built column. Pass the variant that survives the cream ground — the same inversion caveat as the answers' links.",
+          "via": "prop FaqBand.actions"
         }
       ],
       "watchFor": [
@@ -1404,6 +1416,10 @@
         {
           "claim": "`MiniFunnel` on its own, anywhere a small ranked readout helps: quota usage, share-of-total, step drop-off. Its bar width is routed through the `--mini-funnel-fill` custom property rather than set on `width` directly, which is the deliberate seam for a wrapper to transition or override it (grow-on-scroll, staged entrance) without this component owning any animation or state.",
           "via": "export MiniFunnel"
+        },
+        {
+          "claim": "A verified or annotated track without composing steps by hand: each step's `glyph` replaces the ring's 1-based number (a ✓ on a proven step, per step, so a track can mix glyphed and numbered rings) while `JourneyTrack` still owns the connectors — the seam gradients keep deriving from the states with no re-derivation at the call site.",
+          "via": "type JourneyStepItem.glyph"
         }
       ],
       "watchFor": [
@@ -1453,6 +1469,10 @@
         {
           "claim": "Column-level formatting without touching cells: mono, muted, strong and nowrap are per-column flags.",
           "via": "type KeyValueColumn.mono"
+        },
+        {
+          "claim": "The headerless key/value list — a settings readout whose column headings would only repeat what every row already says. `headerless` renders the same rows and column flags as a semantic `<dl>` (the term, then one `<dd>` per value column) rather than a table with visually hidden headers; the file header records why `sr-only` `<th>`s were rejected.",
+          "via": "prop KeyValueTable.headerless"
         }
       ],
       "watchFor": [
@@ -1529,6 +1549,10 @@
         {
           "claim": "`actions` is a slot rather than a label/href pair, so it takes one button, two, or a button plus fine print — and lets you pick a variant that survives the inversion.",
           "via": "prop LightSectionCard.actions"
+        },
+        {
+          "claim": "An eyebrowed band: `eyebrow` renders the package `Eyebrow` above the title with the on-cream overrides applied inside the card — the caller passes content, never colour, and cannot reintroduce the invisible-chrome-ink-on-cream trap the trust-panel story documents.",
+          "via": "prop LightSectionCard.eyebrow"
         }
       ],
       "watchFor": [
@@ -1707,6 +1731,10 @@
         {
           "claim": "Highlighting one item in any set of sibling cards — `featured` carries no pricing semantics, only the cream inversion and the lift.",
           "via": "prop PlanCard.featured"
+        },
+        {
+          "claim": "The featured promotion on a CREAM ground: `featuredTone=\"dark\"` inverts the card to the invariant near-black fill with the `dark` class pinning every mode-aware token in the subtree, same lift and `--shadow-modal` — because the default cream inversion is cream-on-cream inside a light panel. A nested `CheckList` then wants its default rendering, not `onLight`.",
+          "via": "prop PlanCard.featuredTone"
         }
       ],
       "watchFor": [
@@ -2324,6 +2352,10 @@
         {
           "claim": "`TrustFact` on its own inside any `<ul>` you own — it is exported, it is a self-contained `<li>` that draws its own separating rule, and it needs no context from `TrustPanel`. Cream surfaces only (see watchFor).",
           "via": "export TrustFact"
+        },
+        {
+          "claim": "A fact row on a dark band: `TrustFact tone=\"muted\"` swaps the row's two invariant pieces of on-light chrome — the separating rule and the disc — for their theme-following pair (`border`, `GlyphBadge tone=\"muted\"`), so the stack is legible outside the cream panel while the default `tint` rendering inside it is untouched.",
+          "via": "prop TrustFact.tone"
         }
       ],
       "watchFor": [
@@ -2332,7 +2364,7 @@
           "via": "className"
         },
         {
-          "note": "`TrustFact`'s hairlines and its icon circle's border are `chrome-line-on-light` — an invariant dark rule at 14% designed for cream. Lifted onto a dark surface those rules and that circle are effectively invisible. The doc comment calls this out as the one deliberate exception to the theme-aware-tokens rule.",
+          "note": "`TrustFact`'s hairlines and its icon circle's border are `chrome-line-on-light` — an invariant dark rule at 14% designed for cream. Lifted onto a dark surface those rules and that circle are effectively invisible. The doc comment calls this out as the one deliberate exception to the theme-aware-tokens rule. Since 0.11.0 that is what `TrustFact`'s `tone=\"muted\"` exists for — the theme-following pair for any other ground.",
           "via": "export TrustFact"
         },
         {
@@ -2389,6 +2421,10 @@
         {
           "claim": "A three-tier emphasis band, by mixing labelled `cost` cards with unlabelled default cards and one `gain` — no third tone needed, because the label's presence is itself an axis.",
           "via": "prop ValueCard.label"
+        },
+        {
+          "claim": "A row of labelled flat peers: `tone=\"neutral\"` keeps the mono kicker but takes `text.muted` for it and claims neither a defect nor a payoff — three use-case cards can carry labels without any of them reading as a cost, and mixing one `gain` back in restores the turn.",
+          "via": "prop ValueCard.tone"
         }
       ],
       "watchFor": [

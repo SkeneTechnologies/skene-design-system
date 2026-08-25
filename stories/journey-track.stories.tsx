@@ -52,6 +52,24 @@ export const LabelsOnly: Story = {
   args: { ...Default.args, steps: steps.map(({ label, state }) => ({ label, state })) },
 }
 
+/**
+ * Caller-supplied ring glyphs — the verified track. `glyph` is per step and
+ * replaces only the number: the connectors still derive from the states, which
+ * is why the last seam here runs matcha into red with no code at the call site.
+ */
+export const GlyphRings: Story = {
+  args: {
+    title: 'Verified journey',
+    subtitle: 'Every step backed by a live event',
+    steps: [
+      { label: 'Landing', note: 'page_view', state: 'good' as const, glyph: '✓' },
+      { label: 'Signup', note: 'signup_completed', state: 'good' as const, glyph: '✓' },
+      { label: 'Connect', note: 'repo_connected', state: 'good' as const, glyph: '✓' },
+      { label: 'Upgrade', note: 'nothing bound', state: 'danger' as const },
+    ],
+  },
+}
+
 export const Mini: Story = {
   args: { steps },
   render: () => (

@@ -67,6 +67,16 @@ export const Default: Story = {
 export const Reversed: Story = { args: { ...Default.args, reverse: true } }
 
 /**
+ * The eyebrow slot. Content only: the card renders it through `Eyebrow` with
+ * the on-cream overrides applied inside, so this story is one string — compare
+ * the trust-panel `Default` story, where the caller still writes the chip and
+ * its two overrides by hand.
+ */
+export const WithEyebrow: Story = {
+  args: { ...Default.args, eyebrow: 'Integrations' },
+}
+
+/**
  * `NumberedStep` stacked under the card, which is what the homepage renders.
  *
  * `onLight` exists because of this composition. Without it the step's body

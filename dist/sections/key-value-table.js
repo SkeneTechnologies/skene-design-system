@@ -16,8 +16,21 @@ const CODE_IN_CELL = [
     '[&_code]:px-[4px] [&_code]:py-[1px] [&_code]:font-mono [&_code]:text-[0.9em]',
     '[&_code]:text-foreground',
 ].join(' ');
-export function KeyValueTable({ columns, rows, density = 'reference', className, }) {
+export function KeyValueTable({ columns, rows, density = 'reference', headerless = false, className, }) {
     const reference = density === 'reference';
+    if (headerless) {
+        // The formatting below mirrors `DataCell` plus this file's reference-density
+        // additions, cell for cell, so a headerless table beside a headed one at the
+        // same density reads as the same table minus its header bar. The row rule is
+        // `DataRow`'s 60% mix for the same reason.
+        return (_jsx("dl", { className: cn('m-0 w-full', className), children: rows.map((row, r) => (_jsx("div", { className: cn('grid border-b last:border-b-0', row.className), style: {
+                    gridTemplateColumns: `max-content repeat(${Math.max(1, columns.length - 1)}, minmax(0, 1fr))`,
+                    borderColor: 'color-mix(in oklab, var(--border) 60%, transparent)',
+                }, children: columns.map((column, c) => {
+                    const Cell = c === 0 ? 'dt' : 'dd';
+                    return (_jsx(Cell, { className: cn(CODE_IN_CELL, 'm-0 px-[12px] text-[13px] font-normal text-foreground', reference ? 'py-[12px] normal-nums' : 'py-[8px] tabular-nums', (column.mono ?? (reference && c === 0)) && 'font-mono', column.muted && 'text-[12px] text-muted-foreground', (column.nowrap ?? (reference && c === 0)) && 'whitespace-nowrap', column.strong && 'font-medium', column.className), children: row.cells[c] }, c));
+                }) }, row.id ?? r))) }));
+    }
     return (_jsx(DataTable, { columns: columns.map((column) => column.header), 
         // `DataTable` paints `bg-card` because the product's panel is a card. A
         // reference table sits on the marketing page's own panel and must let that

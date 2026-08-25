@@ -84,8 +84,17 @@ export const INTEGRATION_ANIMATION_DETAILS: IntegrationAnimationDetail[] = [
   {
     badge: 'Repo audit',
     badgeVariant: 'amber',
-    text: 'A one-time scan of your current instrumentation surface. See what you have before you adopt anything else.',
-    code: 'skene audit .',
+    // "tracking surface", not "instrumentation surface": the marketing repo's
+    // deslop gate bans the word on GTM surfaces, and this default renders
+    // there. The fact is unchanged.
+    text: 'A one-time scan of your current tracking surface. See what you have before you adopt anything else.',
+    // Not an audit-named command: no `audit` subcommand exists (the noun is
+    // the free audit tier's), and the marketing repo's `check-claims.sh`
+    // fails the string. This is the real one-time local invocation — note
+    // the s-spelling; the z-spelled `analyze-journey` is a second claim the
+    // same gate rejects. Corrected 2026-08-26 after the homepage shipped an
+    // `AUDIT_DETAIL_FIX` override to carry exactly these two strings.
+    code: 'uvx skene analyse-journey .',
   },
 ]
 
