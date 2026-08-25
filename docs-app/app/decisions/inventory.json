@@ -1397,14 +1397,14 @@
         "INTEGRATION",
         "CardAnimationIntegrations"
       ],
-      "summary": "Four integration cards on a textured field, cycling detail copy with GSAP.",
+      "summary": "The PR surface is a GitHub App that posts reviews; no GitHub Action ships.",
       "client": true,
-      "lines": 338,
+      "lines": 343,
       "cases": [],
       "demo": null,
       "usage": {
         "module": "card-animation-integrations",
-        "purpose": "Four integration cards on a textured field, cycling detail copy with GSAP: MCP server, GitHub Action, Cloud API, and repo audit. Ported from skene-marketing-website's CardAnimationIntegrations.",
+        "purpose": "Four integration cards on a textured field, cycling detail copy with GSAP: MCP server, GitHub App, Cloud API, and repo audit. Ported from skene-marketing-website's CardAnimationIntegrations.",
         "alsoFor": [
           "The visual slot of a cream band — drop it in `LightSectionCard.visual` or `IntegrationsHighlight`, which is the pre-composed homepage band.",
           "Custom card or detail sets by passing `cards` and `details`; defaults match the live marketing animation.",

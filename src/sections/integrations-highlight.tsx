@@ -24,7 +24,7 @@ export function IntegrationsHighlight({
       <LightSectionCard
         title="Four ways to plug Skene in."
         titleScale="section"
-        lede="MCP server for your coding agent. GitHub Action for CI. Cloud API for custom runs. One-time repo audit."
+        lede="MCP server for your coding agent. GitHub App for every PR. Cloud API for custom runs. One-time repo audit."
         actions={actions}
         visual={
           <div className="flex min-h-[250px] items-center justify-center overflow-hidden p-6 md:min-h-0 md:p-8">
@@ -33,7 +33,7 @@ export function IntegrationsHighlight({
         }
       >
         Install the MCP server into Cursor or Claude Code and Skene runs before the agent
-        commits. Add the GitHub Action and it runs on every PR. Hit the cloud API directly
+        commits. Install the GitHub App and it reviews every PR. Hit the cloud API directly
         from any script. Or run a one-time audit of your current instrumentation surface
         before you adopt anything else.
       </LightSectionCard>
