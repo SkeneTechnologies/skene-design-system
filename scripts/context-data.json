@@ -3310,6 +3310,76 @@
       "key": "lockupAccent",
       "useFor": "Peach symbol with a white wordmark. The lockup with emphasis, for a dark hero or a footer that wants the brand colour. SkeneLockup tone=\"accent\".",
       "notFor": "Light grounds — the white wordmark vanishes. And do not use it as the default lockup; the accent is for one placement per surface."
+    },
+    {
+      "key": "heroDither",
+      "useFor": "The ground a hero glass/refraction treatment distorts, or a hero-scale dither ground where the subpage texture is too fine.",
+      "notFor": "Subpage headers - that is subpageDither. Second-heaviest texture in the package; do not ship it on pages without a hero."
+    },
+    {
+      "key": "agentOne",
+      "useFor": "Decorating agent-themed cards and testimonials. The three are a set - vary them across adjacent cards rather than repeating one.",
+      "notFor": "Redrawing or recolouring. Delivered brand artwork, same rule as the marks."
+    },
+    {
+      "key": "agentTwo",
+      "useFor": "See agentOne.",
+      "notFor": "See agentOne."
+    },
+    {
+      "key": "agentThree",
+      "useFor": "See agentOne.",
+      "notFor": "See agentOne."
+    },
+    {
+      "key": "heroVideo",
+      "useFor": "The hero media on marketing surfaces, through DitheredMedia's video prop so the dither treatment stays consistent.",
+      "notFor": "Autoplay with sound, or pages that already carry heroDither imagery - one hero medium per page."
+    },
+    {
+      "key": "demoVideo",
+      "useFor": "Demo modals and watch-the-demo placements.",
+      "notFor": "A background texture. It is content shown on request, not furniture."
+    },
+    {
+      "key": "bolt",
+      "useFor": "Logo rows and integration cards naming the actual vendor. Render at delivered proportions.",
+      "notFor": "Recolouring, redrawing, or standing in for a different vendor - it is another company's brand."
+    },
+    {
+      "key": "cursor",
+      "useFor": "Logo rows and integration cards naming the actual vendor. Render at delivered proportions.",
+      "notFor": "Recolouring, redrawing, or standing in for a different vendor - it is another company's brand."
+    },
+    {
+      "key": "github",
+      "useFor": "Logo rows and integration cards naming the actual vendor. Render at delivered proportions.",
+      "notFor": "Recolouring, redrawing, or standing in for a different vendor - it is another company's brand."
+    },
+    {
+      "key": "resend",
+      "useFor": "Logo rows and integration cards naming the actual vendor. Render at delivered proportions.",
+      "notFor": "Recolouring, redrawing, or standing in for a different vendor - it is another company's brand."
+    },
+    {
+      "key": "supabase",
+      "useFor": "Logo rows and integration cards naming the actual vendor. Render at delivered proportions.",
+      "notFor": "Recolouring, redrawing, or standing in for a different vendor - it is another company's brand."
+    },
+    {
+      "key": "terminal",
+      "useFor": "Logo rows and integration cards naming the actual vendor. Render at delivered proportions.",
+      "notFor": "Recolouring, redrawing, or standing in for a different vendor - it is another company's brand."
+    },
+    {
+      "key": "v0",
+      "useFor": "Logo rows and integration cards naming the actual vendor. Render at delivered proportions.",
+      "notFor": "Recolouring, redrawing, or standing in for a different vendor - it is another company's brand."
+    },
+    {
+      "key": "windsurf",
+      "useFor": "Logo rows and integration cards naming the actual vendor. Render at delivered proportions.",
+      "notFor": "Recolouring, redrawing, or standing in for a different vendor - it is another company's brand."
     }
   ]
 }

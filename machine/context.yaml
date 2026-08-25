@@ -19,7 +19,7 @@
 #   the root merges yours through cn; use client means it carries the directive.
 
 version: "1.0.0"
-counts: { modules: 89, ui: 30, patterns: 8, sections: 51, authored: 89, assets: 12 }
+counts: { modules: 89, ui: 30, patterns: 8, sections: 51, authored: 89, assets: 26 }
 
 modules:
   ui/accordion:
@@ -5164,3 +5164,194 @@ assets:
     notFor: >-
       Light grounds — the white wordmark vanishes. And do not use it as the
       default lockup; the accent is for one placement per surface.
+  heroDither:
+    import: "import { assetUrls } from '@skene/design-system/asset-urls'"
+    file: assets/hero-dither.png
+    bytes: 514067
+    kind: texture
+    usedBy: []
+    is: >-
+      Homepage hero dither texture — feeds glass/refraction treatments.
+      `hero-dither.png`.
+    useFor: >-
+      The ground a hero glass/refraction treatment distorts, or a hero-scale
+      dither ground where the subpage texture is too fine.
+    notFor: >-
+      Subpage headers - that is subpageDither. Second-heaviest texture in the
+      package; do not ship it on pages without a hero.
+  agentOne:
+    import: "import { assetUrls } from '@skene/design-system/asset-urls'"
+    file: assets/agent-1.svg
+    bytes: 3688
+    kind: mark
+    usedBy: []
+    is: >-
+      Agent illustration, first of the set of three. `agent-1.svg`.
+    useFor: >-
+      Decorating agent-themed cards and testimonials. The three are a set -
+      vary them across adjacent cards rather than repeating one.
+    notFor: >-
+      Redrawing or recolouring. Delivered brand artwork, same rule as the
+      marks.
+  agentTwo:
+    import: "import { assetUrls } from '@skene/design-system/asset-urls'"
+    file: assets/agent-2.svg
+    bytes: 4519
+    kind: mark
+    usedBy: []
+    is: >-
+      Agent illustration, second of three. `agent-2.svg`.
+    useFor: >-
+      See agentOne.
+    notFor: >-
+      See agentOne.
+  agentThree:
+    import: "import { assetUrls } from '@skene/design-system/asset-urls'"
+    file: assets/agent-3.svg
+    bytes: 5823
+    kind: mark
+    usedBy: []
+    is: >-
+      Agent illustration, third of three. `agent-3.svg`.
+    useFor: >-
+      See agentOne.
+    notFor: >-
+      See agentOne.
+  heroVideo:
+    import: "import { assetUrls } from '@skene/design-system/asset-urls'"
+    file: assets/skene-hero.mp4
+    bytes: 4070609
+    kind: texture
+    usedBy: []
+    is: >-
+      The brand hero video. Pass to `DitheredMedia` via its `video` prop.
+    useFor: >-
+      The hero media on marketing surfaces, through DitheredMedia's video prop
+      so the dither treatment stays consistent.
+    notFor: >-
+      Autoplay with sound, or pages that already carry heroDither imagery -
+      one hero medium per page.
+  demoVideo:
+    import: "import { assetUrls } from '@skene/design-system/asset-urls'"
+    file: assets/skene-demo.mp4
+    bytes: 2445455
+    kind: texture
+    usedBy: []
+    is: >-
+      The product demo video, for demo modals. `skene-demo.mp4`.
+    useFor: >-
+      Demo modals and watch-the-demo placements.
+    notFor: >-
+      A background texture. It is content shown on request, not furniture.
+  bolt:
+    import: "import { assetUrls } from '@skene/design-system/asset-urls'"
+    file: assets/integrations/bolt.svg
+    bytes: 680
+    kind: mark
+    usedBy: []
+    is: >-
+      Bolt mark.
+    useFor: >-
+      Logo rows and integration cards naming the actual vendor. Render at
+      delivered proportions.
+    notFor: >-
+      Recolouring, redrawing, or standing in for a different vendor - it is
+      another company's brand.
+  cursor:
+    import: "import { assetUrls } from '@skene/design-system/asset-urls'"
+    file: assets/integrations/cursor.svg
+    bytes: 917
+    kind: mark
+    usedBy: []
+    is: >-
+      Cursor mark.
+    useFor: >-
+      Logo rows and integration cards naming the actual vendor. Render at
+      delivered proportions.
+    notFor: >-
+      Recolouring, redrawing, or standing in for a different vendor - it is
+      another company's brand.
+  github:
+    import: "import { assetUrls } from '@skene/design-system/asset-urls'"
+    file: assets/integrations/github.svg
+    bytes: 889
+    kind: mark
+    usedBy: []
+    is: >-
+      GitHub mark.
+    useFor: >-
+      Logo rows and integration cards naming the actual vendor. Render at
+      delivered proportions.
+    notFor: >-
+      Recolouring, redrawing, or standing in for a different vendor - it is
+      another company's brand.
+  resend:
+    import: "import { assetUrls } from '@skene/design-system/asset-urls'"
+    file: assets/integrations/resend.svg
+    bytes: 2579
+    kind: mark
+    usedBy: []
+    is: >-
+      Resend mark.
+    useFor: >-
+      Logo rows and integration cards naming the actual vendor. Render at
+      delivered proportions.
+    notFor: >-
+      Recolouring, redrawing, or standing in for a different vendor - it is
+      another company's brand.
+  supabase:
+    import: "import { assetUrls } from '@skene/design-system/asset-urls'"
+    file: assets/integrations/supabase.svg
+    bytes: 4664
+    kind: mark
+    usedBy: []
+    is: >-
+      Supabase mark.
+    useFor: >-
+      Logo rows and integration cards naming the actual vendor. Render at
+      delivered proportions.
+    notFor: >-
+      Recolouring, redrawing, or standing in for a different vendor - it is
+      another company's brand.
+  terminal:
+    import: "import { assetUrls } from '@skene/design-system/asset-urls'"
+    file: assets/integrations/terminal.svg
+    bytes: 277
+    kind: mark
+    usedBy: []
+    is: >-
+      Terminal mark.
+    useFor: >-
+      Logo rows and integration cards naming the actual vendor. Render at
+      delivered proportions.
+    notFor: >-
+      Recolouring, redrawing, or standing in for a different vendor - it is
+      another company's brand.
+  v0:
+    import: "import { assetUrls } from '@skene/design-system/asset-urls'"
+    file: assets/integrations/v0.svg
+    bytes: 983
+    kind: mark
+    usedBy: []
+    is: >-
+      v0 mark.
+    useFor: >-
+      Logo rows and integration cards naming the actual vendor. Render at
+      delivered proportions.
+    notFor: >-
+      Recolouring, redrawing, or standing in for a different vendor - it is
+      another company's brand.
+  windsurf:
+    import: "import { assetUrls } from '@skene/design-system/asset-urls'"
+    file: assets/integrations/windsurf.svg
+    bytes: 1137
+    kind: mark
+    usedBy: []
+    is: >-
+      Windsurf mark.
+    useFor: >-
+      Logo rows and integration cards naming the actual vendor. Render at
+      delivered proportions.
+    notFor: >-
+      Recolouring, redrawing, or standing in for a different vendor - it is
+      another company's brand.
