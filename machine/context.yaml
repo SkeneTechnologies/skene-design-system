@@ -19,7 +19,7 @@
 #   the root merges yours through cn; use client means it carries the directive.
 
 version: "1.0.0"
-counts: { modules: 88, ui: 30, patterns: 8, sections: 50, authored: 88, assets: 12 }
+counts: { modules: 89, ui: 30, patterns: 8, sections: 51, authored: 89, assets: 12 }
 
 modules:
   ui/accordion:
@@ -3067,6 +3067,64 @@ modules:
         why: >-
           A generic cream band when you want different copy or a static visual
           instead of this animation.
+  sections/journey-signal-scene:
+    import: "@skene/design-system/sections/journey-signal-scene"
+    exports: [JourneySignalScene]
+    client: true
+    polarity: inherits
+    seen: []
+    overrides: [use client]
+    customProperties: [--font-primary, --font-geist-sans, --font-mono, --font-geist-mono, --font-size-xs, --font-size-base, --line-height-relaxed, --radius-xs]
+    useFor: >-
+      Evidence, a traced journey step, and the PR review that catches it
+      breaking, in one animated composition with a GTM/Engineering toggle. No
+      props — content lives in named consts near the top of the source file,
+      edited directly rather than passed in. Measures its own container width
+      and switches between three hand-placed layouts (a three-panel row, a
+      hero-column-width layout, a stacked phone layout) rather than using CSS
+      breakpoints, because the same panel widths read differently depending on
+      which parent gives it space.
+    alsoFor:
+      - claim: >-
+          Any `light`-classed container at any width, not just the `Bridge`
+          band it originally shipped inside. It measures its own container and
+          switches layout at 720px and 420px, which is what let
+          skene-marketing-website drop it into a split hero's narrower right
+          column as a second, real placement rather than a copy.
+        via: export JourneySignalScene
+    watchFor:
+      - note: >-
+          Requires a `light` ancestor. Its tokens alias straight to this
+          package's `--color-text-primary` etc., which default to the DARK
+          reading (near-white) without one, and every card in the scene has a
+          white/cream background regardless of page theme — without `light`
+          somewhere above it, the ink text renders near-invisible on its own
+          cards. `polarity: inherits` in the derived block below is why: this
+          module sets no `light`/`dark` class itself, unlike a self-contained
+          band such as `Bridge`.
+        via: export JourneySignalScene
+      - note: >-
+          The only styled-components module in the package
+          (`documentation/20260825_journey_signal_scene_design.md` records
+          why: a straight port of a component the founder already rejected
+          rebuilding on package primitives once). Importing it does not pull
+          styled-components into anything else, but do not use it as precedent
+          for a second one — the exception is this component's history, not a
+          reopened door.
+        via: export JourneySignalScene
+    notFor:
+      - instead: JourneyTrack
+        why: >-
+          A funnel or lifecycle strip with per-step status and no
+          code/PR-review framing. This scene's Flows panel is a fixed
+          three-row funnel illustrating the argument, not a general-purpose
+          funnel primitive — for that, use `JourneyTrack`/`MiniFunnel`.
+      - instead: PrReview
+        why: >-
+          A PR review card on its own, outside the evidence-and-journey-step
+          composition, or with different content than the built-in demo. This
+          module has no props to swap the review's contents; `PrReview` is the
+          standalone primitive for a review that needs its own data.
   sections/journey-track:
     import: "@skene/design-system/sections/journey-track"
     exports: [JourneyStep, JourneyTrack, MiniFunnel]

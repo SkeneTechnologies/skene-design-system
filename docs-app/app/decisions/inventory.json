@@ -2069,6 +2069,34 @@
       }
     },
     {
+      "module": "journey-signal-scene",
+      "layer": "sections",
+      "import": "@skene/design-system/sections/journey-signal-scene",
+      "exports": [
+        "JourneySignalScene"
+      ],
+      "summary": "A documented exception to `machine/rules.yaml`'s `styled_components_for_new_features`.",
+      "client": false,
+      "lines": 1215,
+      "cases": [],
+      "demo": null,
+      "usage": {
+        "module": "journey-signal-scene",
+        "purpose": "Evidence, a traced journey step, and the PR review that catches it breaking, in one animated composition with a GTM/Engineering toggle. No props — content lives in named consts near the top of the source file, edited directly rather than passed in. Measures its own container width and switches between three hand-placed layouts (a three-panel row, a hero-column-width layout, a stacked phone layout) rather than using CSS breakpoints, because the same panel widths read differently depending on which parent gives it space.",
+        "alsoFor": [
+          "Any `light`-classed container at any width, not just the `Bridge` band it originally shipped inside. It measures its own container and switches layout at 720px and 420px, which is what let skene-marketing-website drop it into a split hero's narrower right column as a second, real placement rather than a copy."
+        ],
+        "watchFor": [
+          "Requires a `light` ancestor. Its tokens alias straight to this package's `--color-text-primary` etc., which default to the DARK reading (near-white) without one, and every card in the scene has a white/cream background regardless of page theme — without `light` somewhere above it, the ink text renders near-invisible on its own cards. `polarity: inherits` in the derived block below is why: this module sets no `light`/`dark` class itself, unlike a self-contained band such as `Bridge`.",
+          "The only styled-components module in the package (`documentation/20260825_journey_signal_scene_design.md` records why: a straight port of a component the founder already rejected rebuilding on package primitives once). Importing it does not pull styled-components into anything else, but do not use it as precedent for a second one — the exception is this component's history, not a reopened door."
+        ],
+        "notFor": [
+          "A funnel or lifecycle strip with per-step status and no code/PR-review framing. This scene's Flows panel is a fixed three-row funnel illustrating the argument, not a general-purpose funnel primitive — for that, use `JourneyTrack`/`MiniFunnel`.",
+          "A PR review card on its own, outside the evidence-and-journey-step composition, or with different content than the built-in demo. This module has no props to swap the review's contents; `PrReview` is the standalone primitive for a review that needs its own data."
+        ]
+      }
+    },
+    {
       "module": "journey-track",
       "layer": "sections",
       "import": "@skene/design-system/sections/journey-track",
@@ -3075,12 +3103,12 @@
     "cases": 89
   },
   "counts": {
-    "modules": 87,
-    "exports": 262,
+    "modules": 88,
+    "exports": 263,
     "ui": 30,
     "patterns": 7,
-    "sections": 50,
-    "noVisual": 8,
-    "withUsage": 87
+    "sections": 51,
+    "noVisual": 9,
+    "withUsage": 88
   }
 }
