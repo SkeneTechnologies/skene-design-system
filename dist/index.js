@@ -79,6 +79,8 @@ export * from './sections/value-cards.js';
 export * from './sections/question-grid.js';
 export * from './sections/trust-panel.js';
 export * from './sections/comparison-table.js';
+export * from './sections/logo-row.js';
+export * from './sections/team-card.js';
 // The marketing artifacts. Ported from the prototype site, where they existed
 // as HTML in a generator and 783 lines of app-local CSS. They live here rather than
 // in skene-site because they ARE the marketing surface's visual language and

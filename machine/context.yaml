@@ -19,7 +19,7 @@
 #   the root merges yours through cn; use client means it carries the directive.
 
 version: "1.0.0"
-counts: { modules: 86, ui: 30, patterns: 8, sections: 48, authored: 86, assets: 12 }
+counts: { modules: 88, ui: 30, patterns: 8, sections: 50, authored: 88, assets: 12 }
 
 modules:
   ui/accordion:
@@ -3364,6 +3364,75 @@ modules:
           a whole band: a `<section>` with an `h2` at
           `clamp(2rem,3.2vw,3.25rem)` and 50px/46px vertical padding. For a
           light frame around a screenshot use `ProductWindow tone="light"`.
+  sections/logo-row:
+    import: "@skene/design-system/sections/logo-row"
+    exports: [LogoSlot, LogoRow]
+    polarity: inherits
+    seen: []
+    overrides: [style, className]
+    customProperties: [--radius-md, --logo-row-count]
+    props:
+      LogoSlot:
+        children: { type: React.ReactNode }
+        label: { type: string }
+      LogoRow:
+        title: { type: React.ReactNode }
+        stat: { type: React.ReactNode }
+        count: { type: number, default: 5 }
+        children: { type: React.ReactNode }
+        caption: { type: React.ReactNode }
+        decorative: { type: boolean, default: "true" }
+    useFor: >-
+      The proof strip: a centred heading, a stat line, a row of outlined logo
+      slots, and the caption that explains them. The slots are EMPTY by
+      default and that is the component's argument, not a missing feature —
+      the strip asserts that named proof only appears with consent, so a
+      `LogoSlot` renders a child only when given one and no fabricated
+      customer mark ever goes in a slot. Every colour is a mode-aware role, so
+      the strip survives both the dark page and a cream `light` ancestor with
+      no `onLight` prop.
+    alsoFor:
+      - claim: >-
+          A partially filled strip, honestly: pass fewer `LogoSlot` children
+          than `count` and the remainder render as blanks, so a three-logo row
+          keeps showing the two names it does not yet have.
+        via: prop LogoRow.count
+      - claim: >-
+          `LogoSlot` on its own inside any grid you own — it is exported for
+          the same reason `GlyphBadge` is, reachable without the strip around
+          it, and a filled slot takes a `label` so the account is announced.
+        via: prop LogoSlot.label
+      - claim: >-
+          A bare mid-page divider row: omit `title` and `stat` and only the
+          slots and caption render — nothing conditional leaves an empty
+          heading block behind.
+        via: prop LogoRow.title
+      - claim: >-
+          A strip whose filled logos should reach a screen reader:
+          `decorative` defaults to true because five empty boxes say nothing,
+          and flipping it false un-hides the row the day real logos land.
+        via: prop LogoRow.decorative
+    watchFor:
+      - note: >-
+          `count` is also the column count from `sm` up, via a custom property
+          on the grid. More children than `count` will wrap to a second line
+          rather than being clipped, so keep the two in agreement.
+        via: "--logo-row-count"
+      - note: >-
+          The caption is a prop so no copy is baked in, but a strip without
+          one is a row of unexplained boxes — the wireframes always ship it
+          ("These slots stay empty until an account agrees to be named
+          on-site."). Pass it.
+        via: prop LogoRow.caption
+    notFor:
+      - instead: StatChip
+        why: >-
+          A single figure beside a heading. That is a chip, not a band — this
+          component earns its place only when the row of slots is the point.
+      - instead: TrustPanel
+        why: >-
+          A claim standing next to itemised, checkable facts. The proof strip
+          gestures at accounts; the trust panel argues with evidence.
   sections/mcp-block:
     import: "@skene/design-system/sections/mcp-block"
     exports: [McpBlock, McpCode, McpTool]
@@ -4386,6 +4455,70 @@ modules:
         why: >-
           Options that each need a price, a feature list and a CTA. That is
           PlanCard.
+  sections/team-card:
+    import: "@skene/design-system/sections/team-card"
+    exports: [TeamCard, TeamGrid]
+    polarity: inherits
+    seen: []
+    overrides: [className]
+    customProperties: [--radius-lg, --radius-md]
+    props:
+      TeamCard:
+        name: { type: React.ReactNode, required: true }
+        role: { type: React.ReactNode, required: true }
+        media: { type: React.ReactNode }
+        as: { type: "'h2' | 'h3' | 'h4'" }
+        children: { type: React.ReactNode }
+      TeamGrid:
+        children: { type: React.ReactNode, required: true }
+    useFor: >-
+      The about-page person card and its grid: a name as a heading, a role in
+      the small-caps monospace register, an optional bio/links block, and an
+      optional square media frame that only exists when media does. The card
+      is designed for the no-photo state — type on a bordered panel that looks
+      finished — so a team page needs no photographer and no stock
+      placeholder. Cards are `<li>`s and `TeamGrid` is the `<ul>`, the same
+      peers-in-a-list argument `TrustPanel` makes for its facts.
+    alsoFor:
+      - claim: >-
+          Any person-shaped entry, not only employees: advisors, authors on a
+          contributors page, speakers — `name` and `role` are slots and no
+          copy is baked in.
+        via: prop TeamCard.name
+      - claim: >-
+          A card with links: anchors passed in `children` are styled here
+          (underline, offset, hover to `text.primary`), so a bare `<a href>`
+          at the call site is already visible.
+        via: prop TeamCard.children
+      - claim: >-
+          An illustration or monogram instead of a photo — `media` is a
+          `ReactNode` slot, not a `src`, and the frame's sizing rules make
+          whatever is passed fill it without call-site styling.
+        via: prop TeamCard.media
+      - claim: >-
+          A grid that IS the section: `as` moves the name heading to `h2` when
+          no section heading sits above the stack.
+        via: prop TeamCard.as
+    watchFor:
+      - note: >-
+          `TeamGrid`'s slot renders inside a `<ul>`, so pass `TeamCard`s, not
+          arbitrary markup — a free-floating `<div>` child is invalid list
+          nesting the browser will repair for you, wrongly.
+        via: prop TeamGrid.children
+      - note: >-
+          `alt` on a portrait is the caller's job, and beside the printed name
+          it is usually `alt=""` — the media slot cannot know what it is
+          handed.
+        via: prop TeamCard.media
+    notFor:
+      - instead: TrustFact
+        why: >-
+          A fact with a qualifier in a stack — the icon-title-body row on
+          cream. A person is not a fact and the card carries its own surface.
+      - instead: ValueCard
+        why: >-
+          A benefit or capability tile. If the "person" is really a role
+          description with no name, it is a value card wearing a face.
   sections/terminal-block:
     import: "@skene/design-system/sections/terminal-block"
     exports: [TerminalBlock]

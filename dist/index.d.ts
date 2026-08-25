@@ -79,6 +79,8 @@ export * from './sections/value-cards.js';
 export * from './sections/question-grid.js';
 export * from './sections/trust-panel.js';
 export * from './sections/comparison-table.js';
+export * from './sections/logo-row.js';
+export * from './sections/team-card.js';
 export * from './sections/artifact-shell.js';
 export * from './sections/pr-review.js';
 export * from './sections/side-by-side-diff.js';
