@@ -1,12 +1,21 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { cn } from '../lib/utils.js';
 /**
- * The label colour is the only token that moves with `tone`. Both are mode-aware
+ * The label colour is the only token that moves with `tone`. All are mode-aware
  * roles, so each lands on its designed value in either polarity.
+ *
+ * `neutral` is the third reading the file header predicted — a peer card that
+ * claims neither a defect nor a payoff. Its label is `text.muted`: quieter than
+ * the title, no hue, no verdict. Everything else stays the base card — the 14%
+ * hairline and the 1.8% wash — so a row of neutrals is a row of flat peers, and
+ * mixing one `gain` back in restores the turn. Before it existed the only route
+ * to a labelled flat card was `tone="cost"` with the label's inline red beaten
+ * by a child span's own class, which is a workaround wearing a bug's clothes.
  */
 const TONE_ACCENT = {
     cost: 'var(--color-semantic-error-red)',
     gain: 'var(--color-brand-peach)',
+    neutral: 'var(--color-text-muted)',
 };
 export function ValueCards({ children, className }) {
     return (

@@ -89,6 +89,20 @@ export interface JourneyStepItem {
    */
   note?: React.ReactNode
   state: JourneyStepState
+  /**
+   * What goes in the ring INSTEAD of the track's 1-based number — a ✓ on a
+   * verified track, a ✕ on a dead step. Per step, because a track mixes them:
+   * three proven steps and one numbered unknown is a legitimate story.
+   *
+   * This is the seam that lets a caller keep `JourneyTrack` for a glyphed
+   * track. Before it existed the only route to a ✓ ring was composing
+   * `JourneyStep`s directly — and the connectors are private to the track, so
+   * that meant re-deriving the seam gradients by hand. The glyph changes what
+   * the ring SAYS, never what the seam claims: connectors keep deriving from
+   * `state` alone. The ring is `aria-hidden` either way, so the glyph is
+   * decoration and the `note` still owes the words.
+   */
+  glyph?: React.ReactNode
 }
 
 export interface JourneyStepProps extends JourneyStepItem {
@@ -159,7 +173,10 @@ function JourneyConnector({ from, to }: { from: JourneyStepState; to: JourneySte
 }
 
 export interface JourneyTrackProps {
-  /** Left to right. Connectors are inserted between them; rings are numbered 1..n. */
+  /**
+   * Left to right. Connectors are inserted between them; rings are numbered
+   * 1..n, except where a step supplies its own `glyph`.
+   */
   steps: JourneyStepItem[]
   /** Optional line above the track, e.g. which journey this is. */
   title?: React.ReactNode
@@ -171,7 +188,7 @@ export interface JourneyTrackProps {
 export function JourneyTrack({ steps, title, subtitle, className }: JourneyTrackProps) {
   const row: React.ReactNode[] = []
   steps.forEach((step, i) => {
-    row.push(<JourneyStep key={`step-${i}`} {...step} index={i + 1} />)
+    row.push(<JourneyStep key={`step-${i}`} {...step} index={step.glyph ?? i + 1} />)
     if (i < steps.length - 1) {
       row.push(
         <JourneyConnector key={`link-${i}`} from={step.state} to={steps[i + 1]!.state} />,

@@ -41,7 +41,7 @@ function JourneyConnector({ from, to }) {
 export function JourneyTrack({ steps, title, subtitle, className }) {
     const row = [];
     steps.forEach((step, i) => {
-        row.push(_jsx(JourneyStep, { ...step, index: i + 1 }, `step-${i}`));
+        row.push(_jsx(JourneyStep, { ...step, index: step.glyph ?? i + 1 }, `step-${i}`));
         if (i < steps.length - 1) {
             row.push(_jsx(JourneyConnector, { from: step.state, to: steps[i + 1].state }, `link-${i}`));
         }

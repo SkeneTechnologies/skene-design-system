@@ -55,6 +55,15 @@ export interface FaqBandProps {
   title: React.ReactNode
   /** One line under the heading. The live band puts its "talk to us" link here. */
   note?: React.ReactNode
+  /**
+   * CTA row under the note, in the heading column — the wireframes' head
+   * button beside the questions. A slot rather than a label/href pair for the
+   * reason `LightSectionCard` gives: this column is cream, so the caller
+   * passes the button variant that survives the inversion (the near-black
+   * primary, not the default peach). Renders under the title when `note` is
+   * absent.
+   */
+  actions?: React.ReactNode
   /** `FaqRow`s, in order. */
   children: React.ReactNode
   /** Open many at once instead of one at a time. */
@@ -62,7 +71,7 @@ export interface FaqBandProps {
   className?: string
 }
 
-export function FaqBand({ eyebrow, title, note, children, multiple, className }: FaqBandProps) {
+export function FaqBand({ eyebrow, title, note, actions, children, multiple, className }: FaqBandProps) {
   const rows = (
     <div className="border-b border-chrome-line-on-light">{children}</div>
   )
@@ -93,6 +102,9 @@ export function FaqBand({ eyebrow, title, note, children, multiple, className }:
           {title}
         </h2>
         {note ? <p className="mt-4 max-w-[380px] text-[14px] text-text-muted">{note}</p> : null}
+        {actions ? (
+          <div className="mt-6 flex flex-wrap items-center gap-3">{actions}</div>
+        ) : null}
       </div>
 
       {multiple ? (

@@ -35,12 +35,14 @@ import { cn } from '../lib/utils.js'
  * than laying a dark-mode tint on a cream fill.
  */
 
-export type ChipTone = 'neutral' | 'healthy' | 'live' | 'outline'
+export type ChipTone = 'neutral' | 'healthy' | 'live' | 'danger' | 'outline'
 
 export interface ChipProps {
   /**
    * `neutral` — near-black chip, cream type; an identity marker, not a state.
    * `healthy` — `semantic.matcha`. `live` — `accent.violet`.
+   * `danger` — `semantic.errorRed`, for a breakage or defect marker; its ink
+   * is the on-tint token, not the base red — see the note on the `TONES` row.
    * `outline` — no fill, an invariant hairline; for a marker on a surface that
    * already has a fill of its own.
    */
@@ -70,6 +72,28 @@ const TONES: Record<ChipTone, { className?: string; style?: React.CSSProperties 
     style: {
       background: 'color-mix(in oklab, var(--color-accent-violet) 14%, transparent)',
       color: 'var(--color-accent-violet)',
+    },
+  },
+  // Added 2026-08-25, by the file's own rule — the marketing pricing page was
+  // rendering it as `tone="neutral"` retinted through `className`, i.e. the
+  // inline fork this file exists to stop. Two deliberate deviations from the
+  // `healthy`/`live` recipe, both learned elsewhere in the package:
+  //
+  //   - The ink is `error-red-on-tint`, not the base red. `StatPill` and
+  //     `Finding` both shipped the base token on its own tint and measured
+  //     below the 4.5:1 floor — a label inside a tint of its own hue does not
+  //     sit on the surface ladder the base value was derived against
+  //     (`src/lib/status.ts`, `STATUS_TINT_TOKEN`).
+  //   - The tint is 12%, not 14%, because the on-tint tokens were measured for
+  //     the 10–12% band and fail at 18% (4.49). 14% is unmeasured territory;
+  //     12% is not.
+  //
+  // Both halves are mode-aware, so the chip follows a `light` ancestor down to
+  // the light pair — correct inside a light `ProductWindow` title bar.
+  danger: {
+    style: {
+      background: 'color-mix(in oklab, var(--color-semantic-error-red) 12%, transparent)',
+      color: 'var(--color-semantic-error-red-on-tint)',
     },
   },
   // Added 2026-08-13, and the file header called it: "a fourth belongs in this

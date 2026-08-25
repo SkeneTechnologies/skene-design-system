@@ -1,7 +1,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { cn } from '../lib/utils.js';
 import { GlyphBadge } from './glyph-badge.js';
-export function TrustFact({ icon, title, children, className }) {
+export function TrustFact({ icon, title, children, tone = 'tint', className }) {
     return (
     // An `<li>`, not an `<article>`: a one-line fact plus its qualifier is not a
     // self-contained, independently distributable composition, and it has no
@@ -12,7 +12,10 @@ export function TrustFact({ icon, title, children, className }) {
     // The rule belongs to the item, not to a divider element, so it can never
     // render with nothing under it; `last:` drops it on the final fact, which is
     // why the stack must not be padded by a parent `gap` as well.
-    _jsxs("li", { className: cn('grid grid-cols-[40px_1fr] items-start gap-x-4 border-b border-chrome-line-on-light py-[22px] first:pt-0 last:border-b-0 last:pb-0', className), children: [_jsx(GlyphBadge, { className: "col-start-1 row-start-1", children: icon }), _jsx("span", { className: "col-start-2 row-start-1 self-center text-[15px] font-medium leading-snug text-text-primary", children: title }), children ? (_jsx("p", { className: "col-start-2 row-start-2 mt-1.5 text-[13.5px] leading-relaxed text-text-muted", children: children })) : null] }));
+    _jsxs("li", { className: cn('grid grid-cols-[40px_1fr] items-start gap-x-4 border-b py-[22px] first:pt-0 last:border-b-0 last:pb-0', 
+        // The rule follows `tone` — the on-light hairline is invariant chrome
+        // and vanishes on a dark ground. See the prop.
+        tone === 'muted' ? 'border-border' : 'border-chrome-line-on-light', className), children: [_jsx(GlyphBadge, { tone: tone, className: "col-start-1 row-start-1", children: icon }), _jsx("span", { className: "col-start-2 row-start-1 self-center text-[15px] font-medium leading-snug text-text-primary", children: title }), children ? (_jsx("p", { className: "col-start-2 row-start-2 mt-1.5 text-[13.5px] leading-relaxed text-text-muted", children: children })) : null] }));
 }
 export function TrustPanel({ eyebrow, title, lede, links, children, className }) {
     return (_jsxs("section", { className: cn(

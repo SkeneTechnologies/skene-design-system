@@ -54,6 +54,32 @@
  * this table would move the scrollbar to the body, which is the failure the gate
  * catches.
  *
+ * ## `headerless`, and why it is a `<dl>` rather than hidden `<th>`s
+ *
+ * The kv-lists on the marketing wireframes — Cadence / Hourly, Window / 30 days
+ * — have no column headings because the headings would only repeat what every
+ * row already says. Two renderings were on the table:
+ *
+ *   1. Keep the `<table>` and visually hide the header row. Rejected twice
+ *      over. `sr-only` is `position: absolute`, and this table's container is
+ *      `ui/table`'s `overflow-auto` div, which is unpositioned — the exact
+ *      combination that let `ComparisonTable`'s `sr-only` caption escape its
+ *      scroll container and drag the page sideways 320px at 390. And even
+ *      hidden correctly, the markup would still be a table whose headers exist
+ *      only to satisfy the element — announced structure with no information
+ *      in it.
+ *   2. Render a `<dl>`. A headerless key/value list IS a description list:
+ *      each first cell is the term, each remaining cell describes it. That is
+ *      the semantics the wireframe was drawing, so it is the markup here —
+ *      `<dt>` for column 0, one `<dd>` per further column, rows grouped in
+ *      `<div>`s (valid inside `<dl>` since HTML 5.2, and what keeps a row
+ *      styleable as a row).
+ *
+ * The column flags (`mono`, `muted`, `strong`, `nowrap`, `className`) apply
+ * unchanged, `header` is simply not rendered, and the cells carry the same
+ * paddings as the chosen `density` so a headerless table beside a headed one
+ * keeps the same rhythm.
+ *
  * All content is props. Nothing here knows what a permission grants or what a
  * subprocessor sees.
  */
@@ -106,9 +132,17 @@ export interface KeyValueTableProps {
     rows: KeyValueRow[];
     /** Defaults to `reference`; three of the four call sites are that. */
     density?: KeyValueDensity;
+    /**
+     * Drop the header row and render the rows as a semantic `<dl>` — for the
+     * settings readout whose headings would only repeat what every row says.
+     * Column `header`s go unrendered (keep authoring them; they document the
+     * columns), every other column flag applies unchanged. See the file header
+     * for why this is a `<dl>` and not visually-hidden `<th>`s.
+     */
+    headerless?: boolean;
     className?: string;
 }
-export declare function KeyValueTable({ columns, rows, density, className, }: KeyValueTableProps): import("react").JSX.Element;
+export declare function KeyValueTable({ columns, rows, density, headerless, className, }: KeyValueTableProps): import("react").JSX.Element;
 export interface MaskedValueProps {
     /**
      * The part that survives redaction — a scheme or scope marker, never the

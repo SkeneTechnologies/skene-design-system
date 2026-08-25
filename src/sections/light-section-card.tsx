@@ -1,3 +1,4 @@
+import { Eyebrow } from '../patterns/marketing.js'
 import { cn } from '../lib/utils.js'
 
 /**
@@ -55,6 +56,17 @@ import { cn } from '../lib/utils.js'
  */
 
 export interface LightSectionCardProps {
+  /**
+   * Mono kicker above the title — content only. It renders through the package
+   * `Eyebrow` with the on-cream overrides applied IN HERE, exactly as
+   * `FaqBand` does, because `Eyebrow`'s default chrome is invariant ink that
+   * is near-invisible on this card's cream fill. That trap has shipped before
+   * (the trust-panel story header documents it, and its `Default` story still
+   * carries the hand-written two-utility override from the era when every
+   * caller owed it); a slot that accepted a pre-built chip would hand it to
+   * every caller again.
+   */
+  eyebrow?: React.ReactNode
   /** Section heading, e.g. "Four ways to plug Skene in." */
   title: React.ReactNode
   /**
@@ -88,6 +100,7 @@ export interface LightSectionCardProps {
 }
 
 export function LightSectionCard({
+  eyebrow,
   title,
   titleScale = 'display',
   lede,
@@ -113,6 +126,13 @@ export function LightSectionCard({
           reverse && visual && 'md:col-start-2 md:row-start-1',
         )}
       >
+        {eyebrow ? (
+          // The same two overrides `FaqBand` writes for the same reason: the
+          // chip's default border and ink are invariant chrome, wrong on cream.
+          <Eyebrow className="mb-5 border-chrome-line-on-light text-text-muted">
+            {eyebrow}
+          </Eyebrow>
+        ) : null}
         {/* Whole class strings, never interpolated: Tailwind scans source text. */}
         <h2
           // SIZE FIRST. `cn` is twMerge and it puts font-size and line-height in

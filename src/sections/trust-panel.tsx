@@ -86,10 +86,26 @@ export interface TrustFactProps {
   title: React.ReactNode
   /** The qualifier under it — scope, limit, or how it is verified. */
   children?: React.ReactNode
+  /**
+   * Which ground the fact sits on, in `GlyphBadge`'s vocabulary because the
+   * two invariant pieces of chrome this row owns are exactly the badge's.
+   *
+   * `tint` — the default, and byte-for-byte what this row has always rendered
+   * inside the cream panel: the `chrome.line.onLight` separating rule and the
+   * badge at its `tint` tone. Both are invariant dark-on-cream chrome, which
+   * is why a fact row lifted onto a dark band used to lose its rule and its
+   * disc while the (theme-aware) type survived.
+   *
+   * `muted` — the theme-following pair for every other ground: the rule takes
+   * `border` and the disc takes `GlyphBadge tone="muted"`, the same pairing
+   * skene-site's events rows use on the dark page. The type needs no swap; it
+   * was `text.*` all along.
+   */
+  tone?: 'tint' | 'muted'
   className?: string
 }
 
-export function TrustFact({ icon, title, children, className }: TrustFactProps) {
+export function TrustFact({ icon, title, children, tone = 'tint', className }: TrustFactProps) {
   return (
     // An `<li>`, not an `<article>`: a one-line fact plus its qualifier is not a
     // self-contained, independently distributable composition, and it has no
@@ -102,7 +118,10 @@ export function TrustFact({ icon, title, children, className }: TrustFactProps) 
     // why the stack must not be padded by a parent `gap` as well.
     <li
       className={cn(
-        'grid grid-cols-[40px_1fr] items-start gap-x-4 border-b border-chrome-line-on-light py-[22px] first:pt-0 last:border-b-0 last:pb-0',
+        'grid grid-cols-[40px_1fr] items-start gap-x-4 border-b py-[22px] first:pt-0 last:border-b-0 last:pb-0',
+        // The rule follows `tone` — the on-light hairline is invariant chrome
+        // and vanishes on a dark ground. See the prop.
+        tone === 'muted' ? 'border-border' : 'border-chrome-line-on-light',
         className,
       )}
     >
@@ -113,7 +132,7 @@ export function TrustFact({ icon, title, children, className }: TrustFactProps) 
         because skene-site's events list needs the disc at 32px WITHOUT a fact
         row around it, and a `size` prop here could not have given it that.
       */}
-      <GlyphBadge className="col-start-1 row-start-1">{icon}</GlyphBadge>
+      <GlyphBadge tone={tone} className="col-start-1 row-start-1">{icon}</GlyphBadge>
 
       {/*
         A plain `<span>`, not `<strong>`: `font-medium` already carries the

@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import React from 'react'
 
 import { FaqBand, FaqRow } from '@skene/design-system/sections/faq-band'
+import { Button } from '@skene/design-system/ui/button'
 
 /**
  * The FAQ band.
@@ -49,6 +50,20 @@ export const Multiple: Story = { args: { ...Default.args, multiple: true } }
 
 export const WithNote: Story = {
   args: { ...Default.args, note: 'Everything else is in the docs.' },
+}
+
+/**
+ * The head-actions slot: a CTA under the note, in the heading column. The
+ * button is the near-black variant on purpose — this column is cream, where
+ * the default peach primary lands darker than intended (the same inversion
+ * caveat as `LightSectionCard.actions`).
+ */
+export const WithActions: Story = {
+  args: {
+    ...Default.args,
+    note: 'Everything else is in the docs.',
+    actions: <Button variant="secondary">Talk to us</Button>,
+  },
 }
 
 /** No eyebrow — title only. */

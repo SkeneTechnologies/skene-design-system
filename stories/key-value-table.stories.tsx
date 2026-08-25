@@ -81,6 +81,24 @@ export const WithNote: Story = {
   args: { columns, rows },
 }
 
+/**
+ * `headerless`: the settings readout as a semantic `<dl>` — term, then value —
+ * with no header row. Column flags still apply (the first column is mono and
+ * strong here); the `header` strings are authored but unrendered.
+ */
+export const Headerless: Story = {
+  args: {
+    headerless: true,
+    columns: [{ header: 'Setting', strong: true }, { header: 'Value' }],
+    rows: [
+      { id: 'cadence', cells: ['Cadence', 'Hourly'] },
+      { id: 'window', cells: ['Window', "Plan's own, else 30 days"] },
+      { id: 'shape', cells: ['Query shape', 'One bounded aggregate'] },
+      { id: 'sql', cells: ['SQL accepted', 'None'] },
+    ],
+  },
+}
+
 /** Two columns, one row — the smallest table. */
 export const Minimal: Story = {
   args: {

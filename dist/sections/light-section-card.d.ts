@@ -52,6 +52,17 @@
  * can pad the node they pass.
  */
 export interface LightSectionCardProps {
+    /**
+     * Mono kicker above the title — content only. It renders through the package
+     * `Eyebrow` with the on-cream overrides applied IN HERE, exactly as
+     * `FaqBand` does, because `Eyebrow`'s default chrome is invariant ink that
+     * is near-invisible on this card's cream fill. That trap has shipped before
+     * (the trust-panel story header documents it, and its `Default` story still
+     * carries the hand-written two-utility override from the era when every
+     * caller owed it); a slot that accepted a pre-built chip would hand it to
+     * every caller again.
+     */
+    eyebrow?: React.ReactNode;
     /** Section heading, e.g. "Four ways to plug Skene in." */
     title: React.ReactNode;
     /**
@@ -83,5 +94,5 @@ export interface LightSectionCardProps {
     reverse?: boolean;
     className?: string;
 }
-export declare function LightSectionCard({ title, titleScale, lede, children, actions, visual, reverse, className, }: LightSectionCardProps): import("react").JSX.Element;
+export declare function LightSectionCard({ eyebrow, title, titleScale, lede, children, actions, visual, reverse, className, }: LightSectionCardProps): import("react").JSX.Element;
 //# sourceMappingURL=light-section-card.d.ts.map

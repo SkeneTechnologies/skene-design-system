@@ -18,7 +18,7 @@ const meta = {
   component: Chip,
   parameters: { layout: 'centered' },
   argTypes: {
-    tone: { control: 'inline-radio', options: ['neutral', 'healthy', 'live', 'outline'] },
+    tone: { control: 'inline-radio', options: ['neutral', 'healthy', 'live', 'danger', 'outline'] },
   },
   args: { children: 'PRO' },
 } satisfies Meta<typeof Chip>
@@ -31,7 +31,15 @@ export const Healthy: Story = { args: { tone: 'healthy', children: 'HEALTHY' } }
 export const Live: Story = { args: { tone: 'live', children: 'LIVE' } }
 export const Outline: Story = { args: { tone: 'outline', children: 'BETA' } }
 
-const TONES = ['neutral', 'healthy', 'live', 'outline'] as const
+/**
+ * The breakage marker. Ink is the on-tint token over a 12% tint — see the
+ * `TONES` row in the source for why it deviates from `healthy`'s recipe — and
+ * both halves are mode-aware, so `OnLight` below is the other half of this
+ * story's claim.
+ */
+export const Danger: Story = { args: { tone: 'danger', children: 'BREAKS AT THE SEAM' } }
+
+const TONES = ['neutral', 'healthy', 'live', 'danger', 'outline'] as const
 
 /** All four together — the frame that catches geometry drifting between tones. */
 export const AllTones: Story = {

@@ -82,9 +82,25 @@ export interface TrustFactProps {
     title: React.ReactNode;
     /** The qualifier under it — scope, limit, or how it is verified. */
     children?: React.ReactNode;
+    /**
+     * Which ground the fact sits on, in `GlyphBadge`'s vocabulary because the
+     * two invariant pieces of chrome this row owns are exactly the badge's.
+     *
+     * `tint` — the default, and byte-for-byte what this row has always rendered
+     * inside the cream panel: the `chrome.line.onLight` separating rule and the
+     * badge at its `tint` tone. Both are invariant dark-on-cream chrome, which
+     * is why a fact row lifted onto a dark band used to lose its rule and its
+     * disc while the (theme-aware) type survived.
+     *
+     * `muted` — the theme-following pair for every other ground: the rule takes
+     * `border` and the disc takes `GlyphBadge tone="muted"`, the same pairing
+     * skene-site's events rows use on the dark page. The type needs no swap; it
+     * was `text.*` all along.
+     */
+    tone?: 'tint' | 'muted';
     className?: string;
 }
-export declare function TrustFact({ icon, title, children, className }: TrustFactProps): import("react").JSX.Element;
+export declare function TrustFact({ icon, title, children, tone, className }: TrustFactProps): import("react").JSX.Element;
 export interface TrustPanelProps {
     /**
      * The kicker above the heading — usually an `<Eyebrow>`.

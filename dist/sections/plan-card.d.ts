@@ -59,7 +59,22 @@ export interface PlanCardProps {
     /** Fine print under the CTA. */
     footnote?: React.ReactNode;
     featured?: boolean;
+    /**
+     * Which material the `featured` promotion uses. `light` — the default, and
+     * what every existing caller renders — is the dark-page inversion: cream
+     * fill, `light` class, lift and shadow. `dark` is the same promotion for a
+     * CREAM ground: on a light panel the cream inversion is cream-on-cream, so
+     * the card inverts the other way — the invariant near-black
+     * `chrome.surface.1` fill with the `dark` class pinning every mode-aware
+     * token in the subtree to its dark value, exactly the pinning the gallery
+     * writes for a dark window inside a light card. Lift and `--shadow-modal`
+     * are shared; only the material flips. Ignored when `featured` is off.
+     *
+     * When `featuredTone="dark"`, a nested `CheckList` wants its default (dark)
+     * rendering, NOT `onLight` — the inverse of the cream card's requirement.
+     */
+    featuredTone?: 'light' | 'dark';
     className?: string;
 }
-export declare function PlanCard({ tier, tierAs, flag, price, unit, summary, features, bestFor, action, footnote, featured, className, }: PlanCardProps): import("react").JSX.Element;
+export declare function PlanCard({ tier, tierAs, flag, price, unit, summary, features, bestFor, action, footnote, featured, featuredTone, className, }: PlanCardProps): import("react").JSX.Element;
 //# sourceMappingURL=plan-card.d.ts.map
