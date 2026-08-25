@@ -1,4 +1,8 @@
 import type { StorybookConfig } from '@storybook/react-vite'
+import { dirname, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
+
+const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 
 /**
  * Storybook for the design system.
@@ -48,6 +52,21 @@ const config: StorybookConfig = {
     const { default: react } = await import('@vitejs/plugin-react')
     const { default: tailwind } = await import('@tailwindcss/vite')
     config.plugins = [...(config.plugins ?? []), react(), tailwind()]
+    config.resolve = {
+      ...config.resolve,
+      alias: [
+        ...(Array.isArray(config.resolve?.alias)
+          ? config.resolve.alias
+          : Object.entries(config.resolve?.alias ?? {}).map(([find, replacement]) => ({
+              find,
+              replacement,
+            }))),
+        { find: '@skene/design-system/styles.css', replacement: resolve(ROOT, 'styles/index.css') },
+        { find: '@skene/design-system/tokens.css', replacement: resolve(ROOT, 'styles/tokens.css') },
+        { find: '@skene/design-system/effects.css', replacement: resolve(ROOT, 'styles/effects.css') },
+        { find: /^@skene\/design-system\/(.+)$/, replacement: `${ROOT}/src/$1` },
+      ],
+    }
     return config
   },
 }

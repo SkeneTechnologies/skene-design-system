@@ -32,6 +32,8 @@ export declare const assetUrls: {
     readonly githubField: string;
     /** Halftone field for schema, connections, keys. `card3_bg.webp`. */
     readonly schemaField: string;
+    /** Texture behind the integrations card animation. `plugin.png`. */
+    readonly integrationsField: string;
     /** The closing-CTA backdrop. `pixel-bg.webp`. */
     readonly pixelField: string;
     /** The halftone laid over media, and the subpage header ground. */

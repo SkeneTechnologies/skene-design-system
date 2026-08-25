@@ -1390,6 +1390,37 @@
       }
     },
     {
+      "module": "card-animation-integrations",
+      "layer": "sections",
+      "import": "@skene/design-system/sections/card-animation-integrations",
+      "exports": [
+        "INTEGRATION",
+        "CardAnimationIntegrations"
+      ],
+      "summary": "Four integration cards on a textured field, cycling detail copy with GSAP.",
+      "client": true,
+      "lines": 338,
+      "cases": [],
+      "demo": null,
+      "usage": {
+        "module": "card-animation-integrations",
+        "purpose": "Four integration cards on a textured field, cycling detail copy with GSAP: MCP server, GitHub Action, Cloud API, and repo audit. Ported from skene-marketing-website's CardAnimationIntegrations.",
+        "alsoFor": [
+          "The visual slot of a cream band — drop it in `LightSectionCard.visual` or `IntegrationsHighlight`, which is the pre-composed homepage band.",
+          "Custom card or detail sets by passing `cards` and `details`; defaults match the live marketing animation.",
+          "A different halftone field via `backgroundImage`; defaults to `assetUrls.integrationsField`."
+        ],
+        "watchFor": [
+          "Client-only: uses GSAP and ScrollTrigger. Importing it pulls a client boundary at this file.",
+          "Cards and detail panel start at `visibility: hidden`; GSAP drives `autoAlpha`. Do not remove that or the first paint flashes every card."
+        ],
+        "notFor": [
+          "A static 2x2 grid where every detail is visible at once. Use this when you need motion and one active card at a time.",
+          "A row of tiles with a single detail panel under the chosen one."
+        ]
+      }
+    },
+    {
       "module": "check-list",
       "layer": "sections",
       "import": "@skene/design-system/sections/check-list",
@@ -2004,6 +2035,33 @@
         "notFor": [
           "A real column contract with headers. That is DataTable.",
           "Key/value reference data. That is KeyValueTable."
+        ]
+      }
+    },
+    {
+      "module": "integrations-highlight",
+      "layer": "sections",
+      "import": "@skene/design-system/sections/integrations-highlight",
+      "exports": [
+        "IntegrationsHighlight"
+      ],
+      "summary": "The homepage integrations band: cream copy column plus the four-card GSAP",
+      "client": false,
+      "lines": 43,
+      "cases": [],
+      "demo": null,
+      "usage": {
+        "module": "integrations-highlight",
+        "purpose": "The homepage integrations band: cream copy column plus the four-card GSAP animation. Ported from skene-marketing-website's IntegrationsHighlight.",
+        "alsoFor": [
+          "Custom CTAs via `actions`; pass outline `<Button>`s sized for a cream card.",
+          "A different texture behind the animation via `backgroundImage`."
+        ],
+        "watchFor": [
+          "Composes `LightSectionCard` and `CardAnimationIntegrations`; the animation is client-only."
+        ],
+        "notFor": [
+          "A generic cream band when you want different copy or a static visual instead of this animation."
         ]
       }
     },
@@ -2944,12 +3002,12 @@
     "cases": 89
   },
   "counts": {
-    "modules": 83,
-    "exports": 255,
+    "modules": 85,
+    "exports": 258,
     "ui": 30,
     "patterns": 7,
-    "sections": 46,
-    "noVisual": 4,
-    "withUsage": 83
+    "sections": 48,
+    "noVisual": 6,
+    "withUsage": 85
   }
 }

@@ -543,6 +543,44 @@
       ]
     },
     {
+      "module": "sections/card-animation-integrations",
+      "useFor": "Four integration cards on a textured field, cycling detail copy with GSAP: MCP server, GitHub Action, Cloud API, and repo audit. Ported from skene-marketing-website's CardAnimationIntegrations.",
+      "alsoFor": [
+        {
+          "claim": "The visual slot of a cream band — drop it in `LightSectionCard.visual` or `IntegrationsHighlight`, which is the pre-composed homepage band.",
+          "via": "export CardAnimationIntegrations"
+        },
+        {
+          "claim": "Custom card or detail sets by passing `cards` and `details`; defaults match the live marketing animation.",
+          "via": "prop CardAnimationIntegrations.cards"
+        },
+        {
+          "claim": "A different halftone field via `backgroundImage`; defaults to `assetUrls.integrationsField`.",
+          "via": "prop CardAnimationIntegrations.backgroundImage"
+        }
+      ],
+      "watchFor": [
+        {
+          "note": "Client-only: uses GSAP and ScrollTrigger. Importing it pulls a client boundary at this file.",
+          "via": "export CardAnimationIntegrations"
+        },
+        {
+          "note": "Cards and detail panel start at `visibility: hidden`; GSAP drives `autoAlpha`. Do not remove that or the first paint flashes every card.",
+          "via": "export CardAnimationIntegrations"
+        }
+      ],
+      "notFor": [
+        {
+          "instead": "SurfaceCards",
+          "why": "A static 2x2 grid where every detail is visible at once. Use this when you need motion and one active card at a time."
+        },
+        {
+          "instead": "SurfaceTiles",
+          "why": "A row of tiles with a single detail panel under the chosen one."
+        }
+      ]
+    },
+    {
       "module": "sections/check-list",
       "useFor": "The rule-separated feature list with a peach check — the single highest-frequency element on a Skene marketing page, previously hand-written at every call site. `CheckList` is a bare `<ul>` that sets one CSS variable (`--check-rule`); `CheckItem` is an `<li>` whose separator is a *top border on each row* rather than a divider element, so a list of one still reads as part of its card instead of floating. The check is a real `aria-hidden` `<span>`, not a `::before`, precisely so a screen reader does not announce \"tick\" before every line.",
       "alsoFor": [
@@ -1314,6 +1352,32 @@
         {
           "instead": "KeyValueTable",
           "why": "Key/value reference data. That is KeyValueTable."
+        }
+      ]
+    },
+    {
+      "module": "sections/integrations-highlight",
+      "useFor": "The homepage integrations band: cream copy column plus the four-card GSAP animation. Ported from skene-marketing-website's IntegrationsHighlight.",
+      "alsoFor": [
+        {
+          "claim": "Custom CTAs via `actions`; pass outline `<Button>`s sized for a cream card.",
+          "via": "prop IntegrationsHighlight.actions"
+        },
+        {
+          "claim": "A different texture behind the animation via `backgroundImage`.",
+          "via": "prop IntegrationsHighlight.backgroundImage"
+        }
+      ],
+      "watchFor": [
+        {
+          "note": "Composes `LightSectionCard` and `CardAnimationIntegrations`; the animation is client-only.",
+          "via": "export IntegrationsHighlight"
+        }
+      ],
+      "notFor": [
+        {
+          "instead": "LightSectionCard",
+          "why": "A generic cream band when you want different copy or a static visual instead of this animation."
         }
       ]
     },

@@ -101,3 +101,5 @@ export * from './sections/mcp-block.js';
 export * from './sections/integration-rows.js';
 export * from './sections/overview-tiles.js';
 export * from './sections/flow-diagram.js';
+export * from './sections/card-animation-integrations.js';
+export * from './sections/integrations-highlight.js';

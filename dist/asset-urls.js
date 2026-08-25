@@ -32,6 +32,8 @@ export const assetUrls = {
     githubField: new URL('../assets/card2_bg.webp', import.meta.url).href,
     /** Halftone field for schema, connections, keys. `card3_bg.webp`. */
     schemaField: new URL('../assets/card3_bg.webp', import.meta.url).href,
+    /** Texture behind the integrations card animation. `plugin.png`. */
+    integrationsField: new URL('../assets/plugin.png', import.meta.url).href,
     /** The closing-CTA backdrop. `pixel-bg.webp`. */
     pixelField: new URL('../assets/pixel-bg.webp', import.meta.url).href,
     /** The halftone laid over media, and the subpage header ground. */

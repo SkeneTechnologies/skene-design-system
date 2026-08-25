@@ -19,7 +19,7 @@
 #   the root merges yours through cn; use client means it carries the directive.
 
 version: "1.0.0"
-counts: { modules: 84, ui: 30, patterns: 8, sections: 46, authored: 84, assets: 11 }
+counts: { modules: 86, ui: 30, patterns: 8, sections: 48, authored: 86, assets: 12 }
 
 modules:
   ui/accordion:
@@ -1633,6 +1633,67 @@ modules:
           carrying health use `JourneyTrack`, whose connector is a gradient
           between the two states it joins.
     sameAs: [sections/plan-card#PlanCard]
+  sections/card-animation-integrations:
+    import: "@skene/design-system/sections/card-animation-integrations"
+    exports: [INTEGRATION, CardAnimationIntegrations]
+    client: true
+    composes: [lib/use-container-scale]
+    polarity: inherits
+    seen: []
+    overrides: [style, className, use client]
+    customProperties: [--cursor]
+    props:
+      CardAnimationIntegrations:
+        backgroundImage: { type: string, default: INTEGRATIONS_TEXTURE }
+        cards: { type: "IntegrationAnimationCard[]", default: INTEGRATION_ANIMATION_CARDS }
+        details: { type: "IntegrationAnimationDetail[]", default: INTEGRATION_ANIMATION_DETAILS }
+    types:
+      IntegrationAnimationCard:
+        variant: { type: CardVariant, required: true }
+        icon: { type: LucideIcon, required: true }
+        title: { type: string, required: true }
+        context: { type: string, required: true }
+      IntegrationAnimationDetail:
+        badge: { type: string, required: true }
+        badgeVariant: { type: BadgeVariant, required: true }
+        text: { type: string, required: true }
+        code: { type: string, required: true }
+    useFor: >-
+      Four integration cards on a textured field, cycling detail copy with
+      GSAP: MCP server, GitHub Action, Cloud API, and repo audit. Ported from
+      skene-marketing-website's CardAnimationIntegrations.
+    alsoFor:
+      - claim: >-
+          The visual slot of a cream band — drop it in
+          `LightSectionCard.visual` or `IntegrationsHighlight`, which is the
+          pre-composed homepage band.
+        via: export CardAnimationIntegrations
+      - claim: >-
+          Custom card or detail sets by passing `cards` and `details`;
+          defaults match the live marketing animation.
+        via: prop CardAnimationIntegrations.cards
+      - claim: >-
+          A different halftone field via `backgroundImage`; defaults to
+          `assetUrls.integrationsField`.
+        via: prop CardAnimationIntegrations.backgroundImage
+    watchFor:
+      - note: >-
+          Client-only: uses GSAP and ScrollTrigger. Importing it pulls a
+          client boundary at this file.
+        via: export CardAnimationIntegrations
+      - note: >-
+          Cards and detail panel start at `visibility: hidden`; GSAP drives
+          `autoAlpha`. Do not remove that or the first paint flashes every
+          card.
+        via: export CardAnimationIntegrations
+    notFor:
+      - instead: SurfaceCards
+        why: >-
+          A static 2x2 grid where every detail is visible at once. Use this
+          when you need motion and one active card at a time.
+      - instead: SurfaceTiles
+        why: >-
+          A row of tiles with a single detail panel under the chosen one.
   sections/check-list:
     import: "@skene/design-system/sections/check-list"
     exports: [CheckList, CheckItem]
@@ -2941,6 +3002,39 @@ modules:
       - instead: KeyValueTable
         why: >-
           Key/value reference data. That is KeyValueTable.
+  sections/integrations-highlight:
+    import: "@skene/design-system/sections/integrations-highlight"
+    exports: [IntegrationsHighlight]
+    composes: [same-layer/card-animation-integrations, same-layer/light-section-card]
+    polarity: inherits
+    seen: []
+    overrides: [className]
+    props:
+      IntegrationsHighlight:
+        backgroundImage: { type: string }
+        actions: { type: React.ReactNode }
+    useFor: >-
+      The homepage integrations band: cream copy column plus the four-card
+      GSAP animation. Ported from skene-marketing-website's
+      IntegrationsHighlight.
+    alsoFor:
+      - claim: >-
+          Custom CTAs via `actions`; pass outline `<Button>`s sized for a
+          cream card.
+        via: prop IntegrationsHighlight.actions
+      - claim: >-
+          A different texture behind the animation via `backgroundImage`.
+        via: prop IntegrationsHighlight.backgroundImage
+    watchFor:
+      - note: >-
+          Composes `LightSectionCard` and `CardAnimationIntegrations`; the
+          animation is client-only.
+        via: export IntegrationsHighlight
+    notFor:
+      - instead: LightSectionCard
+        why: >-
+          A generic cream band when you want different copy or a static visual
+          instead of this animation.
   sections/journey-track:
     import: "@skene/design-system/sections/journey-track"
     exports: [JourneyStep, JourneyTrack, MiniFunnel]
@@ -4665,6 +4759,14 @@ assets:
     notFor: >-
       See githubField. The pairing follows the live site so the same backdrop
       always sits behind the same kind of artifact.
+  integrationsField:
+    import: "import { assetUrls } from '@skene/design-system/asset-urls'"
+    file: assets/plugin.png
+    bytes: 4423812
+    kind: texture
+    usedBy: [sections/card-animation-integrations, sections/integrations-highlight]
+    is: >-
+      Texture behind the integrations card animation. `plugin.png`.
   pixelField:
     import: "import { assetUrls } from '@skene/design-system/asset-urls'"
     file: assets/pixel-bg.webp
