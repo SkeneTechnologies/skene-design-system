@@ -972,7 +972,7 @@ export default function ComponentGalleryPage() {
           <div className="light rounded-2xl bg-brand-light p-4">
             <CheckList dense onLight>
               <CheckItem dense>Local MCP server</CheckItem>
-              <CheckItem dense>GitHub Action with PR comments</CheckItem>
+              <CheckItem dense>GitHub App with PR reviews</CheckItem>
               <CheckItem dense>1.5M monthly tokens</CheckItem>
             </CheckList>
           </div>
@@ -1261,7 +1261,7 @@ export default function ComponentGalleryPage() {
                   />
                   <SurfaceTile
                     icon={<GitPullRequest className="size-4" />}
-                    name="GitHub Action"
+                    name="GitHub App"
                     note="Runs on every PR"
                   />
                   <SurfaceTile
@@ -1288,7 +1288,7 @@ export default function ComponentGalleryPage() {
         >
           <CheckList onLight>
             <CheckItem>MCP server, local and read-only</CheckItem>
-            <CheckItem>GitHub Action with PR comments</CheckItem>
+            <CheckItem>GitHub App with PR reviews</CheckItem>
             <CheckItem>Cloud API for your own scripts</CheckItem>
           </CheckList>
         </LightSectionCard>
@@ -1331,7 +1331,7 @@ export default function ComponentGalleryPage() {
             features={
               <CheckList dense onLight>
                 <CheckItem dense>Local MCP server</CheckItem>
-                <CheckItem dense>GitHub Action with PR comments</CheckItem>
+                <CheckItem dense>GitHub App with PR reviews</CheckItem>
               </CheckList>
             }
             action={<Button className="w-full">Start free →</Button>}
@@ -1494,7 +1494,7 @@ export default function ComponentGalleryPage() {
               />
               <SurfaceTile
                 icon={<GitPullRequest className="size-4" />}
-                name="GitHub Action"
+                name="GitHub App"
                 note="Runs on every PR"
               />
               <SurfaceTile
@@ -1584,7 +1584,7 @@ export default function ComponentGalleryPage() {
             The connection Skene asks for cannot write to your tables.
           </TrustFact>
           <TrustFact icon="◍" title="Checked on the pull request">
-            The GitHub Action reads the changed files and comments on the PR.
+            The GitHub App reads the changed files and posts a review on the PR.
           </TrustFact>
           <TrustFact icon="◷" title="The MCP server runs locally">
             It is open source, so you can read what it sends before it sends it.

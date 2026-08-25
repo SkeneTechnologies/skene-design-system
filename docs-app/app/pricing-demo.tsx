@@ -25,21 +25,21 @@ const PLANS = [
     yearly: 24,
     summary: '1.5M monthly tokens',
     featured: true,
-    features: ['Local MCP server', 'GitHub Action with PR comments', 'Cloud validation API', '1.5M monthly tokens'],
+    features: ['Local MCP server', 'GitHub App with PR reviews', 'Cloud validation API', '1.5M monthly tokens'],
   },
   {
     tier: 'SCALE',
     monthly: 99,
     yearly: 82,
     summary: '6M monthly tokens',
-    features: ['Local MCP server', 'GitHub Action with PR comments', 'Cloud validation API', '6M monthly tokens (4x Pro)'],
+    features: ['Local MCP server', 'GitHub App with PR reviews', 'Cloud validation API', '6M monthly tokens (4x Pro)'],
   },
   {
     tier: 'ULTRA',
     monthly: 199,
     yearly: 166,
     summary: '15M monthly tokens',
-    features: ['Local MCP server', 'GitHub Action with PR comments', 'Cloud validation API', '15M monthly tokens (10x Pro)', 'Priority support'],
+    features: ['Local MCP server', 'GitHub App with PR reviews', 'Cloud validation API', '15M monthly tokens (10x Pro)', 'Priority support'],
   },
 ]
 

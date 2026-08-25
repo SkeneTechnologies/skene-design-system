@@ -1397,7 +1397,7 @@
         "INTEGRATION",
         "CardAnimationIntegrations"
       ],
-      "summary": "The PR surface is a GitHub App that posts reviews; no GitHub Action ships.",
+      "summary": "The PR surface is a GitHub App that posts reviews; nothing ships as an Actions workflow.",
       "client": true,
       "lines": 343,
       "cases": [],

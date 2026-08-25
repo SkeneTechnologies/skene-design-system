@@ -4900,6 +4900,14 @@ assets:
     usedBy: [sections/card-animation-integrations, sections/integrations-highlight]
     is: >-
       Texture behind the integrations card animation. `plugin.png`.
+    useFor: >-
+      The field behind the integrations card animation.
+      CardAnimationIntegrations and IntegrationsHighlight load it by default,
+      so a caller passing `backgroundImage` is choosing to replace it.
+    notFor: >-
+      A SectionBackdrop texture — it is not one of the three card fields, and
+      at 4.4MB it is the heaviest file in the package. Reach for it only
+      through the animation that ships it.
   pixelField:
     import: "import { assetUrls } from '@skene/design-system/asset-urls'"
     file: assets/pixel-bg.webp

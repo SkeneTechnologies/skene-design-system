@@ -43,7 +43,7 @@ function Home() {
         </DisplayHeading>
         <p className="mx-auto mt-6 max-w-xl text-[14px] leading-relaxed text-chrome-text-muted">
           Product analytics in your own Supabase, working with any dashboard you
-          use. Skene runs as a GitHub Action on every pull request.
+          use. Skene reviews every pull request as a GitHub App.
         </p>
         <div className="mt-8 flex justify-center gap-3">
           <Button>Start free</Button>
