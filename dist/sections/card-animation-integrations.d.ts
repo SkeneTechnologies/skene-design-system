@@ -13,6 +13,11 @@ export interface IntegrationAnimationDetail {
     text: string;
     code: string;
 }
+/**
+ * The PR surface is a GitHub App that posts reviews; no GitHub Action ships.
+ * The marketing site corrected this on 2026-08-19 — keep the `gh` card and its
+ * detail on the App, or the dead `uses: skene-ai/action@v1` claim regresses.
+ */
 export declare const INTEGRATION_ANIMATION_CARDS: IntegrationAnimationCard[];
 export declare const INTEGRATION_ANIMATION_DETAILS: IntegrationAnimationDetail[];
 export interface CardAnimationIntegrationsProps {

@@ -30,6 +30,11 @@ export interface IntegrationAnimationDetail {
   code: string
 }
 
+/**
+ * The PR surface is a GitHub App that posts reviews; no GitHub Action ships.
+ * The marketing site corrected this on 2026-08-19 — keep the `gh` card and its
+ * detail on the App, or the dead `uses: skene-ai/action@v1` claim regresses.
+ */
 export const INTEGRATION_ANIMATION_CARDS: IntegrationAnimationCard[] = [
   {
     variant: 'mcp',
@@ -40,7 +45,7 @@ export const INTEGRATION_ANIMATION_CARDS: IntegrationAnimationCard[] = [
   {
     variant: 'gh',
     icon: GitPullRequest,
-    title: 'GitHub Action',
+    title: 'GitHub App',
     context: 'Runs on every PR',
   },
   {
@@ -65,10 +70,10 @@ export const INTEGRATION_ANIMATION_DETAILS: IntegrationAnimationDetail[] = [
     code: 'skene mcp --cursor',
   },
   {
-    badge: 'GitHub Action',
+    badge: 'GitHub App',
     badgeVariant: 'gray',
-    text: 'Add it to your workflow file and every PR gets an analytics diff comment automatically. Zero extra steps.',
-    code: 'uses: skene-ai/action@v1',
+    text: 'Install it on the repositories you pick and every pull request gets an analytics review automatically. Zero extra steps.',
+    code: '/skene fix',
   },
   {
     badge: 'Cloud API',

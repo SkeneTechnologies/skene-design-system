@@ -544,7 +544,7 @@
     },
     {
       "module": "sections/card-animation-integrations",
-      "useFor": "Four integration cards on a textured field, cycling detail copy with GSAP: MCP server, GitHub Action, Cloud API, and repo audit. Ported from skene-marketing-website's CardAnimationIntegrations.",
+      "useFor": "Four integration cards on a textured field, cycling detail copy with GSAP: MCP server, GitHub App, Cloud API, and repo audit. Ported from skene-marketing-website's CardAnimationIntegrations.",
       "alsoFor": [
         {
           "claim": "The visual slot of a cream band — drop it in `LightSectionCard.visual` or `IntegrationsHighlight`, which is the pre-composed homepage band.",

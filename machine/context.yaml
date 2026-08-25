@@ -1660,7 +1660,7 @@ modules:
         code: { type: string, required: true }
     useFor: >-
       Four integration cards on a textured field, cycling detail copy with
-      GSAP: MCP server, GitHub Action, Cloud API, and repo audit. Ported from
+      GSAP: MCP server, GitHub App, Cloud API, and repo audit. Ported from
       skene-marketing-website's CardAnimationIntegrations.
     alsoFor:
       - claim: >-
