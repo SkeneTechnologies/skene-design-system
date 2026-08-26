@@ -50,4 +50,39 @@ export const assetUrls = {
     lockupOnLight: new URL('../assets/skene-lockup-on-light.svg', import.meta.url).href,
     /** Peach symbol, white wordmark. Dark grounds only. */
     lockupAccent: new URL('../assets/skene-lockup-accent.svg', import.meta.url).href,
+    /** Homepage hero dither texture — feeds glass/refraction treatments. `hero-dither.png`. */
+    heroDither: new URL('../assets/hero-dither.png', import.meta.url).href,
+    /** Agent illustration, first of the set of three. `agent-1.svg`. */
+    agentOne: new URL('../assets/agent-1.svg', import.meta.url).href,
+    /** Agent illustration, second of three. `agent-2.svg`. */
+    agentTwo: new URL('../assets/agent-2.svg', import.meta.url).href,
+    /** Agent illustration, third of three. `agent-3.svg`. */
+    agentThree: new URL('../assets/agent-3.svg', import.meta.url).href,
+    /** The brand hero video. Pass to `DitheredMedia` via its `video` prop. */
+    heroVideo: new URL('../assets/skene-hero.mp4', import.meta.url).href,
+    /** The product demo video, for demo modals. `skene-demo.mp4`. */
+    demoVideo: new URL('../assets/skene-demo.mp4', import.meta.url).href,
+};
+/**
+ * Integration marks — third-party logos the marketing surfaces pair with
+ * Skene artwork. Kept in their own map because they are someone else's brand:
+ * render them at their delivered proportions, never recolour them.
+ */
+export const integrationMarkUrls = {
+    /** Bolt mark. */
+    bolt: new URL('../assets/integrations/bolt.svg', import.meta.url).href,
+    /** Cursor mark. */
+    cursor: new URL('../assets/integrations/cursor.svg', import.meta.url).href,
+    /** GitHub mark. */
+    github: new URL('../assets/integrations/github.svg', import.meta.url).href,
+    /** Resend mark. */
+    resend: new URL('../assets/integrations/resend.svg', import.meta.url).href,
+    /** Supabase mark. */
+    supabase: new URL('../assets/integrations/supabase.svg', import.meta.url).href,
+    /** Terminal mark. */
+    terminal: new URL('../assets/integrations/terminal.svg', import.meta.url).href,
+    /** v0 mark. */
+    v0: new URL('../assets/integrations/v0.svg', import.meta.url).href,
+    /** Windsurf mark. */
+    windsurf: new URL('../assets/integrations/windsurf.svg', import.meta.url).href,
 };

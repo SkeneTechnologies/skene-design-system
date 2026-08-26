@@ -60,21 +60,36 @@ name a URL that resolves for a crawler, which a path inside `node_modules` never
 does. So the duplicate stands, and it is the one place a change to this file has
 to be made twice.
 
-Integration marks are **not** here yet.
+## Integration marks
+
+`integrations/` holds the eight third-party marks the marketing surfaces pair
+with Skene artwork: bolt, cursor, github, resend, supabase, terminal, v0,
+windsurf (2026-08-26, from skene-marketing-website's `public/img/*-icon.svg` /
+`*-logo.svg`, renamed to plain vendor names). They are someone else's brand —
+render at delivered proportions, never recolour. `integrationMarkUrls` in
+`asset-urls` exposes them.
+
+## Illustrations, hero dither, videos (added 2026-08-26)
+
+- `agent-1/2/3.svg` — the agent illustrations (Testimonials et al. on the live
+  site). Small, brand artwork, same must-not-be-redrawn argument as the marks.
+- `hero-dither.png` — the homepage hero dither that feeds the glass/refraction
+  treatment. Stays a PNG deliberately: it is a palette-dithered texture, and a
+  lossless WebP re-encode came out *larger* (521 KB vs 504 KB) while lossy
+  destroys the dots. The old "a PNG where a WebP would do" objection was
+  tested and does not hold.
+- `skene-hero.mp4` (4.0 MB) / `skene-demo.mp4` (2.3 MB) — the brand videos.
+  Previously excluded as "page content"; brought in so every consumer surface
+  plays the same cut through `DitheredMedia`'s `video` prop rather than each
+  repo carrying its own copy.
 
 Nothing else from skene-marketing-website's `public/` belongs here:
 
-> The row for `pixel-bg.webp` used to sit in this table, rejected at 2.9 MB. The
-> prototype's optimised copy is **143 KB** — twenty times smaller — so the only
-> reason it was excluded no longer holds. Worth re-checking the rest against
-> real numbers rather than the ones recorded here; `hero_dithering.png` is the
-> obvious next candidate.
-
-| asset | size | why not |
-|---|---|---|
-| `hero_dithering.png` | 502 KB | homepage-only, and a PNG where a WebP would do. |
-| `skene_hero.mp4` | video | page content, not design system. |
-| product screenshots | 32 MB total | content. |
+| asset | why not |
+|---|---|
+| product screenshots (`modal-product.jpg`, `skene-team-ready.jpg`, blog images) | content, and they churn with the product. |
+| press logos, event photos, `skene_og.png` | site-specific content. |
+| `skene_xs_plus.mp4`, `feature-1/2/3.png`, `graph.svg` | unreferenced even on the live site. |
 
 Consumers pass their own via the `dither` and `video` props on `DitheredMedia`.
 

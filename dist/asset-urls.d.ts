@@ -50,6 +50,42 @@ export declare const assetUrls: {
     readonly lockupOnLight: string;
     /** Peach symbol, white wordmark. Dark grounds only. */
     readonly lockupAccent: string;
+    /** Homepage hero dither texture — feeds glass/refraction treatments. `hero-dither.png`. */
+    readonly heroDither: string;
+    /** Agent illustration, first of the set of three. `agent-1.svg`. */
+    readonly agentOne: string;
+    /** Agent illustration, second of three. `agent-2.svg`. */
+    readonly agentTwo: string;
+    /** Agent illustration, third of three. `agent-3.svg`. */
+    readonly agentThree: string;
+    /** The brand hero video. Pass to `DitheredMedia` via its `video` prop. */
+    readonly heroVideo: string;
+    /** The product demo video, for demo modals. `skene-demo.mp4`. */
+    readonly demoVideo: string;
 };
+/**
+ * Integration marks — third-party logos the marketing surfaces pair with
+ * Skene artwork. Kept in their own map because they are someone else's brand:
+ * render them at their delivered proportions, never recolour them.
+ */
+export declare const integrationMarkUrls: {
+    /** Bolt mark. */
+    readonly bolt: string;
+    /** Cursor mark. */
+    readonly cursor: string;
+    /** GitHub mark. */
+    readonly github: string;
+    /** Resend mark. */
+    readonly resend: string;
+    /** Supabase mark. */
+    readonly supabase: string;
+    /** Terminal mark. */
+    readonly terminal: string;
+    /** v0 mark. */
+    readonly v0: string;
+    /** Windsurf mark. */
+    readonly windsurf: string;
+};
+export type IntegrationMarkName = keyof typeof integrationMarkUrls;
 export type AssetName = keyof typeof assetUrls;
 //# sourceMappingURL=asset-urls.d.ts.map
