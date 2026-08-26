@@ -2693,7 +2693,7 @@
       ],
       "summary": "The two small labels that recur beside headings: a fact, and a promise.",
       "client": false,
-      "lines": 118,
+      "lines": 151,
       "cases": [
         "section-stat-chip"
       ],
@@ -2992,19 +2992,23 @@
         "StatChip",
         "MetaChip",
         "WindowStatus",
-        "WindowChip"
+        "WindowChip",
+        "TagChip",
+        "CheckChip"
       ],
-      "verdict": "Duplicate extracted: Chip, used by PlanCard’s tier marker and by WindowStatus. Badge and Eyebrow stay — different jobs. StatChip/MetaChip geometry still open.",
-      "detail": "Seven shapes, five radii, three sizes. PlanCard’s tier chip and WindowStatus were almost the same spec reached independently — rounded-[5px], font-mono, 10px, uppercase, px-[7px] py-1 — and disagreed on tracking alone, 0.05em against 0.08em. That is the tell that the cluster was unmanaged: it drifted in the column nobody was tabulating. Applied 2026-08-12 as sections/chip.tsx. The tracking difference is carried, not flattened — Chip holds 0.08em and WindowStatus overrides to 0.05em — because both values shipped and were verified in the browser, and picking a winner is a visual decision rather than a refactor.",
+      "verdict": "Nine shapes, not the seven this decision carried for a fortnight. Chip extracted (PlanCard tier + WindowStatus). Badge/Eyebrow stay apart, now gated. StatChip/MetaChip keep the pill: a token gets the rectangle, prose gets the pill. TagChip vs CheckChip is the one still open — decided, not applied, because it moves pixels.",
+      "detail": "PlanCard’s inline tier chip and WindowStatus were almost the same spec reached independently — rounded-[5px], font-mono, 10px, uppercase, px-[7px] py-1 — and disagreed on tracking alone, 0.05em against 0.08em. Earlier revisions of the table had no tracking column and recorded them as identical: an unmanaged cluster drifts in the column nobody is looking at. Applied 2026-08-12 as sections/chip.tsx, the tracking difference carried rather than flattened because both values shipped and were verified in a browser. The same failure then repeated one level up — the table caught a drift in a column it had, and could not catch a row it did not have, so TagChip and CheckChip were the same 11px mono tag written twice with the duplicate recorded only in evaluator-check.tsx’s own header. The table is a test now: __tests__/chip-cluster.test.ts pins every row against source and fails when a tenth shape lands unrecorded.",
       "evidence": [
-        "Badge          rounded-sm      —",
-        "Eyebrow        rounded-sm      —     mono upper",
-        "StatChip       rounded-full  12px",
-        "MetaChip       rounded-full  12px",
-        "Chip           rounded-[5px] 10px    mono upper   0.08em",
-        "WindowStatus   = Chip, tracking overridden to     0.05em",
+        "Badge          rounded-sm    text-xs",
+        "Eyebrow        rounded-sm    --font-size-pill  mono upper  --font-tracking-eyebrow",
+        "StatChip       rounded-full  12px                          prose: a fact",
+        "MetaChip       rounded-full  12px              part        prose: a promise",
+        "Chip           rounded-[5px] 10px              mono upper  0.08em",
+        "WindowStatus   = Chip, tracking overridden to              0.05em",
         "PlanCard tier  = Chip, neutral tone",
-        "WindowChip     rounded-md    11px    mono upper"
+        "WindowChip     rounded-md    11px              mono upper",
+        "TagChip        rounded-sm    11px              mono        an identifier, verbatim",
+        "CheckChip      rounded-sm    11px              mono        THE SAME — alias it to TagChip"
       ]
     },
     {

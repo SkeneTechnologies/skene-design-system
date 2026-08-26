@@ -105,56 +105,102 @@ sites and this package has no external consumers to break. Note that `PlanCard`
 keeps its own singular `action` — that is one button by design, not the same
 slot, and it is not part of this rename.
 
-### 2. Chips — seven shapes, five radii, three sizes
+### 2. Chips — nine shapes, six radii, four sizes — RESOLVED
 
-| component | radius | size | mono | upper | tracking |
-|---|---|---|---|---|---|
-| `Badge` (ui) | `rounded-sm` | — | no | no | — |
-| `Eyebrow` (pattern) | `rounded-sm` | — | yes | yes | `font.tracking.eyebrow` |
-| `StatChip` | `rounded-full` | 12px | no | no | — |
-| `MetaChip` | `rounded-full` | 12px | part | part | — |
-| `WindowStatus` | `rounded-[5px]` | 10px | yes | yes | `0.05em` |
-| `WindowChip` | `rounded-md` | 11px | yes | yes | — |
-| `PlanCard` tier | `rounded-[5px]` | 10px | yes | yes | `0.08em` |
+| component | radius | size | mono | upper | tracking | carries |
+|---|---|---|---|---|---|---|
+| `Badge` (ui) | `rounded-sm` | `text-xs` | no | no | — | product status: Active, Pending |
+| `Eyebrow` (pattern) | `rounded-sm` | `--font-size-pill` | yes | yes | `--font-tracking-eyebrow` | a section kicker |
+| `StatChip` | `rounded-full` | 12px | no | no | — | a fact, in prose |
+| `MetaChip` | `rounded-full` | 12px | part | part | `0.07em` on the state word | a promise, in prose |
+| `Chip` | `rounded-[5px]` | 10px | yes | yes | `0.08em` | a state or tier token |
+| `WindowStatus` | = `Chip` | = `Chip` | yes | yes | `0.05em` (override) | a window's status slot |
+| `WindowChip` | `rounded-md` | 11px | yes | yes | — | a toolbar segment |
+| `TagChip` | `rounded-sm` | 11px | yes | no | — | an identifier, verbatim |
+| `CheckChip` | `rounded-sm` | 11px | yes | no | — | **the same identifier — duplicate** |
 
-`PlanCard`'s tier chip and `WindowStatus` were **almost the same spec, reached
-independently** — one inline, one a component — agreeing on radius, size, mono,
-uppercase and `px-[7px] py-1`, and disagreeing on exactly one value: tracking,
-`0.05em` against `0.08em`. Earlier revisions of this table had no tracking column
-and so recorded them as identical. They were not, and that omission is itself the
-point: an unmanaged cluster drifts in the column nobody is looking at.
+Nine, not the seven this table carried for two weeks. `TagChip` and `CheckChip`
+are the two it never had, and they are the same eleven-pixel mono tag written
+twice in parallel. `evaluator-check.tsx` records the duplicate in its own header
+— "Both are defensible; two of them shipping is not" — which is the right
+instinct filed in the wrong place: a duplicate recorded in one of the two files
+is invisible from the other, and invisible to this table, which exists to hold
+exactly this.
 
-**Decision, in order of value:**
+That is the same failure as the original entry below, one level up. The table
+caught a drift in a column it had; it could not catch a row it did not have.
 
-1. `PlanCard`'s inline tier chip should not exist. It is `WindowStatus` with a
-   different name. Extract one and use it in both.
-2. `Badge` stays as the shadcn primitive for product-surface status. `Eyebrow`
-   stays as the section-heading kicker — a different job with a different
-   tracking, and the token `font.tracking.eyebrow` exists for it.
-3. `StatChip`/`MetaChip` stay distinct from each other (a fact vs a promise), but
-   both should adopt the 10px/mono/uppercase geometry of the window chips, or
-   state in their doc comment why a pill is right where a rectangle is not.
+**The measurement that started this.** `PlanCard`'s inline tier chip and
+`WindowStatus` were *almost the same spec reached independently* — agreeing on
+`rounded-[5px]`, `font-mono`, `10px`, `uppercase` and `px-[7px] py-1`, and
+disagreeing on exactly one value: tracking, `0.05em` against `0.08em`. Earlier
+revisions of this table had no tracking column and so recorded them as
+identical. They were not, and that omission is the point:
 
-**Point 1 applied 2026-08-12.** `src/sections/chip.tsx` exports `Chip` with three
-tones (`neutral`, `healthy`, `live`); `PlanCard`'s tier marker and `WindowStatus`
-both render it, and `WindowStatus` stays as the name for the window title bar's
-right-hand slot because a status is what a caller is looking for there. Gallery
-case `section-chip`, registered in `machine/components.yaml`.
+> An unmanaged cluster drifts in the column nobody is looking at.
 
-Two rendering details, since a refactor that changes pixels silently is not one:
+**Decisions, in order of value:**
 
-- **Tracking is unreconciled and that is deliberate.** `Chip` holds the tier
-  chip's `0.08em`; `WindowStatus` overrides back to `0.05em`. Both values are on
-  screen today and both were signed off in the browser, so the extraction carries
-  the difference rather than flattening a verified component. Settling it on one
-  value is still open — the `section-chip` case puts the two side by side for
-  whoever takes it.
-- **`PlanCard`'s tier chip gained `shrink-0`**, which the inline span did not
-  have. `Chip` sets it in the base: every live instance sits in a flex row
-  opposite something that can wrap, and in the tier row the flag ("Popular") is
-  what should give, never the tier's identity.
+1. **`PlanCard`'s inline tier chip should not exist** — it is `WindowStatus`
+   under another name. **Applied 2026-08-12.** `src/sections/chip.tsx` exports
+   `Chip` with three tones (`neutral`, `healthy`, `live`); `PlanCard`'s tier
+   marker and `WindowStatus` both render it. `WindowStatus` stays as the name
+   for the title bar's right-hand slot, because a status is what a caller looks
+   for there. Gallery case `section-chip`.
 
-Points 2 and 3 are unchanged decisions, not yet applied.
+2. **`Badge` and `Eyebrow` stay, and stay apart.** `Badge` is the shadcn
+   primitive for product-surface status; `Eyebrow` is the marketing
+   section-heading kicker, and it is the only chip in the cluster whose size and
+   tracking come from tokens through `style` rather than from utilities — which
+   is what lets it claim `font.tracking.eyebrow`, a token that existed with
+   nothing rendering it. **Standing, and it holds in the source:** `Eyebrow`
+   appears in no file under `src/ui`, and the one place `Badge` is reached for
+   outside a product surface is `CheckChip`, inside a *depiction* of one. This
+   was never pending work; it was recorded as "not yet applied" when there was
+   nothing to apply.
+
+3. **`StatChip` / `MetaChip` keep the pill.** They were asked to adopt the
+   window chips' rectangle or say why not. **Resolved: why not**, and the rule
+   generalises — *a token gets the rectangle, prose gets the pill*. The window
+   chips carry tokens (LIVE, PRO): short, grammarless, read as symbols, and
+   correctly set in 10px mono caps. These two carry prose ("121 stars",
+   "Turnkey dollar-revenue view"), where mono caps at 10px costs legibility and
+   asserts a register the words do not have — the same objection `TagChip`'s
+   header raises about uppercasing a table name. `MetaChip` is the proof: it
+   already draws both treatments in one chip, prose in the pill's own type and
+   the state word mono, uppercased and tracked, because that half *is* a token.
+   The argument is written out in `src/sections/stat-chip.tsx`'s header; the
+   private `Pill` stays parameterised so reopening it is one change, not two.
+
+4. **`TagChip` vs `CheckChip` — decided, not yet applied.** `TagChip` has won by
+   adoption: `evaluator-verify.tsx` and `lifecycle-canvas.tsx` both import it,
+   so two of the three modules in this artifact family already render it and
+   only `evaluator-check` keeps a private copy. Rendered side by side the two
+   resolve to the same radius, padding, size, voice and both colour pairs;
+   what differs is that `CheckChip` emits a `<div>` with `inline-flex` (it
+   composes `ui/badge`, which contributes a `div`, a `data-slot` and focus-ring
+   rules to an element that cannot take focus, while tw-merge overrides every
+   visual property the primitive brought) against `TagChip`'s `<span>` with
+   `inline-block` and the prototype's 4px flow margin. **`CheckChip` should
+   become a `TagChip` alias** with `className="m-0"`, the escape `TagChip`'s
+   header already documents for a flex parent.
+
+   Not applied here because it moves pixels — `div`/`inline-flex` to
+   `span`/`inline-block` changes vertical alignment against surrounding text —
+   and `section-evaluator-check-{light,dark}-linux.png` would have to be
+   regenerated with `npm run visual:update`, which needs the Playwright
+   container. A refactor that changes pixels silently is not one.
+
+**The table is now a test.** `__tests__/chip-cluster.test.ts` pins every row's
+radius, size, voice and tracking against the source, and separately requires
+that every chip-shaped class literal in `src` is either a registered row or a
+named exception. A drift in a column nobody widened the table for fails; so does
+a tenth shape landing unrecorded. Five shapes are in that file's `UNTABULATED`
+list — a marker on a surface tile, `SurfaceDetail`'s `code` chip, two inside
+`card-animation-integrations` (one of them on hardcoded hex, in a scene with no
+gallery case), and `PrReview`'s GitHub-chrome meta chip, which borrows GitHub's
+palette on purpose. That list is a deferral in the open, the same shape as
+`stories/BACKLOG.json`: it may shrink, it should not grow.
 
 ### 3. `ProductWindow` vs `Terminal` — no change
 
