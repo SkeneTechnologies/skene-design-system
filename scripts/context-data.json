@@ -669,6 +669,10 @@
         {
           "claim": "A breakage or defect marker with `tone=\"danger\"`. Its recipe deviates from `healthy`/`live` on purpose: the ink is the on-tint token (`--color-semantic-error-red-on-tint`), the split `StatPill` and `Finding` both shipped without and measured below the floor for, and the tint is 12% — inside the band those tokens were measured for. Both halves are mode-aware, so it holds inside a light `ProductWindow` as well as on the page.",
           "via": "prop Chip.tone"
+        },
+        {
+          "claim": "A caution marker with `tone=\"warn\"` (amber): present but degraded, deprecated, or waiting on a decision. Same corrected recipe as `danger` — amber on-tint ink over a 12% tint — added because two marketing pages were retinting `tone=\"neutral\"` through a shared amber `className`, base ink on a 15% fill, which is the inline fork plus the measured-band miss in one constant.",
+          "via": "prop Chip.tone"
         }
       ],
       "watchFor": [
@@ -896,12 +900,20 @@
         {
           "claim": "The same list as EvaluatorList with a different detail pane, since `list` and `detail` are independent props.",
           "via": "prop EvaluatorPanel.list"
+        },
+        {
+          "claim": "The marketing wireframes' side-by-side cut with `split`: the index in a dark left pane (the package's own `dark` subtree switch, nested inside the window's forced `light` the way the product nests its sidebar) with `activeIndex` picking out the open row, the requirements in the cream right pane. Stacks back below `md`.",
+          "via": "prop EvaluatorPanel.split"
         }
       ],
       "watchFor": [
         {
           "note": "Its VerifyRow and MetaPill are copied line-for-line from evaluator-verify. The source says so and defers the merge; do not add a third copy.",
           "via": "prop EvaluatorPanel.detail"
+        },
+        {
+          "note": "In `split` mode the index renders at lower resolution — name and confirmed count per row; the check pill and metric belong to the stacked table. A caller needing all four columns beside the detail has outgrown the split and wants two windows.",
+          "via": "prop EvaluatorPanel.activeIndex"
         }
       ],
       "notFor": [

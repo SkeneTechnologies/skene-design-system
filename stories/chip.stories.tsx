@@ -18,7 +18,7 @@ const meta = {
   component: Chip,
   parameters: { layout: 'centered' },
   argTypes: {
-    tone: { control: 'inline-radio', options: ['neutral', 'healthy', 'live', 'danger', 'outline'] },
+    tone: { control: 'inline-radio', options: ['neutral', 'healthy', 'live', 'warn', 'danger', 'outline'] },
   },
   args: { children: 'PRO' },
 } satisfies Meta<typeof Chip>
@@ -32,6 +32,15 @@ export const Live: Story = { args: { tone: 'live', children: 'LIVE' } }
 export const Outline: Story = { args: { tone: 'outline', children: 'BETA' } }
 
 /**
+ * The caution marker: present but degraded, deprecated, or waiting on a
+ * decision. Same on-tint recipe as `danger` — amber on-tint ink over a 12%
+ * amber tint — because the marketing pages' inline retint (`tone="neutral"`
+ * with an amber `className`) shipped base amber as its own ink at 15%, which is
+ * the measured-band miss the `TONES` row documents.
+ */
+export const Warn: Story = { args: { tone: 'warn', children: 'DEPRECATED' } }
+
+/**
  * The breakage marker. Ink is the on-tint token over a 12% tint — see the
  * `TONES` row in the source for why it deviates from `healthy`'s recipe — and
  * both halves are mode-aware, so `OnLight` below is the other half of this
@@ -39,9 +48,9 @@ export const Outline: Story = { args: { tone: 'outline', children: 'BETA' } }
  */
 export const Danger: Story = { args: { tone: 'danger', children: 'BREAKS AT THE SEAM' } }
 
-const TONES = ['neutral', 'healthy', 'live', 'danger', 'outline'] as const
+const TONES = ['neutral', 'healthy', 'live', 'warn', 'danger', 'outline'] as const
 
-/** All four together — the frame that catches geometry drifting between tones. */
+/** All the tones together — the frame that catches geometry drifting between tones. */
 export const AllTones: Story = {
   render: () => (
     <div className="flex flex-wrap items-center gap-2">

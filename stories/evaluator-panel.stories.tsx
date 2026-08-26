@@ -65,3 +65,15 @@ export const Unframed: Story = { args: { ...Default.args, frame: false } }
 export const WithNote: Story = {
   args: { ...Default.args, note: 'Selecting a row on the left changes the pane on the right.' },
 }
+
+/**
+ * The marketing wireframes' two-pane cut: the index in a dark left pane with
+ * the open row picked out (`activeIndex`), the requirements in the cream right
+ * pane. The index renders at lower resolution here — name and confirmed count
+ * per row — which is the prop's documented trade; the check pill and metric
+ * live in the stacked table. Below `md` the panes stack back into the reading
+ * order the stacked layout has.
+ */
+export const Split: Story = {
+  args: { ...Default.args, split: true, activeIndex: 1 },
+}

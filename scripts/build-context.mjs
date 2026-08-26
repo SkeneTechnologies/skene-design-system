@@ -63,7 +63,12 @@ export function exportsOf(src) {
       if (name && /^[A-Z]/.test(name)) out.add(name)
     }
   }
-  for (const m of src.matchAll(/export (?:function|const) ([A-Z][A-Za-z0-9]*)/g)) out.add(m[1])
+  // Underscore included, or SCREAMING_SNAKE exports truncate at the first `_`:
+  // PILL_NAV_FROSTED_STYLE derived as `PILL`, PILL_NAV_POSITION collapsed into
+  // the same wrong name and vanished from the Set, INTEGRATION_ANIMATION_CARDS
+  // read `INTEGRATION` and PROSE_CODE read `PROSE`. Every `via:` citing one of
+  // those names was checkable against a symbol the package does not export.
+  for (const m of src.matchAll(/export (?:function|const) ([A-Z][A-Za-z0-9_]*)/g)) out.add(m[1])
   return [...out]
 }
 

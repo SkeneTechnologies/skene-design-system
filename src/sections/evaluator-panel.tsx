@@ -149,6 +149,36 @@ export interface EvaluatorPanelProps {
    */
   note?: React.ReactNode
   /**
+   * Side-by-side rather than stacked: the index in a dark left pane, the opened
+   * evaluation's requirements in the cream right pane.
+   *
+   * This is the layout the marketing wireframes draw — a `1fr / 1.4fr` two-pane
+   * with the open row picked out — and it is honest to the product for the same
+   * reason `AppWindow`'s forced `light` is: the signed-in workspace is light
+   * with exactly one dark region, the sidebar-shaped index you pick from. The
+   * dark pane here is that move, made with the package's own machinery — a
+   * `dark` class on the pane's subtree, which `styles/tokens.css` defines as an
+   * explicit theme switch that nests inside `light`.
+   *
+   * The index renders at lower resolution in this mode: each row is the name
+   * and the confirmed count, because a four-column table folded into a `1fr`
+   * pane is a table folded to its longest word. The check pill and metric
+   * belong to the stacked table; a caller who needs all four columns beside the
+   * detail has outgrown the split and wants two windows.
+   *
+   * Below `md` the panes stack — index above detail, the same reading order as
+   * the stacked layout — because two panes side by side at 390px is two
+   * unreadable columns.
+   */
+  split?: boolean
+  /**
+   * Which index row is picked out as the open one, in `split` mode only. The
+   * detail is usually the same words as that row; nothing enforces the match
+   * (the names are `ReactNode`s), but a split where they differ is depicting
+   * two screens — the same caveat `detail.title` already carries.
+   */
+  activeIndex?: number
+  /**
    * Which texture backs the frame, or `false` for none.
    *
    * `jr` is the default because measurement artifacts sit on card1 across the
@@ -169,15 +199,77 @@ export function EvaluatorPanel({
   list,
   detail,
   note,
+  split = false,
+  activeIndex = 0,
   frame = 'jr',
   className,
 }: EvaluatorPanelProps) {
-  const artifact = (
-    <AppWindow
-      crumb={crumb}
-      actions={summary ? <StatPill status={summary.status}>{summary.label}</StatPill> : undefined}
-      className={frame === false ? className : undefined}
-    >
+  // The detail panel is one recipe used by both layouts, so the two cannot
+  // drift apart in what an opened evaluation looks like. Only its margin
+  // differs: the stacked layout carries `.evl`'s 12px itself, the split
+  // layout's grid gap supplies it.
+  const detailPanel = (extraClassName?: string) => (
+    <AppPanel className={extraClassName}>
+      <PanelCaption>
+        <span>{detail.title}</span>
+        {detail.subtitle ? (
+          <span className="text-[11px] text-muted-foreground">{detail.subtitle}</span>
+        ) : null}
+      </PanelCaption>
+      {/*
+        A `Fragment`, not a wrapper element. Every row has to be a direct child
+        of the panel or `last:border-b-0` matches the last field of EVERY group
+        — `display: contents` hides a box from layout but not from
+        `:last-child`, which is exactly the kind of bug that only shows up as
+        one stray missing hairline three rows up.
+      */}
+      {detail.requirements.map((requirement, i) => (
+        <Fragment key={i}>
+          <VerifyRow {...requirement} />
+          {requirement.fields?.map((f, j) => <VerifyRow key={j} {...f} field />)}
+        </Fragment>
+      ))}
+    </AppPanel>
+  )
+
+  const body = split ? (
+    <div className="grid grid-cols-1 gap-[12px] md:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]">
+      {/* The dark pane. `dark` is the package's own subtree switch
+          (styles/tokens.css), nested inside AppWindow's forced `light` the way
+          the product nests its sidebar — so `bg-card`, `border-border` and the
+          text roles below all resolve to their dark values with no second
+          palette written here. */}
+      <AppPanel className="dark self-start">
+        <PanelCaption>
+          <span>{list.columns.name}</span>
+          <span className="text-[11px] text-muted-foreground">{list.columns.confirmed}</span>
+        </PanelCaption>
+        <div className="p-[8px]">
+          {list.evaluations.map((evaluation, i) => (
+            <div
+              key={i}
+              className={cn(
+                'flex items-baseline justify-between gap-[10px] rounded-lg px-[10px] py-[8px] text-[13px]',
+                i === activeIndex ? 'bg-muted text-foreground' : 'text-muted-foreground',
+              )}
+            >
+              <span>{evaluation.name}</span>
+              <span
+                className={cn(
+                  'shrink-0 font-mono text-[11px] tabular-nums',
+                  i === activeIndex ? 'text-brand-peach' : 'text-muted-foreground',
+                )}
+              >
+                {evaluation.confirmed}
+              </span>
+            </div>
+          ))}
+        </div>
+      </AppPanel>
+      {detailPanel()}
+    </div>
+  ) : (
+    <>
       {/*
         `AppPanel` is what clips and scrolls: the table inside it has no
         `min-width`, so at 390px the text columns fold to their longest word and
@@ -214,28 +306,17 @@ export function EvaluatorPanel({
           See the file header. It is the whole gap between the two panels — the
           body sets none — so removing it butts a bordered card straight onto
           another one. */}
-      <AppPanel className="mt-[12px]">
-        <PanelCaption>
-          <span>{detail.title}</span>
-          {detail.subtitle ? (
-            <span className="text-[11px] text-muted-foreground">{detail.subtitle}</span>
-          ) : null}
-        </PanelCaption>
-        {/*
-          A `Fragment`, not a wrapper element. Every row has to be a direct child
-          of the panel or `last:border-b-0` matches the last field of EVERY group
-          — `display: contents` hides a box from layout but not from
-          `:last-child`, which is exactly the kind of bug that only shows up as
-          one stray missing hairline three rows up.
-        */}
-        {detail.requirements.map((requirement, i) => (
-          <Fragment key={i}>
-            <VerifyRow {...requirement} />
-            {requirement.fields?.map((f, j) => <VerifyRow key={j} {...f} field />)}
-          </Fragment>
-        ))}
-      </AppPanel>
+      {detailPanel('mt-[12px]')}
+    </>
+  )
 
+  const artifact = (
+    <AppWindow
+      crumb={crumb}
+      actions={summary ? <StatPill status={summary.status}>{summary.label}</StatPill> : undefined}
+      className={frame === false ? className : undefined}
+    >
+      {body}
       {note ? <EvaluatorNote>{note}</EvaluatorNote> : null}
     </AppWindow>
   )

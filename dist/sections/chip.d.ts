@@ -32,11 +32,14 @@
  * follow a `light` ancestor down to the light value of matcha / violet rather
  * than laying a dark-mode tint on a cream fill.
  */
-export type ChipTone = 'neutral' | 'healthy' | 'live' | 'danger' | 'outline';
+export type ChipTone = 'neutral' | 'healthy' | 'live' | 'warn' | 'danger' | 'outline';
 export interface ChipProps {
     /**
      * `neutral` — near-black chip, cream type; an identity marker, not a state.
      * `healthy` — `semantic.matcha`. `live` — `accent.violet`.
+     * `warn` — `semantic.warningAmber`, for a caution marker: something present
+     * but degraded, deprecated, or waiting on a decision. Same on-tint recipe as
+     * `danger` — see the note on that `TONES` row.
      * `danger` — `semantic.errorRed`, for a breakage or defect marker; its ink
      * is the on-tint token, not the base red — see the note on the `TONES` row.
      * `outline` — no fill, an invariant hairline; for a marker on a surface that

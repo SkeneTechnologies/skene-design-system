@@ -18,6 +18,22 @@ const TONES = {
             color: 'var(--color-accent-violet)',
         },
     },
+    // Added 2026-08-26, by the same rule that admitted `danger` the day before:
+    // the marketing homepage and features page were both rendering the amber
+    // state as `tone="neutral"` retinted through `className` — a shared
+    // `WARN_CHIP = "bg-semantic-warning-amber/15 text-semantic-warning-amber"`
+    // constant, declared once per page, which is the inline fork this file
+    // exists to stop, twice. The retint also carries the exact defect `danger`'s
+    // note documents: base amber as ink on a tint of its own hue, on a fill
+    // percentage (15%) outside the measured 10–12% band. So this row is not a
+    // transcription of the call sites; it is the recipe they should have had —
+    // on-tint ink, 12% fill — per `src/lib/status.ts` `STATUS_TINT_TOKEN`.
+    warn: {
+        style: {
+            background: 'color-mix(in oklab, var(--color-semantic-warning-amber) 12%, transparent)',
+            color: 'var(--color-semantic-warning-amber-on-tint)',
+        },
+    },
     // Added 2026-08-25, by the file's own rule — the marketing pricing page was
     // rendering it as `tone="neutral"` retinted through `className`, i.e. the
     // inline fork this file exists to stop. Two deliberate deviations from the
