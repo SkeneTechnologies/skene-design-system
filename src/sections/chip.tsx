@@ -35,12 +35,15 @@ import { cn } from '../lib/utils.js'
  * than laying a dark-mode tint on a cream fill.
  */
 
-export type ChipTone = 'neutral' | 'healthy' | 'live' | 'danger' | 'outline'
+export type ChipTone = 'neutral' | 'healthy' | 'live' | 'warn' | 'danger' | 'outline'
 
 export interface ChipProps {
   /**
    * `neutral` — near-black chip, cream type; an identity marker, not a state.
    * `healthy` — `semantic.matcha`. `live` — `accent.violet`.
+   * `warn` — `semantic.warningAmber`, for a caution marker: something present
+   * but degraded, deprecated, or waiting on a decision. Same on-tint recipe as
+   * `danger` — see the note on that `TONES` row.
    * `danger` — `semantic.errorRed`, for a breakage or defect marker; its ink
    * is the on-tint token, not the base red — see the note on the `TONES` row.
    * `outline` — no fill, an invariant hairline; for a marker on a surface that
@@ -72,6 +75,22 @@ const TONES: Record<ChipTone, { className?: string; style?: React.CSSProperties 
     style: {
       background: 'color-mix(in oklab, var(--color-accent-violet) 14%, transparent)',
       color: 'var(--color-accent-violet)',
+    },
+  },
+  // Added 2026-08-26, by the same rule that admitted `danger` the day before:
+  // the marketing homepage and features page were both rendering the amber
+  // state as `tone="neutral"` retinted through `className` — a shared
+  // `WARN_CHIP = "bg-semantic-warning-amber/15 text-semantic-warning-amber"`
+  // constant, declared once per page, which is the inline fork this file
+  // exists to stop, twice. The retint also carries the exact defect `danger`'s
+  // note documents: base amber as ink on a tint of its own hue, on a fill
+  // percentage (15%) outside the measured 10–12% band. So this row is not a
+  // transcription of the call sites; it is the recipe they should have had —
+  // on-tint ink, 12% fill — per `src/lib/status.ts` `STATUS_TINT_TOKEN`.
+  warn: {
+    style: {
+      background: 'color-mix(in oklab, var(--color-semantic-warning-amber) 12%, transparent)',
+      color: 'var(--color-semantic-warning-amber-on-tint)',
     },
   },
   // Added 2026-08-25, by the file's own rule — the marketing pricing page was

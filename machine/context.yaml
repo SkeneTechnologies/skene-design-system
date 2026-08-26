@@ -909,7 +909,7 @@ modules:
           is the product surface's status chip.
   patterns/pill-nav-frosted:
     import: "@skene/design-system/patterns/pill-nav-frosted"
-    exports: [PILL]
+    exports: [PILL_NAV_FROSTED_STYLE, PILL_NAV_POSITION]
     polarity: inherits
     seen: []
     useFor: >-
@@ -1645,7 +1645,7 @@ modules:
     sameAs: [sections/plan-card#PlanCard]
   sections/card-animation-integrations:
     import: "@skene/design-system/sections/card-animation-integrations"
-    exports: [INTEGRATION, CardAnimationIntegrations]
+    exports: [INTEGRATION_ANIMATION_CARDS, INTEGRATION_ANIMATION_DETAILS, CardAnimationIntegrations]
     client: true
     composes: [lib/use-container-scale]
     polarity: inherits
@@ -1857,6 +1857,14 @@ modules:
           for. Both halves are mode-aware, so it holds inside a light
           `ProductWindow` as well as on the page.
         via: prop Chip.tone
+      - claim: >-
+          A caution marker with `tone="warn"` (amber): present but degraded,
+          deprecated, or waiting on a decision. Same corrected recipe as
+          `danger` — amber on-tint ink over a 12% tint — added because two
+          marketing pages were retinting `tone="neutral"` through a shared
+          amber `className`, base ink on a 15% fill, which is the inline fork
+          plus the measured-band miss in one constant.
+        via: prop Chip.tone
     watchFor:
       - note: >-
           `className` merges last and therefore beats the base for *any*
@@ -1898,7 +1906,7 @@ modules:
           the window title bar's right-hand slot.
   sections/code:
     import: "@skene/design-system/sections/code"
-    exports: [Code, PROSE]
+    exports: [Code, PROSE_CODE]
     polarity: applies-both
     seen: []
     overrides: [className]
@@ -2232,8 +2240,9 @@ modules:
     import: "@skene/design-system/sections/evaluator-panel"
     exports: [EvaluatorPanel]
     composes: [same-layer/artifact-shell, same-layer/evaluator-list, same-layer/evaluator-verify]
-    polarity: inherits
+    polarity: applies-dark
     seen: [section-evaluator-panel]
+    overrides: [className]
     props:
       EvaluatorPanel:
         crumb: { type: React.ReactNode }
@@ -2241,6 +2250,8 @@ modules:
         list: { type: EvaluatorPanelList, required: true }
         detail: { type: EvaluatorPanelDetail, required: true }
         note: { type: React.ReactNode }
+        split: { type: boolean, default: "false" }
+        activeIndex: { type: number, default: 0 }
         frame: { type: ArtFrameKind | false, default: "'jr'" }
     types:
       EvaluatorPanelList:
@@ -2262,12 +2273,25 @@ modules:
           The same list as EvaluatorList with a different detail pane, since
           `list` and `detail` are independent props.
         via: prop EvaluatorPanel.list
+      - claim: >-
+          The marketing wireframes' side-by-side cut with `split`: the index
+          in a dark left pane (the package's own `dark` subtree switch, nested
+          inside the window's forced `light` the way the product nests its
+          sidebar) with `activeIndex` picking out the open row, the
+          requirements in the cream right pane. Stacks back below `md`.
+        via: prop EvaluatorPanel.split
     watchFor:
       - note: >-
           Its VerifyRow and MetaPill are copied line-for-line from
           evaluator-verify. The source says so and defers the merge; do not
           add a third copy.
         via: prop EvaluatorPanel.detail
+      - note: >-
+          In `split` mode the index renders at lower resolution — name and
+          confirmed count per row; the check pill and metric belong to the
+          stacked table. A caller needing all four columns beside the detail
+          has outgrown the split and wants two windows.
+        via: prop EvaluatorPanel.activeIndex
     notFor:
       - instead: EvaluatorVerify
         why: >-

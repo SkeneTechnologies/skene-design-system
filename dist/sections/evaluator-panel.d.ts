@@ -122,6 +122,36 @@ export interface EvaluatorPanelProps {
      */
     note?: React.ReactNode;
     /**
+     * Side-by-side rather than stacked: the index in a dark left pane, the opened
+     * evaluation's requirements in the cream right pane.
+     *
+     * This is the layout the marketing wireframes draw — a `1fr / 1.4fr` two-pane
+     * with the open row picked out — and it is honest to the product for the same
+     * reason `AppWindow`'s forced `light` is: the signed-in workspace is light
+     * with exactly one dark region, the sidebar-shaped index you pick from. The
+     * dark pane here is that move, made with the package's own machinery — a
+     * `dark` class on the pane's subtree, which `styles/tokens.css` defines as an
+     * explicit theme switch that nests inside `light`.
+     *
+     * The index renders at lower resolution in this mode: each row is the name
+     * and the confirmed count, because a four-column table folded into a `1fr`
+     * pane is a table folded to its longest word. The check pill and metric
+     * belong to the stacked table; a caller who needs all four columns beside the
+     * detail has outgrown the split and wants two windows.
+     *
+     * Below `md` the panes stack — index above detail, the same reading order as
+     * the stacked layout — because two panes side by side at 390px is two
+     * unreadable columns.
+     */
+    split?: boolean;
+    /**
+     * Which index row is picked out as the open one, in `split` mode only. The
+     * detail is usually the same words as that row; nothing enforces the match
+     * (the names are `ReactNode`s), but a split where they differ is depicting
+     * two screens — the same caveat `detail.title` already carries.
+     */
+    activeIndex?: number;
+    /**
      * Which texture backs the frame, or `false` for none.
      *
      * `jr` is the default because measurement artifacts sit on card1 across the
@@ -135,5 +165,5 @@ export interface EvaluatorPanelProps {
     /** Lands on the outermost element — the frame, or the window when unframed. */
     className?: string;
 }
-export declare function EvaluatorPanel({ crumb, summary, list, detail, note, frame, className, }: EvaluatorPanelProps): import("react").JSX.Element;
+export declare function EvaluatorPanel({ crumb, summary, list, detail, note, split, activeIndex, frame, className, }: EvaluatorPanelProps): import("react").JSX.Element;
 //# sourceMappingURL=evaluator-panel.d.ts.map

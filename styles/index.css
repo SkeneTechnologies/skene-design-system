@@ -24,7 +24,18 @@
 
    The glob is explicit rather than a bare directory: given a directory Tailwind
    applies its own extension heuristics and ignore rules, and would also re-read
-   the .d.ts files. */
+   the .d.ts files.
+
+   KNOWN LIMIT — Turbopack does not honour this line. It resolves the @import
+   and then never scans the imported file's own @source, so utilities only the
+   package uses (LogoSlot's min-h-14, the card animation's aspect-square) are
+   silently absent and the components render collapsed. A consumer on Turbopack
+   must add its own, path-relative to ITS stylesheet:
+
+     @source "../../node_modules/@skene/design-system/dist";
+
+   Harmless where this line already works — Tailwind dedupes scanned files —
+   so add it unconditionally. The fuller account is in README.md, "Use". */
 @source "../dist/**/*.js";
 
 @plugin "tailwindcss-animate";

@@ -1278,7 +1278,7 @@ export default function ComponentGalleryPage() {
                     note="One-time · no commitment"
                   />
                 </SurfaceTiles>
-                <SurfaceDetail tag="Repo audit" code="skene audit .">
+                <SurfaceDetail tag="Repo audit" code="uvx skene analyse-journey .">
                   A one-time scan of your current tracking. See what you have before you adopt
                   anything else.
                 </SurfaceDetail>
@@ -1511,7 +1511,7 @@ export default function ComponentGalleryPage() {
                 note="One-time · no commitment"
               />
             </SurfaceTiles>
-            <SurfaceDetail tag="Repo audit" code="skene audit .">
+            <SurfaceDetail tag="Repo audit" code="uvx skene analyse-journey .">
               A one-time scan of your current tracking. See what you have before you adopt anything
               else.
             </SurfaceDetail>
@@ -2072,12 +2072,18 @@ export default function ComponentGalleryPage() {
             in the barrel — a "use client" directive on a re-exported module
             poisons the barrel for server rendering, which package-contract
             asserts against. Imported from its own subpath here for that reason. */}
+        {/* The command is the OSS CLI's real invocation — s-spelled, uvx-run.
+            No audit-named subcommand exists (the noun belongs to the free
+            audit tier), and the marketing repo's check-claims.sh fails the
+            string; same correction as src/sections/card-animation-integrations.
+            The note matches what the command actually does: reads the codebase
+            read-only, writes one local artifact. */}
         <TerminalBlock
-          title="Install"
-          note="Reads the repo. Writes nothing."
+          title="Scan"
+          note="Reads the repo read-only. Writes skene-context/journey.yaml."
           lines={[
-            { command: 'uvx skene audit .', prompt: '$', copyable: true },
-            { command: '✓ 42 events matched the tracking plan', prompt: ' ', copyable: false },
+            { command: 'uvx skene analyse-journey .', prompt: '$', copyable: true },
+            { command: '✓ 42 events matched the journey plan', prompt: ' ', copyable: false },
             { command: '✗ trial_activated missing from 2 product paths', prompt: ' ', copyable: false },
           ]}
         />

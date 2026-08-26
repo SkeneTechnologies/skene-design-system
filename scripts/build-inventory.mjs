@@ -24,7 +24,9 @@ function exportsOf(src) {
       if (name && /^[A-Z]/.test(name)) out.add(name)
     }
   }
-  for (const m of src.matchAll(/export (?:function|const) ([A-Z][A-Za-z0-9]*)/g)) out.add(m[1])
+  // Underscore included — same fix as scripts/build-context.mjs `exportsOf`:
+  // without it SCREAMING_SNAKE exports truncate at the first underscore.
+  for (const m of src.matchAll(/export (?:function|const) ([A-Z][A-Za-z0-9_]*)/g)) out.add(m[1])
   return [...out]
 }
 

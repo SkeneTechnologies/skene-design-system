@@ -125,6 +125,32 @@ Two lines at the top of the app's stylesheet:
 @import "@skene/design-system/styles.css";
 ```
 
+### And one more, which the package cannot add for you
+
+```css
+@source "../../node_modules/@skene/design-system/dist";
+```
+
+(Path relative to *your* stylesheet — the line above is right for a stylesheet
+at `src/app/globals.css`; one at `app/globals.css` drops one `../`.)
+
+The package's own `styles/index.css` already declares
+`@source "../dist/**/*.js"` so that its components' classes are generated, and
+under the Tailwind CLI and Vite that is sufficient. **Under Turbopack it is
+not**: the marketing site's build resolved the `@import`, then never scanned
+the imported file's own `@source`, so every utility that only the package's
+components use was silently absent from the emitted CSS. Observed shipping,
+not hypothesised: `LogoSlot`'s `min-h-14` and the card animation's
+`aspect-square` never made it into the app's stylesheet, and `LogoRow`
+rendered as a zero-height strip — no error, no warning, a component that
+simply is not there. Classes the app also happens to use elsewhere are
+generated anyway, which is exactly what makes the gap invisible until a
+component leans on a utility nobody else does.
+
+The line is idempotent where the package's own `@source` already works —
+Tailwind dedupes scanned files — so add it unconditionally rather than
+per-bundler.
+
 Tokens are also importable as typed values:
 
 ```ts
