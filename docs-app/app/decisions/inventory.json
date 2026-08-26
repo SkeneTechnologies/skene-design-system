@@ -1054,6 +1054,32 @@
       }
     },
     {
+      "module": "pill-nav-frosted",
+      "layer": "patterns",
+      "import": "@skene/design-system/patterns/pill-nav-frosted",
+      "exports": [
+        "PILL_NAV_FROSTED_STYLE",
+        "PILL_NAV_POSITION"
+      ],
+      "summary": "",
+      "client": false,
+      "lines": 13,
+      "cases": [],
+      "demo": null,
+      "usage": {
+        "module": "pill-nav-frosted",
+        "purpose": "The two constants PillNav and its drawer share: the frosted wash that keeps links legible over arbitrary photography, and the absolute and sticky position classes.",
+        "alsoFor": [
+          "The same frosted wash on chrome that sits beside the nav and has to match it, rather than each surface re-deriving the colour-mix.",
+          "Reading the position contract without importing the component, for a layout that has to reserve or overlay the same space."
+        ],
+        "watchFor": [],
+        "notFor": [
+          "Restyling the nav. A bar that needs a different wash is a different component, and copying these values into an app to tweak them is the primitive-copy rule."
+        ]
+      }
+    },
+    {
       "module": "pill-nav-mobile-menu",
       "layer": "patterns",
       "import": "@skene/design-system/patterns/pill-nav-mobile-menu",
@@ -3107,12 +3133,12 @@
     "cases": 89
   },
   "counts": {
-    "modules": 88,
-    "exports": 264,
+    "modules": 89,
+    "exports": 266,
     "ui": 30,
-    "patterns": 7,
+    "patterns": 8,
     "sections": 51,
-    "noVisual": 9,
-    "withUsage": 88
+    "noVisual": 10,
+    "withUsage": 89
   }
 }

@@ -1102,7 +1102,7 @@ modules:
         why: >-
           Framing a product mock rather than text. That is ProductWindow,
           which inverts to light by default.
-    sameAs: [sections/terminal-block#TerminalBlock]
+    sameAs: [sections/terminal-block#TerminalBlock, sections/traffic-lights#TrafficLights]
   sections/agent-callout:
     import: "@skene/design-system/sections/agent-callout"
     exports: [AgentCallout]
@@ -1904,6 +1904,7 @@ modules:
           A pill beside a heading. `StatChip` (a fact) or `MetaChip` (a
           promise) own that slot at `rounded-full` 12px; `WindowStatus` owns
           the window title bar's right-hand slot.
+    sameAs: [sections/stat-chip#StatChip]
   sections/code:
     import: "@skene/design-system/sections/code"
     exports: [Code, PROSE_CODE]
@@ -2553,6 +2554,7 @@ modules:
           `AppPanel` within `ArtifactShell`; this component is what the
           artifact sits in, not what it is made of. Nesting one in the other
           puts a 600px marketing band inside a depiction.
+    sameAs: [sections/glyph-badge#GlyphBadge]
   sections/final-cta:
     import: "@skene/design-system/sections/final-cta"
     exports: [FinalCta]
@@ -4604,6 +4606,7 @@ modules:
         why: >-
           Options that each need a price, a feature list and a CTA. That is
           PlanCard.
+    sameAs: [sections/surface-cards#SurfaceCards]
   sections/team-card:
     import: "@skene/design-system/sections/team-card"
     exports: [TeamCard, TeamGrid]

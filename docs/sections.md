@@ -188,9 +188,30 @@ None from the captured demo. `journey-track`, `value-cards`, `question-grid`,
 the 2026-08-13 gap analysis. `patterns/` now has its own
 block in `machine/components.yaml`.
 
-Visual coverage is no longer one of them. The 16 product-artifact sections that
-carried no gallery case, and so no light/dark baseline, each got one in
-`290a19f`. `noVisual` in the inventory is now 1: `sonner`, a toast host that
-renders nothing until something calls it, so there is no state to snapshot.
+Visual coverage is a live gap again, and this paragraph is where it hid. The 16
+product-artifact sections that carried no gallery case, and so no light/dark
+baseline, each got one in `290a19f`, which took `noVisual` to 1: `sonner`, a
+toast host that renders nothing until something calls it, so there is no state
+to snapshot. That was true on 2026-08-15 and this paragraph went on asserting it
+while 10 modules accumulated with no case:
+
+    sonner                        pill-nav-frosted
+    pill-nav-mobile-menu          card-animation-integrations
+    code                          integrations-highlight
+    journey-signal-scene          logo-row
+    surface-cards                 team-card
+
+`sonner` is the only justified one. The other nine are unproven — `seen: []` in
+`machine/context.yaml`, whose own header says an empty list means nothing in
+this repository has ever rendered the module, so treat its claims as unproven.
+
+Two mechanisms failed here, not one. The list went stale because a hand-typed
+count has no gate behind it — `__tests__/docs-counts.test.ts` now reads the
+figure out of this paragraph and fails when it drifts. And `pill-nav-frosted`
+was missing from `/decisions` entirely rather than merely uncounted:
+`scripts/build-inventory.mjs` filtered on `.tsx`, and that module is the
+package's only `.ts` one, so the page built to list everything listed 88 of 89.
+Fixed; it now matches `build-context.mjs` and takes both extensions.
+
 Filter `no visual` on `/decisions` for the live list — that page is generated
 from the source, this paragraph is not, so trust it over this one.

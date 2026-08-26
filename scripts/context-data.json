@@ -241,7 +241,8 @@
         }
       ],
       "sameAs": [
-        "sections/terminal-block#TerminalBlock"
+        "sections/terminal-block#TerminalBlock",
+        "sections/traffic-lights#TrafficLights"
       ]
     },
     {
@@ -702,6 +703,9 @@
           "instead": "StatChip",
           "why": "A pill beside a heading. `StatChip` (a fact) or `MetaChip` (a promise) own that slot at `rounded-full` 12px; `WindowStatus` owns the window title bar's right-hand slot."
         }
+      ],
+      "sameAs": [
+        "sections/stat-chip#StatChip"
       ]
     },
     {
@@ -1059,6 +1063,9 @@
           "instead": "AppPanel",
           "why": "A panel INSIDE a drawn artifact. An artifact's own chrome is `AppPanel` within `ArtifactShell`; this component is what the artifact sits in, not what it is made of. Nesting one in the other puts a 600px marketing band inside a depiction."
         }
+      ],
+      "sameAs": [
+        "sections/glyph-badge#GlyphBadge"
       ]
     },
     {
@@ -2255,6 +2262,9 @@
           "instead": "PlanCard",
           "why": "Options that each need a price, a feature list and a CTA. That is PlanCard."
         }
+      ],
+      "sameAs": [
+        "sections/surface-cards#SurfaceCards"
       ]
     },
     {

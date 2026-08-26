@@ -9,7 +9,7 @@
  *   node scripts/build-inventory.mjs
  */
 import { readdirSync, readFileSync, writeFileSync, mkdirSync } from 'node:fs'
-import { resolve, dirname, basename } from 'node:path'
+import { resolve, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
@@ -141,9 +141,17 @@ const USAGE = Object.fromEntries(
 
 const modules = []
 for (const { dir, layer, importBase } of LAYERS) {
-  for (const file of readdirSync(resolve(ROOT, dir)).filter((f) => f.endsWith('.tsx')).sort()) {
+  // `.ts` as well as `.tsx`, matching scripts/build-context.mjs. A module with
+  // no JSX is still a module: `patterns/pill-nav-frosted` is two constants, the
+  // frosted wash and the position classes. Filtering on `.tsx` alone dropped it
+  // from this file while machine/context.yaml carried it — 88 modules here
+  // against 89 there — so the page whose whole premise is that it lists
+  // everything was one short, and silently, which is the failure the header of
+  // this file says it exists to prevent.
+  for (const file of readdirSync(resolve(ROOT, dir)).sort()) {
+    if (!file.endsWith('.tsx') && !file.endsWith('.ts')) continue
     const src = readFileSync(resolve(ROOT, dir, file), 'utf8')
-    const name = basename(file, '.tsx')
+    const name = file.replace(/\.tsx?$/, '')
     modules.push({
       module: name,
       layer,
