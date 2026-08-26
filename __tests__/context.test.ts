@@ -108,6 +108,28 @@ describe('referential integrity', () => {
     expect(bad).toEqual([])
   })
 
+  it('sameAs is symmetric — a twin that does not name you back is half a warning', () => {
+    // sameAs is the near-duplicate declaration: these two overlap enough that
+    // someone will reach for the wrong one. That only helps the reader who
+    // happens to open the side that declared it. The pair `stat-chip -> chip`
+    // was exactly this — the unfinished half of the chip decision in
+    // docs/sections.md §2, invisible to anyone starting from `chip`.
+    //
+    // Module-level, not symbol-level: the named exports may legitimately differ
+    // in each direction (glyph-badge points at FeatureIcon, feature-row points
+    // back at GlyphBadge). What must be mutual is the acknowledgement.
+    const twins = new Map(
+      authored.map((a) => [a.module, new Set((a.sameAs ?? []).map((t) => t.split('#')[0]))]),
+    )
+    const oneWay: string[] = []
+    for (const [module, targets] of twins) {
+      for (const target of targets) {
+        if (!twins.get(target)?.has(module)) oneWay.push(`${module} -> ${target}`)
+      }
+    }
+    expect(oneWay, 'sameAs declared in one direction only').toEqual([])
+  })
+
   it('every alsoFor and watchFor cites a prop, default or export that exists', () => {
     // The anti-invention gate. `via` must name something in the derived block:
     // a prop, a default, an export. A claim that cannot cite one is a claim

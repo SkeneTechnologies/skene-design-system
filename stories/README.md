@@ -30,8 +30,9 @@ That resolves to `dist/`, which means:
 
 ## Coverage is a ratchet, not a gate
 
-`npm run stories:check` (part of `npm run verify`). **74 of 74 modules have
-stories; `BACKLOG.json` is empty.**
+`npm run stories:check` (part of `npm run verify`). **81 of 81 modules have
+stories; `BACKLOG.json` is empty.** (81, not 89: `src/patterns` is deliberately
+untracked — see `TRACKED` in the script.)
 
 - A component **not** in the backlog must have a story. New components cannot
   land without one.
@@ -48,7 +49,7 @@ the story never gets written, or the check gets disabled. See the header of
 ## Stories are rendered, not just built
 
 `npm run stories:render` (needs `npm run storybook:build` and a running
-Storybook) loads all 318 stories and fails on anything that throws, logs a
+Storybook) loads all 379 stories and fails on anything that throws, logs a
 console error, or renders empty.
 
 `storybook build` compiles stories; it does not run them. The gap is real: this
@@ -85,6 +86,15 @@ change to them is a question someone has to answer.
   pixel harness reported the primary below floor at three different readings
   when it is 9.11:1 — each one a ground the glyph does not sit on. See the
   file header for which reading maps to which ground.
+
+## The counts above are checked
+
+`74 of 74` and `318 stories` were both true when they were written and neither
+survived the seven modules and sixty-one stories that landed after. A number typed into prose is a
+claim with no gate behind it, which is the same failure this directory's ratchet
+exists to prevent one level down. `__tests__/docs-counts.test.ts` now reads the
+three figures out of this file and out of `docs/sections.md` and compares them to
+the source, so the next drift fails `npm test` instead of being read as fact.
 
 ## Theme
 

@@ -1054,6 +1054,32 @@
       }
     },
     {
+      "module": "pill-nav-frosted",
+      "layer": "patterns",
+      "import": "@skene/design-system/patterns/pill-nav-frosted",
+      "exports": [
+        "PILL_NAV_FROSTED_STYLE",
+        "PILL_NAV_POSITION"
+      ],
+      "summary": "",
+      "client": false,
+      "lines": 13,
+      "cases": [],
+      "demo": null,
+      "usage": {
+        "module": "pill-nav-frosted",
+        "purpose": "The two constants PillNav and its drawer share: the frosted wash that keeps links legible over arbitrary photography, and the absolute and sticky position classes.",
+        "alsoFor": [
+          "The same frosted wash on chrome that sits beside the nav and has to match it, rather than each surface re-deriving the colour-mix.",
+          "Reading the position contract without importing the component, for a layout that has to reserve or overlay the same space."
+        ],
+        "watchFor": [],
+        "notFor": [
+          "Restyling the nav. A bar that needs a different wash is a different component, and copying these values into an app to tweak them is the primitive-copy rule."
+        ]
+      }
+    },
+    {
       "module": "pill-nav-mobile-menu",
       "layer": "patterns",
       "import": "@skene/design-system/patterns/pill-nav-mobile-menu",
@@ -2667,7 +2693,7 @@
       ],
       "summary": "The two small labels that recur beside headings: a fact, and a promise.",
       "client": false,
-      "lines": 118,
+      "lines": 151,
       "cases": [
         "section-stat-chip"
       ],
@@ -2966,19 +2992,23 @@
         "StatChip",
         "MetaChip",
         "WindowStatus",
-        "WindowChip"
+        "WindowChip",
+        "TagChip",
+        "CheckChip"
       ],
-      "verdict": "Duplicate extracted: Chip, used by PlanCard’s tier marker and by WindowStatus. Badge and Eyebrow stay — different jobs. StatChip/MetaChip geometry still open.",
-      "detail": "Seven shapes, five radii, three sizes. PlanCard’s tier chip and WindowStatus were almost the same spec reached independently — rounded-[5px], font-mono, 10px, uppercase, px-[7px] py-1 — and disagreed on tracking alone, 0.05em against 0.08em. That is the tell that the cluster was unmanaged: it drifted in the column nobody was tabulating. Applied 2026-08-12 as sections/chip.tsx. The tracking difference is carried, not flattened — Chip holds 0.08em and WindowStatus overrides to 0.05em — because both values shipped and were verified in the browser, and picking a winner is a visual decision rather than a refactor.",
+      "verdict": "Nine shapes, not the seven this decision carried for a fortnight. Chip extracted (PlanCard tier + WindowStatus). Badge/Eyebrow stay apart, now gated. StatChip/MetaChip keep the pill: a token gets the rectangle, prose gets the pill. TagChip vs CheckChip is the one still open — decided, not applied, because it moves pixels.",
+      "detail": "PlanCard’s inline tier chip and WindowStatus were almost the same spec reached independently — rounded-[5px], font-mono, 10px, uppercase, px-[7px] py-1 — and disagreed on tracking alone, 0.05em against 0.08em. Earlier revisions of the table had no tracking column and recorded them as identical: an unmanaged cluster drifts in the column nobody is looking at. Applied 2026-08-12 as sections/chip.tsx, the tracking difference carried rather than flattened because both values shipped and were verified in a browser. The same failure then repeated one level up — the table caught a drift in a column it had, and could not catch a row it did not have, so TagChip and CheckChip were the same 11px mono tag written twice with the duplicate recorded only in evaluator-check.tsx’s own header. The table is a test now: __tests__/chip-cluster.test.ts pins every row against source and fails when a tenth shape lands unrecorded.",
       "evidence": [
-        "Badge          rounded-sm      —",
-        "Eyebrow        rounded-sm      —     mono upper",
-        "StatChip       rounded-full  12px",
-        "MetaChip       rounded-full  12px",
-        "Chip           rounded-[5px] 10px    mono upper   0.08em",
-        "WindowStatus   = Chip, tracking overridden to     0.05em",
+        "Badge          rounded-sm    text-xs",
+        "Eyebrow        rounded-sm    --font-size-pill  mono upper  --font-tracking-eyebrow",
+        "StatChip       rounded-full  12px                          prose: a fact",
+        "MetaChip       rounded-full  12px              part        prose: a promise",
+        "Chip           rounded-[5px] 10px              mono upper  0.08em",
+        "WindowStatus   = Chip, tracking overridden to              0.05em",
         "PlanCard tier  = Chip, neutral tone",
-        "WindowChip     rounded-md    11px    mono upper"
+        "WindowChip     rounded-md    11px              mono upper",
+        "TagChip        rounded-sm    11px              mono        an identifier, verbatim",
+        "CheckChip      rounded-sm    11px              mono        THE SAME — alias it to TagChip"
       ]
     },
     {
@@ -3107,12 +3137,12 @@
     "cases": 89
   },
   "counts": {
-    "modules": 88,
-    "exports": 264,
+    "modules": 89,
+    "exports": 266,
     "ui": 30,
-    "patterns": 7,
+    "patterns": 8,
     "sections": 51,
-    "noVisual": 9,
-    "withUsage": 88
+    "noVisual": 10,
+    "withUsage": 89
   }
 }

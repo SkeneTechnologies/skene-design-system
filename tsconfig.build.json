@@ -8,7 +8,19 @@
     "declarationMap": true,
     "allowImportingTsExtensions": false,
     "types": [],
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    // `npm run verify` ends in `npm run build`, so a full `tsc` ran on every
+    // pass: 4.7s of the 10.3s, re-checking 89 unchanged modules to re-emit
+    // bytes identical to the ones already on disk. Incremental makes the repeat
+    // 1.4s and the whole verify 7.0s. Output is unaffected — `dist` is
+    // byte-identical either way, which is the only thing that would matter.
+    //
+    // The state file is local and disposable: `*.tsbuildinfo` was already in
+    // .gitignore before anything wrote one. A cold CI run rebuilds from
+    // scratch and pays the original 4.7s, which is correct — there is nothing
+    // to be incremental against.
+    "incremental": true,
+    "tsBuildInfoFile": "./.tsbuildinfo"
   },
   "include": [
     "src"

@@ -37,7 +37,7 @@ custom properties, 127 in agreement and 12 in genuine conflict.
 Consumed as a git dependency, so there is no npm registry and no npm token:
 
 ```jsonc
-"@skene/design-system": "git+https://github.com/SkeneTechnologies/skene-design-system.git#semver:^0.11.0"
+"@skene/design-system": "git+https://github.com/SkeneTechnologies/skene-design-system.git#semver:^0.12.0"
 ```
 
 npm resolves `semver:` against git **tags**, and `package-lock.json` pins the
@@ -68,12 +68,14 @@ git push origin main && git push origin v<version>
 
 Verified by installing this package from a clean directory with only the git
 dependency in `package.json`: the range above resolves to the highest matching
-tag and pins the commit. At `^0.11.0` the range resolves `v0.11.0`, the tag the
+tag and pins the commit. At `^0.12.0` the range resolves `v0.12.0`, the tag the
 release that bumped package.json to it also pushed.
-(This sentence read `v0.3.0` for six releases, then `v0.10.0` for another —
-the same drift the note above warns about, in the paragraph that warns about
-it. Treat it as something a release updates, per that note, not something
-anyone remembers by hand.)
+(This sentence read `v0.3.0` for six releases, then `v0.10.0` for another, then
+`v0.11.0` through the 0.12.0 release — the same drift the note above warns
+about, in the paragraph that warns about it, now three times over. Treat it as
+something a release updates, per that note, not something anyone remembers by
+hand. `__tests__/package-contract.test.ts` fails while it is stale, which is
+how this one was found rather than read.)
 
 ### CI needs nothing. That is a recent fact, and it is worth knowing why.
 
