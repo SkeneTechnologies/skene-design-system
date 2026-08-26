@@ -497,3 +497,60 @@ describe('the agent contract is discoverable', () => {
     expect(read('machine/components.yaml')).toMatch(/^context: machine\/context\.yaml$/m)
   })
 })
+
+describe('every dependency is one this package actually uses', () => {
+  /**
+   * A `dependency` is not a note about what the repo once tried. It is a
+   * download, on every install, in every consumer's CI, forever.
+   *
+   * Three had stopped being used and nothing said so. `@radix-ui/react-label`
+   * went dead when `ui/label.tsx` became a plain `<label>` — the primitive it
+   * was installed for is gone from the file that named it. `@radix-ui/react-
+   * separator` never had an importer: every separator in the package comes from
+   * breadcrumb's own markup, from `@radix-ui/react-dropdown-menu`, or from cmdk.
+   * And `@types/styled-components@5` sat beside `styled-components@6`, which
+   * ships its own types — not merely redundant, since a stale major of a
+   * `@types` package can shadow the real ones.
+   *
+   * None of that fails a build. That is exactly why it needs a test: an unused
+   * dependency has no symptom, so it is found by looking or not at all.
+   */
+  const source = readdirSync(resolve(ROOT, 'src'), { recursive: true } as never)
+    .filter((f) => /\.tsx?$/.test(String(f)))
+    .map((f) => read(`src/${String(f)}`))
+    .join('\n')
+  const specifiers = new Set(
+    [...source.matchAll(/from\s+['"]([^'"]+)['"]/g)].map((m) => m[1]),
+  )
+  /** Some deps are consumed by the consumer's CSS build, never by our TS. */
+  const css = readdirSync(resolve(ROOT, 'styles'))
+    .map((f) => read(`styles/${f}`))
+    .join('\n')
+
+  const used = (name: string) =>
+    [...specifiers].some((s) => s === name || s.startsWith(`${name}/`)) || css.includes(name)
+
+  it.each(Object.keys(pkg.dependencies))('%s is imported somewhere', (name) => {
+    expect(
+      used(name),
+      `nothing in src/ imports ${name} and no stylesheet names it. Remove it, or if a consumer ` +
+        `needs it at build time the way tailwindcss-animate does, reference it from styles/.`,
+    ).toBe(true)
+  })
+
+  it('the type packages match the libraries they type', () => {
+    // @types/styled-components@5 against styled-components@6 was shipped for a
+    // release. A major-version disagreement here is the readable form of it.
+    for (const [name, range] of Object.entries(pkg.devDependencies as Record<string, string>)) {
+      if (!name.startsWith('@types/')) continue
+      const target = name.slice('@types/'.length).replace('__', '/')
+      const declared = pkg.dependencies[target] ?? pkg.devDependencies[target]
+      if (!declared) continue
+      const major = (r: string) => r.replace(/^[^\d]*/, '').split('.')[0]
+      expect(
+        major(range),
+        `${name}@${range} types ${target}@${declared} — different majors`,
+      ).toBe(major(declared))
+    }
+  })
+})
