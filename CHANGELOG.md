@@ -1,5 +1,88 @@
 # @skene/design-system
 
+## 0.12.0
+
+### Minor Changes
+
+- ee7210e: Fourteen assets ported from skene-marketing-website, growing `assets/` from 12
+  to 26 files: `hero-dither.png` (kept as PNG — a lossless WebP re-encode came
+  out larger and lossy destroys the dots), the `agent-1/2/3.svg` illustration
+  set, the brand videos `skene-hero.mp4` and `skene-demo.mp4` for
+  `DitheredMedia`'s `video` prop, and eight third-party integration marks under
+  `assets/integrations/` (bolt, cursor, github, resend, supabase, terminal, v0,
+  windsurf), closing the README's "integration marks are not here yet" gap.
+
+  `assetUrls` gains `heroDither`, `agentOne`/`agentTwo`/`agentThree`,
+  `heroVideo`, and `demoVideo`. A new `integrationMarkUrls` map (with
+  `IntegrationMarkName`) keeps the third-party brands in their own namespace:
+  render at delivered proportions, never recolour.
+
+  `assets/README.md`'s exclusion table is rewritten around what still stays out
+  — product screenshots and blog images (content), press logos and event photos
+  (site-specific), and files unreferenced even on the live site.
+
+- 5c062af: `JourneySignalScene` — evidence, a traced journey step, and the PR review that
+  catches it breaking, in one animated composition.
+
+  Ported in from skene-marketing-website rather than authored fresh: it predates
+  the package's Tailwind port, was once rebuilt on this package's own primitives
+  (`MiniFunnel`, `AppPanel`, `DiffColumn`, `PrReview`), and the founder rejected
+  that version on sight and restored the styled-components original. It keeps
+  that original, documented as a deliberate exception to
+  `styled_components_for_new_features` in the file's own leading comment and in
+  `documentation/20260825_journey_signal_scene_design.md`.
+
+  `gsap` and `styled-components` become package dependencies (`@types/styled-components`
+  dev-only). Nothing else in the package uses either — the import is an island.
+
+  No props: content lives in named consts near the top of the source file. Three
+  responsive layouts switch on the container's own measured width, from a
+  three-panel row down to a hero-column-width layout down to a stacked phone
+  layout, all covered by the new Storybook stories.
+
+- 9d19f41: The remaining upstream ledger from the marketing build pass, closed in one
+  branch. Everything additive; no existing call site changes rendering.
+
+  - `Chip` gains `tone="warn"`, the amber companion to 0.11.0's `danger`. The
+    homepage and features page were both retinting `tone="neutral"` through a
+    shared `WARN_CHIP` className — base amber ink on a 15% tint, the on-tint miss
+    `danger`'s note documents. The new tone is the corrected recipe: amber
+    on-tint ink over a 12% fill, per `src/lib/status.ts`. New `Warn` story; the
+    `AllTones`/`OnLight` matrices now render six tones.
+
+  - `EvaluatorPanel` gains `split?: boolean` and `activeIndex?: number` — the
+    marketing wireframes' two-pane cut: the index in a dark left pane (the
+    package's own `dark` subtree switch, nested inside the window's forced
+    `light` the way the product nests its sidebar) with the open row picked out,
+    the requirements in the cream right pane. The index renders name and
+    confirmed count per row in this mode; the four-column table stays the
+    stacked layout's. Stacks below `md`. New `Split` story; the default stacked
+    rendering is untouched.
+
+  - `scripts/build-context.mjs` and `scripts/build-inventory.mjs` no longer
+    truncate SCREAMING_SNAKE export names at the first underscore.
+    `machine/context.yaml` and `docs-app/app/decisions/inventory.json` now list
+    `PILL_NAV_FROSTED_STYLE` and `PILL_NAV_POSITION` (the second had vanished
+    entirely — both truncated to `PILL` and the Set deduped them),
+    `INTEGRATION_ANIMATION_CARDS`, and `PROSE_CODE`.
+
+  - Stories for the seven storyless patterns: dither, hero-backdrop, marketing,
+    pill-nav, pill-nav-frosted, skene-mark, terminal. Every module in the
+    package now has a story file.
+
+  - README and `styles/index.css` document the Turbopack `@source` gap: the
+    bundler never scans the package stylesheet's own `@source`, so utilities
+    only the package uses were absent and `LogoRow` rendered zero-height until
+    the consuming app added
+    `@source "../../node_modules/@skene/design-system/dist";` itself. The exact
+    line, and why it is safe to add unconditionally, are now in both places.
+
+  - docs-app no longer quotes `skene audit`, a subcommand that does not exist:
+    the three remaining spots (two SurfaceDetail cases, the terminal-block case)
+    now carry the OSS CLI's real invocation, `uvx skene analyse-journey .`, and
+    the terminal case's note states what the command actually reads and writes.
+    Visual baselines rebaselined for the copy-bearing screens.
+
 ## 0.11.0
 
 ### Minor Changes
