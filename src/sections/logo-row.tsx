@@ -45,6 +45,21 @@ import { cn } from '../lib/utils.js'
  *
  * All content is props: no heading, no stat, no caption lives in here.
  * No `use client` — everything is props in, markup out.
+ *
+ * ## Spacing: written as literal px, and it took a shipped defect to learn why
+ *
+ * Read the header of `artifact-shell.tsx`. The package sets
+ * `--spacing: 0.2rem`, so every numeric Tailwind step is 80% of the
+ * `--spacing-N` custom property with the same number. This module was written
+ * on the numeric scale and therefore rendered at 80% of the size its own
+ * comments claim: `min-h-14` measured 44.8px against the wireframe's 56,
+ * `gap-3.5` measured 11.2px against 14, and `mb-6` / `mt-3.5` were off by the
+ * same fifth. Measured live on skene-marketing-website's /pricing, 2026-08-27.
+ *
+ * Every spacing value below is now the literal px the wireframe draws
+ * (`_shared/base.css` `.logo-row` / `.logo-slot` / `.proof__caption`), so it
+ * diffs against that file line for line. `min-h-[56px]` is not a candidate for
+ * tidying into `min-h-14`; that IS the defect.
  */
 
 export interface LogoSlotProps {
@@ -73,8 +88,12 @@ export function LogoSlot({ children, label, className }: LogoSlotProps) {
       // 56px height is kept as the minimum rather than a fixed height so a
       // real logo with padding cannot overflow the box that was sized for
       // nothing.
+      //
+      // `min-h-[56px]`, not `min-h-14`. See the spacing note in the file
+      // header: this module shipped at 80% of the size its own comment claims
+      // because `--spacing: 0.2rem` makes step 14 measure 44.8px.
       className={cn(
-        'grid min-h-14 place-items-center rounded-[var(--radius-md)] border border-border bg-muted',
+        'grid min-h-[56px] place-items-center rounded-[var(--radius-md)] border border-border bg-muted',
         className,
       )}
     >
@@ -139,7 +158,7 @@ export function LogoRow({
   return (
     <section className={cn('mx-auto w-full', className)}>
       {title ? (
-        <div className="mx-auto mb-6 max-w-[640px] text-center">
+        <div className="mx-auto mb-[24px] max-w-[640px] text-center">
           <h2 className="text-[clamp(1.4rem,2.2vw,1.8rem)] font-medium tracking-[-0.01em] text-text-primary">
             {title}
           </h2>
@@ -149,14 +168,14 @@ export function LogoRow({
       {stat ? (
         // The figures are the caller's <strong>s; the base ink is muted so
         // they read as the emphasis without this component styling them.
-        <p className="mx-auto mb-6 max-w-[560px] text-center text-[14px] leading-relaxed text-text-muted-strong [&_strong]:font-medium [&_strong]:text-text-primary">
+        <p className="mx-auto mb-[24px] max-w-[560px] text-center text-[14px] leading-relaxed text-text-muted-strong [&_strong]:font-medium [&_strong]:text-text-primary">
           {stat}
         </p>
       ) : null}
 
       <div
         aria-hidden={decorative || undefined}
-        className="mx-auto grid max-w-[900px] grid-cols-2 gap-3.5 sm:grid-cols-[repeat(var(--logo-row-count),1fr)]"
+        className="mx-auto grid max-w-[900px] grid-cols-2 gap-[14px] sm:grid-cols-[repeat(var(--logo-row-count),1fr)]"
         style={{ '--logo-row-count': count } as React.CSSProperties}
       >
         {children}
@@ -166,7 +185,7 @@ export function LogoRow({
       </div>
 
       {caption ? (
-        <p className="mx-auto mt-3.5 max-w-[480px] text-center text-[12.5px] leading-[1.6] text-text-muted">
+        <p className="mx-auto mt-[14px] max-w-[480px] text-center text-[12.5px] leading-[1.6] text-text-muted">
           {caption}
         </p>
       ) : null}
