@@ -116,8 +116,40 @@ comparison — including the one named `/vs/`, which argues with findings instea
 **Before adding a comparison band, decide whether the argument is a table or a
 finding.**
 
+## Band spacing: read `layouts.yaml` `marketing`, not `shipped_here`
+
+`machine/layouts.yaml` holds two surfaces. The first thing an agent hits under
+`shipped_here` is `page_gutters`, `gap-4 px-4 py-6 sm:px-6 lg:px-8`, marked
+`utilities_resolve_here: true` and described as the shipped contract. **It is
+the dashboard page shell.** "Works anywhere" is a claim about whether the
+utilities resolve, not about whether the numbers are right for your surface.
+
+This package sets `--spacing: 0.2rem`, so a numeric Tailwind step is 80% of the
+`--spacing-N` token with the same number. Measured, not inferred:
+
+| | `page_gutters` | a marketing band |
+|---|---|---|
+| band vertical padding | `py-6` → **19.2px** | `py-[96px] md:py-[128px]` |
+| split gap | `gap-4` → **12.8px** | `gap-[32px] lg:gap-[64px]` |
+
+Five times and two-to-five times apart. Compose a marketing page on
+`page_gutters` and every band collapses to a dashboard row.
+
+**Take band geometry from section 5, `marketing` (`status: composed_here`).**
+It carries the rhythm, the 5fr/7fr split, `ACTION_GAP`, the cream inset and the
+ground-alternation rule, all measured off pages that ship. Nothing in this
+package enforces any of it — it is the shape to land in, not an API — and it is
+also why the literal px above are literal: `py-24` is 76.8px here, and tidying a
+bracket value back onto the numeric scale IS the defect, not a cleanup. Four
+modules have now been bitten by it; see `spacing_scale.warning` in the same
+file.
+
 ## Where to go next
 
 - Choosing or calling one module → the `skene-design-system` skill.
 - Installing or configuring the package → `skene-design-system-setup`.
-- Section order within one band, spacing and widths → `machine/layouts.yaml`.
+- Marketing band geometry, ground and split → `machine/layouts.yaml`,
+  **section 5 `marketing`**. Read the section above first.
+- Dashboard page shell, workspace templates, T-codes → the same file's
+  `shipped_here`, `depicts_here` and `dashboard_only` blocks. Not a marketing
+  band.
