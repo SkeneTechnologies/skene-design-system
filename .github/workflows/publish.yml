@@ -101,13 +101,26 @@ jobs:
       # There is also a clock on it: npm has said 2FA-bypass tokens lose the
       # ability to publish directly around January 2027, leaving them able only
       # to stage a publish for human approval. Migrating is not optional.
+      #
+      # ADVISORY, not a gate. v0.13.0's second attempt failed HERE, on a token
+      # that may well have been able to publish: `whoami` reads `/-/whoami`,
+      # which a Granular Access Token scoped to packages alone is not entitled
+      # to, so it answers 401 for a token whose publish rights are fine. A check
+      # that cannot tell that apart from a revoked token must not decide whether
+      # a release happens — it was blocking releases to save a few minutes of
+      # CI, and the minutes are the cheaper thing.
+      #
+      # Failing late is safe here, which is what makes advisory the right call:
+      # npm rejects bad credentials BEFORE accepting a tarball, so a publish
+      # that fails on auth costs a run, never the version number. EOTP on the
+      # first attempt demonstrated exactly that.
       - name: Check the npm credential
         run: |
-          who=$(npm whoami --registry https://registry.npmjs.org) || {
-            echo "::error::NPM_TOKEN is missing, expired or revoked — npm whoami failed."
-            exit 1
-          }
-          echo "authenticated as $who"
+          if who=$(npm whoami --registry https://registry.npmjs.org 2>&1); then
+            echo "authenticated as $who"
+          else
+            echo "::warning::npm whoami failed ($who). That is expected for a Granular Access Token without user-read scope, and also what a revoked token looks like — the publish below decides which. It cannot spend the version number either way."
+          fi
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
