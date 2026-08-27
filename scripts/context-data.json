@@ -1,9 +1,36 @@
 {
   "$comment": "Authored half of machine/context.yaml. The derived half comes from the source files; see scripts/build-context.mjs. Every alsoFor/watchFor entry must carry a via naming a prop, default or export that appears in the derived block — __tests__/context.test.ts enforces it, and a claim that cannot cite one was guessed.",
+  "$intentComment": "Controlled vocabulary for the intent index. An agent building a page asks the inverse of what useFor answers — \"I need a band that contrasts two options, what do I have?\" — and with 89 modules that question has no cheap answer. Tags are drawn ONLY from this list: a free tag list indexes nothing. Keys are the tag, values a one-line definition. Adding a tag means adding it here first; __tests__/context.test.ts rejects an undeclared tag and a declared tag no module uses.",
+  "intents": {
+    "open-a-page": "The band that starts a page: hero strip, full-bleed media composition, the display heading over the fold.",
+    "navigate": "Moving the reader somewhere else — top nav, footer links, breadcrumbs, menus, tabbed views, a command palette.",
+    "brand-the-surface": "Putting Skene itself on the page: the mark, the wordmark, the lockup that says whose surface this is.",
+    "compare-options": "Setting two or more choices against each other so one of them wins — tiers, approaches, before/after, this-not-that.",
+    "explain-a-process": "Ordered stages and what happens between them — steps, funnels, lifecycles, a journey with a shape.",
+    "show-status": "The state a thing is in right now: ok/warn/broken, live/pending, running/done, loading.",
+    "show-a-metric": "A number and what it is made of — a headline figure, a score, a rate, a delta, a bar.",
+    "prove-a-claim": "Evidence beside an assertion — checkable facts, logos, a ruled proof list, a verdict with its reasoning.",
+    "display-code": "Literal machine text the reader is meant to read or copy — shell lines, config, diffs, an identifier inside a sentence.",
+    "frame-a-mock": "The chrome around a product artifact so it reads as a tool: window borders, title bars, the field it floats on.",
+    "collect-input": "Taking something from the reader — a field, a control, a toggle, a form row, a prompt box.",
+    "answer-a-question": "Copy shaped as a question and its answer, whether it is asked of the reader or by them.",
+    "group-related-items": "A container or grid holding N peers of the same kind, where the set is the point.",
+    "tabulate-data": "Rows and columns of real data — keys and values, findings, records, a comparison matrix.",
+    "mark-a-label": "A small piece of type that classifies what it sits beside: chip, badge, eyebrow, glyph disc, inline code.",
+    "texture-a-surface": "Painting the Skene ground under other content — halftone, dither, the site textures, a frosted wash.",
+    "reveal-on-demand": "Content that is present but hidden until the reader asks: disclosure, popover, drawer, tooltip, tabbed panel.",
+    "interrupt-the-reader": "Something that takes over or demands an answer before the reader continues — modal, confirm, toast.",
+    "drive-an-action": "The thing the reader is supposed to do next — a button, a closing CTA band, a copyable install line, a proposal.",
+    "pitch-a-capability": "A whole marketing band arguing that Skene does something: promise, proof and a visual beside it."
+  },
   "modules": [
     {
       "module": "patterns/dither",
       "useFor": "The Skene surface treatment: a halftone texture blended over photographic or video media, and the full hero composition built from it. DitherOverlay is the raw layer; DitheredMedia is media, dither, scrim, gradient and content in one.",
+      "intent": [
+        "open-a-page",
+        "texture-a-surface"
+      ],
       "alsoFor": [
         {
           "claim": "Any full-bleed media band, not only a hero — the `video` and `image` props are both optional and the composition renders with either.",
@@ -45,6 +72,10 @@
     {
       "module": "patterns/hero-backdrop",
       "useFor": "A dark hero strip: a background image at low opacity, a gradient fading to the page ground, and content above it.",
+      "intent": [
+        "open-a-page",
+        "texture-a-surface"
+      ],
       "alsoFor": [
         {
           "claim": "Any short banner that needs to sit on the page rather than end abruptly — a subpage header, a section lead-in.",
@@ -78,6 +109,11 @@
     {
       "module": "patterns/marketing",
       "useFor": "The page furniture the marketing surface repeats: the nav bar over the hero, the display heading and its peach accent, the eyebrow kicker, the numbered step, and the split auth layout.",
+      "intent": [
+        "open-a-page",
+        "mark-a-label",
+        "explain-a-process"
+      ],
       "alsoFor": [
         {
           "claim": "Eyebrow above any band, not only a section: it owns font.tracking.eyebrow, which is the token that makes a kicker read as a label.",
@@ -116,6 +152,10 @@
     {
       "module": "patterns/pill-nav",
       "useFor": "The marketing site's top navigation: a frosted pill floating over hero media, with a full-screen drawer below md so a phone gets the links rather than the CTA alone.",
+      "intent": [
+        "navigate",
+        "brand-the-surface"
+      ],
       "alsoFor": [
         {
           "claim": "Sticky chrome on a page with no hero to overlay, where the bar should stay visible as the page scrolls.",
@@ -140,6 +180,10 @@
     {
       "module": "patterns/pill-nav-frosted",
       "useFor": "The two constants PillNav and its drawer share: the frosted wash that keeps links legible over arbitrary photography, and the absolute and sticky position classes.",
+      "intent": [
+        "navigate",
+        "texture-a-surface"
+      ],
       "notFor": [
         {
           "instead": "PillNav",
@@ -160,6 +204,10 @@
     {
       "module": "patterns/pill-nav-mobile-menu",
       "useFor": "The drawer layers behind PillNav's mobile navigation: the Menu and Close toggle, the backdrop, and the bordered link list with the actions repeated in its footer.",
+      "intent": [
+        "navigate",
+        "reveal-on-demand"
+      ],
       "notFor": [
         {
           "instead": "PillNav",
@@ -184,6 +232,9 @@
     {
       "module": "patterns/skene-mark",
       "useFor": "The brand artwork as elements: the square symbol, and the horizontal lockup with the wordmark.",
+      "intent": [
+        "brand-the-surface"
+      ],
       "alsoFor": [
         {
           "claim": "Anywhere the product speaks for itself — an avatar, a card that says SKENE, a nav lockup. AgentCallout already defaults its avatar to it.",
@@ -214,6 +265,10 @@
     {
       "module": "patterns/terminal",
       "useFor": "A terminal frame: traffic lights, a title, and monospace lines with an optional prompt.",
+      "intent": [
+        "display-code",
+        "frame-a-mock"
+      ],
       "alsoFor": [
         {
           "claim": "Any CLI transcript, install snippet or log excerpt on a marketing page.",
@@ -248,6 +303,9 @@
     {
       "module": "sections/agent-callout",
       "useFor": "The verdict block: an avatar, a claim in bold, and the evidence under it, in a peach-bordered frame on its own tinted ground. It is the moment Skene speaks on the page.",
+      "intent": [
+        "prove-a-claim"
+      ],
       "alsoFor": [
         {
           "claim": "Any attributed statement — a customer quote, a reviewer's note, an assistant's summary. Nothing in it is Skene-specific except the default avatar.",
@@ -282,6 +340,10 @@
     {
       "module": "sections/annotated-curve",
       "useFor": "A narrative plotting frame: a Catmull-Rom spline drawn through hand-authored 0-100 percentage points, with HTML callout boxes pinned to the points that carry labels. The split is the whole design — the SVG is `aria-hidden` decoration and the callouts are an ordered list of real HTML, so the copy wraps, selects, finds, and is read in array order. It is for making an argument that has a *shape* (a rise, a dip, a recovery) where the copy is the payload and the curve is the frame the copy hangs on, not for showing measured values.",
+      "intent": [
+        "prove-a-claim",
+        "explain-a-process"
+      ],
       "alsoFor": [
         {
           "claim": "Falling, dipping, or S-shaped stories, not just the rising one. `y` runs from the top (0 = top), so any progression is just a different y sequence, and `stroke` picks from a 5-token union (`brand-peach`, `brand-peach-deep`, `accent-violet`, `accent-blue`, `semantic-matcha`) — a decline in `semantic-error-red` is the one thing NOT available, since red is not in `CurveStrokeToken`.",
@@ -336,6 +398,9 @@
     {
       "module": "sections/artifact-shell",
       "useFor": "The shell every drawn Skene Cloud artifact is built from: the textured field, the light app window, its panels, the status pill and the data table.",
+      "intent": [
+        "frame-a-mock"
+      ],
       "alsoFor": [
         {
           "claim": "Any product screenshot you would rather draw than capture — the real screen carries a customer's repository name and counts, and a drawing does not.",
@@ -381,6 +446,10 @@
     {
       "module": "sections/ask-widget",
       "useFor": "The \"ask us anything\" prompt block: an attributed question rendered as the loud heading, a quiet borderless textarea that the heading labels via `aria-labelledby`, an AI-disclosure badge, and a small submit sized to its label in the bottom-right. It is the package's one genuinely interactive section — a controlled textarea plus a submit handler — and it lives in its own module specifically so `'use client'` does not spread to server-renderable siblings. The restraint is the design: it is a low-commitment probe, so a full-bleed primary button and a boxed input would make it read as a form rather than as a question.",
+      "intent": [
+        "collect-input",
+        "answer-a-question"
+      ],
       "alsoFor": [
         {
           "claim": "Any single free-text capture on a dark page — a waitlist \"what are you trying to fix?\", a feedback prompt, a qualification question. `question`, `lede`, `placeholder` and `submitLabel` are all props and nothing in the file is Skene-specific.",
@@ -435,6 +504,10 @@
     {
       "module": "sections/billing-toggle",
       "useFor": "The monthly/yearly switch, and the only `'use client'` file in the pricing section. It exists as its own module for a structural reason rather than a visual one: putting the directive in `plan-card.tsx` would drag the whole pure-markup card across the client boundary, so the interactivity was quarantined here (sections.md rule 4). It is fully controlled — `yearly` in, `onChange` out — and makes both word labels clickable, not just the 40px track, because the words are the obvious target.",
+      "intent": [
+        "collect-input",
+        "compare-options"
+      ],
       "alsoFor": [
         {
           "claim": "Any two-word binary switch — the pricing wording lives entirely in props. `monthlyLabel`/`yearlyLabel` are `ReactNode`, so \"USD / EUR\", \"Self-serve / Enterprise\", \"Cloud / Self-hosted\" all work with no code change.",
@@ -489,6 +562,9 @@
     {
       "module": "sections/bridge",
       "useFor": "A whole cream band (a `<section>`, not a card) that lays N `BridgeNode` cards in a row, interleaves arrows between them, and inverts one of them to dark and lifts it. It exists to argue POSITION — that the featured thing sits between the others — and the tone difference is the argument, not styling: three cards in one tone read as three peers and the band says nothing. Structurally it is also the package's one doubly-nested inversion (`light` band, `dark` card inside it), so it doubles as the worked example of how the two subtree switches nest.",
+      "intent": [
+        "compare-options"
+      ],
       "alsoFor": [
         {
           "claim": "Any node count, not just three. `Bridge` runs `Children.toArray` and emits N-1 arrows, and each node gets `flex-1 basis-0`, so a two-card before/after or a four-stage handoff works with no change.",
@@ -550,6 +626,10 @@
     {
       "module": "sections/card-animation-integrations",
       "useFor": "Four integration cards on a textured field, cycling detail copy with GSAP: MCP server, GitHub App, Cloud API, and repo audit. Ported from skene-marketing-website's CardAnimationIntegrations.",
+      "intent": [
+        "pitch-a-capability",
+        "group-related-items"
+      ],
       "alsoFor": [
         {
           "claim": "The visual slot of a cream band — drop it in `LightSectionCard.visual` or `IntegrationsHighlight`, which is the pre-composed homepage band.",
@@ -588,6 +668,10 @@
     {
       "module": "sections/check-list",
       "useFor": "The rule-separated feature list with a peach check — the single highest-frequency element on a Skene marketing page, previously hand-written at every call site. `CheckList` is a bare `<ul>` that sets one CSS variable (`--check-rule`); `CheckItem` is an `<li>` whose separator is a *top border on each row* rather than a divider element, so a list of one still reads as part of its card instead of floating. The check is a real `aria-hidden` `<span>`, not a `::before`, precisely so a screen reader does not announce \"tick\" before every line.",
+      "intent": [
+        "prove-a-claim",
+        "group-related-items"
+      ],
       "alsoFor": [
         {
           "claim": "Any proof list in a section body, not just plan cards — the gallery uses it directly inside `FeatureRow` (dark, no flags) and inside `LightSectionCard` (`onLight`).",
@@ -646,6 +730,10 @@
     {
       "module": "sections/chip",
       "useFor": "The 10px monospace uppercase rectangle, extracted from two copies that were written independently — `PlanCard`'s inline tier span and `ProductWindow`'s `WindowStatus` — which had already drifted apart on tracking before anyone noticed. Its job is to hold the geometry still: `tone` carries colour and nothing else, with tracking as the single declared exception. It exists as much to stop a third inline copy being written as to render the two that exist.",
+      "intent": [
+        "mark-a-label",
+        "show-status"
+      ],
       "alsoFor": [
         {
           "claim": "An identity marker on either ground with `tone=\"neutral\"`. This is the one tone allowed to use invariant `chrome.surface-darker` / `brand.light`, because its fill is near-black on both the dark page AND the featured cream `PlanCard` — there is no inversion for an invariant token to get wrong.",
@@ -711,6 +799,10 @@
     {
       "module": "sections/code",
       "useFor": "The inline identifier chip inside a sentence: an event name, a column, a flag, a path. Extracted from SEVEN copies — six byte-identical component declarations across skene-site route files, verified by comparing the emitted class string, plus a seventh spelling as `PROSE_CODE`, the same recipe as a descendant selector for prose the author cannot reach element by element. The oldest open entry on that repository's gap list, on a site where an event name appears in nearly every paragraph of body copy.",
+      "intent": [
+        "display-code",
+        "mark-a-label"
+      ],
       "alsoFor": [
         {
           "claim": "Prose the caller does not author element by element — MDX, a table cell, a body rendered from a string. Applied to the CONTAINING block rather than each mark, because there is no `<code>` to wrap. Kept as a second mechanism deliberately: merging it into the component would leave that case with no answer.",
@@ -741,6 +833,10 @@
     {
       "module": "sections/comparison-table",
       "useFor": "A real semantic `<table>` for capability comparison — one row per claim, one column per approach, with your column picked out. The featured column is washed in the head *and* every body cell so it reads as one continuous object top to bottom, and the header additionally turns peach so its identity is stated once in words rather than only in colour. The whole component is really the pairing of `min-width: 820px` on the table with `overflow-x: auto` + `tabIndex={0}` on the wrapper: a comparison that reflows into stacked cards stops being a comparison, so on narrow screens it keeps its shape and scrolls sideways instead.",
+      "intent": [
+        "compare-options",
+        "tabulate-data"
+      ],
       "alsoFor": [
         {
           "claim": "A plan or pricing feature matrix. `columns` and each row's `cells` are `React.ReactNode[]`, so prices, phrases and glyphs all drop in; `featuredIndex` marks the recommended plan.",
@@ -803,6 +899,10 @@
     {
       "module": "sections/discovery-table",
       "useFor": "The discovery artifact: the events Skene found, where it found them, and whether each one verified.",
+      "intent": [
+        "tabulate-data",
+        "show-status"
+      ],
       "alsoFor": [
         {
           "claim": "Any found-things table with a per-row state — files scanned, endpoints discovered, records matched. Every column header is a prop and every cell is a node.",
@@ -833,6 +933,10 @@
     {
       "module": "sections/evaluator-check",
       "useFor": "The evaluator's Check tab: a metric, the formula under it, one row per operand, and the results it produced.",
+      "intent": [
+        "tabulate-data",
+        "show-a-metric"
+      ],
       "alsoFor": [
         {
           "claim": "Any computed-value explanation — a score, a rate, a derived KPI. The formula is a slot, so the operands can be anything.",
@@ -866,6 +970,10 @@
     {
       "module": "sections/evaluator-list",
       "useFor": "The evaluator index: every evaluation in a workspace, and whether the signals it depends on were found.",
+      "intent": [
+        "tabulate-data",
+        "show-status"
+      ],
       "alsoFor": [
         {
           "claim": "Any status list with a per-row check — jobs, monitors, integrations tests. Four columns, all named by prop.",
@@ -896,6 +1004,10 @@
     {
       "module": "sections/evaluator-panel",
       "useFor": "The two-pane evaluator: the index on one side, one evaluation's requirements on the other.",
+      "intent": [
+        "tabulate-data",
+        "show-status"
+      ],
       "alsoFor": [
         {
           "claim": "Any master-detail artifact where the detail is a checklist — a rule and its conditions, a policy and its clauses.",
@@ -930,6 +1042,10 @@
     {
       "module": "sections/evaluator-verify",
       "useFor": "The requirements an evaluation depends on: one row per event, its verdict, and the fields it must carry.",
+      "intent": [
+        "tabulate-data",
+        "show-status"
+      ],
       "alsoFor": [
         {
           "claim": "Any requirements checklist with nested sub-requirements — a schema contract, a compliance list, a validation report.",
@@ -956,6 +1072,10 @@
     {
       "module": "sections/faq-band",
       "useFor": "The FAQ band: a heading column that stays put, and the questions beside it on a cream ground with a hairline per row and a round toggle.",
+      "intent": [
+        "answer-a-question",
+        "reveal-on-demand"
+      ],
       "alsoFor": [
         {
           "claim": "Any disclosure band on a marketing page — objections, a glossary, what's included.",
@@ -994,6 +1114,10 @@
     {
       "module": "sections/feature-row",
       "useFor": "A whole dark band of a page: a copy column (corner marker, ringed icon, title, italic lede, proof list, pinned actions) beside a visual panel, mirrored per row by `reverse`. The shape is an argument, not a layout — `title` + `lede` are the promise and `children` (usually a `CheckList`) is the proof, which is why the lede is its own slot rather than the first paragraph of the body. Ships with `FeatureStack` (the `grid gap-6` rhythm wrapper) and `FeatureIcon` (a ringed accent glyph in peach/violet/blue) so a three-row feature section is three prop sets rather than a re-derived grid.",
+      "intent": [
+        "pitch-a-capability",
+        "prove-a-claim"
+      ],
       "alsoFor": [
         {
           "claim": "A one-off split band anywhere on the page — used without `FeatureStack`, with `n` and `icon` omitted, it is just copy-beside-visual; nothing couples it to a numbered list.",
@@ -1071,6 +1195,10 @@
     {
       "module": "sections/final-cta",
       "useFor": "The closing band: full-bleed, centred, one large heading, an optional lede and an actions row, over a textured dark backdrop. It appears twice on the live homepage and once per subpage, and every instance had previously been rebuilt by hand. The default backdrop (`pixel-bg.webp`, 143 KB) ships with the package and is resolved from the module itself, on the principle that the default should produce the section the site actually has rather than a stripped-down gradient the caller has to re-dress.",
+      "intent": [
+        "drive-an-action",
+        "texture-a-surface"
+      ],
       "alsoFor": [
         {
           "claim": "Any full-bleed closing band, not just signup — `children` is the heading node and `actions` is a free slot, so waitlist, newsletter, \"book a demo\", or an end-of-doc band all fit without changes.",
@@ -1125,6 +1253,10 @@
     {
       "module": "sections/finding-card",
       "useFor": "Three small pieces that together fill a product window with Skene's actual argument: `Finding` (a status-tagged row — tag, title, consequence), `MetricCard` (the headline number with a coloured delta), and `Sparkline` (an authored bar shape). The point of the set is the contradiction — a metric that looks fine above a list of steps that are unmeasured or renamed — so the status vocabulary is fixed at `good | warn | danger` bound to `semantic.matcha / warningAmber / errorRed`, the same three the dashboard uses. All content is props; nothing here knows what a Skene finding says.",
+      "intent": [
+        "show-status",
+        "show-a-metric"
+      ],
       "alsoFor": [
         {
           "claim": "Any KPI tile: `MetricCard` takes `label`, `value`, `delta` and `trend` as ReactNodes and has no light/dark flag at all — it inherits colour from its parent — and `children` is an open slot under the number for whatever the caller wants there.",
@@ -1179,6 +1311,9 @@
     {
       "module": "sections/flow-diagram",
       "useFor": "Nodes in a row joined by arrows, with a value and a note on each edge.",
+      "intent": [
+        "explain-a-process"
+      ],
       "alsoFor": [
         {
           "claim": "Any pipeline or path with a measurable step-to-step drop — a funnel, a queue, a state machine.",
@@ -1209,6 +1344,10 @@
     {
       "module": "sections/footer",
       "useFor": "The site footer as a set of composable parts — `SiteFooter` (brand column, link columns, bottom bar), `FooterColumn`, `FooterLink`, `SocialLinks`, `SocialLink`. The part actually worth reusing is the oversized wordmark: 29vw at 1.7% opacity, clipped by the footer's own `overflow-hidden`, so it reads as texture at a glance and only resolves into a word if you look. Rendering it at a \"sensible\" size or opacity is the obvious change and it is wrong every time.",
+      "intent": [
+        "navigate",
+        "brand-the-surface"
+      ],
       "alsoFor": [
         {
           "claim": "The sub-components stand alone. `FooterColumn` is a self-contained `<nav>` with its own heading and grid, so a link cluster works in a mega-menu, a sitemap block, or a docs index without `SiteFooter` around it.",
@@ -1271,6 +1410,10 @@
     {
       "module": "sections/funnel",
       "useFor": "The activation funnel as the reader's own dashboard would draw it: one bar per step, and three states because a broken number is not a low number.",
+      "intent": [
+        "show-a-metric",
+        "show-status"
+      ],
       "alsoFor": [
         {
           "claim": "Any staged conversion chart where some steps are untrustworthy — onboarding, checkout, a signup path.",
@@ -1305,6 +1448,9 @@
     {
       "module": "sections/glyph-badge",
       "useFor": "The round disc a glyph sits in at the head of a row: a circle, a hairline, a peach mark centred in it, `aria-hidden` always. It is the disc `TrustFact` draws, lifted out so it is reachable without the `<li>`, the separating rule and the qualifier slot that come with a fact row. `tone` picks the ground — `tint` is the cream-panel pair (`chrome.line.onLight` over a 12% peach wash), `muted` is the themed pair that follows the page — and `size` is one number, written to `style` so the glyph inside keeps whatever type size it inherits.",
+      "intent": [
+        "mark-a-label"
+      ],
       "alsoFor": [
         {
           "claim": "Any icon-led row, on cream or on the page ground: a status glyph, a numbered marker, a two- or three-letter code. Nothing here knows what the mark means, and the disc still renders when `children` is empty — which is what keeps a stack of rows aligned on their titles when only some of them carry one.",
@@ -1355,6 +1501,10 @@
     {
       "module": "sections/integration-rows",
       "useFor": "The integrations artifact: what Skene is attached to, and whether each connection is live.",
+      "intent": [
+        "show-status",
+        "tabulate-data"
+      ],
       "alsoFor": [
         {
           "claim": "Any connection or account list where the right-hand cell is a state — data sources, webhooks, installed apps.",
@@ -1389,6 +1539,10 @@
     {
       "module": "sections/integrations-highlight",
       "useFor": "The homepage integrations band: cream copy column plus the four-card GSAP animation. Ported from skene-marketing-website's IntegrationsHighlight.",
+      "intent": [
+        "pitch-a-capability",
+        "group-related-items"
+      ],
       "alsoFor": [
         {
           "claim": "Custom CTAs via `actions`; pass outline `<Button>`s sized for a cream card.",
@@ -1415,6 +1569,10 @@
     {
       "module": "sections/journey-track",
       "useFor": "The numbered steps of a funnel on one line, where the connector between two steps is a gradient running from one step's status colour to the next's — the seam carries the state, not just the nodes. That is the section's argument, not a flourish: breakage happens *in the link* (an event that stops firing between checkout and confirmation), and the eye should find it before reading a label. The module also exports `MiniFunnel`, the small authored label/value/bar readout that usually sits beside the track.",
+      "intent": [
+        "explain-a-process",
+        "show-status"
+      ],
       "alsoFor": [
         {
           "claim": "Any three-state pipeline, not just a purchase funnel: onboarding checklists, deploy stages, data-source health. States are the fixed `good | warn | danger` triple bound to matcha/amber/red — the same vocabulary `Finding` uses — and `note` is free prose, so the domain lives entirely in the caller's copy.",
@@ -1476,6 +1634,9 @@
     {
       "module": "sections/key-value-table",
       "useFor": "The reference table: keys and values at two densities, with a masked value, a note and the 11px tag chip.",
+      "intent": [
+        "tabulate-data"
+      ],
       "alsoFor": [
         {
           "claim": "Any settings, environment or schema reference — the `reference` density drops the row fill and hover so it stops reading as a data grid.",
@@ -1514,6 +1675,10 @@
     {
       "module": "sections/lifecycle-canvas",
       "useFor": "The lifecycle artifact: stages across the canvas, each holding milestones and the signals bound to them.",
+      "intent": [
+        "explain-a-process",
+        "group-related-items"
+      ],
       "alsoFor": [
         {
           "claim": "Any two-level map — phases and their steps, epics and their stories, a journey and its moments.",
@@ -1548,6 +1713,10 @@
     {
       "module": "sections/light-section-card",
       "useFor": "The inverted band: one cream card carrying a whole section's worth of copy — heading, italic promise, a ruled proof block, actions — with an optional visual panel opposite. It is `FeatureRow` at the other polarity, and its `light` root is a load-bearing accessibility mechanism, which is why the two were deliberately NOT collapsed behind a `tone` flag. SCOPE NARROWED IN 0.9.19: this is no longer a marketing section band. `render_marketing_cards_as_feature_row` gives that role to `FeatureRow` alone, because a page that alternates one repeating object cannot also alternate polarity without the cream band reading as a second system. What remains is every non-marketing use — product surfaces, gallery cases, and any dark-document context needing a correctly-inverted cream subtree, which is the part no other component does.",
+      "intent": [
+        "pitch-a-capability",
+        "prove-a-claim"
+      ],
       "alsoFor": [
         {
           "claim": "A closing CTA panel: `title` + `lede` + `actions`, no `visual` and no `children`. Without `visual` the grid stays single-column and you get a plain cream panel — `docs/sections.md` names this as the alternative to `FinalCta` when you want a panel rather than a full-bleed textured band.",
@@ -1606,6 +1775,10 @@
     {
       "module": "sections/mcp-block",
       "useFor": "A panel inside the MCP artifact: a config snippet to paste, or the list of tools the server answers with.",
+      "intent": [
+        "display-code",
+        "group-related-items"
+      ],
       "alsoFor": [
         {
           "claim": "Any code-plus-catalogue pairing — an API key block and its scopes, a config and its options.",
@@ -1640,6 +1813,10 @@
     {
       "module": "sections/overview-tiles",
       "useFor": "The workspace overview: a row of small tiles, each a caption, one number and what the number is made of.",
+      "intent": [
+        "show-a-metric",
+        "group-related-items"
+      ],
       "alsoFor": [
         {
           "claim": "Any set of commensurable counts — four numbers that belong in one sweep. A tile that styled itself differently would read as the important one.",
@@ -1673,6 +1850,10 @@
     {
       "module": "sections/pipeline-stepper",
       "useFor": "A labelled progress track: N steps with state rings, joined by connectors the STEPPER owns and fills from the state of the step on their left, above an optional title/subtitle. It was built for a long job running inside a light `ProductWindow`, and two decisions carry that job — connectors are derived rather than drawn per-step, so N dots read as one track filling left to right; and emphasis runs backwards from instinct, with the ACTIVE step taking the label weight and a peach halo while done steps recede to matcha, because a running job's question is \"what is it doing now\", not \"what has it finished\".",
+      "intent": [
+        "explain-a-process",
+        "show-status"
+      ],
       "alsoFor": [
         {
           "claim": "Any step count and any mix of states — `steps` is a plain array and connectors are derived (N-1), so a five-step onboarding checklist or a two-step form indicator works unchanged.",
@@ -1730,6 +1911,10 @@
     {
       "module": "sections/plan-card",
       "useFor": "A pricing tier card plus the grid that holds a row of them (`PlanGrid` + `PlanCard`). It is pure markup — no state, no client directive — because the only interactive part of a pricing section, the billing switch, was deliberately split into `billing-toggle.tsx` so this file stays server-renderable. The shape's real argument is comparison-by-inversion: `featured` flips one card to cream-on-dark, lifts it `md:-translate-y-3`, and drops a `--shadow-modal` on it, so a row of peers stops reading as peers and one of them becomes the recommendation.",
+      "intent": [
+        "compare-options",
+        "group-related-items"
+      ],
       "alsoFor": [
         {
           "claim": "A billing/subscription panel in a product surface: `flag=\"Current plan\"`, `bestFor={{label: 'Renews', value: 'Sep 12'}}` as a generic labelled metadata block, `action` as a Manage button, `footnote` for the fine print.",
@@ -1795,6 +1980,10 @@
     {
       "module": "sections/pr-review",
       "useFor": "The pull-request artifact: Skene's review on a PR, with findings by severity, a suggested fix and the file it lands in.",
+      "intent": [
+        "show-status",
+        "display-code"
+      ],
       "alsoFor": [
         {
           "claim": "Any review or audit output with ranked findings — a linter run, a security scan, a code review.",
@@ -1829,6 +2018,9 @@
     {
       "module": "sections/product-window",
       "useFor": "The chrome that frames a product mock inside a marketing section: rounded border, modal shadow, and an optional title bar with a left title and a right `status` slot. Its default `tone=\"light\"` is the argument rather than a style choice — the page around it is Skene's dark chrome, so the thing inside the frame reads as the customer's own tool; a dark window on a dark page reads as a screenshot of Skene itself. Ships alongside `WindowStatus` (the title bar's chip), `WindowToolbar` (a filter/breadcrumb strip) and `WindowChip`.",
+      "intent": [
+        "frame-a-mock"
+      ],
       "alsoFor": [
         {
           "claim": "The deliberate opposite reading: `tone=\"dark\"` frames Skene's own surfaces (MCP output, a tracking plan, a CLI-adjacent view) on `chrome.surface.1`, and it is the mode `WindowToolbar` and `WindowChip` were built for.",
@@ -1887,6 +2079,10 @@
     {
       "module": "sections/question-grid",
       "useFor": "A 1–4 column grid of near-empty cards, each one a mono category `tag` sitting at the top of the card with a question (or claim) below it and an optional answer. The card is deliberately a border, a 14px radius and a peach corner glow with no opaque fill — that is what lets it sit on a dark band or a cream one without needing a polarity class or a token audit. It exists for the \"here is what you'll actually be able to answer\" band, where the copy does all the work and the container must not compete with it.",
+      "intent": [
+        "answer-a-question",
+        "group-related-items"
+      ],
       "alsoFor": [
         {
           "claim": "An FAQ or objection-handling teaser band: `tag` as the category (\"BILLING\", \"OBJECTION\"), `title` as the question, `children` as the short answer. Static only — see notFor.",
@@ -1948,6 +2144,10 @@
     {
       "module": "sections/recommendation-card",
       "useFor": "The proposal: what to do next, and what makes it worth doing. Deliberately without a status colour.",
+      "intent": [
+        "drive-an-action",
+        "prove-a-claim"
+      ],
       "alsoFor": [
         {
           "claim": "Any suggestion block — a next step, a recommended setting, an upsell that should not look like an alert.",
@@ -1982,6 +2182,9 @@
     {
       "module": "sections/score-ring",
       "useFor": "A score against a scale: a partial arc on a track with the value inside it.",
+      "intent": [
+        "show-a-metric"
+      ],
       "alsoFor": [
         {
           "claim": "Any bounded score — coverage, health, completeness, a readiness percentage.",
@@ -2020,6 +2223,10 @@
     {
       "module": "sections/section-backdrop",
       "useFor": "The halftone field a panel floats on: a container that paints one of the three real site textures (`card1/2/3_bg.webp`) and insets its child by a percentage of the track width. The percentage is the whole design — the live panel is 84–92% of its container, and only a percentage holds that proportion at every width; a fixed padding turns the field into a coloured border on a short wide card. It is the narrowest of the package's four texture tools: field behind a mock inside a feature row, as opposed to `HeroBackdrop` (hero strip), `DitheredMedia` (whole hero composition) and `DitherOverlay` (the raw layer).",
+      "intent": [
+        "texture-a-surface",
+        "frame-a-mock"
+      ],
       "alsoFor": [
         {
           "claim": "Standalone use outside a feature row — the gallery's `section-backdrop` case renders three of them in a plain grid wrapping an arbitrary card, so any node can be the floating panel.",
@@ -2077,6 +2284,10 @@
     {
       "module": "sections/side-by-side-diff",
       "useFor": "Two columns of code with added and removed lines marked — what was written beside what was expected.",
+      "intent": [
+        "display-code",
+        "compare-options"
+      ],
       "alsoFor": [
         {
           "claim": "Any before/after code comparison — a migration, a suggested fix, a config change.",
@@ -2115,6 +2326,10 @@
     {
       "module": "sections/stat-chip",
       "useFor": "Two small pills that sit beside headings: `StatChip` asserts something true right now (\"121 stars\"), `MetaChip` marks something not shipped yet (prose, a hairline divider, then a peach status word). They are two components rather than one with a `variant` precisely so a forgotten prop can never turn a roadmap item into a live claim about the product — two names cannot be defaulted into each other. Both derive their border and fill from `currentColor` via `color-mix`, which is what lets one chip survive both the dark page and the cream `LightSectionCard` with no `onLight` prop.",
+      "intent": [
+        "mark-a-label",
+        "prove-a-claim"
+      ],
       "alsoFor": [
         {
           "claim": "Recolouring the entire chip by setting only the text colour. Because border (26%/22%) and fill (7%/6%) are `color-mix` on `currentColor`, passing e.g. `className=\"text-semantic-matcha\"` retints border, fill, and type together. That `currentColor` derivation IS the tone mechanism — there is no `tone` prop and none is needed.",
@@ -2172,6 +2387,10 @@
     {
       "module": "sections/surface-cards",
       "useFor": "A compact grid of peer cards on a textured field, one of them drawn cream, where every card carries its own detail: the “ways in” band, four surfaces two across.",
+      "intent": [
+        "group-related-items",
+        "pitch-a-capability"
+      ],
       "alsoFor": [
         {
           "claim": "Any two-to-four item set of alternatives where one is editorially led — entry points, plans, channels. Nothing in it is homepage-specific.",
@@ -2229,6 +2448,10 @@
     {
       "module": "sections/surface-tiles",
       "useFor": "The surfaces a product runs on, as a row of tiles with one picked out, and the panel that explains the chosen one.",
+      "intent": [
+        "compare-options",
+        "pitch-a-capability"
+      ],
       "alsoFor": [
         {
           "claim": "Any set of options where one is editorially highlighted — plans, integrations, entry points.",
@@ -2270,6 +2493,10 @@
     {
       "module": "sections/terminal-block",
       "useFor": "The install block: a terminal frame holding one or more shell lines, each with its own copy button.",
+      "intent": [
+        "display-code",
+        "drive-an-action"
+      ],
       "alsoFor": [
         {
           "claim": "Any copyable command list — install steps, a CLI walkthrough, a set of environment exports.",
@@ -2312,6 +2539,9 @@
     {
       "module": "sections/traffic-lights",
       "useFor": "The three window-chrome dots — red, yellow, green, 10px each — as one `aria-hidden` group at an 8px gap. It exists so a shell bar, an editor header or a GitHub file header can carry window furniture without hand-rolling three spans, which is what five files were doing: `TerminalBlock` and `PrReview` in this package, and two skene-site routes that each declared a local copy plus a comment saying the fix belonged upstream.",
+      "intent": [
+        "frame-a-mock"
+      ],
       "alsoFor": [
         {
           "claim": "Any drawn window header, not only a shell — an editor chrome bar, a browser mock, a GitHub file header. It carries no terminal semantics at all: it is three coloured circles in a flex row, and it needs no parent and no context.",
@@ -2354,6 +2584,9 @@
     {
       "module": "sections/trust-panel",
       "useFor": "A cream panel split into a claim and its evidence: heading, lede and a row of links on the left, a stack of `TrustFact` items on a deeper cream to the right. The split is the argument — the reassurance is not a paragraph asserting itself but a paragraph standing next to checkable facts, which is why the evidence track is the wider of the two (`0.9fr 1.1fr`). It is a fixed-polarity object: the root carries `light` unconditionally, so it is a cream card on a dark page, with a peach bloom rising from the bottom-left corner that the token system gets right on cream for free.",
+      "intent": [
+        "prove-a-claim"
+      ],
       "alsoFor": [
         {
           "claim": "Any claim-plus-itemised-proof panel, not just security: \"what's included\", \"how it works\", \"what we do with your data\". `title` + `lede` + `TrustFact`s is the shape, and no copy is baked in.",
@@ -2423,6 +2656,10 @@
     {
       "module": "sections/value-cards",
       "useFor": "A responsive card band whose argument is carried by tone rather than by copy: N cards stating what the current situation costs, then one stating what it becomes. `ValueCard` takes a mono `label`, a `title` line and an optional body, and the `tone` union (`'cost' | 'gain'`) is the only thing that moves — `cost` borrows `semantic.errorRed` for the label and a neutral 14% hairline, `gain` takes `brand.peach` with a 34% border and a left-to-right directional wash so the last card reads as an arrival rather than one more tile. It exists so a band can make a turn; a row of identically-weighted cards degrades into a feature list and says nothing.",
+      "intent": [
+        "compare-options",
+        "pitch-a-capability"
+      ],
       "alsoFor": [
         {
           "claim": "Any before/after or problem/payoff band: `label` is free text, so \"BEFORE\"/\"AFTER\", \"TODAY\"/\"WITH SKENE\", \"MANUAL\"/\"AUTOMATED\" all work with no code change — only `tone` decides the colour.",
@@ -2488,6 +2725,9 @@
     {
       "module": "ui/accordion",
       "useFor": "Radix disclosure list. One trigger, one panel, animated open and close.",
+      "intent": [
+        "reveal-on-demand"
+      ],
       "alsoFor": [
         {
           "claim": "A settings or filter group that collapses on a dense product screen.",
@@ -2510,6 +2750,9 @@
     {
       "module": "ui/alert",
       "useFor": "A static inline notice inside a page — not a toast, not a modal.",
+      "intent": [
+        "show-status"
+      ],
       "alsoFor": [
         {
           "claim": "An empty-state explanation or a persistent warning above a form.",
@@ -2532,6 +2775,9 @@
     {
       "module": "ui/alert-dialog",
       "useFor": "Radix modal that demands an answer before anything continues.",
+      "intent": [
+        "interrupt-the-reader"
+      ],
       "alsoFor": [
         {
           "claim": "Any destructive confirmation — delete, disconnect, revoke.",
@@ -2554,6 +2800,10 @@
     {
       "module": "ui/badge",
       "useFor": "The product surface's status marker: a small rounded label with four variants.",
+      "intent": [
+        "mark-a-label",
+        "show-status"
+      ],
       "alsoFor": [
         {
           "claim": "A row-level state in a table — Active, Pending, Archived.",
@@ -2576,6 +2826,9 @@
     {
       "module": "ui/breadcrumb",
       "useFor": "The path back up a product hierarchy.",
+      "intent": [
+        "navigate"
+      ],
       "alsoFor": [
         {
           "claim": "A workspace trail — workspace, project, resource.",
@@ -2598,6 +2851,9 @@
     {
       "module": "ui/button",
       "useFor": "The action primitive. Six variants, four sizes.",
+      "intent": [
+        "drive-an-action"
+      ],
       "alsoFor": [
         {
           "claim": "Any action anywhere in either app — the marketing CTA and the workspace toolbar are the same component.",
@@ -2620,6 +2876,9 @@
     {
       "module": "ui/card",
       "useFor": "The generic product container: header, content, footer. `variant=\"surface\"` is the flat flavour of the same card — `border-surface-border` over `bg-surface-1`, 24px of its own padding — which appeared inline eight times across skene-site's routes plus six near-copies that differed only by being an `<a>`. SCOPE NARROWED IN 0.9.19: `surface` is no longer the marketing grid cell. `render_marketing_cards_as_feature_row` routes those to `FeatureRow`, whose copy-only path renders a content-height row so a 2-up grid does not gain a 600px floor per cell. On product surfaces this component is unchanged and remains the default container.",
+      "intent": [
+        "group-related-items"
+      ],
       "alsoFor": [
         {
           "claim": "Any dashboard panel that is not a table and not a drawn artifact.",
@@ -2654,6 +2913,9 @@
     {
       "module": "ui/checkbox",
       "useFor": "Radix checkbox with the package's focus ring.",
+      "intent": [
+        "collect-input"
+      ],
       "alsoFor": [
         {
           "claim": "A multi-select filter list, or a consent row in a form.",
@@ -2676,6 +2938,9 @@
     {
       "module": "ui/collapsible",
       "useFor": "Radix show/hide for one region.",
+      "intent": [
+        "reveal-on-demand"
+      ],
       "alsoFor": [
         {
           "claim": "A sidebar section, or a details panel under a row.",
@@ -2698,6 +2963,10 @@
     {
       "module": "ui/command",
       "useFor": "cmdk palette: a searchable list with groups and shortcuts.",
+      "intent": [
+        "navigate",
+        "reveal-on-demand"
+      ],
       "alsoFor": [
         {
           "claim": "A workspace switcher or a jump-to-resource palette.",
@@ -2720,6 +2989,9 @@
     {
       "module": "ui/dialog",
       "useFor": "Radix modal for a task the reader may abandon.",
+      "intent": [
+        "interrupt-the-reader"
+      ],
       "alsoFor": [
         {
           "claim": "A create/edit form, a detail view, a connect flow.",
@@ -2742,6 +3014,10 @@
     {
       "module": "ui/dropdown-menu",
       "useFor": "Radix menu hung off a trigger.",
+      "intent": [
+        "navigate",
+        "reveal-on-demand"
+      ],
       "alsoFor": [
         {
           "claim": "Row actions, a user menu, a filter with checkable items.",
@@ -2764,6 +3040,9 @@
     {
       "module": "ui/hover-card",
       "useFor": "Preview on hover, no click.",
+      "intent": [
+        "reveal-on-demand"
+      ],
       "alsoFor": [
         {
           "claim": "A definition or a record preview behind an identifier in a table.",
@@ -2786,6 +3065,9 @@
     {
       "module": "ui/input",
       "useFor": "The single-line text field.",
+      "intent": [
+        "collect-input"
+      ],
       "alsoFor": [
         {
           "claim": "Any form field on either surface.",
@@ -2808,6 +3090,9 @@
     {
       "module": "ui/input-group",
       "useFor": "An input with addons welded to it — prefix, suffix, inline button.",
+      "intent": [
+        "collect-input"
+      ],
       "alsoFor": [
         {
           "claim": "A URL field with a fixed scheme, a search box with a clear button, an amount with a currency.",
@@ -2830,6 +3115,10 @@
     {
       "module": "ui/label",
       "useFor": "The form label, wired to Radix's accessible name.",
+      "intent": [
+        "collect-input",
+        "mark-a-label"
+      ],
       "alsoFor": [
         {
           "claim": "Any control that is not already labelled by a settings field wrapper.",
@@ -2852,6 +3141,10 @@
     {
       "module": "ui/navigation-menu",
       "useFor": "Radix top navigation with dropdown panels.",
+      "intent": [
+        "navigate",
+        "reveal-on-demand"
+      ],
       "alsoFor": [
         {
           "claim": "A product or resources menu on the marketing site.",
@@ -2874,6 +3167,9 @@
     {
       "module": "ui/popover",
       "useFor": "Radix floating panel anchored to a trigger.",
+      "intent": [
+        "reveal-on-demand"
+      ],
       "alsoFor": [
         {
           "claim": "A date picker, a filter panel, a small inline form.",
@@ -2896,6 +3192,10 @@
     {
       "module": "ui/progress",
       "useFor": "A determinate bar with the brand gradient indicator.",
+      "intent": [
+        "show-status",
+        "show-a-metric"
+      ],
       "alsoFor": [
         {
           "claim": "An upload, an import, a quota meter.",
@@ -2918,6 +3218,9 @@
     {
       "module": "ui/select",
       "useFor": "Radix select with the package's two sizes.",
+      "intent": [
+        "collect-input"
+      ],
       "alsoFor": [
         {
           "claim": "Any choice from a short known list, on either surface.",
@@ -2940,6 +3243,9 @@
     {
       "module": "ui/settings-field",
       "useFor": "The workspace form row: label, control, description, in one component.",
+      "intent": [
+        "collect-input"
+      ],
       "alsoFor": [
         {
           "claim": "Any dense settings screen — three exports cover input, select and switch.",
@@ -2962,6 +3268,10 @@
     {
       "module": "ui/sheet",
       "useFor": "A side panel that slides in from an edge.",
+      "intent": [
+        "reveal-on-demand",
+        "navigate"
+      ],
       "alsoFor": [
         {
           "claim": "A detail drawer, or the mobile navigation on a narrow viewport.",
@@ -2984,6 +3294,9 @@
     {
       "module": "ui/skeleton",
       "useFor": "A loading placeholder block.",
+      "intent": [
+        "show-status"
+      ],
       "alsoFor": [
         {
           "claim": "Any list, table or card that waits on a fetch.",
@@ -3006,6 +3319,9 @@
     {
       "module": "ui/slider",
       "useFor": "Radix range control.",
+      "intent": [
+        "collect-input"
+      ],
       "alsoFor": [
         {
           "claim": "A threshold, a sampling rate, a numeric range filter.",
@@ -3028,6 +3344,10 @@
     {
       "module": "ui/sonner",
       "useFor": "The toast host. Mount once, near the root.",
+      "intent": [
+        "interrupt-the-reader",
+        "show-status"
+      ],
       "alsoFor": [
         {
           "claim": "Any transient confirmation or error the reader did not ask to read.",
@@ -3050,6 +3370,9 @@
     {
       "module": "ui/switch",
       "useFor": "The instant on/off control.",
+      "intent": [
+        "collect-input"
+      ],
       "alsoFor": [
         {
           "claim": "A feature toggle on a settings screen — no Save step.",
@@ -3072,6 +3395,9 @@
     {
       "module": "ui/table",
       "useFor": "The semantic product table.",
+      "intent": [
+        "tabulate-data"
+      ],
       "alsoFor": [
         {
           "claim": "Any real data grid on a workspace surface — sortable, paginated, selectable.",
@@ -3094,6 +3420,10 @@
     {
       "module": "ui/tabs",
       "useFor": "Mutually exclusive views, as a segmented control.",
+      "intent": [
+        "navigate",
+        "reveal-on-demand"
+      ],
       "alsoFor": [
         {
           "claim": "Canvas/list, tokens/gallery — any either-or on one screen.",
@@ -3116,6 +3446,9 @@
     {
       "module": "ui/textarea",
       "useFor": "The multi-line field.",
+      "intent": [
+        "collect-input"
+      ],
       "alsoFor": [
         {
           "claim": "Any free-text input — a description, a note, a message.",
@@ -3138,6 +3471,9 @@
     {
       "module": "ui/tooltip",
       "useFor": "A one-line label on hover or focus.",
+      "intent": [
+        "reveal-on-demand"
+      ],
       "alsoFor": [
         {
           "claim": "Naming an icon-only button, or expanding a truncated cell.",
@@ -3160,6 +3496,10 @@
     {
       "module": "sections/logo-row",
       "useFor": "The proof strip: a centred heading, a stat line, a row of outlined logo slots, and the caption that explains them. The slots are EMPTY by default and that is the component's argument, not a missing feature — the strip asserts that named proof only appears with consent, so a `LogoSlot` renders a child only when given one and no fabricated customer mark ever goes in a slot. Every colour is a mode-aware role, so the strip survives both the dark page and a cream `light` ancestor with no `onLight` prop.",
+      "intent": [
+        "prove-a-claim",
+        "group-related-items"
+      ],
       "alsoFor": [
         {
           "claim": "A partially filled strip, honestly: pass fewer `LogoSlot` children than `count` and the remainder render as blanks, so a three-logo row keeps showing the two names it does not yet have.",
@@ -3202,6 +3542,10 @@
     {
       "module": "sections/team-card",
       "useFor": "The about-page person card and its grid: a name as a heading, a role in the small-caps monospace register, an optional bio/links block, and an optional square media frame that only exists when media does. The card is designed for the no-photo state — type on a bordered panel that looks finished — so a team page needs no photographer and no stock placeholder. Cards are `<li>`s and `TeamGrid` is the `<ul>`, the same peers-in-a-list argument `TrustPanel` makes for its facts.",
+      "intent": [
+        "group-related-items",
+        "prove-a-claim"
+      ],
       "alsoFor": [
         {
           "claim": "Any person-shaped entry, not only employees: advisors, authors on a contributors page, speakers — `name` and `role` are slots and no copy is baked in.",
@@ -3244,6 +3588,10 @@
     {
       "module": "sections/journey-signal-scene",
       "useFor": "Evidence, a traced journey step, and the PR review that catches it breaking, in one animated composition with a GTM/Engineering toggle. No props — content lives in named consts near the top of the source file, edited directly rather than passed in. Measures its own container width and switches between three hand-placed layouts (a three-panel row, a hero-column-width layout, a stacked phone layout) rather than using CSS breakpoints, because the same panel widths read differently depending on which parent gives it space.",
+      "intent": [
+        "explain-a-process",
+        "pitch-a-capability"
+      ],
       "alsoFor": [
         {
           "claim": "Any `light`-classed container at any width, not just the `Bridge` band it originally shipped inside. It measures its own container and switches layout at 720px and 420px, which is what let skene-marketing-website drop it into a split hero's narrower right column as a second, real placement rather than a copy.",

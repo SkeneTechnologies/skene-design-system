@@ -89,8 +89,9 @@ All of these ship inside the package, so from a consumer they are under
 | 2 | `machine/components.yaml` | what you must **not** do with the one you picked. |
 | 3 | `machine/rules.yaml` | the reach ladder, the `must_not` list, and `ask_first_when`. |
 | 4 | `machine/tokens.yaml` | the token vocabulary, and which role belongs on which surface. |
-| 5 | `machine/layouts.yaml` | page and section layout contracts. |
-| 6 | `machine/accessibility.yaml` | the a11y contracts, including contrast floors. |
+| 5 | `machine/compositions.yaml` | **how whole pages are assembled** — section order per page archetype, load-bearing vs optional, derived from pages that were actually built. |
+| 6 | `machine/layouts.yaml` | the layout scale that applies here, the modules that draw a dashboard for a marketing page, and skene-dashboard's forward contract — each block carries a `status` saying which. |
+| 7 | `machine/accessibility.yaml` | the a11y contracts, including contrast floors. |
 | — | `docs/sections.md` | prose: decision paths, and every measured overlap with a verdict. |
 | — | `docs/brand.md`, `docs/principles.md`, `docs/ux-patterns.md` | voice, principles, interaction patterns. |
 | — | `design-tokens.json` | the 331 token values themselves. |
@@ -115,6 +116,9 @@ Four fields per entry earn the read:
 - `notFor` — the component you probably meant instead. 144 such edges exist.
 - `sameAs` — a near-duplicate this is easy to confuse with. Enforced symmetric,
   so it reads the same from either side.
+- `intent` — tags from a controlled vocabulary, declared at the top of the file.
+  This is the index to read backwards: you know what you are trying to DO, and
+  the tag takes you to the candidates without reading 89 entries.
 
 ## Fields that bite if you skip them
 

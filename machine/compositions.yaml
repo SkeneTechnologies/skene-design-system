@@ -1,0 +1,379 @@
+# Page recipes for @skene/design-system.
+# Human narrative: docs/sections.md (the three layers, and the decision paths).
+#
+# WHAT THIS IS: how the modules are assembled into a whole page.
+# machine/context.yaml says which module to reach for and how to call it;
+# machine/layouts.yaml says how one band is laid out. Neither says what a
+# features page is made of, in what order, or which band is load-bearing. This
+# does, and only where a real page has already been built that way.
+#
+# WHERE THE EVIDENCE CAME FROM: 19 routes on
+# skene-marketing-website@claude/calcom-style-wireframes-a64a8e (b96b935, "port
+# cal.com-style hero to 13 subpages"), read for the design-system modules each
+# one imports. Nothing here is designed. Every recipe carries the routes it was
+# read out of, and a recipe with one route says so rather than generalising.
+#
+# THE ORDER IS IMPORT ORDER. It is the order the modules appear in the route's
+# source, which tracks render order closely but is not the DOM. Treat it as the
+# shape of the page, not as a spec for the markup.
+#
+# load_bearing: appears in EVERY route of the archetype.
+# optional: appears in some. `in: 2, of: 4` is the count, not a recommendation.
+# confidence: derived (3+ routes, a real intersection) | pair (2 routes, an
+#   intersection of two is a coincidence until a third confirms it) | single
+#   (1 route — recorded, not generalised).
+#
+# WHAT IS NOT HERE: the home page and the pricing page. Both exist in the
+# corpus and both import no design-system section at all, so there is no
+# observed recipe for either. See `not_covered`. This follows context.yaml's
+# `seen: []` convention: an empty observation is stated, never filled in.
+
+version: "1.0.0"
+
+corpus:
+  source: skene-marketing-website
+  branch: claude/calcom-style-wireframes-a64a8e
+  commit: b96b935
+  routes_read: 19
+  routes_composing_sections: 17
+  routes_importing_nothing: 2
+  modules_seen: 34
+  note: >-
+    Read as imports per route, in source order. One marketing site, one branch,
+    one commit — this is what has been built, not what is possible.
+
+# What the whole corpus repeats, before any archetype. An agent building a page
+# not covered below should start from these five and justify leaving one out.
+spine:
+  - module: sections/artifact-shell
+    in: 14
+    of: 17
+    note: >-
+      The near-universal band. Every page that shows the product at all hangs it
+      on this. polarity is applies-light — it brings its own ground, so it does
+      not need the light class the page would otherwise owe it.
+  - module: sections/key-value-table
+    in: 9
+    of: 17
+    note: The reference half. Usually inside or immediately after the artifact.
+  - module: sections/trust-panel
+    in: 8
+    of: 17
+    note: The evidence band. Late on the page in every route that carries it.
+  - module: patterns/marketing
+    in: 7
+    of: 17
+    note: >-
+      Page furniture, not a band — nav, display heading, eyebrow. Where it is
+      imported it is imported first.
+  - module: sections/code
+    in: 7
+    of: 17
+    note: The inline identifier chip. Its position in the list is where the page
+      first names a field or a flag, not a band of its own.
+
+archetypes:
+
+  product-page:
+    confidence: derived
+    instances: 4
+    argues: >-
+      Show the thing running before you argue about it — all four put the drawn
+      artifact on the page, and the trust and reference bands come after it.
+    load_bearing:
+      - sections/artifact-shell
+    optional:
+      - { module: patterns/marketing, in: 3, of: 4 }
+      - { module: sections/trust-panel, in: 2, of: 4 }
+      - { module: sections/integration-rows, in: 2, of: 4 }
+      - { module: sections/key-value-table, in: 2, of: 4 }
+      - { module: sections/overview-tiles, in: 2, of: 4 }
+      - { module: sections/discovery-table, in: 1, of: 4 }
+      - { module: sections/journey-track, in: 1, of: 4 }
+      - { module: sections/surface-tiles, in: 1, of: 4 }
+      - { module: sections/surface-cards, in: 1, of: 4 }
+      - { module: sections/pr-review, in: 1, of: 4 }
+      - { module: sections/check-list, in: 1, of: 4 }
+      - { module: sections/stat-chip, in: 1, of: 4 }
+      - { module: sections/code, in: 1, of: 4 }
+    routes:
+      "(site)/product/features/page.tsx":
+        [patterns/marketing, sections/artifact-shell, sections/discovery-table,
+         sections/journey-track, sections/trust-panel, sections/surface-tiles]
+      "(site)/product/how-it-works/page.tsx":
+        [patterns/marketing, sections/artifact-shell, sections/overview-tiles,
+         sections/pr-review]
+      "(site)/product/integrations/page.tsx":
+        [sections/artifact-shell, sections/check-list, sections/integration-rows,
+         sections/key-value-table, sections/surface-cards]
+      "(site)/product/security/page.tsx":
+        [sections/artifact-shell, sections/integration-rows,
+         sections/key-value-table, sections/overview-tiles, sections/stat-chip,
+         sections/trust-panel, sections/code, patterns/marketing]
+    watch_for: >-
+      Only artifact-shell is in all four. What varies is which artifact — the
+      discovery table, the integration rows, the overview tiles — so pick the
+      artifact for the claim, not from this list.
+
+  use-case-page:
+    confidence: derived
+    instances: 3
+    argues: >-
+      A named audience gets the artifact and the table under it: the shape
+      argues the workflow is real by showing its data rather than describing it.
+    load_bearing:
+      - sections/artifact-shell
+      - sections/key-value-table
+    optional:
+      - { module: sections/code, in: 2, of: 3 }
+      - { module: sections/evaluator-verify, in: 2, of: 3 }
+      - { module: sections/flow-diagram, in: 2, of: 3 }
+      - { module: sections/lifecycle-canvas, in: 2, of: 3 }
+      - { module: sections/finding-card, in: 1, of: 3 }
+      - { module: sections/recommendation-card, in: 1, of: 3 }
+      - { module: sections/evaluator-check, in: 1, of: 3 }
+      - { module: sections/funnel, in: 1, of: 3 }
+      - { module: sections/annotated-curve, in: 1, of: 3 }
+      - { module: sections/pr-review, in: 1, of: 3 }
+      - { module: sections/trust-panel, in: 1, of: 3 }
+      - { module: sections/faq-band, in: 1, of: 3 }
+      - { module: sections/journey-track, in: 1, of: 3 }
+    routes:
+      "(site)/use-cases/customer-success/page.tsx":
+        [sections/code, sections/artifact-shell, sections/evaluator-verify,
+         sections/finding-card, sections/recommendation-card,
+         sections/key-value-table, sections/lifecycle-canvas]
+      "(site)/use-cases/growth/page.tsx":
+        [sections/code, sections/artifact-shell, sections/evaluator-check,
+         sections/flow-diagram, sections/funnel, sections/annotated-curve,
+         sections/pr-review, sections/trust-panel, sections/key-value-table]
+      "(site)/use-cases/lifecycle/page.tsx":
+        [sections/evaluator-verify, sections/artifact-shell, sections/faq-band,
+         sections/flow-diagram, sections/journey-track,
+         sections/lifecycle-canvas, sections/key-value-table]
+    watch_for: >-
+      key-value-table lands last or near-last in all three. It is the page's
+      closing reference, not its opening summary.
+
+  developer-page:
+    confidence: pair
+    instances: 2
+    argues: >-
+      Code first, install line included — the only shape in the corpus where
+      code, marketing, trust-panel, artifact-shell and terminal-block all appear
+      together, and the only one that ships terminal-block at all.
+    load_bearing:
+      - sections/code
+      - patterns/marketing
+      - sections/trust-panel
+      - sections/artifact-shell
+      - sections/terminal-block
+    optional:
+      - { module: sections/value-cards, in: 1, of: 2 }
+      - { module: sections/traffic-lights, in: 1, of: 2 }
+      - { module: sections/pr-review, in: 1, of: 2 }
+      - { module: sections/finding-card, in: 1, of: 2 }
+      - { module: sections/side-by-side-diff, in: 1, of: 2 }
+      - { module: sections/agent-callout, in: 1, of: 2 }
+      - { module: sections/faq-band, in: 1, of: 2 }
+      - { module: sections/key-value-table, in: 1, of: 2 }
+    routes:
+      "(site)/developers/page.tsx":
+        [sections/code, patterns/marketing, sections/trust-panel,
+         sections/value-cards, sections/traffic-lights, sections/artifact-shell,
+         sections/pr-review, sections/finding-card, sections/side-by-side-diff,
+         sections/terminal-block]
+      "(site)/developers/reference/page.tsx":
+        [sections/code, sections/agent-callout, sections/faq-band,
+         sections/trust-panel, patterns/marketing, sections/artifact-shell,
+         sections/terminal-block, sections/key-value-table]
+    watch_for: >-
+      Five shared modules out of two routes is the strongest intersection in the
+      corpus and still only two routes. terminal-block is applies-dark and
+      side-by-side-diff is applies-dark: on a light page each needs its own
+      ground, which the reference route gets by keeping them adjacent.
+
+  comparison-page:
+    confidence: pair
+    instances: 2
+    argues: >-
+      Put ours beside theirs inside the artifact frame. Both routes frame the
+      comparison rather than running it as bare page copy.
+    load_bearing:
+      - sections/artifact-shell
+    optional:
+      - { module: sections/finding-card, in: 1, of: 2 }
+      - { module: sections/mcp-block, in: 1, of: 2 }
+      - { module: sections/comparison-table, in: 1, of: 2 }
+      - { module: sections/integration-rows, in: 1, of: 2 }
+      - { module: sections/key-value-table, in: 1, of: 2 }
+    routes:
+      "(site)/vs/coding-agents/page.tsx":
+        [sections/artifact-shell, sections/finding-card, sections/mcp-block]
+      "(site)/supabase/page.tsx":
+        [sections/artifact-shell, sections/comparison-table,
+         sections/integration-rows, sections/key-value-table]
+    watch_for: >-
+      Thin. Two routes sharing one module is not a recipe — and note that only
+      one of them uses comparison-table, which is the module whose name says
+      comparison. The /vs/ page argues with findings instead. Read
+      context.yaml's entry for both before choosing.
+
+  community-page:
+    confidence: pair
+    instances: 2
+    argues: >-
+      The evidence band carries the page: what exists in the open, with the
+      trust panel as the proof rather than the decoration.
+    load_bearing:
+      - sections/trust-panel
+    optional:
+      - { module: patterns/marketing, in: 1, of: 2 }
+      - { module: sections/pipeline-stepper, in: 1, of: 2 }
+      - { module: sections/check-list, in: 1, of: 2 }
+      - { module: sections/code, in: 1, of: 2 }
+      - { module: sections/traffic-lights, in: 1, of: 2 }
+      - { module: sections/artifact-shell, in: 1, of: 2 }
+      - { module: sections/key-value-table, in: 1, of: 2 }
+    routes:
+      "(site)/community/events/page.tsx":
+        [patterns/marketing, sections/pipeline-stepper, sections/trust-panel]
+      "(site)/community/open-source/page.tsx":
+        [sections/check-list, sections/trust-panel, sections/code,
+         sections/traffic-lights, sections/artifact-shell,
+         sections/key-value-table]
+    watch_for: >-
+      Grouped by site role, not by shape — the two routes share one module. The
+      events route is one of the three in the whole corpus with no artifact at
+      all. Take trust-panel from this and derive the rest from the claim.
+
+  company-page:
+    confidence: pair
+    instances: 2
+    argues: >-
+      End on the proposal. Both close with the recommendation card — what to do
+      next, stated without a status colour.
+    load_bearing:
+      - sections/recommendation-card
+    optional:
+      - { module: sections/artifact-shell, in: 1, of: 2 }
+      - { module: sections/key-value-table, in: 1, of: 2 }
+      - { module: sections/finding-card, in: 1, of: 2 }
+      - { module: sections/value-cards, in: 1, of: 2 }
+      - { module: sections/check-list, in: 1, of: 2 }
+      - { module: sections/glyph-badge, in: 1, of: 2 }
+    routes:
+      "(site)/about/page.tsx":
+        [sections/artifact-shell, sections/key-value-table,
+         sections/finding-card, sections/recommendation-card,
+         sections/value-cards]
+      "(site)/contact/page.tsx":
+        [sections/check-list, sections/glyph-badge,
+         sections/recommendation-card]
+      # about builds the argument inside an artifact; contact does not build one
+      # at all. Weakest grouping in the file. Kept because the closing move is
+      # identical and that is the part worth copying.
+    watch_for: >-
+      Do not read this as a template. One module in common across two pages that
+      otherwise share nothing — the citation is the value here, not the recipe.
+
+  hub-page:
+    confidence: single
+    instances: 1
+    argues: >-
+      The index of a family argues by contrast and by question, not by artifact:
+      a bridge across the options, the questions they raise, the evidence, the
+      cost of not choosing.
+    load_bearing: []
+    observed:
+      - sections/bridge
+      - sections/faq-band
+      - sections/trust-panel
+      - sections/value-cards
+    routes:
+      "(site)/use-cases/page.tsx":
+        [sections/bridge, sections/faq-band, sections/trust-panel,
+         sections/value-cards]
+    watch_for: >-
+      One route. load_bearing is empty on purpose — with a single instance
+      nothing can be shown to recur, so the list above is `observed`, not
+      required. bridge is applies-both and faq-band applies-light: both bring
+      their own ground, so this shape survives on a dark page unchanged.
+
+  capability-deep-dive:
+    confidence: single
+    instances: 1
+    argues: >-
+      One capability, named in the URL, gets its own panel and its own pipeline
+      — the artifact is the middle of the page, not the proof at the end.
+    load_bearing: []
+    observed:
+      - sections/code
+      - patterns/marketing
+      - sections/evaluator-panel
+      - sections/artifact-shell
+      - sections/pipeline-stepper
+      - sections/agent-callout
+      - sections/evaluator-verify
+    routes:
+      "(site)/evaluator/page.tsx":
+        [sections/code, patterns/marketing, sections/evaluator-panel,
+         sections/artifact-shell, sections/pipeline-stepper,
+         sections/agent-callout, sections/evaluator-verify]
+    watch_for: >-
+      One route, and evaluator-panel's only appearance in the corpus.
+      evaluator-panel is applies-dark; artifact-shell that follows it is
+      applies-light. The polarity flips between two adjacent bands here on
+      purpose — see rule 2 in machine/rules.yaml before you reorder them.
+
+# Observations that are not archetypes but change how the above is read.
+findings:
+  - id: artifact-is-the-default
+    note: >-
+      14 of the 17 composing routes import sections/artifact-shell. It is the
+      corpus's default band. If a page you are building has no artifact, that is
+      a decision to make deliberately, not by omission.
+  - id: no-artifact-free-recipe
+    note: >-
+      Three routes compose sections without an artifact — (site)/contact,
+      (site)/community/events and (site)/use-cases. Their intersection is
+      EMPTY: no module appears in all three. There is therefore no observed
+      recipe for an artifact-free page, only three unrelated instances of one.
+  - id: furniture-goes-first
+    note: >-
+      patterns/marketing is imported by 7 routes and lands first or second in 5
+      of them. The two exceptions are (site)/developers/reference (fifth of
+      eight) and (site)/product/security (last of eight). Import order is not
+      DOM order, so treat those two as noise rather than as a second
+      convention.
+  - id: comparison-table-is-underused
+    note: >-
+      sections/comparison-table appears once in 19 routes, on (site)/supabase —
+      not on the one route named /vs/. Before adding a comparison band, check
+      whether the argument is a table or a finding.
+
+# Stated, not filled in. context.yaml's `seen: []` is the precedent.
+not_covered:
+  - route: "(site)/page.tsx"
+    what: the home page
+    observed_modules: []
+    why: >-
+      Imports no module from @skene/design-system. The home page on this branch
+      is composed entirely of route-local components, so this package has no
+      observed home recipe. Do not derive one from the product page — the home
+      page is the one page in the corpus that was deliberately not built from
+      these parts.
+  - route: "(site)/pricing/page.tsx"
+    what: the pricing page
+    observed_modules: []
+    why: >-
+      Imports no module from @skene/design-system, despite the package shipping
+      PlanCard. Whatever the reason, it is not recorded here, and a pricing
+      recipe written from this corpus would be invention.
+  - what: everything outside the marketing site
+    observed_modules: []
+    why: >-
+      The corpus is one marketing site at one commit. The dashboard and docs
+      surfaces compose these modules too; none of that is in evidence here, so
+      none of it is claimed. machine/layouts.yaml is the file that speaks to
+      those surfaces.

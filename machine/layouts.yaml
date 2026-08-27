@@ -1,128 +1,312 @@
 # @skene/design-system — layout contracts
 #
-# The T-code templates below are dashboard-specific and their paths point into
-# skene-dashboard, not this package. They are kept because the Figma anchors are
-# the only record of which frame each template implements, but they are NOT
-# shipped here yet. Promoting them is tracked as P5. Verified 2026-08-14: no
-# file in this repository imports or references any of them outside this block
-# and the ux-patterns.md table that mirrors it, so nothing here breaks if they
-# never land — they are a note to whoever does the dashboard migration.
+# Two different things have always lived in this file, and until now nothing in
+# its structure said which was which: the layout scale THIS package ships, and
+# skene-dashboard's workspace layout contract, which it does not. An agent
+# reading top-down took the T-codes for modules it could import and the
+# `workspace-*` classes for classes it could write. Neither is true here.
+#
+# Nothing is deleted. Both halves are wanted — the dashboard is going to consume
+# this package, and the T-codes with their Figma anchors are the only record of
+# which frame each template implements. What changed is that every top-level
+# block now carries a `status`, so the question "can I use this from a consumer
+# of @skene/design-system today?" is answered by a field rather than by reading
+# the header and remembering it.
+#
+# Human reference: docs/ux-patterns.md §6b, §7, §17.
 
-# Layout system — Skene Cloud workspace dashboard
-# Human reference: docs/ux-patterns.md §6b, §7, §17 — inside this package that
-# path has no `design-system/` prefix, which is the dashboard's own layout.
+version: "2.0.0"
 
-version: "1.0.0"
-authority:
-  spacing: tailwind  # p-*, gap-*, m-*
-  radius: [rounded-sm, rounded-md, rounded-lg, rounded-xl, rounded-full]
-  panels: shadcn Card or rounded-lg border border-border bg-card
-  sidebar_width: w-60  # 240px — components/dashboard/Sidenav.tsx
+# The four values `status` takes. Read this before anything else in the file.
+status_legend:
+  shipped_here: >-
+    True of this package right now, verified against styles/ and src/. Safe to
+    build against from any consumer.
+  unverified_here: >-
+    Recorded as the contract, but nothing in this repository defines it. It may
+    be true of the app you are in; it is not true because this file says so.
+    Check before you use it.
+  depicts_here: >-
+    Modules this package really does ship, whose subject is a dashboard. They
+    draw a Skene Cloud surface for a marketing page. They are a depiction of the
+    product, not the product's own layout system.
+  dashboard_only: >-
+    skene-dashboard's contract, kept here as the forward record of what has to
+    land when the dashboard migrates onto this package. NOT present in this
+    package. Every path in a `dashboard_only` block resolves in skene-dashboard
+    and nowhere here — do not try to import or read one from a consumer.
 
-deprecated:
-  layout_tokens:
-    - lib/design-tokens.ts layout.*
-    - tokens.layout.dashboard.*
-  radius_vars:
-    - --radius-nav
-    - --radius-tight
-    - --radius-panel
-    - --radius-input
-  classes:
-    - rounded-nav
-    - rounded-panel
-  sidebar_legacy: 158px
+# ---------------------------------------------------------------------------
+# 1. What this package ships.
+# ---------------------------------------------------------------------------
 
-templates:
-  T1:
-    component: SettingsTemplate
-    path: components/workspace/templates/SettingsTemplate.tsx
-    purpose: Two-pane settings (vertical tabs + content)
-    figma_anchors: ["63:1655", "63:1822", "63:2009", "63:2212", "63:2371"]
-  T2:
-    component: ListTemplate
-    path: components/workspace/templates/ListTemplate.tsx
-    purpose: Table + filter bar via DashboardPageShell
-    figma_anchors: ["63:1024", "63:1252"]
-  T2-canvas:
-    component: CanvasTemplate
-    path: components/workspace/templates/CanvasTemplate.tsx
-    purpose: Full-bleed agent-canvas, mission-designer
-  T3:
-    components: [DetailTemplate, WizardTemplate]
-    paths:
-      - components/workspace/templates/DetailTemplate.tsx
-      - components/workspace/templates/WizardTemplate.tsx
-    purpose: Step-driven / onboarding flows
-    figma_anchors: ["63:2542"]
-  T4:
-    component: DashboardTemplate
-    path: components/workspace/templates/DashboardTemplate.tsx
-    purpose: Overview canvas with rich chrome
-    figma_anchors: ["63:583"]
+shipped_here:
+  status: shipped_here
+  verified: "2026-08-27, against styles/index.css and styles/tokens.css"
 
-page_gutters:
-  source: components/dashboard/DashboardPageShell.tsx
-  pattern: gap-4 px-4 py-6 sm:px-6 lg:px-8
+  authority:
+    spacing: tailwind  # p-*, gap-*, m-*
+    radius: [rounded-sm, rounded-md, rounded-lg, rounded-xl, rounded-full]
+    panels: shadcn Card or rounded-lg border border-border bg-card
 
-spacing_scale:
-  base: "--spacing: 0.2rem"
-  steps:
-    - { step: "0.5", px: "2px", css_var: "--spacing-0-5" }
-    - { step: "1", px: "4px", css_var: "--spacing-1" }
-    - { step: "2", px: "8px", css_var: "--spacing-2" }
-    - { step: "3", px: "12px", css_var: "--spacing-3" }
-    - { step: "4", px: "16px", css_var: "--spacing-4" }
-    - { step: "6", px: "24px", css_var: "--spacing-6" }
-    - { step: "8", px: "32px", css_var: "--spacing-8" }
-    - { step: "12", px: "48px", css_var: "--spacing-12" }
-    - { step: "16", px: "64px", css_var: "--spacing-16" }
-    - { step: "24", px: "96px", css_var: "--spacing-24" }
-    - { step: "32", px: "128px", css_var: "--spacing-32" }
+  spacing_scale:
+    base: "--spacing: 0.2rem"    # styles/index.css
+    note: >-
+      Tailwind's dynamic spacing multiplies this, so `p-4` is
+      calc(var(--spacing) * 4). The stepped `--spacing-*` vars below are the
+      same ladder named explicitly, for the places that need a var rather than
+      a utility.
+    steps:
+      - { step: "0.5", px: "2px", css_var: "--spacing-0-5" }
+      - { step: "1", px: "4px", css_var: "--spacing-1" }
+      - { step: "2", px: "8px", css_var: "--spacing-2" }
+      - { step: "3", px: "12px", css_var: "--spacing-3" }
+      - { step: "4", px: "16px", css_var: "--spacing-4" }
+      - { step: "6", px: "24px", css_var: "--spacing-6" }
+      - { step: "8", px: "32px", css_var: "--spacing-8" }
+      - { step: "12", px: "48px", css_var: "--spacing-12" }
+      - { step: "16", px: "64px", css_var: "--spacing-16" }
+      - { step: "24", px: "96px", css_var: "--spacing-24" }
+      - { step: "32", px: "128px", css_var: "--spacing-32" }
 
-radius_scale:
-  base: "--radius: 0.625rem"
-  canonical:
-    - { utility: rounded-sm, approx: "6px" }
-    - { utility: rounded-md, approx: "8px" }
-    - { utility: rounded-lg, approx: "10px" }
-    - { utility: rounded-xl, approx: "14px" }
-    - { utility: rounded-full, approx: pill }
+  radius_scale:
+    base: "--radius: 0.625rem"   # styles/index.css
+    canonical:
+      - { utility: rounded-sm, approx: "6px" }
+      - { utility: rounded-md, approx: "8px" }
+      - { utility: rounded-lg, approx: "10px" }
+      - { utility: rounded-xl, approx: "14px" }
+      - { utility: rounded-full, approx: pill }
 
-breakpoints:
-  - { prefix: sm, min_width: "640px", css_var: "--breakpoint-sm" }
-  - { prefix: md, min_width: "768px", css_var: "--breakpoint-md" }
-  - { prefix: lg, min_width: "1024px", css_var: "--breakpoint-lg" }
-  - { prefix: xl, min_width: "1280px", css_var: "--breakpoint-xl" }
-  - { prefix: 2xl, min_width: "1440px", css_var: "--breakpoint-2xl" }
+  breakpoints:
+    - { prefix: sm, min_width: "640px", css_var: "--breakpoint-sm" }
+    - { prefix: md, min_width: "768px", css_var: "--breakpoint-md" }
+    - { prefix: lg, min_width: "1024px", css_var: "--breakpoint-lg" }
+    - { prefix: xl, min_width: "1280px", css_var: "--breakpoint-xl" }
+    - { prefix: 2xl, min_width: "1440px", css_var: "--breakpoint-2xl" }
 
-layout_widths:
-  - { utility: w-panel, px: "400px" }
-  - { utility: w-journey-node, px: "360px" }
-  - { utility: w-overview-dock, px: "480px" }
-  - { utility: min-w-panel-lg, px: "640px" }
-  - { utility: min-w-journey-list, px: "720px" }
+  max_widths:
+    utilities: [max-w-5xl, max-w-7xl, max-w-full]
+    note: Stock Tailwind. No theme extension is required for these to resolve.
 
-max_widths:
-  - max-w-5xl
-  - max-w-7xl
-  - max-w-full
+  page_gutters:
+    pattern: gap-4 px-4 py-6 sm:px-6 lg:px-8
+    utilities_resolve_here: true
+    origin:
+      file: components/dashboard/DashboardPageShell.tsx
+      repo: skene-dashboard
+      why_kept: >-
+        The pattern is plain Tailwind and works anywhere, so it is the shipped
+        contract. The file it was read out of is not in this package — recorded
+        so nobody goes looking for it here.
 
-workspace_classes:
-  workspace-page-inset:
-    definition: "flex: 1 1 0%; min-height: 0; padding: var(--spacing-4)"
-    unified: "flex-1 min-h-0 p-4"
-  workspace-panel:
-    status: deprecated
-    replacement: Card with overflow-hidden rounded-lg shadow-none
+# ---------------------------------------------------------------------------
+# 2. Recorded, but nothing here defines it.
+# ---------------------------------------------------------------------------
 
-# coverage_canon named documentation/figma-coverage.json. Neither that file nor
-# a documentation/ directory exists in this repository — it never came across
-# with the templates. It lives in
-# skene-dashboard, which is also where the templates it indexes live, so the
-# pointer is only resolvable from there. Recorded as unresolvable rather than
-# left as a path an agent will try to read and get nothing from.
-coverage_canon:
-  file: figma-coverage.json
+unverified_here:
+  status: unverified_here
+  layout_widths:
+    utilities:
+      - { utility: w-panel, px: "400px" }
+      - { utility: w-journey-node, px: "360px" }
+      - { utility: w-overview-dock, px: "480px" }
+      - { utility: min-w-panel-lg, px: "640px" }
+      - { utility: min-w-journey-list, px: "720px" }
+    why_unverified: >-
+      Checked 2026-08-27: no `--width-panel`, `--width-journey-node` or any
+      sibling theme var exists in styles/, and no source file in this package
+      writes one of these classes. Under Tailwind v4 a utility with no backing
+      theme var does not error — it emits nothing. That is the exact shape of
+      the LogoRow failure AGENTS.md records under Configuration: `min-h-14`
+      never reached the stylesheet and the row rendered as a zero-height strip,
+      with no error and no warning. Writing `w-panel` in a consumer of this
+      package gets you an auto-width element and silence.
+    if_you_need_these: >-
+      Define the theme vars in your own app's stylesheet, or use an arbitrary
+      value (`w-[400px]`) so the failure is at least visible in the class name.
+      Do not assume this package supplies them.
+
+# ---------------------------------------------------------------------------
+# 3. Drawing a dashboard on a marketing page.
+# ---------------------------------------------------------------------------
+#
+# This block exists because "put a Skene dashboard visual on the landing page"
+# is a request that gets answered by inventing a mock, when the answer is
+# thirteen modules that already ship. They are the reason dashboard material
+# belongs in this file at all: the product-artifact sections are how a real
+# Skene Cloud surface is DEPICTED in marketing, without a screenshot carrying a
+# customer's repository name and counts.
+
+depicts_here:
+  status: depicts_here
+  read_first: machine/context.yaml
+  why_not_a_screenshot: >-
+    A drawn artifact is authored content — it takes props, it survives a
+    redesign of the real screen, and it never leaks a customer's data. Every
+    module below is a section, so per rules.yaml its copy is props.
+  start_with: sections/artifact-shell
+
+  polarity_warning: >-
+    artifact-shell and product-window put `light` on their own roots, and
+    evaluator-panel puts `dark` on its. That is load-bearing: these draw a light
+    product screen on a dark marketing page, and without the class every
+    mode-aware token inside resolves against the wrong ground — the 1.08:1
+    failure rules.yaml names. Do not strip it, and do not add a second one
+    outside. Read `polarity` in context.yaml for each module before nesting them.
+
+  modules:
+    - module: sections/artifact-shell
+      import: "@skene/design-system/sections/artifact-shell"
+      draws: >-
+        The shell every drawn artifact is built from — the textured field, the
+        light app window, its panels, the status pill and the data table.
+      exports: [ArtFrame, ArtPanel, ArtTitle, AppWindow, PanelCaption, AppPanel, StatPill, DataTable, DataRow, DataCell]
+      polarity: applies-light
+    - module: sections/product-window
+      import: "@skene/design-system/sections/product-window"
+      draws: >-
+        The marketing-register frame around a product mock: 640px cap, modal
+        shadow, optional title bar with a right-hand status slot.
+      polarity: applies-light
+      not: >-
+        Not interchangeable with artifact-shell's AppWindow. ProductWindow is
+        the marketing frame; AppWindow is the app chrome inside it.
+    - module: sections/discovery-table
+      import: "@skene/design-system/sections/discovery-table"
+      draws: The discovery artifact — events found, where, and whether each verified.
+      polarity: inherits
+    - module: sections/key-value-table
+      import: "@skene/design-system/sections/key-value-table"
+      draws: >-
+        The reference table at two densities, with a masked value, a note and
+        the 11px tag chip. Settings, environment and schema screens.
+      polarity: inherits
+    - module: sections/overview-tiles
+      import: "@skene/design-system/sections/overview-tiles"
+      draws: The workspace overview row — caption, one number, what it is made of.
+      polarity: inherits
+    - module: sections/finding-card
+      import: "@skene/design-system/sections/finding-card"
+      draws: >-
+        The three pieces that fill a window with the actual argument: Finding,
+        MetricCard, Sparkline.
+      polarity: inherits
+    - module: sections/pr-review
+      import: "@skene/design-system/sections/pr-review"
+      draws: The PR artifact — findings by severity, a suggested fix, the file it lands in.
+      polarity: inherits
+    - module: sections/lifecycle-canvas
+      import: "@skene/design-system/sections/lifecycle-canvas"
+      draws: The lifecycle artifact — stages, milestones, and the signals bound to them.
+      polarity: inherits
+    - module: sections/evaluator-panel
+      import: "@skene/design-system/sections/evaluator-panel"
+      draws: The two-pane evaluator — the index on one side, one evaluation's requirements on the other.
+      polarity: applies-dark
+    - module: sections/evaluator-list
+      import: "@skene/design-system/sections/evaluator-list"
+      draws: The evaluator index — every evaluation, and whether its signals were found.
+      polarity: inherits
+    - module: sections/evaluator-verify
+      import: "@skene/design-system/sections/evaluator-verify"
+      draws: One row per required event, its verdict, and the fields it must carry.
+      polarity: inherits
+    - module: sections/evaluator-check
+      import: "@skene/design-system/sections/evaluator-check"
+      draws: >-
+        The evaluator's Check tab — a metric, the formula under it, one row per
+        operand, and the results it produced.
+      polarity: inherits
+
+  before_you_pick: >-
+    These four evaluator modules and the two window modules are the two clusters
+    most often confused from outside. context.yaml carries `sameAs` and `notFor`
+    edges for every one of them and those are enforced symmetric — read the
+    entry before importing, not after.
+
+# ---------------------------------------------------------------------------
+# 4. skene-dashboard's own layout contract. NOT shipped here.
+# ---------------------------------------------------------------------------
+#
+# Kept, not stripped, and for a reason that is about to matter: the dashboard is
+# going to consume this package, and this is the standing list of what has to
+# land when it does. The Figma anchors are the only record of which frame each
+# template implements, so losing them loses the mapping.
+#
+# Verified 2026-08-14, re-checked 2026-08-27: no file in this repository imports
+# or references any of these outside this block and the ux-patterns.md table
+# that mirrors it. Nothing here breaks if they never land.
+
+dashboard_only:
+  status: dashboard_only
   repo: skene-dashboard
-  present_here: false
+  paths_resolve_in: skene-dashboard
+  tracked_as: P5 — promote the templates into this package
+  do_not: >-
+    Do not import a T-code from @skene/design-system. Do not write a
+    `workspace-*` class or a `rounded-nav` / `rounded-panel` utility in a
+    consumer of this package — none of them are defined here.
+
+  authority:
+    sidebar_width: w-60  # 240px — components/dashboard/Sidenav.tsx, skene-dashboard
+
+  templates:
+    T1:
+      component: SettingsTemplate
+      path: components/workspace/templates/SettingsTemplate.tsx
+      purpose: Two-pane settings (vertical tabs + content)
+      figma_anchors: ["63:1655", "63:1822", "63:2009", "63:2212", "63:2371"]
+    T2:
+      component: ListTemplate
+      path: components/workspace/templates/ListTemplate.tsx
+      purpose: Table + filter bar via DashboardPageShell
+      figma_anchors: ["63:1024", "63:1252"]
+    T2-canvas:
+      component: CanvasTemplate
+      path: components/workspace/templates/CanvasTemplate.tsx
+      purpose: Full-bleed agent-canvas, mission-designer
+    T3:
+      components: [DetailTemplate, WizardTemplate]
+      paths:
+        - components/workspace/templates/DetailTemplate.tsx
+        - components/workspace/templates/WizardTemplate.tsx
+      purpose: Step-driven / onboarding flows
+      figma_anchors: ["63:2542"]
+    T4:
+      component: DashboardTemplate
+      path: components/workspace/templates/DashboardTemplate.tsx
+      purpose: Overview canvas with rich chrome
+      figma_anchors: ["63:583"]
+
+  deprecated:
+    layout_tokens:
+      - lib/design-tokens.ts layout.*
+      - tokens.layout.dashboard.*
+    radius_vars:
+      - --radius-nav
+      - --radius-tight
+      - --radius-panel
+      - --radius-input
+    classes:
+      - rounded-nav
+      - rounded-panel
+    sidebar_legacy: 158px
+
+  workspace_classes:
+    workspace-page-inset:
+      definition: "flex: 1 1 0%; min-height: 0; padding: var(--spacing-4)"
+      unified: "flex-1 min-h-0 p-4"
+    workspace-panel:
+      status: deprecated
+      replacement: Card with overflow-hidden rounded-lg shadow-none
+
+  # coverage_canon named documentation/figma-coverage.json. That file does not
+  # exist in this repository — it never came across with the templates. It lives
+  # in skene-dashboard, alongside the templates it indexes, so the pointer is
+  # only resolvable from there. Recorded as unresolvable rather than left as a
+  # path an agent will try to read and get nothing from.
+  coverage_canon:
+    file: figma-coverage.json
+    repo: skene-dashboard
+    present_here: false

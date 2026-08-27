@@ -182,9 +182,17 @@ describe('the publish workflow', () => {
 
 describe('the run leaves nothing behind', () => {
   it('no scratch run log is shipped', () => {
-    // .runlog/ is this session's working file. It is useful while the work is
-    // in flight and noise in a package a dozen repos install.
-    expect(existsSync(resolve(ROOT, '.runlog')), 'delete .runlog before merging').toBe(false)
+    // .runlog/ is a working file: a run's target, gap list and evidence, read by
+    // subagents while the work is in flight. Noise in a package a dozen repos
+    // install.
+    //
+    // Asserted against what is COMMITTED, not what is on disk. The first version
+    // checked existsSync and so failed for the whole duration of every run that
+    // used one — turning `npm run verify` red while the work it was meant to
+    // guard was still being done, which trains you to stop running it. Shipping
+    // it is the failure; having it locally is the working state.
+    const tracked = execFileSync('git', ['ls-files', '.runlog'], { cwd: ROOT, encoding: 'utf8' })
+    expect(tracked.trim(), '.runlog is committed; it is a scratch file').toBe('')
     expect(pkg.files).not.toContain('.runlog')
   })
 
