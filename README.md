@@ -1,10 +1,17 @@
 # @skene/design-system
 
 Tokens, the Tailwind v4 theme, and the agent contracts. Consumed today by
-`skene-site`, and by nothing else: `skene-marketing-website` has zero matches in
-its package.json, its lockfile and its source, and `skene-dashboard` is where the
-tokens and the generators came from but still runs its own copies. One consumer,
-not three — see `machine/rules.yaml` for what each surface actually installs.
+`skene-site` and by `skene-marketing-website` — the live public site, which
+installs 0.12.0 and reaches the package on 222 import statements across 33
+files, more than any other surface. `skene-dashboard` is where the tokens and
+the generators came from and still runs its own copies. Two consumers, not one
+— see `machine/rules.yaml` for what each surface actually installs, and
+`machine/layouts.yaml` for the two layout contracts, dashboard and marketing.
+
+The "one consumer, not three" line that stood here until 2026-08-27 was
+measured against `skene-marketing-website`'s `main`, where the dependency was
+genuinely absent because the work sat on a branch. An agent that read it
+concluded the design system did not apply to the site it was editing.
 
 ## For agents
 
