@@ -1092,7 +1092,9 @@
       "summary": "Overlay + panel rendered as siblings of the nav bar, not inside it — same",
       "client": true,
       "lines": 126,
-      "cases": [],
+      "cases": [
+        "pattern-pill-nav-mobile-menu"
+      ],
       "demo": null,
       "usage": {
         "module": "pill-nav-mobile-menu",
@@ -3146,7 +3148,7 @@
   "unbuilt": [],
   "gallery": {
     "route": "/components",
-    "cases": 95
+    "cases": 96
   },
   "counts": {
     "modules": 89,
@@ -3154,7 +3156,7 @@
     "ui": 30,
     "patterns": 8,
     "sections": 51,
-    "noVisual": 4,
+    "noVisual": 3,
     "withUsage": 89
   }
 }

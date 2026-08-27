@@ -2762,6 +2762,59 @@ export default function ComponentGalleryPage() {
           }
         />
       </Case>
+
+      <Case name="pattern-pill-nav-mobile-menu" width="w-[880px]">
+        {/* The consumer's mobile nav, which every page of it carries, and the
+            only case on this page that is an IFRAME. The reason is not
+            decoration and it is not a workaround: every layer in this module
+            carries `md:hidden`, which is a viewport media query, and this suite
+            runs at 1280x900. Rendered inline, the toggle, the backdrop and the
+            panel are all `display: none` — a case here would capture an element
+            with no box, which is not a thin baseline, it is none. A container
+            cannot narrow a media query, and overriding `md:hidden` from the
+            call site would hold geometry the component never produces.
+
+            A same-origin iframe has its own viewport, so at 390 the module's own
+            breakpoint decides, unchanged. That also settles the panel: it is
+            `fixed inset-0`, so what it fills IS the viewport, and a 1280-wide
+            capture would be a baseline of a phone sheet stretched across a
+            desktop rather than of this component.
+
+            HELD, all of it measured off the render rather than read off the
+            classes: the open sheet at 390x760 on #141414. The frosted bar over
+            it at z-1050 against the panel and backdrop at z-1040, which is the
+            shipped z-order and the thing most likely to break silently. The
+            panel's top inset of 44.8px — `pt-14`, which is 56 on Tailwind's
+            default scale and 44.8 on this package's `--spacing: 0.2rem`, and
+            which clears this frame's 43.69px bar by 1.1px, so it is worth
+            knowing it is not the 56 the class name suggests. Then 19.2px of
+            side padding, link rows at 24px type on 12.8px of vertical padding
+            with a 1px white/10 hairline between each and one under the last,
+            the active link at rgb(254,192,137) against white/90 for the rest,
+            and the actions row at 19.2px padding and a 6.4px gap. Both toggle
+            states are in the bar, the same component twice at a 4px radius and
+            12px mono, because the closed one is otherwise unreachable — the
+            panel it belongs to is what is covering the screen.
+
+            NOT HELD: the transition between the two states, because the module
+            returns `null` when closed and there is no intermediate DOM to
+            capture; the `document.body.style.overflow` lock, which is a side
+            effect with no pixels; and everything at 768 and up, where every
+            layer is `display: none` by design and correctly renders nothing.
+
+            The frame is deliberately shorter than the iframe is tall, so the
+            capture proves the sheet reaches the bottom edge rather than
+            floating above it. Both mode sweeps are expected to produce
+            identical files: this drawer is invariant nav chrome and has no
+            light reading — see the route's own header. */}
+        <iframe
+          className="rounded-md border border-border"
+          height={760}
+          src="/components/mobile-menu"
+          title="pill-nav-mobile-menu at a 390px viewport"
+          width={390}
+        />
+      </Case>
     </main>
   )
 }

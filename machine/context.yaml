@@ -1258,7 +1258,7 @@ modules:
     client: true
     composes: [same-layer/pill-nav-frosted]
     polarity: inherits
-    seen: []
+    seen: [pattern-pill-nav-mobile-menu]
     overrides: [className, use client]
     props:
       PillNavMobileMenuToggle:

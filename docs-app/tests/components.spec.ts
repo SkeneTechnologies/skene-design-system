@@ -192,9 +192,14 @@ test('gallery is reachable and every component is claimed by a case', async ({ p
   // of those five sittings that made the point for the third time — writing
   // `section-integrations-highlight` found the band rendering its animation at
   // 0x0, in a module whose only defence was that nothing had ever looked at it.
-  // Four modules still have no case (`docs/sections.md` names them and ranks
-  // them); `ui/sonner` is the only one that is meant to be there.
-  expect(names.length).toBeGreaterThanOrEqual(87)
+  //
+  // Raised 87 → 88 on 2026-08-28 with `pattern-pill-nav-mobile-menu`, the
+  // consumer's mobile nav, which every page of it carries. It is the first case
+  // on the gallery that is an iframe: every layer in that module is `md:hidden`
+  // and this suite runs at 1280, so an inline case captured an element with no
+  // box at all. Three modules still have no case (`docs/sections.md` names them
+  // and ranks them); `ui/sonner` is the only one that is meant to be there.
+  expect(names.length).toBeGreaterThanOrEqual(88)
   expect(new Set(names).size, 'duplicate data-visual names').toBe(names.length)
 })
 

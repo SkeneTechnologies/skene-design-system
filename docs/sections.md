@@ -239,12 +239,12 @@ product-artifact sections that carried no gallery case, and so no light/dark
 baseline, each got one in `290a19f`, which took `noVisual` to 1: `sonner`, a
 toast host that renders nothing until something calls it, so there is no state
 to snapshot. That was true on 2026-08-15 and this paragraph went on asserting it
-while ten modules piled up behind it. Six have since been closed, `logo-row` on
-2026-08-27 and five more on 2026-08-28, which leaves this, and the sentence is
-now gated rather than typed: while 4 modules accumulated with no case:
+while ten modules piled up behind it. Seven have since been closed, `logo-row`
+on 2026-08-27 and six more on 2026-08-28, which leaves this, and the sentence is
+now gated rather than typed: while 3 modules accumulated with no case:
 
-    sonner                        pill-nav-mobile-menu
-    card-animation-integrations   journey-signal-scene
+    sonner                        card-animation-integrations
+    journey-signal-scene
 
 `sonner` is the only justified one, and it is justified permanently rather than
 pending: it is a toast HOST. It renders an empty portal and nothing else until
@@ -254,7 +254,7 @@ which point the baseline is of `Sonner`'s own overlay rather than of anything
 this package decides. Do not read it as debt and do not write a case for it to
 get the count to zero. The number that matters is one, not zero.
 
-The other three are unproven — `seen: []` in `machine/context.yaml`, whose own
+The other two are unproven — `seen: []` in `machine/context.yaml`, whose own
 header says an empty list means nothing in this repository has ever rendered the
 module, so treat its claims as unproven.
 
@@ -289,14 +289,24 @@ repairs it at its own call site with two `!` overrides mapping the chrome roles
 onto mode-aware ones; the package's pre-composed band ships the pairing
 unrepaired. The baseline holds the regression floor, not an endorsement.
 
+`patterns/pill-nav-mobile-menu` closed on the same day and is worth its own
+paragraph, because it is the first case on the gallery that is an IFRAME. Every
+layer in that module carries `md:hidden`, which is a viewport media query, and
+the suite runs at 1280x900: rendered inline, the toggle, the backdrop and the
+panel are all `display: none`, so a case captured an element with no box. A
+container cannot narrow a media query and overriding the class from the call
+site would hold geometry the component never produces, so
+`docs-app/app/components/mobile-menu/page.tsx` renders the open sheet and the
+case embeds it at 390x760, where the module's own breakpoint decides unchanged.
+The panel is `fixed inset-0`, so the viewport is also the thing it fills, which
+a 1280-wide capture could not have shown.
+
 What is left is a list of live blind spots, not tidiness debt.
-`patterns/pill-nav-mobile-menu` is the consumer's mobile nav, which every page
-carries, and it needs an open sheet at a phone viewport before a frame of it
-means anything. `sections/card-animation-integrations` and
-`sections/journey-signal-scene` are both multi-state, so one frame proves one
-state and each needs its states named. `sections/journey-signal-scene` also has
-three geometry defects already filed against it by that consumer, which is the
-same failure mode as `logo-row` and the same reason it survived.
+`sections/card-animation-integrations` and `sections/journey-signal-scene` are
+both multi-state, so one frame proves one state and each needs its states named.
+`sections/journey-signal-scene` also has three geometry defects already filed
+against it by the consumer, which is the same failure mode as `logo-row` and the
+same reason it survived.
 
 Two mechanisms failed here, not one. The list went stale because a hand-typed
 count has no gate behind it — `__tests__/docs-counts.test.ts` now reads the
