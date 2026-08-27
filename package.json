@@ -27,6 +27,7 @@
     "CHANGELOG.md",
     "assets",
     "scripts",
+    "skills",
     "__tests__"
   ],
   "exports": {
@@ -43,6 +44,7 @@
     "./tokens.css": "./styles/tokens.css",
     "./machine/*": "./machine/*",
     "./docs/*": "./docs/*",
+    "./skills/*": "./skills/*",
     "./package.json": "./package.json",
     ".": {
       "types": "./dist/index.d.ts",
