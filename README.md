@@ -34,7 +34,75 @@ custom properties, 127 in agreement and 12 in genuine conflict.
 
 ## Install
 
-Consumed as a git dependency, so there is no npm registry and no npm token:
+### From the registry. This is the path new consumers take.
+
+```bash
+npm install @skene/design-system
+```
+
+The scope stays `@skene`, and that is the entire reason this publishes to
+npmjs rather than GitHub Packages. GitHub Packages' npm registry requires the
+package scope to equal the repository owner, so the package would have had to
+become `@skenetechnologies/design-system` — a rename that rewrites the import
+specifier in every file of every consumer, which is precisely the churn this
+package exists to remove. npmjs keeps the specifier, so a migration is one line
+in a consumer's `package.json` and nothing else. The price is a paid plan and
+an `NPM_TOKEN`. It is cheaper than the rename.
+
+It is published **restricted**, so an install with no credential fails — and it
+fails as a 404, which reads as "no such package" rather than "you are not
+authenticated". Do not go looking for a typo in the name.
+
+Two places the token belongs, and one it never does.
+
+**Local dev: the developer's `~/.npmrc`.**
+
+```
+//registry.npmjs.org/:_authToken=<token>
+```
+
+**CI: a repository secret, given to npm by `actions/setup-node`.**
+
+```yaml
+- uses: actions/setup-node@v4
+  with:
+    node-version: 20
+    registry-url: https://registry.npmjs.org
+- run: npm ci
+  env:
+    NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+```
+
+`registry-url` is the load-bearing line: it is what makes setup-node write an
+`.npmrc` that reads `NODE_AUTH_TOKEN`. Without it the secret is an environment
+variable nothing consults, and the install dies with the same anonymous 404 as
+no token at all.
+
+**Never a project-level `.npmrc`.** That is a token in a commit. This
+repository is public, and a committed credential is leaked the moment it is
+pushed regardless — rotating it is the only remedy, and you find out you needed
+to from a secret-scanning alert. `.npmrc` is gitignored here for that reason;
+gitignore it in the consumer too.
+
+### What a consumer gains by moving
+
+- **No 36 MB clone on every cold CI install.** A git dependency fetches the
+  repository, `.git` and all. The published tarball is 12.85 MB and arrives
+  already resolved.
+- **An ordinary semver range in `dependencies`**, resolved by npm, instead of a
+  hand-maintained range embedded in a URL. That embedded range has gone stale
+  four times; the note below is kept as the record of it.
+- **`npm outdated` and Renovate start working.** Neither has anything to say
+  about a git URL, which is why no consumer has ever been told a new version of
+  this package exists.
+
+### Legacy: the git dependency
+
+Supported until every consumer has migrated, and not a day longer — it is also
+why `dist/` is still committed and still gated. Everything from here to `## Use`
+describes this path only.
+
+Installed this way there is no npm registry and no npm token:
 
 ```jsonc
 "@skene/design-system": "git+https://github.com/SkeneTechnologies/skene-design-system.git#semver:^0.12.0"
