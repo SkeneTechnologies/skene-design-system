@@ -85,6 +85,58 @@ describe('a token cannot be committed', () => {
   })
 })
 
+describe('the credential check cannot block a release it cannot judge', () => {
+  // v0.13.0 failed twice, and the SECOND failure was this check rather than
+  // npm: `npm whoami` reads `/-/whoami`, which a Granular Access Token scoped
+  // to packages alone is not entitled to, so it 401s for a token whose publish
+  // rights may be perfectly fine. The check existed to save a few minutes of
+  // CI on a dead token; it was spending releases instead, and the minutes are
+  // the cheaper thing.
+  //
+  // Advisory is safe here specifically because npm rejects bad credentials
+  // before accepting a tarball — a late failure costs a run, never the version
+  // number, which the EOTP rejection demonstrated.
+  const workflow = read('.github/workflows/publish.yml')
+  const start = workflow.indexOf('- name: Check the npm credential')
+  const step = workflow.slice(start, workflow.indexOf('- name:', start + 10))
+
+  it('is present at all', () => {
+    expect(start, 'the credential check is gone entirely').toBeGreaterThan(-1)
+    expect(step).toContain('npm whoami')
+  })
+
+  it('warns rather than failing the job', () => {
+    expect(step, 'whoami failure should be a ::warning::, not an ::error::').toContain('::warning::')
+    expect(step, 'the credential check must not exit non-zero').not.toMatch(/exit 1/)
+  })
+})
+
+describe('the publish step cannot report a rejected upload as green', () => {
+  // v0.13.0's first publish came back EOTP, and the step now traps that to
+  // explain it. Trapping means piping `npm publish` through `tee`, and a
+  // pipeline's exit status in bash is its LAST command's — tee's, which always
+  // succeeds. An Actions `run:` step runs under `bash -e {0}`, with no
+  // pipefail, so without it set explicitly a rejected publish would read as a
+  // successful one. That is the worst outcome this workflow can produce: a
+  // release everyone believes shipped and nothing installed.
+  const workflow = read('.github/workflows/publish.yml')
+  const step = workflow.slice(workflow.indexOf('- name: Publish'))
+
+  it('sets pipefail wherever it pipes npm publish', () => {
+    if (!/npm publish[^\n]*\|/.test(step)) return // not piped; nothing to guard
+    expect(step, 'the Publish step pipes npm publish without `set -o pipefail`').toContain(
+      'set -o pipefail',
+    )
+  })
+
+  it('still exits non-zero on failure rather than only annotating', () => {
+    // An `::error::` line colours the log; it does not fail the job. If the
+    // trap ever loses its `exit 1`, npm's rejection becomes a warning on a
+    // green run.
+    expect(step).toMatch(/exit 1/)
+  })
+})
+
 describe('the package is publishable', () => {
   it('publishes restricted, to a named registry', () => {
     // `access: restricted` is not a preference. The licence is UNLICENSED and
