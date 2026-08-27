@@ -74,11 +74,13 @@ consumers:
       NOTE, 0.13.0: `machine/compositions.yaml` derives its whole corpus from
       THIS repository (branch claude/calcom-style-wireframes-a64a8e @ b96b935),
       which is by itself proof the `installs: false` reading was wrong — the
-      release read 19 of its routes while the registry beside it said the repo
-      had zero matches in its package.json, its lockfile and its source. That
-      corpus is also incomplete: it excludes (site)/page.tsx and
-      (site)/pricing/page.tsx as importing nothing, and both import from this
-      package at the commit it names. See compositions.yaml `not_covered`.
+      release read 17 of its routes while the registry beside it said the repo
+      had zero matches in its package.json, its lockfile and its source. The
+      same `installs: false` reading is what let the release record
+      (site)/page.tsx and (site)/pricing/page.tsx as importing nothing: they
+      import seventeen modules and nine at the commit it names. Both are
+      archetypes in that file now, and the corpus is 19 composing routes of 20.
+      See compositions.yaml `corpus.history`.
   - repo: skene-dashboard
     surface: app
     installs: false

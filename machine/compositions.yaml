@@ -7,11 +7,19 @@
 # features page is made of, in what order, or which band is load-bearing. This
 # does, and only where a real page has already been built that way.
 #
-# WHERE THE EVIDENCE CAME FROM: 19 routes on
+# WHERE THE EVIDENCE CAME FROM: every `page.tsx` under `src/app/(site)` on
 # skene-marketing-website@claude/calcom-style-wireframes-a64a8e (b96b935, "port
-# cal.com-style hero to 13 subpages"), read for the design-system modules each
-# one imports. Nothing here is designed. Every recipe carries the routes it was
-# read out of, and a recipe with one route says so rather than generalising.
+# cal.com-style hero to 13 subpages") — 20 routes, of which 19 import a section
+# or a pattern from this package. Read for the design-system modules each one
+# imports. Nothing here is designed. Every recipe carries the routes it was read
+# out of, and a recipe with one route says so rather than generalising.
+#
+# The first cut of this file read 17 of those routes and reported the other two
+# as importing nothing. That was false, and both were the densest routes in the
+# corpus. See `corpus.history`. The derivation below is the re-run, and
+# `__tests__/compositions.test.ts` now checks every count in it against the
+# route lists it cites, so a denominator cannot drift from its own evidence
+# again.
 #
 # THE ORDER IS IMPORT ORDER. It is the order the modules appear in the route's
 # source, which tracks render order closely but is not the DOM. Treat it as the
@@ -23,96 +31,98 @@
 #   intersection of two is a coincidence until a third confirms it) | single
 #   (1 route — recorded, not generalised).
 #
-# WHAT IS NOT HERE: the home page and the pricing page. See `not_covered` --
-# and read `corpus.correction` first. The reason recorded there when this file
-# was written ("both import no design-system section at all") was checked on
-# 2026-08-27 against the commit this file cites and is FALSE. Both routes
-# import from this package, heavily, at b96b935. The archetypes below were
-# therefore derived from a corpus with its two densest routes missing, and
-# every `in: N, of: M` denominator is short by two.
+# WHAT IS NOT HERE: `(landing)/alternatives/*`, and every surface outside this
+# one marketing site. See `not_covered`, which is part of the contract: an
+# uncovered thing is written down, never dropped. `context.yaml`'s `seen: []`
+# is the precedent.
 
-version: "1.0.0"
+version: "1.1.0"
 
 corpus:
   source: skene-marketing-website
   branch: claude/calcom-style-wireframes-a64a8e
   commit: b96b935
-  routes_read: 19
-  routes_composing_sections: 17
-  routes_importing_nothing: 2
-  modules_seen: 34
+  routes_read: 20
+  routes_composing_sections: 19
+  routes_importing_nothing: 1        # (site)/community/page.tsx, ui/button only
+  modules_seen: 40
   note: >-
     Read as imports per route, in source order. One marketing site, one branch,
     one commit — this is what has been built, not what is possible.
-  correction:
-    found: "2026-08-27, by skene-marketing-website while re-verdicting its upstream asks"
-    status: known_wrong_not_yet_re-derived
-    what: >-
-      The counts above and every archetype below were derived from 17 routes,
-      not 19, and the two that were dropped are the two densest in the corpus.
-      Re-measured at the cited commit b96b935 by reading
-      `@skene/design-system/(sections|patterns)/*` out of every `page.tsx`
-      under `src/app/(site)`:
-    measured:
-      route_files_under_site: 20
-      routes_composing_a_section_or_pattern: 19
-      routes_composing_none: 1        # (site)/community/page.tsx, ui/button only
-      distinct_modules_seen: 40
-      stated_here: { routes_read: 19, routes_composing_sections: 17, routes_importing_nothing: 2, modules_seen: 34 }
-    spine_re_measured:
-      - { module: sections/artifact-shell, stated: "14 of 17", actual: "16 of 19" }
-      - { module: sections/key-value-table, stated: "9 of 17", actual: "10 of 19" }
-      - { module: sections/trust-panel, stated: "8 of 17", actual: "10 of 19" }
-      - { module: patterns/marketing, stated: "7 of 17", actual: "9 of 19" }
-      - { module: sections/code, stated: "7 of 17", actual: "7 of 19" }
-    modules_absent_from_this_file_entirely: >-
-      Six modules appear ONLY on the two dropped routes, so they appear in no
-      spine entry, no archetype and no `optional` list here: patterns/dither,
-      sections/evaluator-list, sections/feature-row, sections/final-cta,
-      sections/plan-card, sections/question-grid. Two of those matter more than
-      the rest. `sections/feature-row` is the module
-      `machine/rules.yaml` names in `render_marketing_cards_as_feature_row` —
-      the package's own must-rule for a marketing card — and this file does not
-      mention it once. `sections/final-cta` is the closing band, which the
-      consumer's own spec says every page carries exactly once.
-    why_it_matters: >-
-      An agent following this file composes a page without the marketing card
-      the rules file mandates and without a closer. Do not treat the archetypes
-      as wrong — they were read correctly out of the routes they cite — but
-      treat the corpus as short by its two most important members until this is
-      re-derived.
-    not_re-derived_here: >-
-      Adding both routes changes every denominator, and the home route's 17
-      modules match no existing archetype, so re-deriving is a maintainer's
-      call rather than a drive-by edit. Recorded instead.
+  history:
+    - date: "2026-08-27"
+      what: derived
+      by: "@skene/design-system v0.13.0"
+      note: >-
+        First cut. Read 17 routes and recorded the other two — (site)/page.tsx
+        and (site)/pricing/page.tsx — under `not_covered` as importing no
+        design-system section at all.
+    - date: "2026-08-27"
+      what: found_wrong
+      by: "skene-marketing-website, re-verdicting its upstream asks"
+      note: >-
+        Both statements were false at the commit this file cites. At b96b935
+        the home route imports SEVENTEEN modules from this package and is the
+        densest route in the corpus; the pricing route imports nine, including
+        `sections/plan-card`, the module the entry named as absent. So every
+        `in: N, of: M` denominator was short by two, and six modules appeared
+        nowhere in the file at all because they appear only on those two
+        routes: patterns/dither, sections/evaluator-list, sections/feature-row,
+        sections/final-cta, sections/plan-card, sections/question-grid. Two of
+        those are load-bearing elsewhere in this package. `sections/feature-row`
+        is what `render_marketing_cards_as_feature_row` in `machine/rules.yaml`
+        mandates for a marketing card, and `sections/final-cta` is the closing
+        band. An agent following this file composed a page with neither.
+    - date: "2026-08-27"
+      what: re-derived
+      note: >-
+        Both routes read at b96b935 and added as archetypes — `home-page` and
+        `pricing-page`, both `single`, because neither matches an existing
+        shape and one instance generalises to nothing. Corpus 17 -> 19 composing
+        routes, modules_seen 34 -> 40, every spine denominator and every
+        archetype count re-counted from the route lists below. `not_covered`
+        no longer names either route: a route cannot be both cited by an
+        archetype and recorded as uncovered, and the test file now enforces
+        exactly that.
+    - date: "2026-08-27"
+      what: gated
+      note: >-
+        The original defect was invisible because nothing checked this file
+        against itself. `__tests__/compositions.test.ts` now recomputes every
+        number here from the `routes:` maps: archetype `instances`, spine
+        `in`/`of`, each `optional` count, and that a `load_bearing` module
+        really does appear in every route of its archetype. A stale denominator
+        now fails `npm test`. What no test can check is whether the corpus is
+        complete — that needs someone to re-read the consumer, which is how
+        this was found.
 
 # What the whole corpus repeats, before any archetype. An agent building a page
 # not covered below should start from these five and justify leaving one out.
 spine:
   - module: sections/artifact-shell
-    in: 14
-    of: 17
+    in: 16
+    of: 19
     note: >-
       The near-universal band. Every page that shows the product at all hangs it
       on this. polarity is applies-light — it brings its own ground, so it does
       not need the light class the page would otherwise owe it.
   - module: sections/key-value-table
-    in: 9
-    of: 17
+    in: 10
+    of: 19
     note: The reference half. Usually inside or immediately after the artifact.
   - module: sections/trust-panel
-    in: 8
-    of: 17
+    in: 10
+    of: 19
     note: The evidence band. Late on the page in every route that carries it.
   - module: patterns/marketing
-    in: 7
-    of: 17
+    in: 9
+    of: 19
     note: >-
       Page furniture, not a band — nav, display heading, eyebrow. Where it is
       imported it is imported first.
   - module: sections/code
     in: 7
-    of: 17
+    of: 19
     note: The inline identifier chip. Its position in the list is where the page
       first names a field or a flag, not a band of its own.
 
@@ -370,11 +380,96 @@ archetypes:
       applies-light. The polarity flips between two adjacent bands here on
       purpose — see rule 2 in machine/rules.yaml before you reorder them.
 
+  home-page:
+    confidence: single
+    instances: 1
+    argues: >-
+      Everything at once, in one pass: the artifact, the discovery table, the
+      evaluator, the marketing cards, the plans, the questions, the proof, and
+      a closer. Seventeen modules, the densest route in the corpus by six, and
+      the only one that carries the whole product argument without a second
+      page to hand off to.
+    load_bearing: []
+    observed:
+      - patterns/dither
+      - patterns/marketing
+      - sections/agent-callout
+      - sections/artifact-shell
+      - sections/bridge
+      - sections/check-list
+      - sections/discovery-table
+      - sections/evaluator-list
+      - sections/feature-row
+      - sections/final-cta
+      - sections/glyph-badge
+      - sections/funnel
+      - sections/plan-card
+      - sections/pr-review
+      - sections/question-grid
+      - sections/surface-cards
+      - sections/trust-panel
+    routes:
+      "(site)/page.tsx":
+        [patterns/dither, patterns/marketing, sections/agent-callout,
+         sections/artifact-shell, sections/bridge, sections/check-list,
+         sections/discovery-table, sections/evaluator-list,
+         sections/feature-row, sections/final-cta, sections/glyph-badge,
+         sections/funnel, sections/plan-card, sections/pr-review,
+         sections/question-grid, sections/surface-cards, sections/trust-panel]
+    watch_for: >-
+      One route, so `load_bearing` is empty and the list above is `observed`.
+      Do NOT read it as a checklist: seventeen bands on one page is what a home
+      page did once, not what a page needs. Its value is that five of these
+      modules appear nowhere else in the corpus — patterns/dither,
+      sections/evaluator-list, sections/feature-row, sections/final-cta,
+      sections/question-grid — so this is the only recorded evidence of how any
+      of them is composed. Two of the five matter beyond this route:
+      `sections/feature-row` is the marketing card
+      `render_marketing_cards_as_feature_row` in `machine/rules.yaml` mandates,
+      and `sections/final-cta` is the closing band. If you are building any
+      page and have neither, that is the omission to check first.
+      The route also composes them by hand rather than through the consumer's
+      own page template, which is a fact about that consumer and not about this
+      package — but it is why the file's first cut mistook it for a route that
+      imports nothing.
+
+  pricing-page:
+    confidence: single
+    instances: 1
+    argues: >-
+      Price the thing, then answer for it: the plans, the comparison, the
+      questions and the proof, with the artifact used as evidence rather than
+      as the opener.
+    load_bearing: []
+    observed:
+      - patterns/marketing
+      - sections/trust-panel
+      - sections/comparison-table
+      - sections/faq-band
+      - sections/finding-card
+      - sections/check-list
+      - sections/plan-card
+      - sections/artifact-shell
+      - sections/key-value-table
+    routes:
+      "(site)/pricing/page.tsx":
+        [patterns/marketing, sections/trust-panel, sections/comparison-table,
+         sections/faq-band, sections/finding-card, sections/check-list,
+         sections/plan-card, sections/artifact-shell, sections/key-value-table]
+    watch_for: >-
+      One route, and the corpus's only pairing of `sections/plan-card` with
+      `sections/comparison-table` — the plans state the offer and the table
+      answers what separates them, which is the move worth copying. The
+      consumer's own build spec names this route its CALIBRATION page: the
+      shape every other page copies when a shape is ambiguous. That is a claim
+      about that site, not a rule this package can enforce, but it is the
+      reason this is the single worst route in the corpus to read past.
+
 # Observations that are not archetypes but change how the above is read.
 findings:
   - id: artifact-is-the-default
     note: >-
-      14 of the 17 composing routes import sections/artifact-shell. It is the
+      16 of the 19 composing routes import sections/artifact-shell. It is the
       corpus's default band. If a page you are building has no artifact, that is
       a decision to make deliberately, not by omission.
   - id: no-artifact-free-recipe
@@ -385,54 +480,36 @@ findings:
       recipe for an artifact-free page, only three unrelated instances of one.
   - id: furniture-goes-first
     note: >-
-      patterns/marketing is imported by 7 routes and lands first or second in 5
+      patterns/marketing is imported by 9 routes and lands first or second in 7
       of them. The two exceptions are (site)/developers/reference (fifth of
       eight) and (site)/product/security (last of eight). Import order is not
       DOM order, so treat those two as noise rather than as a second
       convention.
+  - id: the-closer-and-the-card-have-one-instance-each
+    note: >-
+      sections/final-cta and sections/feature-row each appear on exactly ONE of
+      the 19 composing routes, the home page. That is thin evidence and it is
+      recorded as thin — but it is not a reason to skip either. feature-row is
+      the module `render_marketing_cards_as_feature_row` in machine/rules.yaml
+      MANDATES for a marketing card, so a page rendering cards any other way is
+      breaking a must-rule regardless of what this corpus shows; and a closing
+      band is the one thing the consumer's own spec says every page carries
+      exactly once. Read the single instance as the only worked example, not as
+      the strength of the claim.
   - id: comparison-table-is-underused
     note: >-
-      sections/comparison-table appears once in 19 routes, on (site)/supabase —
-      not on the one route named /vs/. Before adding a comparison band, check
-      whether the argument is a table or a finding.
+      sections/comparison-table appears twice in 19 composing routes, on
+      (site)/supabase and (site)/pricing — and on neither of the two routes
+      whose job is comparison, including the one named /vs/, which argues with
+      findings instead. Before adding a comparison band, check whether the
+      argument is a table or a finding.
 
-# Stated, not filled in. context.yaml's `seen: []` is the precedent.
+# Stated, not filled in. context.yaml's `seen: []` is the precedent. A route
+# that any archetype above cites must NOT appear here — being covered and being
+# uncovered are the two halves of the corpus, and the first version of this file
+# put its two densest routes in the wrong half. `__tests__/compositions.test.ts`
+# now fails if the halves overlap.
 not_covered:
-  - route: "(site)/page.tsx"
-    what: the home page
-    observed_modules:
-      [patterns/dither, patterns/marketing, sections/agent-callout,
-       sections/artifact-shell, sections/bridge, sections/check-list,
-       sections/discovery-table, sections/evaluator-list, sections/feature-row,
-       sections/final-cta, sections/funnel, sections/glyph-badge,
-       sections/plan-card, sections/pr-review, sections/question-grid,
-       sections/surface-cards, sections/trust-panel]
-    status: dropped_in_error
-    why: >-
-      CORRECTED 2026-08-27. This entry read "Imports no module from
-      @skene/design-system … deliberately not built from these parts". That is
-      false at the commit this file cites: at b96b935
-      `src/app/(site)/page.tsx` imports the seventeen modules listed above, the
-      densest route in the corpus. What IS true, and is probably what the
-      original reading was reaching for, is that the home route composes them
-      by hand rather than through the site's own page template — a distinction
-      about the consumer's template, not about this package. No archetype below
-      was derived with these seventeen in scope. See `corpus.correction`.
-  - route: "(site)/pricing/page.tsx"
-    what: the pricing page
-    observed_modules:
-      [patterns/marketing, sections/artifact-shell, sections/check-list,
-       sections/comparison-table, sections/faq-band, sections/finding-card,
-       sections/key-value-table, sections/plan-card, sections/trust-panel]
-    status: dropped_in_error
-    why: >-
-      CORRECTED 2026-08-27. This entry read "Imports no module from
-      @skene/design-system, despite the package shipping PlanCard". Both halves
-      are wrong: at b96b935 `src/app/(site)/pricing/page.tsx` imports the nine
-      modules above and `sections/plan-card` is one of them. It is also the one
-      route the consumer's own build spec names as its calibration page, the
-      shape every other page copies when ambiguous — so it is the single worst
-      route in the corpus to have dropped. See `corpus.correction`.
   - route: "(landing)/alternatives/*"
     what: the twenty competitor-comparison pages
     observed_modules: []

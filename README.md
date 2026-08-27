@@ -25,7 +25,7 @@ in `node_modules/@skene/design-system/`:
 | `machine/components.yaml` | what you must not do with a given component. |
 | `machine/rules.yaml` | the reach ladder, and the seven things never to do. |
 | `machine/layouts.yaml` | the page-level geometry. Every block carries a `status`: `shipped_here` is the scale you can build on, `marketing` (`composed_here`) is the band grammar — rhythm, ground alternation, the 5fr/7fr split, the cream inset, the gap constants — that the public site composes these sections into. |
-| `machine/compositions.yaml` | which sections a page of a given kind carries. Read its corpus caveat first: it was derived from `skene-marketing-website`, and its `not_covered` entry excludes that site's home and pricing routes on the ground that they import nothing from this package, which is not true at the commit it cites. |
+| `machine/compositions.yaml` | which sections a page of a given kind carries, in ten archetypes derived from 19 composing routes on `skene-marketing-website`. Every count in it is recomputed from its own route citations by `__tests__/compositions.test.ts`; `corpus.history` records the one time they were not, when the corpus dropped its two densest routes and every denominator went two short. |
 | `docs/sections.md` | prose: the decision paths, and the overlaps with a verdict for each. |
 | `inventory.json` | the generated index: every module with its exports, line count, gallery **cases** and authored usage, plus the ten resolved design decisions with their verdicts. This is what `seen:` in `context.yaml` points at. Import it as `@skene/design-system/inventory.json`, or read `docs-app/app/decisions/inventory.json` under the package root. |
 
