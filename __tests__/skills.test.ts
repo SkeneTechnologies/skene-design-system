@@ -171,6 +171,15 @@ describe('what the skills quote is true', () => {
 })
 
 describe('the skills ship', () => {
+  it('is reachable by subpath, the way machine/ and docs/ already are', () => {
+    // Agent skill discovery scans the filesystem rather than importing, so this
+    // is not what makes the skills readable. It is here because `./machine/*`
+    // and `./docs/*` are exported and an unexported `./skills/*` beside them
+    // reads as an oversight — and because an exports map is the only statement
+    // this package makes about what is addressable from outside.
+    expect(pkg.exports['./skills/*']).toBe('./skills/*')
+  })
+
   it('is in package.json files, so a consumer gets them from node_modules', () => {
     // A skill that only exists in this repository routes nothing: every agent
     // it is written for is working in a CONSUMER repo, reading the installed
