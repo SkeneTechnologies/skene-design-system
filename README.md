@@ -6,7 +6,8 @@ installs 0.12.0 and reaches the package on 222 import statements across 33
 files, more than any other surface. `skene-dashboard` is where the tokens and
 the generators came from and still runs its own copies. Two consumers, not one
 — see `machine/rules.yaml` for what each surface actually installs, and
-`machine/layouts.yaml` for the two layout contracts, dashboard and marketing.
+`machine/layouts.yaml` for the layout contracts — what this package ships,
+what it only records, and the marketing grammar its sections get composed into.
 
 The "one consumer, not three" line that stood here until 2026-08-27 was
 measured against `skene-marketing-website`'s `main`, where the dependency was
@@ -23,6 +24,7 @@ in `node_modules/@skene/design-system/`:
 | `machine/context.yaml` | **which module to reach for**, and what each one can also be used for. Start here. |
 | `machine/components.yaml` | what you must not do with a given component. |
 | `machine/rules.yaml` | the reach ladder, and the seven things never to do. |
+| `machine/layouts.yaml` | the page-level geometry. Every block carries a `status`: `shipped_here` is the scale you can build on, `marketing` (`composed_here`) is the band grammar — rhythm, ground alternation, the 5fr/7fr split, the cream inset, the gap constants — that the public site composes these sections into. |
 | `docs/sections.md` | prose: the decision paths, and the overlaps with a verdict for each. |
 | `inventory.json` | the generated index: every module with its exports, line count, gallery **cases** and authored usage, plus the ten resolved design decisions with their verdicts. This is what `seen:` in `context.yaml` points at. Import it as `@skene/design-system/inventory.json`, or read `docs-app/app/decisions/inventory.json` under the package root. |
 

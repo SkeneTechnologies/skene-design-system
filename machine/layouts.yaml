@@ -14,10 +14,24 @@
 # the header and remembering it.
 #
 # Human reference: docs/ux-patterns.md §6b, §7, §17.
+#
+# A fifth block was added on 2026-08-27: `marketing`, carrying `status:
+# composed_here`. Everything above it answers "what can I import"; that block
+# answers the question the only external consumer actually had, which nothing in
+# this file answered before — "what shape does a marketing band take". The
+# grammar is not defined here and cannot be: the template that enforces it lives
+# in the consumer. It is recorded because an agent asked to build a marketing
+# page from `machine/` and given only the blocks above produces dashboard-shaped
+# bands — sidebar gutters, `gap-4 px-4 py-6`, `max-w-7xl` — which is what
+# happened, and is why that consumer had to write a 2,000-line spec of its own.
+#
+# Read it beside `machine/compositions.yaml`. That file says which sections a
+# page of a given kind carries; this one says what a band made of them looks
+# like. Both are read out of the same consumer and neither is enforced here.
 
 version: "2.0.0"
 
-# The four values `status` takes. Read this before anything else in the file.
+# The five values `status` takes. Read this before anything else in the file.
 status_legend:
   shipped_here: >-
     True of this package right now, verified against styles/ and src/. Safe to
@@ -35,6 +49,13 @@ status_legend:
     land when the dashboard migrates onto this package. NOT present in this
     package. Every path in a `dashboard_only` block resolves in skene-dashboard
     and nowhere here — do not try to import or read one from a consumer.
+  composed_here: >-
+    Not a module and not a class you can import: the grammar a consumer composes
+    this package's sections INTO. Every value is measured off pages that ship
+    today, so it is evidence rather than proposal, but nothing in this
+    repository enforces it. Treat it as the shape to land in, not as an API —
+    and do not read a `composed_here` value as a default this package will
+    supply for you. Same standing as machine/compositions.yaml.
 
 # ---------------------------------------------------------------------------
 # 1. What this package ships.
@@ -56,18 +77,27 @@ shipped_here:
       calc(var(--spacing) * 4). The stepped `--spacing-*` vars below are the
       same ladder named explicitly, for the places that need a var rather than
       a utility.
+    # THE trap in this package, and it has claimed four modules. Because
+    # --spacing is 0.2rem and not the stock 0.25rem, Tailwind step N is 80% of
+    # the `--spacing-N` custom property with the same number: `p-4` is 12.8px
+    # while `--spacing-4` is 16px. artifact-shell.tsx:35-40, funnel.tsx:48-49
+    # and integration-rows.tsx:73-74 all write literal px and say why.
+    # logo-row.tsx did not, and renders at 80% of its own documented size.
+    warning: >-
+      Tailwind step N is NOT --spacing-N. Write the literal px when you are
+      porting a measured value, and do not tidy it back onto the numeric scale.
     steps:
-      - { step: "0.5", px: "2px", css_var: "--spacing-0-5" }
-      - { step: "1", px: "4px", css_var: "--spacing-1" }
-      - { step: "2", px: "8px", css_var: "--spacing-2" }
-      - { step: "3", px: "12px", css_var: "--spacing-3" }
-      - { step: "4", px: "16px", css_var: "--spacing-4" }
-      - { step: "6", px: "24px", css_var: "--spacing-6" }
-      - { step: "8", px: "32px", css_var: "--spacing-8" }
-      - { step: "12", px: "48px", css_var: "--spacing-12" }
-      - { step: "16", px: "64px", css_var: "--spacing-16" }
-      - { step: "24", px: "96px", css_var: "--spacing-24" }
-      - { step: "32", px: "128px", css_var: "--spacing-32" }
+      - { step: "0.5", px: "2px", css_var: "--spacing-0-5" , tailwind_px: "1.6px" }
+      - { step: "1", px: "4px", css_var: "--spacing-1" , tailwind_px: "3.2px" }
+      - { step: "2", px: "8px", css_var: "--spacing-2" , tailwind_px: "6.4px" }
+      - { step: "3", px: "12px", css_var: "--spacing-3" , tailwind_px: "9.6px" }
+      - { step: "4", px: "16px", css_var: "--spacing-4" , tailwind_px: "12.8px" }
+      - { step: "6", px: "24px", css_var: "--spacing-6" , tailwind_px: "19.2px" }
+      - { step: "8", px: "32px", css_var: "--spacing-8" , tailwind_px: "25.6px" }
+      - { step: "12", px: "48px", css_var: "--spacing-12" , tailwind_px: "38.4px" }
+      - { step: "16", px: "64px", css_var: "--spacing-16" , tailwind_px: "51.2px" }
+      - { step: "24", px: "96px", css_var: "--spacing-24" , tailwind_px: "76.8px" }
+      - { step: "32", px: "128px", css_var: "--spacing-32" , tailwind_px: "102.4px" }
 
   radius_scale:
     base: "--radius: 0.625rem"   # styles/index.css
@@ -310,3 +340,232 @@ dashboard_only:
     file: figma-coverage.json
     repo: skene-dashboard
     present_here: false
+
+# ---------------------------------------------------------------------------
+# 5. The grammar the marketing site composes these sections into.
+# ---------------------------------------------------------------------------
+#
+# Transcribed, not designed. Source: skene-marketing-website
+# `.webanatomy/build-page/BUILD-SPEC.md`, Part 1 "The Grammar" and Part 2 "The
+# cream primitive". Every value below is measured off twenty pages that ship.
+# Where a value looks odd, read its `why` — most of them are the record of a
+# defect that shipped once.
+
+marketing:
+  status: composed_here
+  applies_to: [skene-marketing-website, skene-site]
+  see_also:
+    compositions: machine/compositions.yaml
+    note: >-
+      compositions.yaml says WHICH sections a page of a given kind carries;
+      this block says what a band made of them looks like. Read the corpus
+      caveat at the head of that file before trusting either one's route list.
+  source:
+    repo: skene-marketing-website
+    file: .webanatomy/build-page/BUILD-SPEC.md
+    parts: ["Part 1 — The Grammar", "Part 2 — The cream primitive"]
+    proven_on: 20 pages
+    transcribed: "2026-08-27"
+  template:
+    component: SitePage
+    path: src/components/site/page-template.tsx
+    repo: skene-marketing-website
+    present_here: false
+    note: >-
+      The template itself has NOT been promoted into this package. What is
+      recorded below is the contract it enforces, so a page built with the
+      package's sections lands in the same grammar as the pages that ship.
+
+  page_shape: >-
+    A page is a data declaration: a header, plus an ordered list of bands. The
+    page supplies copy, artifacts and links and nothing else. Ground, rhythm,
+    split geometry, which side the copy sits on, the eyebrow gap and the card
+    recipe are all computed from a band's POSITION. The value is not that the
+    template's answer is better than any one page's; it is that there is exactly
+    one answer and a page cannot reach around it. Before it, one site had three
+    mechanisms for section rhythm, four for the split at two different
+    breakpoints, two conventions for the eyebrow gap, and fifteen hand-rolled
+    copies of a card that already shipped.
+
+  dom:
+    renders_wrapper: false
+    shape: "fragment — the header <div>, then N <section> as direct children of <main>"
+    why: >-
+      Section addressing across the consuming repo depends on
+      `body > main > section:nth-of-type(n)`. A container div re-paths all of
+      them at once.
+    server_component: true
+
+  ground_alternation:
+    rule: "a page declares no ground, ever — it is a function of band index"
+    cycle: { 0: page, 1: deep, 2: page, 3: deep }
+    tokens: { page: "the page dark", deep: surface-deep-2 }
+    starts_on: page
+    why_starts_on_page: >-
+      The header above band 0 is already dark and textured, so a deep-2 first
+      band reads as a second header.
+    cream_is_not_a_ground: >-
+      Cream never grounds a section. It arrives only as a component that paints
+      its own panel, sitting on whichever ground its position gives it.
+    override:
+      exists: true
+      for: "letting a page's ONE signature band sit on a ground its position would not give it"
+      consumes_a_slot: false
+      watch_for: >-
+        A page that overrides every band has re-invented per-page grounds, which
+        is the exact failure the alternation was written to end.
+
+  mirroring:
+    rule: "even mirrorable band copy-left, odd copy-right, from the top of the page"
+    authored: false
+    why: >-
+      When it was authored per band, one site had eleven copy-left and three
+      copy-right with no pattern, because each author chose separately.
+    only_mirrorable_bands_take_a_turn: >-
+      A band with no second track cannot mirror. Fifteen artifact bands run
+      splitAt: never because their artifact needs 812-998px against the 640-700
+      a half track offers. Counting those anyway lets a full-width band consume
+      a parity slot and produces two copy-left cards in a row with a wide one
+      between them, which reads as a mistake rather than a rhythm.
+
+  rhythm:
+    default: "py-[96px] md:py-[128px]"
+    tight: "py-[64px] md:py-[80px]"
+    tall: "py-[128px] md:py-[176px]"
+    written_as_literal_px: true
+    why_literal: >-
+      The package sets --spacing: 0.2rem, so py-24 is 76.8px, not 96. The
+      literal IS the token value and is not a tidying candidate.
+    tight_when: "a dense band — a table, a terminal — that earns less air"
+    tall_when: "once per page: the page's signature band"
+    the_craft_rule: >-
+      NEVER let three bands in a row share both rhythm and silhouette. A craft
+      audit measured 26 of 136 sections at an identical 857px silhouette — that
+      is FeatureRow's 600px visual floor plus the fixed rhythm, repeated. Three
+      consecutive same-height bands read generated, not composed.
+    the_lever:
+      prop: "floor: 'content'"
+      does: "lets a carded band size to its artifact instead of being padded up to the 600px floor"
+      travels_with: "rhythm: 'tight'"
+      never_on: >-
+        A band whose artifact is a sparse panel. The floor is what keeps a
+        sparse panel from looking cropped by its copy column.
+    opt_in: "per band, with judgement, only where a run actually exists — not a taste knob per author"
+
+  measurements:
+    SPLIT:
+      value: "gap-[32px] lg:gap-[64px]"
+      note: "the split grid. Breakpoint is lg (1024), never min-[1025px]"
+    SPLIT_TRACKS:
+      value: "lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]"
+      ratio: "5fr / 7fr"
+      note: "copy narrow, artifact wide"
+    SPLIT_TRACKS_FLIP:
+      value: "lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]"
+      note: >-
+        flip moves the WIDE track left. DOM order never changes, so reading and
+        tab order are identical either way. One boolean, one breakpoint, both
+        halves — the two must move together.
+    PROSE_MEASURE: { value: "max-w-[768px]", note: "the prose band's measure" }
+    PROSE_STACK: { value: "16px", note: "between siblings inside a prose stack" }
+    HEAD_GAP:
+      value: "mt-[24px]"
+      note: "eyebrow to heading"
+      why: >-
+        The margin goes on the block BELOW, never on the chip. Eyebrow is
+        inline-block, so its bottom margin does not collapse, and pages that
+        wrote both ended up at 48px.
+    BODY_GAP: { value: "mt-[32px]", note: "band head to body" }
+    NOTE_GAP: { value: "mt-[24px]", note: "artifact to the sentence explaining it" }
+    ACTION_GAP: { value: "mt-[48px]", note: "last thing to read, to the thing to do" }
+    RULE:
+      value: ""
+      note: >-
+        There is NO hairline between bands. Founder direction 2026-08-26. The
+        grounds do the separating; a hairline between two fades is a line drawn
+        across a fade.
+    card_floor: { value: "min-h-[600px]", note: "FeatureRow's floor for any row with a visual" }
+    card_recipe:
+      value: "Card variant=\"surface\" + h-full min-w-0"
+      note: "never hand-roll. Fifteen call sites once did."
+
+  band_kinds:
+    prose: "one paragraph stack at the 768px measure"
+    split: "heading plus children in two tracks"
+    artifact: "copy plus a product mock; splitAt: never stacks them, lg splits"
+    artifactBeside: "artifact always beside the copy"
+    cards: "a card row, with an optional trailing action"
+    rows: "stacked rows"
+    tonal: "a FeatureRow, not a cream card (changed 2026-08-17)"
+    closer: "the page's final CTA. Once per page"
+    component: "a component that paints its own ground; no wrapper, no card"
+    photos: "image grid"
+
+  header_variants:
+    default: dither
+    all: [dither, flat, flat-prose, flat-split]
+    flat_split: >-
+      The only variant that takes an `aside`, which is how a hero gets a product
+      artifact beside the h1 — and the ONLY one that renders the `actions` slot.
+      Under `dither` a CTA row and its fineprint are silently dropped.
+
+  shared_chrome:
+    rule: "nav, footer, hero backdrop, fact strip and proof band are each defined once and imported. No page carries its own copy of any of them."
+    background:
+      rule: "header and document tail are each ONE masked texture layer, never per-band grounds"
+      why: >-
+        Two elements of different heights crop a background-size: cover asset
+        differently, so their join can never line up.
+      fade: "mask-image (alpha), never a gradient toward a colour"
+      why_fade: >-
+        A gradient toward an opaque base left a measurable 4-point step under
+        the old HeroBackdrop: its chrome-surface-darker base is rgb(6,6,6)
+        against a rgb(10,10,10) page, so however softly the texture faded the
+        block still ended on a step.
+
+  cream_inset:
+    rule: "cream is never a section ground; it arrives only as a card"
+    choose:
+      FaqBand: "always, for an FAQ. applies-light with no dark variant; the cream is constitutional"
+      LightSectionCard: >-
+        Nowhere on the marketing site today. Two geometry blockers still stand
+        at 0.13.0 — it gives the COPY column the wider track and it splits at md
+        while every band on that site splits at lg. See components.yaml.
+      hand_rolled_panel: "every cream band the site draws"
+    hand_rolled_recipe: >-
+      light overflow-hidden rounded-3xl border border-chrome-line-on-light
+      bg-brand-light px-[32px] py-[46px] md:px-[48px] md:py-[56px]
+    light_first_and_unconditional: >-
+      `light` is what darkens inherited-polarity children. ComparisonTable
+      inside the panel is legible only because the ROOT sets polarity. Never
+      restyle a child to fix cream contrast; set the root.
+    onLight_children: >-
+      Inside a cream panel, components that take onLight keep their default. A
+      Finding's light case is bg-white, which is the wireframes' white cards on
+      cream. SideBySideDiff applies `dark` to itself, so GitHub chrome stays
+      dark on cream by the component's own rule.
+
+  every_band_everywhere:
+    - rule: "sheen={false} on every artifact card"
+      why: >-
+        Accessibility, not taste. The 10% white wash measured StatPill contrast
+        on AppWindow's forced-light ground down from 4.510:1 to 3.801, 3.896 and
+        4.230 across three viewports, against a 4.5 floor. Set it off on the
+        decorative cards too: a stack where one card lacks the highlight reads
+        as a rendering fault rather than a decision.
+    - rule: "titleAs=\"h2\" + titleScale=\"section\" on every band"
+      why: >-
+        A band is a section. Without the explicit scale the same <h2> renders at
+        two sizes on one page, and the two invert at 1333px.
+    - rule: "splitAt defaults to never, and you opt in AFTER measuring"
+      why: >-
+        Nine of eighteen full-width artifacts clip by zero at 570px; the worst
+        three clip by 574, 388 and 109px. They clip silently, inside
+        overflow-hidden chrome, so no verifier sees it.
+    - rule: "the halftone lives inside an ArtFrame, never under copy"
+      why: >-
+        Recorded twice, both times as a correction: a band-wide SectionBackdrop
+        behind a copy row washed the whole band out. SectionBackdrop is still
+        right for a full-width artifact band with no copy beside it, where the
+        field IS the band — pair it with width: full, because capping it at the
+        896px measure spends its 6% inset twice.
