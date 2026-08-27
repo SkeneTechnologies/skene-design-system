@@ -122,6 +122,7 @@ shipped_here:
   page_gutters:
     pattern: gap-4 px-4 py-6 sm:px-6 lg:px-8
     utilities_resolve_here: true
+    surface: dashboard
     origin:
       file: components/dashboard/DashboardPageShell.tsx
       repo: skene-dashboard
@@ -129,6 +130,18 @@ shipped_here:
         The pattern is plain Tailwind and works anywhere, so it is the shipped
         contract. The file it was read out of is not in this package — recorded
         so nobody goes looking for it here.
+    not_a_marketing_band: >-
+      READ THIS BEFORE USING IT ON A MARKETING PAGE. "Works anywhere" is about
+      whether the utilities resolve, not about whether the values are right.
+      At `--spacing: 0.2rem` this pattern is 19.2px of vertical band padding
+      and 12.8px of gap. The marketing site's band rhythm is
+      `py-[96px] md:py-[128px]` and its split gap is
+      `gap-[32px] lg:gap-[64px]` — five times and two to five times these
+      values — and it writes them as literal px for the reason
+      `spacing_scale.warning` gives. Section 5 `marketing` is the block for a
+      marketing band. This one is the dashboard page shell.
+      `skills/skene-design-system-pages` routes a page builder here for
+      "spacing and widths"; that is what it should find when it arrives.
 
 # ---------------------------------------------------------------------------
 # 2. Recorded, but nothing here defines it.
