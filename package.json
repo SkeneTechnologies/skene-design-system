@@ -82,7 +82,7 @@
     "inventory": "node scripts/build-inventory.mjs",
     "context": "node scripts/build-context.mjs",
     "context:check": "node scripts/build-context.mjs --check",
-    "build": "npm run tokens && npm run inventory && npm run context && tsc -p tsconfig.build.json",
+    "build": "npm run tokens && npm run inventory && tsc -p tsconfig.build.json && npm run context",
     "test": "vitest run",
     "verify": "npm run tokens:check && npm run tokens:contrast && npm run context:check && npm run stories:check && npm test && npm run build",
     "visual": "VISUAL_MODE=verify bash scripts/visual.sh",
