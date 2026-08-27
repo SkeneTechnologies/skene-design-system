@@ -1,6 +1,7 @@
 'use client'
 
 import { Children, isValidElement, useId, useMemo, useState } from 'react'
+import { Slot } from '@radix-ui/react-slot'
 
 import { cn } from '../lib/utils.js'
 import { PILL_NAV_FROSTED_STYLE, PILL_NAV_POSITION } from './pill-nav-frosted.js'
@@ -24,13 +25,19 @@ export interface PillNavProps {
 function collectMobileLinks(children: React.ReactNode): PillNavMobileLink[] {
   const links: PillNavMobileLink[] = []
   Children.forEach(children, (child) => {
-    if (!isValidElement<{ href: string; active?: boolean; children: React.ReactNode }>(child)) {
+    if (!isValidElement<{ href?: string; active?: boolean; children: React.ReactNode }>(child)) {
       return
     }
     const isPillNavLink =
       child.type === PillNavLink ||
       (typeof child.type === 'function' && child.type.name === 'PillNavLink')
     if (!isPillNavLink) return
+    // `href` became optional with `asChild`, and the drawer is a list of
+    // destinations: a trigger that opens a menu has none, so it is skipped
+    // here rather than pushed in with `href: undefined` and rendered as a
+    // dead row. An `asChild` link that SHOULD appear in the drawer passes
+    // `href` on the PillNavLink as well as on its child.
+    if (!child.props.href) return
     links.push({
       href: child.props.href,
       label: child.props.children,
@@ -103,20 +110,46 @@ export function PillNav({
   )
 }
 
+export interface PillNavLinkProps {
+  /**
+   * Where the item goes. Optional only because `asChild` exists: a menu
+   * trigger occupies the same slot and has no destination. Pass it whenever
+   * there is one, `asChild` or not — `PillNav` reads it to build the mobile
+   * drawer, and an item without one does not appear there.
+   */
+  href?: string
+  children: React.ReactNode
+  className?: string
+  active?: boolean
+  /**
+   * Render as the single child instead of an `<a>` — the same Slot mechanism
+   * `ui/button` and `ui/card` use.
+   *
+   * Without it, anything that is not a plain anchor in this bar has to copy the
+   * class string. skene-marketing-website does exactly that: its nav dropdown
+   * trigger reproduces all seven utilities verbatim so the menu sits in the
+   * same slot as the links either side of it, which means the bar's hover ink,
+   * its active peach and its 4px radius now live in two places and drift on the
+   * next change. A Radix `DropdownMenuTrigger`, a `next/link`, or a button
+   * composes through this instead.
+   *
+   * `href` is not forwarded when `asChild` is set: the child owns its own
+   * element, and an `href` landing on a `<button>` trigger is invalid markup.
+   */
+  asChild?: boolean
+}
+
 export function PillNavLink({
   href,
   children,
   className,
   active = false,
-}: {
-  href: string
-  children: React.ReactNode
-  className?: string
-  active?: boolean
-}) {
+  asChild = false,
+}: PillNavLinkProps) {
+  const Comp = asChild ? Slot : 'a'
   return (
-    <a
-      href={href}
+    <Comp
+      {...(asChild ? {} : { href })}
       data-pill-nav-link=""
       className={cn(
         'rounded-[4px] px-4 py-1.5 text-sm tracking-[-0.01em] whitespace-nowrap shrink-0 transition-colors duration-150',
@@ -126,6 +159,6 @@ export function PillNavLink({
       )}
     >
       {children}
-    </a>
+    </Comp>
   )
 }

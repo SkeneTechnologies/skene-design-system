@@ -8,9 +8,22 @@ import { cn } from '../lib/utils.js'
  * copying markup out of skene-marketing-website.
  */
 
-export { PillNav, PillNavLink, type PillNavProps } from './pill-nav.js'
+export { PillNav, PillNavLink, type PillNavProps, type PillNavLinkProps } from './pill-nav.js'
 
 export interface EyebrowProps {
+  /**
+   * The chip is on a cream panel rather than the dark page.
+   *
+   * Its default border and ink are INVARIANT chrome tokens, which is right on
+   * the dark ground and wrong on cream — they do not follow a `light`
+   * ancestor, so the chip keeps its dark-page colours inside a cream card.
+   * Three modules in this package already worked around that by writing the
+   * same two-utility override at the call site
+   * (`light-section-card.tsx`, `faq-band.tsx`, `bridge.tsx`), and
+   * skene-marketing-website writes it at fourteen more. Fourteen call sites of
+   * one recipe is what a prop is for.
+   */
+  onLight?: boolean
   className?: string
   children: React.ReactNode
 }
@@ -21,12 +34,14 @@ export interface EyebrowProps {
  * Uses `font.tracking.eyebrow` (0.16em) and `font.size.pill`, which existed as
  * tokens with nothing rendering them.
  */
-export function Eyebrow({ className, children }: EyebrowProps) {
+export function Eyebrow({ onLight = false, className, children }: EyebrowProps) {
   return (
     <span
       className={cn(
         'inline-block rounded-sm border px-2 py-1 font-mono uppercase',
-        'border-chrome-surface-border text-chrome-text-muted',
+        onLight
+          ? 'border-chrome-line-on-light text-text-muted'
+          : 'border-chrome-surface-border text-chrome-text-muted',
         className,
       )}
       style={{

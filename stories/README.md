@@ -49,7 +49,7 @@ the story never gets written, or the check gets disabled. See the header of
 ## Stories are rendered, not just built
 
 `npm run stories:render` (needs `npm run storybook:build` and a running
-Storybook) loads all 379 stories and fails on anything that throws, logs a
+Storybook) loads all 382 stories and fails on anything that throws, logs a
 console error, or renders empty.
 
 `storybook build` compiles stories; it does not run them. The gap is real: this

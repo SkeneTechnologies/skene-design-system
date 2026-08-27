@@ -6,9 +6,10 @@ export function LightSectionCard({ eyebrow, title, titleScale = 'display', lede,
     return (_jsxs("section", { className: cn(
         // `light` first, and never conditional — see the file header.
         'light grid overflow-hidden rounded-3xl border border-chrome-line-on-light bg-brand-light', visual && (reverse ? 'md:grid-cols-[0.9fr_1.1fr]' : 'md:grid-cols-[1.1fr_0.9fr]'), className), children: [_jsxs("div", { className: cn('flex flex-col items-start px-8 pb-[46px] pt-[50px] md:px-12', reverse && visual && 'md:col-start-2 md:row-start-1'), children: [eyebrow ? (
-                    // The same two overrides `FaqBand` writes for the same reason: the
-                    // chip's default border and ink are invariant chrome, wrong on cream.
-                    _jsx(Eyebrow, { className: "mb-5 border-chrome-line-on-light text-text-muted", children: eyebrow })) : null, _jsx("h2", { 
+                    // `onLight`: the chip's default border and ink are invariant chrome,
+                    // wrong on cream. This was two hand-written overrides here, in
+                    // FaqBand and in Bridge until the prop landed.
+                    _jsx(Eyebrow, { onLight: true, className: "mb-5", children: eyebrow })) : null, _jsx("h2", { 
                         // SIZE FIRST. `cn` is twMerge and it puts font-size and line-height in
                         // one conflict group, so a `text-*` utility appearing AFTER
                         // `leading-[1.08]` deletes it. Verified against tailwind-merge

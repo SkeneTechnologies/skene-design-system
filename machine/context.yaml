@@ -1170,6 +1170,7 @@ modules:
     customProperties: [--font-size-pill, --font-tracking-eyebrow, --font-size-marketing-hero, --font-size-marketing-xxl, --font-size-marketing-xl, --font-line-height-tight, --font-size-card-title]
     props:
       Eyebrow:
+        onLight: { type: boolean, default: "false" }
         children: { type: React.ReactNode, required: true }
       DisplayHeading:
         size: { type: "'hero' | 'page' | 'section'", default: "'page'" }
@@ -1314,6 +1315,11 @@ modules:
         actions: { type: React.ReactNode }
         position: { type: "'absolute' | 'sticky'", default: "'absolute'" }
         children: { type: React.ReactNode, required: true }
+      PillNavLink:
+        href: { type: string }
+        children: { type: React.ReactNode, required: true }
+        active: { type: boolean, default: "false" }
+        asChild: { type: boolean, default: "false" }
     useFor: >-
       The marketing site's top navigation: a frosted pill floating over hero
       media, with a full-screen drawer below md so a phone gets the links
@@ -5064,6 +5070,7 @@ modules:
         display: { type: React.ReactNode }
         prompt: { type: React.ReactNode }
         copyable: { type: boolean }
+        wrap: { type: boolean }
     useFor: >-
       The install block: a terminal frame holding one or more shell lines,
       each with its own copy button.

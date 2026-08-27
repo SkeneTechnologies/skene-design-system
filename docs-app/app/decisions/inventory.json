@@ -1027,7 +1027,7 @@
       ],
       "summary": "The page furniture that makes a marketing surface read as Skene: the floating",
       "client": false,
-      "lines": 236,
+      "lines": 251,
       "cases": [
         "pattern-pill-nav",
         "pattern-display-heading",
@@ -1116,7 +1116,7 @@
       ],
       "summary": "Floating pill navigation with a marketing-site mobile drawer below `md`.",
       "client": true,
-      "lines": 132,
+      "lines": 165,
       "cases": [
         "pattern-pill-nav"
       ],
@@ -1388,7 +1388,7 @@
       ],
       "summary": "The bridge: GTM ↔ Skene ↔ Engineering. A cream band carrying three cards in a",
       "client": false,
-      "lines": 335,
+      "lines": 334,
       "cases": [
         "section-bridge"
       ],
@@ -1793,7 +1793,7 @@
       ],
       "summary": "The alternating feature row: copy on one side, a visual on the other, flipping",
       "client": false,
-      "lines": 429,
+      "lines": 447,
       "cases": [
         "section-feature-row"
       ],
@@ -2240,7 +2240,7 @@
       ],
       "summary": "The inverted section: one cream card carrying a whole section's worth of copy",
       "client": false,
-      "lines": 191,
+      "lines": 192,
       "cases": [
         "section-light-section-card",
         "light-section-card-steps"
@@ -2829,7 +2829,7 @@
       ],
       "summary": "The install block: a terminal frame holding one or more shell lines, each with",
       "client": true,
-      "lines": 273,
+      "lines": 304,
       "cases": [
         "section-terminal-block"
       ],

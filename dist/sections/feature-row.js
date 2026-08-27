@@ -110,7 +110,23 @@ export function FeatureRow({ reverse = false, n, eyebrow, icon, title, lede, chi
       false for all of them and none of their markup moves.
     */
     const copyOnly = !visual && !texture && !textureSrc;
-    return (_jsxs("div", { className: cn('grid overflow-hidden rounded-2xl border border-chrome-line-subtle bg-chrome-surface-1', !copyOnly && 'min-h-[600px]', !copyOnly && (reverse ? SPLIT[splitAt].gridReverse : SPLIT[splitAt].grid), className), children: [_jsxs("div", { className: cn('relative flex flex-col items-start px-12 pb-[46px] pt-[50px]', reverse && SPLIT[splitAt].copyReverse), children: [n ? (_jsx("span", { className: "absolute right-6 top-[22px] font-mono text-[11px] text-chrome-text-muted-warm", children: n })) : null, icon ? _jsx("div", { className: "mb-[54px]", children: icon }) : null, eyebrow ? _jsx("div", { className: "mb-[24px]", children: eyebrow }) : null, title ? (_jsx(Title
+    return (_jsxs("div", { className: cn('grid overflow-hidden rounded-2xl border border-chrome-line-subtle bg-chrome-surface-1', !copyOnly && 'min-h-[600px]', !copyOnly && (reverse ? SPLIT[splitAt].gridReverse : SPLIT[splitAt].grid), className), children: [_jsxs("div", { className: cn('relative flex flex-col items-start px-12 pb-[46px] pt-[50px]', reverse && SPLIT[splitAt].copyReverse), children: [n ? (
+                    // `aria-hidden`, unconditionally, and it is not a preference.
+                    //
+                    // The numeral is furniture: it is positioned into the corner rather
+                    // than into the reading flow, the heading beside it already carries
+                    // the whole accessible name, and an ordinal read aloud before every
+                    // heading is noise. `NumberedStep`'s numeral has always done this
+                    // (`patterns/marketing.tsx`); this one did not, and nothing on it is
+                    // reachable from a call site — no prop touches `n`'s element — so a
+                    // consumer could not fix it either. Measured live from the
+                    // accessibility tree on skene-marketing-website: `/` exposed a bare
+                    // "01" and "03" StaticText from two FeatureRow benefits while the
+                    // hand-rolled "02" between them was correctly silent.
+                    //
+                    // Not a prop, because there is no case for the other setting: a
+                    // numeral that carries meaning of its own is not this element.
+                    _jsx("span", { "aria-hidden": "true", className: "absolute right-6 top-[22px] font-mono text-[11px] text-chrome-text-muted-warm", children: n })) : null, icon ? _jsx("div", { className: "mb-[54px]", children: icon }) : null, eyebrow ? _jsx("div", { className: "mb-[24px]", children: eyebrow }) : null, title ? (_jsx(Title
                     // ORDER IS LOAD-BEARING AND IT COST A REGRESSION. `cn` is twMerge,
                     // which puts font-size and line-height in ONE conflict group,
                     // because a Tailwind `text-lg` sets both. So a `text-*` utility

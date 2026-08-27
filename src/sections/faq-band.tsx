@@ -91,7 +91,7 @@ export function FaqBand({ eyebrow, title, note, actions, children, multiple, cla
           // px-2. Nothing could have caught it — three copies of one span, and
           // the token was only ever a default. This is the same override Bridge
           // uses, and it moves this chip by 1px of type and 1.6px of padding.
-          <Eyebrow className="border-chrome-line-on-light text-text-muted">{eyebrow}</Eyebrow>
+          <Eyebrow onLight>{eyebrow}</Eyebrow>
         ) : null}
         <h2
           className={cn(

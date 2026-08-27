@@ -77,3 +77,32 @@ export const WithActions: Story = {
     </Ground>
   ),
 }
+
+/**
+ * A menu trigger in the same slot as the links, composed rather than copied.
+ *
+ * `asChild` renders the single child in place of the `<a>` — the Slot mechanism
+ * `ui/button` uses. Without it, anything that is not a plain anchor has to
+ * reproduce the bar's seven utilities, which is what skene-marketing-website's
+ * nav dropdown does today: the bar's hover ink, its active peach and its 4px
+ * radius live in two places and drift on the next change.
+ *
+ * `href` is not forwarded under `asChild` — the child owns its element, and an
+ * `href` on a `<button>` is invalid markup. A trigger with no destination is
+ * also skipped when `PillNav` builds the mobile drawer.
+ */
+export const TriggerViaAsChild: Story = {
+  render: () => (
+    <Ground>
+      <PillNav brand={<SkeneLockup tone="accent" height={20} alt="" />}>
+        <PillNavLink href="/product">Product</PillNavLink>
+        <PillNavLink asChild>
+          <button type="button" aria-haspopup="menu" aria-expanded={false}>
+            Resources
+          </button>
+        </PillNavLink>
+        <PillNavLink href="/pricing">Pricing</PillNavLink>
+      </PillNav>
+    </Ground>
+  ),
+}

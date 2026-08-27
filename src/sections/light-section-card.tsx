@@ -127,9 +127,10 @@ export function LightSectionCard({
         )}
       >
         {eyebrow ? (
-          // The same two overrides `FaqBand` writes for the same reason: the
-          // chip's default border and ink are invariant chrome, wrong on cream.
-          <Eyebrow className="mb-5 border-chrome-line-on-light text-text-muted">
+          // `onLight`: the chip's default border and ink are invariant chrome,
+          // wrong on cream. This was two hand-written overrides here, in
+          // FaqBand and in Bridge until the prop landed.
+          <Eyebrow onLight className="mb-5">
             {eyebrow}
           </Eyebrow>
         ) : null}
