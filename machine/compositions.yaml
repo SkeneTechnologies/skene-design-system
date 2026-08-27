@@ -23,10 +23,13 @@
 #   intersection of two is a coincidence until a third confirms it) | single
 #   (1 route — recorded, not generalised).
 #
-# WHAT IS NOT HERE: the home page and the pricing page. Both exist in the
-# corpus and both import no design-system section at all, so there is no
-# observed recipe for either. See `not_covered`. This follows context.yaml's
-# `seen: []` convention: an empty observation is stated, never filled in.
+# WHAT IS NOT HERE: the home page and the pricing page. See `not_covered` --
+# and read `corpus.correction` first. The reason recorded there when this file
+# was written ("both import no design-system section at all") was checked on
+# 2026-08-27 against the commit this file cites and is FALSE. Both routes
+# import from this package, heavily, at b96b935. The archetypes below were
+# therefore derived from a corpus with its two densest routes missing, and
+# every `in: N, of: M` denominator is short by two.
 
 version: "1.0.0"
 
@@ -41,6 +44,47 @@ corpus:
   note: >-
     Read as imports per route, in source order. One marketing site, one branch,
     one commit — this is what has been built, not what is possible.
+  correction:
+    found: "2026-08-27, by skene-marketing-website while re-verdicting its upstream asks"
+    status: known_wrong_not_yet_re-derived
+    what: >-
+      The counts above and every archetype below were derived from 17 routes,
+      not 19, and the two that were dropped are the two densest in the corpus.
+      Re-measured at the cited commit b96b935 by reading
+      `@skene/design-system/(sections|patterns)/*` out of every `page.tsx`
+      under `src/app/(site)`:
+    measured:
+      route_files_under_site: 20
+      routes_composing_a_section_or_pattern: 19
+      routes_composing_none: 1        # (site)/community/page.tsx, ui/button only
+      distinct_modules_seen: 40
+      stated_here: { routes_read: 19, routes_composing_sections: 17, routes_importing_nothing: 2, modules_seen: 34 }
+    spine_re_measured:
+      - { module: sections/artifact-shell, stated: "14 of 17", actual: "16 of 19" }
+      - { module: sections/key-value-table, stated: "9 of 17", actual: "10 of 19" }
+      - { module: sections/trust-panel, stated: "8 of 17", actual: "10 of 19" }
+      - { module: patterns/marketing, stated: "7 of 17", actual: "9 of 19" }
+      - { module: sections/code, stated: "7 of 17", actual: "7 of 19" }
+    modules_absent_from_this_file_entirely: >-
+      Six modules appear ONLY on the two dropped routes, so they appear in no
+      spine entry, no archetype and no `optional` list here: patterns/dither,
+      sections/evaluator-list, sections/feature-row, sections/final-cta,
+      sections/plan-card, sections/question-grid. Two of those matter more than
+      the rest. `sections/feature-row` is the module
+      `machine/rules.yaml` names in `render_marketing_cards_as_feature_row` —
+      the package's own must-rule for a marketing card — and this file does not
+      mention it once. `sections/final-cta` is the closing band, which the
+      consumer's own spec says every page carries exactly once.
+    why_it_matters: >-
+      An agent following this file composes a page without the marketing card
+      the rules file mandates and without a closer. Do not treat the archetypes
+      as wrong — they were read correctly out of the routes they cite — but
+      treat the corpus as short by its two most important members until this is
+      re-derived.
+    not_re-derived_here: >-
+      Adding both routes changes every denominator, and the home route's 17
+      modules match no existing archetype, so re-deriving is a maintainer's
+      call rather than a drive-by edit. Recorded instead.
 
 # What the whole corpus repeats, before any archetype. An agent building a page
 # not covered below should start from these five and justify leaving one out.
@@ -356,20 +400,39 @@ findings:
 not_covered:
   - route: "(site)/page.tsx"
     what: the home page
-    observed_modules: []
+    observed_modules:
+      [patterns/dither, patterns/marketing, sections/agent-callout,
+       sections/artifact-shell, sections/bridge, sections/check-list,
+       sections/discovery-table, sections/evaluator-list, sections/feature-row,
+       sections/final-cta, sections/funnel, sections/glyph-badge,
+       sections/plan-card, sections/pr-review, sections/question-grid,
+       sections/surface-cards, sections/trust-panel]
+    status: dropped_in_error
     why: >-
-      Imports no module from @skene/design-system. The home page on this branch
-      is composed entirely of route-local components, so this package has no
-      observed home recipe. Do not derive one from the product page — the home
-      page is the one page in the corpus that was deliberately not built from
-      these parts.
+      CORRECTED 2026-08-27. This entry read "Imports no module from
+      @skene/design-system … deliberately not built from these parts". That is
+      false at the commit this file cites: at b96b935
+      `src/app/(site)/page.tsx` imports the seventeen modules listed above, the
+      densest route in the corpus. What IS true, and is probably what the
+      original reading was reaching for, is that the home route composes them
+      by hand rather than through the site's own page template — a distinction
+      about the consumer's template, not about this package. No archetype below
+      was derived with these seventeen in scope. See `corpus.correction`.
   - route: "(site)/pricing/page.tsx"
     what: the pricing page
-    observed_modules: []
+    observed_modules:
+      [patterns/marketing, sections/artifact-shell, sections/check-list,
+       sections/comparison-table, sections/faq-band, sections/finding-card,
+       sections/key-value-table, sections/plan-card, sections/trust-panel]
+    status: dropped_in_error
     why: >-
-      Imports no module from @skene/design-system, despite the package shipping
-      PlanCard. Whatever the reason, it is not recorded here, and a pricing
-      recipe written from this corpus would be invention.
+      CORRECTED 2026-08-27. This entry read "Imports no module from
+      @skene/design-system, despite the package shipping PlanCard". Both halves
+      are wrong: at b96b935 `src/app/(site)/pricing/page.tsx` imports the nine
+      modules above and `sections/plan-card` is one of them. It is also the one
+      route the consumer's own build spec names as its calibration page, the
+      shape every other page copies when ambiguous — so it is the single worst
+      route in the corpus to have dropped. See `corpus.correction`.
   - route: "(landing)/alternatives/*"
     what: the twenty competitor-comparison pages
     observed_modules: []

@@ -36,15 +36,15 @@ consumers:
   - repo: skene-marketing-website
     surface: site
     installs: true
-    installs_verified: "2026-08-27, branch staging @ 7dd6717"
-    version: "github:SkeneTechnologies/skene-design-system#semver:^0.12.0"
+    installs_verified: "2026-08-27, branch staging @ a874e83, against v0.13.0"
+    version: "github:SkeneTechnologies/skene-design-system#semver:^0.13.0"
     theme_default: dark
     reach:
       import_statements: 222
       files: 33
       css_directives: 2
       routes: 20
-      distinct_specifiers: 48
+      distinct_specifiers: 49
       by_layer: { sections: 162, patterns: 31, ui: 23, utils: 3, asset-urls: 3 }
       heaviest:
         - { module: patterns/marketing, files: 23 }
@@ -60,9 +60,10 @@ consumers:
       yet. Hardcodes `dark` on `<html>` in src/app/layout.tsx:65. Display type
       runs to 67px, well past the dashboard's UI-density scale.
       It is the package's HEAVIEST consumer by import count, not empty estate.
-      Evidence, all re-measured 2026-08-27 on branch `staging`: the dependency
-      is at package.json:31 and resolved at package-lock.json:3966; 222 import
-      statements across 33 .ts/.tsx files; src/app/globals.css:30 imports
+      Evidence, all re-measured 2026-08-27 on branch `staging` against v0.13.0:
+      the dependency is at package.json:33 and resolved at package-lock.json:22
+      and :3876 (git+ssh …#29a3a9e404889bcac92a692d499f306bf9b1f2b0, the v0.13.0
+      tag); 222 import statements across 33 .ts/.tsx files; src/app/globals.css:30 imports
       styles.css and :38 declares `@source ".../@skene/design-system/dist"`,
       which is the Turbopack scan every packaged utility class depends on.
       Unlike skene-site its globals.css is ~1,940 lines and does hold local
@@ -70,6 +71,14 @@ consumers:
       Read `machine/layouts.yaml` `marketing` before writing a page for it: its
       band grammar, its 5fr/7fr split and its cream inset are contracts this
       package did not ship until 2026-08-27 and every page on it already obeys.
+      NOTE, 0.13.0: `machine/compositions.yaml` derives its whole corpus from
+      THIS repository (branch claude/calcom-style-wireframes-a64a8e @ b96b935),
+      which is by itself proof the `installs: false` reading was wrong — the
+      release read 19 of its routes while the registry beside it said the repo
+      had zero matches in its package.json, its lockfile and its source. That
+      corpus is also incomplete: it excludes (site)/page.tsx and
+      (site)/pricing/page.tsx as importing nothing, and both import from this
+      package at the commit it names. See compositions.yaml `not_covered`.
   - repo: skene-dashboard
     surface: app
     installs: false

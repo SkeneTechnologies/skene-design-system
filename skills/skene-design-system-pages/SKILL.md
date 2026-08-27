@@ -76,18 +76,33 @@ between two adjacent bands on purpose. Check each module's `polarity` in
 
 ## What has no recipe — stated, never invented
 
-`not_covered` is part of the contract. Three entries today:
+`not_covered` is part of the contract. Three entries today, and **read
+`corpus.correction` before you trust the first two**:
 
-- **the home page** — imports nothing from this package. Do not derive one from
-  the product page; it was deliberately not built from these parts.
-- **the pricing page** — imports nothing, despite the package shipping
-  `PlanCard`. A pricing recipe written from this corpus would be invention.
+- **the home page** — recorded as importing nothing from this package.
+  **Corrected 2026-08-27: that is false.** At the commit the file cites it
+  imports seventeen modules and is the densest route in the corpus. It was
+  dropped in error, so no archetype was derived with it in scope.
+- **the pricing page** — recorded as importing nothing "despite the package
+  shipping `PlanCard`". **Also false**: it imports nine modules and `PlanCard`
+  is one of them. It is the consumer's own calibration page.
 - **`(landing)/alternatives/*`** — the site's largest archetype, twenty routes,
   none importing this package. They compose route-local components instead.
+  This entry stands.
 
-If your page is one of these, compose from `context.yaml` by intent and say
-that you did — do not borrow a neighbouring archetype and present it as the
-recipe.
+Consequence you have to carry: six modules appear only on the two dropped
+routes and therefore appear nowhere in this file — `patterns/dither`,
+`sections/evaluator-list`, `sections/feature-row`, `sections/final-cta`,
+`sections/plan-card`, `sections/question-grid`. Two of those are load-bearing
+elsewhere in the package: `sections/feature-row` is what
+`render_marketing_cards_as_feature_row` in `machine/rules.yaml` mandates for a
+marketing card, and `sections/final-cta` is the closing band. **A page composed
+from the archetypes alone will be missing both.** Add them from
+`context.yaml` deliberately.
+
+If your page is `(landing)/alternatives/*`, compose from `context.yaml` by
+intent and say that you did — do not borrow a neighbouring archetype and
+present it as the recipe.
 
 ## Before you add a band
 
