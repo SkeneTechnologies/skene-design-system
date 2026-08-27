@@ -370,6 +370,29 @@ not_covered:
       Imports no module from @skene/design-system, despite the package shipping
       PlanCard. Whatever the reason, it is not recorded here, and a pricing
       recipe written from this corpus would be invention.
+  - route: "(landing)/alternatives/*"
+    what: the twenty competitor-comparison pages
+    observed_modules: []
+    why: >-
+      The largest page archetype on the site, and not one of its twenty routes
+      imports anything from this package. They compose three route-local
+      components instead — ComparisonLayout (12 routes), CategoryLayout (4) and
+      ArchitectureComparisonTable (14).
+    matters_because: >-
+      ArchitectureComparisonTable is 45 lines drawing a real table of
+      `Dimension | Skene | <competitor>`, which is sections/comparison-table's
+      stated job almost word for word: "one row per claim, one column per
+      approach, with your column picked out". Two implementations of one object,
+      the shipped one carrying the horizontal-scroll and focus handling that the
+      local one does not.
+    consequence_for_this_file: >-
+      Read the comparison-page archetype in that light. It is derived from the
+      two comparison routes that DID use this package, so its shape is sound,
+      but it speaks for two routes out of twenty-two. The other twenty are not
+      evidence against the recipe — they are evidence nobody reached for it.
+      That is the twenty-first duplicate cluster, in a package whose whole
+      premise is the twenty already documented, and it is a finding about the
+      site rather than a defect in this contract.
   - what: everything outside the marketing site
     observed_modules: []
     why: >-
