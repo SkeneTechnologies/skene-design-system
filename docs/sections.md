@@ -239,12 +239,11 @@ product-artifact sections that carried no gallery case, and so no light/dark
 baseline, each got one in `290a19f`, which took `noVisual` to 1: `sonner`, a
 toast host that renders nothing until something calls it, so there is no state
 to snapshot. That was true on 2026-08-15 and this paragraph went on asserting it
-while ten modules piled up behind it. Seven have since been closed, `logo-row`
-on 2026-08-27 and six more on 2026-08-28, which leaves this, and the sentence is
-now gated rather than typed: while 3 modules accumulated with no case:
+while ten modules piled up behind it. Nine have since been closed, `logo-row` on
+2026-08-27 and eight more on 2026-08-28, which leaves this, and the sentence is
+now gated rather than typed: while 1 module accumulated with no case:
 
-    sonner                        card-animation-integrations
-    journey-signal-scene
+    sonner
 
 `sonner` is the only justified one, and it is justified permanently rather than
 pending: it is a toast HOST. It renders an empty portal and nothing else until
@@ -254,9 +253,9 @@ which point the baseline is of `Sonner`'s own overlay rather than of anything
 this package decides. Do not read it as debt and do not write a case for it to
 get the count to zero. The number that matters is one, not zero.
 
-The other two are unproven — `seen: []` in `machine/context.yaml`, whose own
-header says an empty list means nothing in this repository has ever rendered the
-module, so treat its claims as unproven.
+It is now the only one, so the paragraph has nothing left to warn about:
+everything else in the package has been rendered here and has a light and a dark
+baseline behind it.
 
 `logo-row` is why this paragraph is worth reading twice. It shipped every
 spacing value at 80% of the number its own comments claimed — a 56px slot floor
@@ -301,12 +300,46 @@ case embeds it at 390x760, where the module's own breakpoint decides unchanged.
 The panel is `fixed inset-0`, so the viewport is also the thing it fills, which
 a 1280-wide capture could not have shown.
 
-What is left is a list of live blind spots, not tidiness debt.
-`sections/card-animation-integrations` and `sections/journey-signal-scene` are
-both multi-state, so one frame proves one state and each needs its states named.
-`sections/journey-signal-scene` also has three geometry defects already filed
-against it by the consumer, which is the same failure mode as `logo-row` and the
-same reason it survived.
+The last two closed on the same day, and they are the reason the count is worth
+reading rather than tallying. Both are multi-state, so one frame proves one state
+and each got TWO cases with the held state named in each.
+`sections/card-animation-integrations` cycles four detail panels on a GSAP loop
+and is captured at two playheads, 2.5s and 9.5s; either frame alone would let a
+component that never swapped pass. `sections/journey-signal-scene` picks one of
+three hand-placed layouts by measuring its own container and carries a
+GTM/Engineering toggle, so it holds WIDE+GTM and MEDIUM+Engineering, and the two
+unheld corners are named in the case rather than left to be discovered.
+
+Writing the second of those found the largest defect of the sweep. **The module
+reads 24 CSS custom properties and 18 of them are not defined anywhere in this
+package** — every `--color-terminalChrome-*` it uses, plus `--color-text`,
+`--color-text-dark`, `--color-text-light`, the three `--color-text-on-dark`
+variants, `--color-accent-muted`, `--color-background-darker`,
+`--color-border-on-dark`, `--color-chrome-accent` and `--color-chrome-muted`.
+None carries a `var()` fallback, so each resolves to
+invalid-at-computed-value-time: backgrounds go transparent, colours fall back to
+`inherit`. The GTM view survives on inherited ink and two literals; the
+Engineering view asks for `--color-terminalChrome-githubDarkBg`, gets
+transparent, and paints `#ffffff` text on the white stage. The values exist in
+`design-tokens.json` under `terminalChrome` and reach `src/tokens/index.ts`, but
+the CSS generator never emits them under those names.
+
+It survived because nothing was looking from either end. The module is a
+straight port and its header says so; the tokens came across and the definitions
+did not. The one app that renders this scene defines every missing name in its
+own `globals.css` and runs a FORK rather than importing this module, so the
+package's copy has no consumer — and `seen: []` meant nothing in this repository
+had rendered it either. That is the `logo-row` shape at a larger scale, and it
+is now held by a picture. Not fixed in the coverage commit: eighteen undefined
+properties inside 1,214 lines of styled-components is a token decision, and it
+needs someone to say whether the generator should emit `terminalChrome` or the
+module should move onto the roles that already exist.
+
+`sections/journey-signal-scene` also has three geometry defects filed against it
+by that consumer, as ask 12 of its upstream list, all re-verified against
+v0.13.0. Those are baselined as they are for the same reason: a fix lands as a
+picture of what changed once a baseline exists, and as a list of numbers before
+one does. The `-medium` frame is expected to move twice.
 
 Two mechanisms failed here, not one. The list went stale because a hand-typed
 count has no gate behind it — `__tests__/docs-counts.test.ts` now reads the

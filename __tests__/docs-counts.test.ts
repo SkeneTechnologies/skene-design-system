@@ -95,7 +95,11 @@ describe('docs/sections.md', () => {
       'docs/sections.md names these as uncovered, but they have a gallery case now',
     ).toEqual([])
 
-    const claimed = figure('docs/sections.md', doc, /while (\d+) modules accumulated with no case/)
+    // `modules?`: the count reached 1 on 2026-08-28 and the pattern was written
+    // when it could only be plural. Widening the match keeps the number gated
+    // and lets the sentence stay grammatical; narrowing the prose to suit the
+    // regex would have been the wrong way round.
+    const claimed = figure('docs/sections.md', doc, /while (\d+) modules? accumulated with no case/)
     expect(claimed).toBe(uncovered.length)
   })
 })

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
@@ -130,22 +130,134 @@ export function HashScroll() {
  */
 const HELD = new WeakSet<object>()
 
-export function FrozenGsap({ seconds }: { seconds: number }) {
+/**
+ * Which case a timeline belongs to, worked out from what it animates.
+ *
+ * There is one `gsap.globalTimeline` for the page, so a per-case playhead needs
+ * a way to tell one module's timeline from another's. The timeline itself
+ * carries no marker, but its tweens carry their targets, so the scope is
+ * whichever case element contains them. Nested children too (`getChildren(true,
+ * true, false)`), because both animated modules build their timelines out of
+ * `.to()` calls on element sets rather than out of sub-timelines.
+ */
+function scopeOf(timeline: gsap.core.Timeline, selectors: string[]): string | null {
+  const targets = timeline
+    .getChildren(true, true, false)
+    .flatMap((t) => (t as gsap.core.Tween).targets<unknown>())
+    .filter((t): t is Node => t instanceof Node)
+  for (const selector of selectors) {
+    const root = document.querySelector(selector)
+    if (root && targets.some((t) => root.contains(t))) return selector
+  }
+  return null
+}
+
+export function FrozenGsap({
+  seconds,
+  at = [],
+}: {
+  /** Playhead for every timeline that no `at` entry claims. */
+  seconds: number
+  /**
+   * Per-case playheads: `{ selector, seconds }`, where the selector is a case
+   * element. Needed because one frame proves one state, so a module that cycles
+   * gets a second case at a second playhead rather than a second copy of the
+   * first. Matched against a selector rather than a wrapper element on purpose
+   * — a wrapper would change the DOM of the cases that already have baselines.
+   */
+  at?: { selector: string; seconds: number }[]
+}) {
   useEffect(() => {
     let frames = 0
     let raf = 0
+    const selectors = at.map((a) => a.selector)
     const tick = () => {
       ScrollTrigger.getAll().forEach((st) => st.disable(false, true))
       for (const child of gsap.globalTimeline.getChildren(false, false, true)) {
         if (HELD.has(child)) continue
+        const scope = scopeOf(child as gsap.core.Timeline, selectors)
+        const at_ = at.find((a) => a.selector === scope)
         HELD.add(child)
         child.pause(0)
-        child.seek(seconds, false)
+        child.seek(at_ ? at_.seconds : seconds, false)
       }
       if (++frames < 30) raf = requestAnimationFrame(tick)
     }
     raf = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(raf)
-  }, [seconds])
+    // AND THEN FOREVER, every 100ms, which is not belt-and-braces.
+    //
+    // The frame loop above only covers timelines that exist within about half a
+    // second of this component hydrating, and that assumption failed under
+    // load: one `components — light` run took 1.1 minutes and lost
+    // `section-card-animation-integrations` — no actual image and no diff, just
+    // a capture that never stabilised, which is what a live GSAP loop looks
+    // like from `toHaveScreenshot`. The animated modules are client components
+    // behind their own chunks (`gsap` is a large one), so on a slow worker they
+    // can hydrate, and build their timelines, well after this component has
+    // stopped watching, and a timeline created after the last frame escapes the
+    // freeze entirely.
+    //
+    // An interval with no end catches one within 100ms of its creation for as
+    // long as the page is open. `HELD` keeps it idempotent, so this is a
+    // no-op every tick once everything is pinned, and pinning late is harmless:
+    // `pause(0)` then `seek()` lands on the same deterministic state wherever
+    // the playhead had got to.
+    const interval = window.setInterval(tick, 100)
+    return () => {
+      cancelAnimationFrame(raf)
+      window.clearInterval(interval)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [seconds, JSON.stringify(at)])
   return null
+}
+
+/**
+ * `JourneySignalScene` with its view pinned, because otherwise it changes on
+ * its own halfway through a capture.
+ *
+ * The scene auto-advances between its GTM and Engineering views every 6s while
+ * an IntersectionObserver says it is on screen, and the spec scrolls each case
+ * into view immediately before capturing it. So the view at capture time is
+ * whatever the clock says, which is not a baseline. There is no `view` prop —
+ * the module's own words are that content "lives in named consts near the top
+ * of the source file" — but there IS a documented handover: the scene stops
+ * advancing "for good the moment someone reaches for the toggle themselves".
+ * Clicking the toggle once on mount is therefore not a trick played on the
+ * component, it is the component's own contract, and it pins the view as a side
+ * effect of the thing that was needed anyway.
+ *
+ * `HTMLElement.click()` rather than a real pointer: it dispatches the click
+ * without moving focus, so no focus ring lands in the frame.
+ *
+ * `light` on the wrapper is not decoration. The module is `polarity: inherits`
+ * and its own `watchFor` says its tokens alias to `--color-text-primary`, which
+ * defaults to the DARK reading, while every card in the scene paints a
+ * white/cream background regardless of page theme. Without a `light` ancestor
+ * it renders near-white ink on its own white cards.
+ */
+export function JourneySceneCase({
+  view,
+  width,
+  children,
+}: {
+  view: 'GTM' | 'Engineering'
+  /** Width class for the measured container — this scene picks a layout from it. */
+  width: string
+  children: React.ReactNode
+}) {
+  const ref = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    const root = ref.current
+    if (!root) return
+    const button = Array.from(root.querySelectorAll('button')).find(
+      (b) => b.textContent?.trim() === view,
+    )
+    button?.click()
+  }, [view])
+  return (
+    <div className={`light rounded-md bg-brand-light ${width}`} ref={ref}>
+      {children}
+    </div>
+  )
 }

@@ -1985,7 +1985,7 @@ modules:
     client: true
     composes: [lib/use-container-scale]
     polarity: inherits
-    seen: []
+    seen: [section-card-animation-integrations, section-card-animation-integrations-last]
     overrides: [style, className, use client]
     customProperties: [--cursor]
     props:
@@ -3454,7 +3454,7 @@ modules:
     exports: [JourneySignalScene]
     client: true
     polarity: inherits
-    seen: []
+    seen: [section-journey-signal-scene, section-journey-signal-scene-medium]
     overrides: [use client]
     customProperties: [--font-primary, --font-geist-sans, --font-mono, --font-geist-mono, --font-size-xs, --font-size-base, --line-height-relaxed, --radius-xs]
     useFor: >-

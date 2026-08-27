@@ -101,6 +101,7 @@ import { PrReview } from '@skene/design-system/sections/pr-review'
 import { DiffColumn, SideBySideDiff } from '@skene/design-system/sections/side-by-side-diff'
 import { TerminalBlock } from '@skene/design-system/sections/terminal-block'
 import { Bridge, BridgeNode } from '@skene/design-system/sections/bridge'
+import { CardAnimationIntegrations } from '@skene/design-system/sections/card-animation-integrations'
 import { CheckItem, CheckList } from '@skene/design-system/sections/check-list'
 import { Code, PROSE_CODE } from '@skene/design-system/sections/code'
 import { Chip } from '@skene/design-system/sections/chip'
@@ -115,6 +116,7 @@ import {
 } from '@skene/design-system/sections/footer'
 import { GlyphBadge } from '@skene/design-system/sections/glyph-badge'
 import { IntegrationsHighlight } from '@skene/design-system/sections/integrations-highlight'
+import { JourneySignalScene } from '@skene/design-system/sections/journey-signal-scene'
 import { JourneyStep, JourneyTrack, MiniFunnel } from '@skene/design-system/sections/journey-track'
 import { LightSectionCard } from '@skene/design-system/sections/light-section-card'
 import { LogoRow } from '@skene/design-system/sections/logo-row'
@@ -137,7 +139,9 @@ import { TrafficLights } from '@skene/design-system/sections/traffic-lights'
 import { TrustFact, TrustPanel } from '@skene/design-system/sections/trust-panel'
 import { ValueCard, ValueCards } from '@skene/design-system/sections/value-cards'
 
-import { AskWidgetCase, BillingToggleCase, FrozenGsap, HashScroll } from './islands'
+import {
+  AskWidgetCase, BillingToggleCase, FrozenGsap, HashScroll, JourneySceneCase,
+} from './islands'
 
 /**
  * Per-component gallery. NOT a documentation page — the three pages under
@@ -227,7 +231,16 @@ export default function ComponentGalleryPage() {
           case: the freeze is global by construction (there is one
           `gsap.globalTimeline`), and two copies would just seek the same
           timelines twice. */}
-      <FrozenGsap seconds={2.5} />
+      <FrozenGsap
+        at={[
+          // The second integrations case, one full cycle later, so the pair
+          // proves the swap rather than one lit card. 9.5s sits inside the
+          // last detail's hold (8.61 → 10.51 on the timeline's own clock) and
+          // well before the closing fade at 12.51.
+          { seconds: 9.5, selector: '[data-visual="section-card-animation-integrations-last"]' },
+        ]}
+        seconds={2.5}
+      />
       <h1 className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
         component gallery
       </h1>
@@ -2814,6 +2827,194 @@ export default function ComponentGalleryPage() {
           title="pill-nav-mobile-menu at a 390px viewport"
           width={390}
         />
+      </Case>
+
+      <Case name="section-card-animation-integrations" width="w-[880px]">
+        {/* The animation on its own, which is how the one consumer actually
+            uses it — `IntegrationsHighlight` is the pre-composed band and it
+            calls this; the site skips the band and calls this directly, inside
+            a wrapper of its own.
+
+            One frame proves one state, and this module has four. The four cards
+            enter, then the detail panel cycles: card 0 lit with detail 0, then
+            1, 2, 3, then everything fades and it repeats. `ICON_STYLES` carries
+            a `light` and a `dark` pair for each of the four variants and only
+            the active card takes the light one, so a single frame proves one
+            row of that table and leaves three unproven — and worse, it cannot
+            tell "card 0 is lit because the playhead is at 2.5s" from "card 0 is
+            always lit". TWO cases, therefore, at two playheads.
+
+            THIS ONE HOLDS t=2.5s: all four cards in and at rest, card 0 (MCP
+            server) active with its light icon fill, detail 0 in the panel. The
+            stable window is 1.56 → 3.76 on the timeline's own clock, so 2.5 is
+            not on an edge. `section-card-animation-integrations-last` holds
+            t=9.5s and the last card.
+
+            NOT held by either: the entry stagger, the three swap transitions,
+            the closing fade, and details 1 and 2. A cycling timeline cannot be
+            covered by frames, only sampled by them, and two samples is the
+            point at which the sampling proves the cycle moves.
+
+            The playhead is set by `FrozenGsap` at the top of this page, which
+            reaches GSAP because nothing else on the page does: FREEZE_CSS and
+            Playwright's `animations: 'disabled'` cover CSS animations,
+            transitions and the Web Animations API, and GSAP is none of those.
+            Without it a `repeat: -1` timeline never gives `toHaveScreenshot`
+            two identical frames and the case times out. */}
+        <CardAnimationIntegrations />
+      </Case>
+
+      <Case name="section-card-animation-integrations-last" width="w-[880px]">
+        {/* The same component one cycle later, at t=9.5s: card 3 (Repo audit)
+            active with its light icon fill, the other three back to their dark
+            one, and detail 3 in the panel. Read it beside
+            `section-card-animation-integrations` — the pair is the assertion,
+            and either frame alone would let a component that never swapped pass.
+
+            9.5s is also the last branch of the timeline's own loop, which is
+            written differently from the other three (`CYCLE_HOLD - SWAP_IN`
+            rather than `CYCLE_HOLD - SWAP_OUT - SWAP_IN`, because nothing
+            follows it), so this frame is the only cover that branch has.
+
+            The strings in the detail panel are not decorative and are checked
+            copy: the source's own comments record that the `gh` card names a
+            GitHub App because nothing ships as an Actions workflow, that no
+            `audit` subcommand exists, and that the s-spelling of
+            `analyse-journey` is the one the consuming repo's `check-claims.sh`
+            accepts. This frame is where a regression to any of the three would
+            show. */}
+        <CardAnimationIntegrations />
+      </Case>
+
+      <Case name="section-journey-signal-scene" width="w-[1120px]">
+        {/* The scene's WIDE layout, GTM view. 1,214 lines, the package's only
+            styled-components module, and until now `seen: []` — nothing here
+            had ever rendered it.
+
+            One frame proves one state and this module has two axes of them: a
+            GTM / Engineering view toggle, and three hand-placed layouts it
+            picks by measuring its own container (WIDE at 720+, MEDIUM at
+            420-719, COMPACT below). Four combinations that matter. TWO cases,
+            not four: this one holds WIDE + GTM, which is the pairing the
+            module was designed against and the one its `Bridge` band ships;
+            `section-journey-signal-scene-medium` holds MEDIUM + Engineering,
+            which is where every filed defect against it lives. The two
+            unheld corners are WIDE + Engineering and MEDIUM + GTM.
+
+            The view is pinned by clicking the toggle once on mount, which is
+            the module's own documented handover rather than a trick — see
+            `JourneySceneCase` in ./islands. Without it the scene auto-advances
+            every 6s while on screen and the capture lands wherever the clock
+            is. The entry timeline is GSAP and is held with everything else at
+            2.5s, which is past its ~1.2s end, so this is its settled state.
+
+            COMPACT is not held. It needs a container under 420 and this page's
+            cases are sized in one axis only, so a phone-width frame of this
+            scene would need the iframe treatment
+            `pattern-pill-nav-mobile-menu` uses. Recorded rather than skipped
+            quietly. */}
+        <JourneySceneCase view="GTM" width="w-full p-4">
+          <JourneySignalScene />
+        </JourneySceneCase>
+      </Case>
+
+      <Case name="section-journey-signal-scene-medium" width="w-[1120px]">
+        {/* MEDIUM layout, Engineering view — and THIS FRAME HOLDS A BROKEN
+            RENDERING, on purpose and on the record. Read the next two blocks
+            before reading the picture, because half of what is in it is wrong
+            and the frame exists to say so.
+
+            FOUND BY WRITING THIS CASE: the module reads 24 CSS custom
+            properties and 18 OF THEM ARE NOT DEFINED ANYWHERE IN THIS PACKAGE.
+            Not renamed, not defaulted — absent, with no `var()` fallback, so
+            each one resolves to invalid-at-computed-value-time: a background
+            becomes transparent, a colour falls back to `inherit`. The list is
+            every `--color-terminalChrome-*` it uses, plus `--color-text`,
+            `--color-text-dark`, `--color-text-light`, `--color-text-on-dark`
+            and its two variants, `--color-accent-muted`,
+            `--color-background-darker`, `--color-border-on-dark`,
+            `--color-chrome-accent` and `--color-chrome-muted`. The VALUES exist
+            in `design-tokens.json` under `terminalChrome` and reach
+            `src/tokens/index.ts`, but the CSS generator never emits them under
+            those names.
+
+            It shows here rather than in the GTM case because the two views fail
+            differently. GTM asks for `var(--color-secondary)` and a literal
+            `#ffffff` for its fills and survives on inherited ink. Engineering
+            asks for `--color-terminalChrome-githubDarkBg` and
+            `--color-terminalChrome-githubDarkSurface`, gets transparent, and
+            then paints `#ffffff` text on it — near-white on the white stage.
+            Measured: the centre card and the PR panel both compute
+            `background-color: rgba(0, 0, 0, 0)` with `color: rgb(255, 255, 255)`.
+
+            Why it survived: the module is a straight port, its own header says
+            so, and the tokens came across while the definitions did not. The
+            one app that renders this scene defines every missing name in its
+            OWN `globals.css` — and does not import this module at all, it runs
+            a fork. So the package's copy has no consumer, and `seen: []` meant
+            nothing here had rendered it either. Nothing anywhere was looking.
+
+            The two mode captures of this case are the proof, and they are the
+            reason to look at both files rather than one. They DIFFER, and they
+            must not: the scene sits under an explicit `light` wrapper, so the
+            page's mode should reach nothing inside it. What reaches in is the
+            fallback. `color` on an undefined property resolves to `inherit`, so
+            the panels take the gallery `Case`'s own `text-foreground` — ink
+            under the light sweep, near-white under the dark one — and the
+            Engineering view is legible in one baseline and almost absent in the
+            other. A component whose ink is decided by a page two levels up is
+            the defect stated as a picture.
+
+            Not fixed here. Eighteen undefined properties inside a
+            1,214-line styled-components module is a token decision, not a
+            coverage chore, and it needs someone to say whether the generator
+            should emit `terminalChrome` or the module should move onto the
+            roles that exist. This frame is what makes that reviewable.
+
+            The geometry defects are the second half of the story:
+
+            The consuming site has three geometry defects filed against this
+            module's MEDIUM layout as ask 12 of its upstream list, all three
+            re-verified against v0.13.0 and all three still live in
+            `src/sections/journey-signal-scene.tsx`:
+
+              G1  `WIDE_MIN = 720` (:888). At 768 a hero stacks and the scene
+                  takes a ~730px column, which is over 720, so WIDE fires and
+                  scales its 1100px stage to 0.66 — panel body copy at 8.6px.
+                  The tablet gets the desktop layout. NOT held by this frame:
+                  it is a threshold, and a case at 600 sits well inside MEDIUM.
+                  It would need a third case at ~730.
+              G2  `MEDIUM.left.w = 170` (:874). The Evidence panel's whole job
+                  is naming the file and the table, and at 170 neither fits.
+                  The package's own labels are three characters longer than the
+                  fork's, so it clips harder here than where it was found. THIS
+                  frame is where that shows.
+              G3  `MEDIUM.h = 640` (:871). `right` starts at y 300 and the
+                  Engineering view runs its three panels much taller than the
+                  GTM view they were laid out against. That is why this case
+                  is the Engineering one: the GTM view would not show it.
+                  Measured HERE, with the package's own copy rather than the
+                  fork's: the PR panel runs ~330 of the 340 stage units the
+                  layout leaves it, so it does not clip yet — it has about ten
+                  units of slack, against the five the fork measured. The
+                  defect is the absent floor, not a visible overflow, and any
+                  copy change to that panel spends the remainder.
+
+            The decision, since a baseline taken now freezes what it finds:
+            HOLD THE CURRENT STATE, both halves, and fix neither first. Two
+            reasons, and they are the same for the tokens as for the geometry.
+            Each fix is a visible change to a component that a consumer's home
+            hero renders in forked form, so each belongs in its own commit where
+            it can be reviewed on its own terms rather than smuggled in under a
+            coverage task. And having this frame FIRST is what makes either fix
+            reviewable at all: with a baseline, correcting 720/170/640 or
+            emitting the missing properties lands as a picture of what changed;
+            without one it lands as a list of names and a promise. So this is a
+            regression floor and a filed defect, not an endorsement, and the
+            frame is EXPECTED to move — twice. */}
+        <JourneySceneCase view="Engineering" width="w-[600px] p-4">
+          <JourneySignalScene />
+        </JourneySceneCase>
       </Case>
     </main>
   )

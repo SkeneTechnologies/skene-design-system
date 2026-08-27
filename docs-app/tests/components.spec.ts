@@ -197,9 +197,18 @@ test('gallery is reachable and every component is claimed by a case', async ({ p
   // consumer's mobile nav, which every page of it carries. It is the first case
   // on the gallery that is an iframe: every layer in that module is `md:hidden`
   // and this suite runs at 1280, so an inline case captured an element with no
-  // box at all. Three modules still have no case (`docs/sections.md` names them
-  // and ranks them); `ui/sonner` is the only one that is meant to be there.
-  expect(names.length).toBeGreaterThanOrEqual(88)
+  // box at all.
+  //
+  // Raised 88 → 92 on 2026-08-28 with the last two, TWO cases each, because one
+  // frame proves one state and both are multi-state:
+  // `section-card-animation-integrations` at two playheads on its cycling
+  // timeline, and `section-journey-signal-scene` at WIDE+GTM and
+  // MEDIUM+Engineering. The second of those holds a rendering that is BROKEN on
+  // purpose — the module reads 18 CSS custom properties this package does not
+  // define — which is a regression floor and a filed defect, not an
+  // endorsement. `ui/sonner` is now the only module with no case, and it is
+  // meant to be: a toast host has no resting state to snapshot.
+  expect(names.length).toBeGreaterThanOrEqual(92)
   expect(new Set(names).size, 'duplicate data-visual names').toBe(names.length)
 })
 

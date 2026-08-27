@@ -1432,7 +1432,10 @@
       "summary": "The PR surface is a GitHub App that posts reviews; nothing ships as an Actions workflow.",
       "client": true,
       "lines": 352,
-      "cases": [],
+      "cases": [
+        "section-card-animation-integrations",
+        "section-card-animation-integrations-last"
+      ],
       "demo": null,
       "usage": {
         "module": "card-animation-integrations",
@@ -2116,7 +2119,10 @@
       "summary": "A documented exception to `machine/rules.yaml`'s `styled_components_for_new_features`.",
       "client": false,
       "lines": 1215,
-      "cases": [],
+      "cases": [
+        "section-journey-signal-scene",
+        "section-journey-signal-scene-medium"
+      ],
       "demo": null,
       "usage": {
         "module": "journey-signal-scene",
@@ -3148,7 +3154,7 @@
   "unbuilt": [],
   "gallery": {
     "route": "/components",
-    "cases": 96
+    "cases": 100
   },
   "counts": {
     "modules": 89,
@@ -3156,7 +3162,7 @@
     "ui": 30,
     "patterns": 8,
     "sections": 51,
-    "noVisual": 3,
+    "noVisual": 1,
     "withUsage": 89
   }
 }
