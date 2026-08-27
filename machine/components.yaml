@@ -176,6 +176,19 @@ patterns:
         PillNav sits OVER the hero rather than above it, so media runs to the top
         of the viewport. The translucent fill plus blur is what keeps links
         legible over arbitrary photography without a solid bar.
+      - >-
+        Eyebrow on a cream panel takes `onLight`. Its default border and ink are
+        invariant chrome.* and do NOT follow a `light` ancestor, so on cream the
+        chip keeps its dark-page colours. Do not write the two-utility className
+        override that predates the prop; three modules here and fourteen call
+        sites on the marketing site did, which is what the prop replaced.
+      - >-
+        Anything in the pill bar that is not a plain anchor composes through
+        PillNavLink `asChild` — a menu trigger, a next/link, a button. Copying
+        the bar's seven-utility class string is what puts its hover ink, its
+        active peach and its 4px radius in two places. `href` is not forwarded
+        under `asChild`, and an item with no `href` does not appear in the
+        mobile drawer; pass one when it should.
   dither:
     import: "@skene/design-system/patterns/dither.tsx"
     exports: [DitherOverlay, DitheredMedia]
@@ -262,6 +275,161 @@ sections:
         so there is nothing for an invariant token to get wrong. healthy and live
         mix their fill from mode-aware tokens through color-mix so they follow a
         `light` ancestor.
+  ArtifactShell:
+    import: "@skene/design-system/sections/artifact-shell.tsx"
+    exports: [ArtFrame, ArtPanel, ArtTitle, AppWindow, artifactHeader, PanelCaption, AppPanel, StatPill, DataTable, DataRow, DataCell]
+    props:
+      ArtFrame.kind: [gh, db, jr]
+      ArtFrame.row: "boolean — the frame sits in a row rather than a column"
+      StatPill.status: [good, warn, bad, neutral]
+      DataCell.mono: "boolean"
+      DataCell.muted: "boolean"
+    rules:
+      - >-
+        `kind` on ArtFrame is REQUIRED and the pairing is not decoration: gh is
+        GitHub, PRs and editor chrome; db is schema, connections and keys; jr is
+        journeys, funnels and measurement. A schema panel on the GitHub texture
+        is not a styling slip, it is a miscue. Same three assets as
+        SectionBackdrop, under different names — journey/github/schema there,
+        jr/gh/db here. That divergence is real and unreconciled; do not "fix" it
+        at a call site by passing the other vocabulary.
+      - >-
+        The two registers are a decision, not a default. ArtPanel is fixed dark
+        because it depicts GitHub, an editor or a shell, and drawing those light
+        is a lie; its tokens are terminal.* and terminal-chrome.*, invariant by
+        construction. AppWindow carries `light` unconditionally because the real
+        signed-in product IS light (bg-card appears 127 times under
+        app/workspace/**) and these artifacts render on a dark page. Do not
+        remove either: `cn` is twMerge and it cannot unset a theme class, so an
+        artifact that inherits the page's polarity is a picture of a product
+        that does not exist. A consumer needing AppWindow to follow the ambient
+        theme wants a prop and a decision, not a className.
+      - >-
+        Every padding in this module is a literal px ported from a --spacing-N
+        token, NOT the numerically-similar Tailwind step. The package sets
+        --spacing: 0.2rem, so p-4 is 12.8px against --spacing-4's 16px. They
+        differ by 25% and nothing warns. Radii do line up: --radius-gtm is
+        --radius-xl is rounded-xl (14px). Tidying a px value onto the numeric
+        scale is the single most repeated defect in this package — logo-row.tsx
+        shipped at 80% of its documented size that way.
+      - >-
+        StatPill derives every edge and fill from the one status colour, so a
+        caller cannot produce a red pill with an amber rim. Its dot is a real
+        aria-hidden span rather than a ::before, deliberately: as a
+        pseudo-element it reads as a glyph pixel to the contrast harness and
+        skews the measurement of every artifact containing a pill.
+      - >-
+        AppWindow drops its bar whole when there is neither crumb nor actions.
+        That is not a convenience — the funnel artifact is deliberately
+        unbranded, because no Skene surface renders a funnel and the chart is
+        the reader's own dashboard. Do not add chrome to give it a header.
+      - >-
+        DataTable takes rows as CHILDREN because its cells are not uniform down
+        a column — an event name is mono, a location mono and quiet, a status a
+        StatPill. If your cells ARE uniform down a column, you have a reference
+        table: use KeyValueTable, which takes rows as data for exactly that
+        reason.
+  KeyValueTable:
+    import: "@skene/design-system/sections/key-value-table.tsx"
+    exports: [KeyValueTable, MaskedValue, TableNote, TagChip]
+    props:
+      density: [reference, data]
+      headerless: "boolean — renders a semantic <dl> instead of a <table>"
+      TagChip.variant: [outline, solid]
+    rules:
+      - >-
+        `rows` is DATA here and `children` in DataTable, and the split is the
+        whole point of having two components. Formatting that is a property of
+        the COLUMN belongs on the column; it is what stops the tenth
+        subprocessor row being the one that forgot `mono`. Anything genuinely
+        per-cell still goes in the cell as a node — that is what TagChip and
+        MaskedValue are for.
+      - >-
+        `density` exists because the four call sites had already drifted into
+        two: the prototype's .ptab and .dtab differ by 4px of vertical padding,
+        a vertical-align, a hover fill and tabular-nums. That is one design at
+        two densities. Do not add a third by overriding padding from a call
+        site.
+      - >-
+        `reference` density defaults column 0 to mono and nowrap, and that is
+        sourced, not stylistic: the page notes enumerate where mono may appear
+        and name the permission column, because that column holds things a
+        reader matches against their own config. It is a default, not a rule —
+        `mono: false` on the column turns it off where the first column is
+        prose.
+      - >-
+        `headerless` is a real <dl>, not visually-hidden <th>s, and it drops the
+        header row for the readout whose headings would only repeat what every
+        row says. Keep authoring the column `header`s anyway: they document the
+        columns and every other column flag still applies.
+      - >-
+        Nothing here sets a width or a min-w. The table scrolls inside
+        ui/table's overflow-auto container, cells wrap, and only column 0
+        refuses to. Adding a width at a call site is what turns a table that
+        scrolls into a page that scrolls.
+  CheckList:
+    import: "@skene/design-system/sections/check-list.tsx"
+    exports: [CheckList, CheckItem]
+    props:
+      onLight: "boolean — the list sits on a cream/featured surface"
+      dense: "boolean — tightens padding and type, for a plan card"
+    rules:
+      - >-
+        Type uses the theme-aware text.* role, never chrome.text.*. This list
+        renders on cream featured plan cards as well as dark ones, and chrome.*
+        is invariant by definition: cream text that can never invert, which on a
+        cream card is invisible. Only the mode-aware role follows a `light`
+        ancestor.
+      - >-
+        `onLight` switches the RULE token only (--check-rule). Everything else
+        in the light case resolves itself from a `light` ancestor
+        (PlanCard--featured, ProductWindow tone=light), so `onLight` is not a
+        substitute for putting the list inside one.
+      - >-
+        The separator is a top border per item, not a divider element, so a list
+        of one still reads as part of its card rather than floating.
+      - >-
+        The check is a real span, not a ::before, and it is aria-hidden. A
+        screen reader announcing "tick" before every line is noise, and
+        aria-hidden on a pseudo-element is not expressible. Do not reintroduce
+        it as CSS.
+      - >-
+        `dense` sets both the padding and the type. Pass the prop rather than
+        tightening one of the two from a call site; the six homepage instances
+        that were hand-written each time are why this component exists.
+  SectionBackdrop:
+    import: "@skene/design-system/sections/section-backdrop.tsx"
+    exports: [SectionBackdrop]
+    props:
+      texture: [journey, github, schema]
+      src: "string — explicit URL, for a consumer with its own artwork"
+      inset: "number — percent of width, default 6"
+    rules:
+      - >-
+        `inset` is a PERCENTAGE and not a spacing step. The live panel is 84-92%
+        of its container, and a percentage holds that proportion at every track
+        width by construction. A fixed padding was tried and turns the field
+        into a coloured BORDER on a short wide card. Do not override it with a
+        padding utility.
+      - >-
+        minHeight is 22rem and is inline, so no class beats it. The live
+        container is square: without vertical room the texture only shows left
+        and right, which is the border failure again in the other axis.
+      - >-
+        Textures are resolved with new URL(…, import.meta.url), never as
+        /img/card1_bg.webp. A consumer installing the package has no public/img
+        and a bare path renders as a missing image everywhere but the prototype.
+        Same mechanism as ArtFrame, which names the same three assets gh/db/jr
+        against journey/github/schema here.
+      - >-
+        Decorative throughout — aria-hidden, pointer-events-none, content
+        lifted above. It is a field for an artifact, not a container for copy.
+      - >-
+        NOT a band-wide ground behind a copy row. Recorded twice on the
+        marketing site, both times as a correction: a SectionBackdrop behind a
+        copy column washed the whole band out. It is right for a full-width
+        artifact band where the field IS the band — pair it with the full width,
+        because capping it at the prose measure spends the 6% inset twice.
   ProductWindow:
     import: "@skene/design-system/sections/product-window.tsx"
     exports: [ProductWindow, WindowStatus, WindowToolbar, WindowChip]
@@ -317,6 +485,17 @@ sections:
       - >-
         accent.violet / accent.blue exist for FeatureIcon specifically; the
         nearest neon.* is dE 24+ and far too saturated at a 44px ring.
+      - >-
+        `n` is a CORNER MARKER — absolutely positioned at right-6 / top-[22px],
+        11px, muted-warm — and it is aria-hidden unconditionally. It is not the
+        baseline ordinal a marketing wireframe draws beside a heading; that mark
+        is a flex sibling of the head at 12px. If your page draws the second
+        one, `n` is the wrong element and no prop turns it into the right one.
+      - >-
+        There is no `copyOnly` prop. The mode is derived at render as
+        `!visual && !texture && !textureSrc`, and with it the 600px floor,
+        `splitAt` and `reverse` all go inert. So it is invisible at the call
+        site, and adding a `texture` later silently restores the floor.
   PipelineStepper:
     import: "@skene/design-system/sections/pipeline-stepper.tsx"
     exports: [PipelineStepper, PipelineStep]
@@ -359,12 +538,62 @@ sections:
   LightSectionCard:
     import: "@skene/design-system/sections/light-section-card.tsx"
     exports: [LightSectionCard]
+    props:
+      titleScale: [display, section]
+      reverse: "boolean — mirrors which side each column sits on. NOT a ratio."
     rules:
       - >-
         Root carries the `light` class and it is load-bearing. This is a cream
         surface on a dark page; without it every mode-aware token inside resolves
         to its dark value against the fill and the text disappears. Same
         mechanism as ProductWindow tone=light and the featured PlanCard.
+      - >-
+        The COPY column gets the wider track, in both modes: 1.1fr/0.9fr, and
+        `reverse` is 0.9fr/1.1fr, which only mirrors sides. There is no ratio
+        prop. Every cream copy-and-visual band on skene-marketing-website gives
+        the wider track to the VISUAL, at 5fr/7fr, so all seven of them stay
+        hand-rolled. Overriding the tracks with a className from the call site
+        is precisely what page-template.tsx deleted TONAL_GRID to stop.
+      - >-
+        It splits at `md` (768), hardcoded. FeatureRow has `splitAt` for this;
+        this does not. Every band on the marketing site splits at `lg` (1024).
+      - >-
+        The two above are unresolved upstream asks, not preferences, and they
+        are why context.yaml's routing and the
+        feature_row_as_the_marketing_card documentation disagree about whether
+        this is the cream copy-and-buttons panel at all. Until they are settled,
+        a cream band with copy and a visual is hand-rolled from the recipe in
+        layouts.yaml `marketing.cream_inset`.
+  JourneySignalScene:
+    import: "@skene/design-system/sections/journey-signal-scene.tsx"
+    exports: [JourneySignalScene]
+    props: {}
+    rules:
+      - >-
+        It takes NO PROPS. Every string, every table name and every step label
+        is hardcoded, and the set is the pre-swap onboarding vocabulary
+        (onboarding_started, public.accounts, Signed up / Onboarding started /
+        Reached first value). A consumer that needs different content forks the
+        file; one has. Do not add a call-site workaround, and do not assume a
+        content prop exists because every other section has one.
+      - >-
+        The stage is LIGHT and deliberately so — --color-background-darker is
+        #ffffff, and softPulse is ink rather than peach because peach measures
+        ~1.2:1 on cream. It was built for a `Bridge` band. On a near-black hero
+        it is the wrong reading and there is no tone prop to say so.
+      - >-
+        Four geometry defects ship at 0.12.0 and are recorded in
+        documentation/20260825_journey_signal_scene_design.md under "Known
+        defects at 0.12.0": WIDE_MIN 720 sends 768px viewports to the desktop
+        layout at 0.66 scale, MEDIUM.left.w 170 ellipsises both Evidence rows,
+        MEDIUM.h 640 leaves ~5px under the PR panel, and MEDIUM reserves no top
+        strip for an overlaid control. Read that section before changing any
+        number in the three Layout constants.
+      - >-
+        Nothing in this repository consumed MEDIUM before the one external
+        consumer did, which is how all four shipped. A story that renders the
+        scene at a few widths is not a check on a hand-placed layout; measure
+        the panels at the width a hero column actually gives it.
   StatChip:
     import: "@skene/design-system/sections/stat-chip.tsx"
     exports: [StatChip, MetaChip]
