@@ -182,7 +182,7 @@ Four fields per entry earn the read:
   dark values against a light fill, which has shipped text at 1.08:1.
 - **`seen`** — the gallery cases that have ever rendered it. **An empty list
   means nothing in this repository has ever rendered the module, so treat its
-  claims as unproven.** Ten modules are in that state today.
+  claims as unproven.** Nine modules are in that state today.
 - **`overrides`** — what a caller can reach from outside. `style` means the
   module writes an inline style that beats any class you pass.
 

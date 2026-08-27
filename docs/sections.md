@@ -239,17 +239,36 @@ product-artifact sections that carried no gallery case, and so no light/dark
 baseline, each got one in `290a19f`, which took `noVisual` to 1: `sonner`, a
 toast host that renders nothing until something calls it, so there is no state
 to snapshot. That was true on 2026-08-15 and this paragraph went on asserting it
-while 10 modules accumulated with no case:
+while 9 modules accumulated with no case:
 
     sonner                        pill-nav-frosted
     pill-nav-mobile-menu          card-animation-integrations
     code                          integrations-highlight
-    journey-signal-scene          logo-row
-    surface-cards                 team-card
+    journey-signal-scene          surface-cards
+    team-card
 
-`sonner` is the only justified one. The other nine are unproven — `seen: []` in
+`sonner` is the only justified one. The other eight are unproven — `seen: []` in
 `machine/context.yaml`, whose own header says an empty list means nothing in
 this repository has ever rendered the module, so treat its claims as unproven.
+
+`logo-row` was the tenth until 2026-08-27, and it is why this paragraph is worth
+reading twice. It shipped every spacing value at 80% of the number its own
+comments claimed — a 56px slot floor rendering at 44.8 — and no gate here saw
+it, because a module with no case has no baseline and the per-component suite
+compares nothing to nothing. The defect was found by measuring the rendered
+strip inside a consuming app. `section-logo-row` now exists and the suite's
+floor moved 81 → 82.
+
+Which makes the list above a list of live blind spots, not of tidiness debt.
+Ranked by how much of the estate is exposed: `sections/code` is the worst, at 7
+of the 19 composing routes in `machine/compositions.yaml`'s corpus — the fifth
+most-used module in the whole package and the only spine member with no
+baseline. `sections/surface-cards` is next, on the consumer's home and
+integrations routes. `patterns/pill-nav-frosted` and
+`patterns/pill-nav-mobile-menu` are the consumer's site nav, which every page
+carries. `sections/journey-signal-scene` already has three geometry defects
+filed against it by that consumer, which is the same failure mode as `logo-row`
+and the same reason it survived.
 
 Two mechanisms failed here, not one. The list went stale because a hand-typed
 count has no gate behind it — `__tests__/docs-counts.test.ts` now reads the

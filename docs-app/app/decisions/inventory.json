@@ -2280,7 +2280,9 @@
       "summary": "The proof strip: a heading, a stat line, a row of logo slots, and a caption",
       "client": false,
       "lines": 195,
-      "cases": [],
+      "cases": [
+        "section-logo-row"
+      ],
       "demo": null,
       "usage": {
         "module": "logo-row",
@@ -3134,7 +3136,7 @@
   "unbuilt": [],
   "gallery": {
     "route": "/components",
-    "cases": 89
+    "cases": 90
   },
   "counts": {
     "modules": 89,
@@ -3142,7 +3144,7 @@
     "ui": 30,
     "patterns": 8,
     "sections": 51,
-    "noVisual": 10,
+    "noVisual": 9,
     "withUsage": 89
   }
 }

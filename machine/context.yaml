@@ -3871,7 +3871,7 @@ modules:
     import: "@skene/design-system/sections/logo-row"
     exports: [LogoSlot, LogoRow]
     polarity: inherits
-    seen: []
+    seen: [section-logo-row]
     overrides: [style, className]
     customProperties: [--radius-md, --logo-row-count]
     props:

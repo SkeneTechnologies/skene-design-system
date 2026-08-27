@@ -110,6 +110,7 @@ import {
 import { GlyphBadge } from '@skene/design-system/sections/glyph-badge'
 import { JourneyStep, JourneyTrack, MiniFunnel } from '@skene/design-system/sections/journey-track'
 import { LightSectionCard } from '@skene/design-system/sections/light-section-card'
+import { LogoRow } from '@skene/design-system/sections/logo-row'
 import { PipelineStepper } from '@skene/design-system/sections/pipeline-stepper'
 import { PlanCard, PlanGrid } from '@skene/design-system/sections/plan-card'
 import {
@@ -2331,6 +2332,70 @@ export default function ComponentGalleryPage() {
             <Finding onLight={false} status="good" tag="VERIFIED" title="repo_connected" />
             <Finding onLight={false} status="warn" tag="CHANGED" title="checkout_started" />
             <Finding onLight={false} status="danger" tag="MISSING" title="signup_started" />
+          </div>
+        </div>
+      </Case>
+
+      <Case name="section-logo-row" width="w-[1120px]">
+        {/* The proof strip, and the case that should have existed before it
+            shipped at 80% of its documented size.
+
+            `LogoRow` had NO case here, so none of the committed baselines
+            covered it, so `min-h-14` measuring 44.8px against a comment that
+            said 56 passed every gate this package has. It was found by
+            measuring the rendered strip in a consumer, which is the one place
+            a package's own suite should never be the second-best instrument.
+            The file header now writes every spacing value as literal px; this
+            case is what holds them.
+
+            What the baseline is holding is GEOMETRY, not text: the 56px slot
+            floor, the 14px inter-slot gap, the 24px under the heading and the
+            stat, and the 14px above the caption. All four were a fifth short.
+            A slot is an outlined blank of fixed minimum height, so a
+            regression in any of them moves this frame and nothing else.
+
+            Both grounds in one case, because this band declares none of its
+            own. Every colour is a mode-aware role, so the strip follows a
+            `light` ancestor onto cream without an `onLight` prop — which is
+            exactly how the consumer ships it, inside a cream inset on
+            /pricing. The left column takes whatever <html> is set to and the
+            right column forces the cream, so the light sweep proves the inset
+            and the dark sweep proves the strip survives being dropped onto a
+            light ancestor from a dark page.
+
+            NO logo in a slot, deliberately, and not because a demo is hard to
+            write. The empty slot is the component's argument: named proof
+            appears the day an account agrees to be named, and the file header
+            forbids a fabricated mark in a story, a demo or sample data. A case
+            that filled one to look better would be the first place that rule
+            broke. The filled path is covered by the `decorative` prop's
+            contract, not by an invented customer.
+
+            The heading and stat strings are the ones the module's own prop
+            docs use as their example, so nothing here is a figure this case
+            made up. */}
+        <div className="grid grid-cols-2 gap-6">
+          <LogoRow
+            caption="These slots stay empty until an account agrees to be named on-site."
+            count={3}
+            stat={
+              <>
+                <strong>10 paying teams</strong>, <strong>$2,000 MRR</strong>.
+              </>
+            }
+            title="Who is running this"
+          />
+          <div className="light rounded-md bg-brand-light p-6">
+            <LogoRow
+              caption="These slots stay empty until an account agrees to be named on-site."
+              count={3}
+              stat={
+                <>
+                  <strong>10 paying teams</strong>, <strong>$2,000 MRR</strong>.
+                </>
+              }
+              title="Who is running this"
+            />
           </div>
         </div>
       </Case>

@@ -178,7 +178,16 @@ test('gallery is reachable and every component is claimed by a case', async ({ p
   // meant the duplication findings against them — one caption strip written out
   // four times, VerifyRow copied line-for-line — had no way to be proven
   // harmless. A merge that cannot be shown to change nothing is not a merge.
-  expect(names.length).toBeGreaterThanOrEqual(81)
+  //
+  // Raised 81 → 82 on 2026-08-27 with `section-logo-row`, for the third time
+  // and for the same reason: `LogoRow` had no case, so no baseline covered it,
+  // so it shipped every spacing value at 80% of the number its own comments
+  // claimed and this suite reported green. That is now twice that a module with
+  // no case has been the one carrying the defect, which makes the count below a
+  // ratchet on the class rather than a tally. Nine modules still have no case
+  // (`docs/sections.md` names them); `sections/code` is the one that matters
+  // most, at 7 of the consumer corpus's 19 composing routes.
+  expect(names.length).toBeGreaterThanOrEqual(82)
   expect(new Set(names).size, 'duplicate data-visual names').toBe(names.length)
 })
 
