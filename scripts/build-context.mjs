@@ -10,8 +10,11 @@
  * `machine/components.yaml` answers "what must I not do with this" — its `rules`
  * are prohibitions, and they are correct. Nothing shipped answers "what else is
  * this good for". The two files that did — `scripts/usage-data.json` and the
- * generated `inventory.json` — are both outside `package.json` `files`, so a
- * consuming agent has never seen either. What it does see is the file-header
+ * generated `inventory.json` — were both outside `package.json` `files`, so a
+ * consuming agent had never seen either. (`inventory.json` ships as of
+ * 2026-08-27, exported as `@skene/design-system/inventory.json`; it is what
+ * turns a `seen:` case id into something a reader can actually look at.)
+ * What it does see is the file-header
  * comment, which says what the component was BUILT for. That framing is exactly
  * what makes a reader write a near-copy instead of reusing what is there, and
  * the twenty duplicate clusters in this package are the receipt.
@@ -406,7 +409,11 @@ export function render(entries, data) {
 #   Whether the module puts a theme class on its own root. A light surface on a
 #   dark page needs one, and a missing one renders cream on cream.
 # seen: gallery case ids under docs-app /components. An empty list means nothing
-#   in this repository has ever rendered it — treat its claims as unproven.
+#   in this repository has ever rendered it — treat its claims as unproven. The
+#   ids resolve in the shipped \`@skene/design-system/inventory.json\`, which
+#   carries every module's cases, exports and line count beside the ten resolved
+#   design decisions. Until 2026-08-27 that file sat outside \`files\`, so a
+#   \`seen:\` entry was a pointer a consuming agent could not follow.
 # overrides: what a caller can reach from outside. style means the module writes
 #   at least one inline style, which beats any class you pass; className means
 #   the root merges yours through cn; use client means it carries the directive.

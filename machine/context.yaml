@@ -13,7 +13,11 @@
 #   Whether the module puts a theme class on its own root. A light surface on a
 #   dark page needs one, and a missing one renders cream on cream.
 # seen: gallery case ids under docs-app /components. An empty list means nothing
-#   in this repository has ever rendered it — treat its claims as unproven.
+#   in this repository has ever rendered it — treat its claims as unproven. The
+#   ids resolve in the shipped `@skene/design-system/inventory.json`, which
+#   carries every module's cases, exports and line count beside the ten resolved
+#   design decisions. Until 2026-08-27 that file sat outside `files`, so a
+#   `seen:` entry was a pointer a consuming agent could not follow.
 # overrides: what a caller can reach from outside. style means the module writes
 #   at least one inline style, which beats any class you pass; className means
 #   the root merges yours through cn; use client means it carries the directive.

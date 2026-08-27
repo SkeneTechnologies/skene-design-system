@@ -24,6 +24,7 @@ in `node_modules/@skene/design-system/`:
 | `machine/components.yaml` | what you must not do with a given component. |
 | `machine/rules.yaml` | the reach ladder, and the seven things never to do. |
 | `docs/sections.md` | prose: the decision paths, and the overlaps with a verdict for each. |
+| `inventory.json` | the generated index: every module with its exports, line count, gallery **cases** and authored usage, plus the ten resolved design decisions with their verdicts. This is what `seen:` in `context.yaml` points at. Import it as `@skene/design-system/inventory.json`, or read `docs-app/app/decisions/inventory.json` under the package root. |
 
 Nothing pointed at these until 2026-08-13, which is the failure they were built
 to prevent: the package has 89 modules and twenty measured clusters where the

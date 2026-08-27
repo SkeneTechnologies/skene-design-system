@@ -28,7 +28,8 @@
     "assets",
     "scripts",
     "skills",
-    "__tests__"
+    "__tests__",
+    "docs-app/app/decisions/inventory.json"
   ],
   "exports": {
     "./tokens": {
@@ -43,6 +44,7 @@
     "./styles.css": "./styles/index.css",
     "./tokens.css": "./styles/tokens.css",
     "./machine/*": "./machine/*",
+    "./inventory.json": "./docs-app/app/decisions/inventory.json",
     "./docs/*": "./docs/*",
     "./skills/*": "./skills/*",
     "./package.json": "./package.json",
