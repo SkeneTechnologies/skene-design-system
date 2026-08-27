@@ -7,7 +7,7 @@
  */
 
 import { describe, it, expect } from 'vitest'
-import { readFileSync, existsSync, readdirSync } from 'node:fs'
+import { readFileSync, existsSync, readdirSync, globSync } from 'node:fs'
 import { load } from 'js-yaml'
 import { satisfies } from 'semver'
 import { resolve } from 'node:path'
@@ -192,14 +192,31 @@ describe('the documented install resolves this version', () => {
   //
   // Four manual fixes is the evidence that it is not a memory problem. The test
   // is the fix; the number is the thing the test checks.
-  it('README pins a range that includes package.json version', () => {
+  //
+  // Widened at 0.13.0: the gate watched README.md alone while the identical
+  // line had since been copied into AGENTS.md and the setup skill, so two of
+  // the three copies were ungated — the same drift, now with more places to
+  // drift from. Every file carrying a `#semver:` range is checked, and the
+  // list of them is discovered rather than enumerated, so a fourth copy is
+  // covered the moment it is written.
+  const carriers = ['README.md', 'AGENTS.md', ...globSync('skills/*/SKILL.md', { cwd: ROOT })]
+    .map((f) => [f, read(f)] as const)
+    .filter(([, src]) => src.includes('#semver:'))
+
+  it('every file that documents one is checked', () => {
+    // If this collapses the loop below asserts nothing.
+    expect(carriers.map(([f]) => f)).toContain('README.md')
+    expect(carriers.length, 'no file documents a #semver: range').toBeGreaterThan(1)
+  })
+
+  it.each(carriers)('%s pins a range that includes package.json version', (name, src) => {
     const version = JSON.parse(read('package.json')).version as string
-    const ranges = [...read('README.md').matchAll(/#semver:([^"'`\s]+)/g)].map((m) => m[1])
-    expect(ranges.length, 'no #semver: range documented in the README').toBeGreaterThan(0)
+    const ranges = [...src.matchAll(/#semver:([^"'`\s]+)/g)].map((m) => m[1])
+    expect(ranges.length, `no #semver: range in ${name}`).toBeGreaterThan(0)
     for (const range of ranges) {
       expect(
         satisfies(version, range),
-        `README documents #semver:${range}, which does not resolve ${version}`,
+        `${name} documents #semver:${range}, which does not resolve ${version}`,
       ).toBe(true)
     }
   })

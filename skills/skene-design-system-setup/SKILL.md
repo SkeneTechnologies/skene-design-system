@@ -23,7 +23,7 @@ presents as a **404, not a 401** — do not go looking for a typo in the name.
 - **Never a project-level `.npmrc`.** That is a token in a commit.
 
 Repos not yet migrated use a git dependency instead —
-`git+https://github.com/SkeneTechnologies/skene-design-system.git#semver:^0.12.0`.
+`git+https://github.com/SkeneTechnologies/skene-design-system.git#semver:^0.13.0`.
 
 ## 2. Wire the stylesheet
 

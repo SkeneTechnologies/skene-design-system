@@ -71,6 +71,13 @@ describe('a token cannot be committed', () => {
       .filter(Boolean)
       .filter((f) => /\.(json|ya?ml|md|mjs|ts|tsx|sh|npmrc)$/.test(f))
       .filter((f) => f !== '__tests__/publishing.test.ts' && f !== 'package-lock.json')
+      // `git ls-files` reads the index, which still lists a file deleted in the
+      // working tree until the deletion is staged. `changeset version` consumes
+      // every changeset by deleting it, so `npm run verify` mid-release hit
+      // ENOENT here and reported a scan failure as a test failure — the one
+      // shape of failure this gate must never produce, since a scan that
+      // crashes proves nothing about whether a token is committed.
+      .filter((f) => existsSync(resolve(ROOT, f)))
     const TOKEN =
       /npm_[A-Za-z0-9]{30,}|_authToken\s*=\s*["']?[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/
     const offenders = files.filter((f) => TOKEN.test(read(f)))

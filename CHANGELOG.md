@@ -1,5 +1,200 @@
 # @skene/design-system
 
+## 0.13.0
+
+### Minor Changes
+
+- 4a48797: Make the package composable by an agent, not just callable.
+
+  `machine/context.yaml` has always answered "what is FeatureRow for" — 89 modules
+  with full prop signatures. It never answered the question an agent actually
+  arrives with: "I have to build a features page, what goes in it and in what
+  order?"
+
+  - **`machine/compositions.yaml`** — page recipes derived from 19 routes that
+    were really built (the cal.com-style wireframe branch of the marketing site),
+    not from a taxonomy anyone liked the shape of. Eight archetypes, each citing
+    its routes with their import lists inline, each splitting load-bearing (recurs
+    in every instance) from optional (with counts). Two single-instance
+    archetypes carry `observed` rather than `load_bearing`, because with n=1
+    nothing can be shown to recur. Home and pricing are recorded in `not_covered`:
+    both routes import no section from this package, so there is no observed
+    recipe and inventing one would be the failure this file exists to prevent.
+
+  - **`intent` on every module, from a closed 20-tag vocabulary** declared at the
+    top of `context.yaml`. The reverse index: you know what you are trying to do,
+    the tag takes you to the candidates. 89 of 89 tagged, cap of three — the
+    fourth tag is always the one that is only sort-of true.
+
+  - **`machine/layouts.yaml` restructured, nothing deleted.** Two different things
+    had always lived in it and nothing in its structure said which was which: the
+    layout scale this package ships, and skene-dashboard's contract, which it does
+    not. Every block now carries a `status` — `shipped_here`, `unverified_here`,
+    `depicts_here`, `dashboard_only` — so "can I build against this today?" is a
+    field rather than something you infer from the header. The dashboard T-codes
+    and their Figma anchors stay: the dashboard is going to consume this package.
+    New `depicts_here` block names the modules that draw a dashboard-shaped
+    surface for a marketing page, so "put a Skene dashboard visual on a landing
+    page" resolves here instead of being reinvented.
+
+  Gated by `__tests__/compositions.test.ts` and six new cases in
+  `__tests__/context.test.ts`: every module a recipe names must exist in
+  `context.yaml`, every archetype must cite page files, no `load_bearing` may be
+  claimed from a single route, `not_covered` must be stated, every intent must be
+  declared, and no declared intent may go unused.
+
+  One correction to an earlier gate: `publishing.test.ts` asserted `.runlog/` did
+  not exist on disk, which turned `npm run verify` red for the whole duration of
+  any run that used one — guarding the work by breaking the check meant to guard
+  it. It now asserts the directory is not committed, which is the actual failure.
+
+- 4a48797: Add the agent entry point the contracts never had.
+
+  `machine/` has shipped ~7,000 lines of machine-readable contracts since
+  2026-08-13, pointed at only by README prose. That works for an agent reading
+  top-down and does nothing for one that lands in the directory, looks for
+  `AGENTS.md`, finds nothing and starts guessing. The contracts were readable and
+  undiscoverable, which is most of the way to not existing.
+
+  - `AGENTS.md` at the root, shipped in the tarball, with installation,
+    configuration and usage — the three sections Vercel's agent-readability spec
+    asks for at least two of. Configuration carries the Turbopack `@source` gap,
+    because that one shipped a zero-height `LogoRow` with no error.
+  - `llms.txt` as the machine-readable index.
+  - `CLAUDE.md` as a symlink, not a copy: two files saying the same thing are two
+    files that disagree by next quarter.
+  - `__tests__/agent-entry-point.test.ts` gates all of it — every path named in
+    either entry point must resolve, every contract in `machine/` must be named in
+    both, `context.yaml` must be listed before the others (its siblings' headers
+    say to read it first), and every code fence must carry a language.
+
+  Two stale claims fixed while verifying, both in documents an agent is told to
+  trust: the README said the package "has 79 modules" (89) and that the gallery
+  renders "all 79 modules as 85 cases". The second was wrong in the way that
+  matters — it claimed complete coverage when ten modules have no case at all,
+  and those ten are exactly the ones `machine/context.yaml` marks `seen: []` and
+  tells an agent to treat as unproven. Now gated too.
+
+  The site half of that spec — sitemap.xml, sitemap.md, robots.txt, canonical
+  links, JSON-LD, markdown mirrors, content negotiation — is about serving pages
+  over HTTP and belongs to `docs-app`. Not attempted here.
+
+- aa2b6de: Ship three Agent Skills, and add `skills/` to the tarball.
+
+  `AGENTS.md` only helps an agent that already knows to look for it. A Skill is
+  routed to by its `description`, on a trigger the agent never went looking for —
+  which is the moment the contracts are worth reading and the moment they were
+  being missed. The split is by moment, not by surface, because surface is the
+  wrong axis here: dashboard visuals render _on_ marketing pages, so a
+  marketing/product split would misroute every artifact section.
+
+  - `skills/skene-design-system-setup` — first install, the stylesheet, the
+    Tailwind `@source` line and the proof it took. That is the only one of the
+    four steps that fails silently, so it is the only one carrying a proof.
+  - `skills/skene-design-system` — before writing any component. The intent
+    vocabulary is inlined rather than pointed at, since an agent that has to open
+    `context.yaml` to learn the tags has already paid the cost the reverse index
+    exists to avoid.
+  - `skills/skene-design-system-pages` — composing a whole page: the spine, the
+    eight archetypes read confidence-first, and what has no recipe at all.
+
+  Each description carries a `Do NOT use for…` clause naming the other two, so
+  three skills over one package do not fire over each other.
+
+  `__tests__/skills.test.ts` gates it. The numbers a skill quotes are compared
+  against their sources — the inlined intent vocabulary against the 20 tags
+  `context.yaml` declares, the spine and archetype tables against
+  `compositions.yaml`'s own counts and confidences — so drift fails rather than
+  quietly teaching an agent something untrue. Every repo-relative path any skill
+  names is resolved; consumer-tree paths are deliberately not, since resolving
+  those against this repo is how a correct instruction gets "fixed" into a wrong
+  one.
+
+  `AGENTS.md` also gains a first-run section, for the agent that lands there
+  directly rather than being routed.
+
+- a314b12: Make the package publishable to a registry, so the product repos consolidating
+  onto it stop installing it as a git dependency.
+
+  - `publishConfig` names npmjs and stays `restricted`. npmjs rather than GitHub
+    Packages because GitHub Packages requires the scope to equal the repository
+    owner: the package would become `@skenetechnologies/design-system` and rewrite
+    the import specifier in every file of every consumer, which is the churn this
+    consolidation exists to remove. npmjs keeps `@skene`, so migrating a consumer
+    is one line in its `package.json`.
+  - `prepublishOnly` runs `npm run verify`, so a publish rebuilds rather than
+    shipping whatever `dist` happened to be on disk. `prepare` stays absent: npm
+    runs it for GIT dependencies, and consumers are on that path until they
+    migrate.
+  - `.github/workflows/publish.yml` publishes on a `v*` tag, authenticating from
+    `secrets.NPM_TOKEN` through `actions/setup-node`. It refuses to publish when
+    the tag disagrees with `package.json` — the version string in this repo has
+    drifted from reality four times, and npm does not let you reuse a number.
+  - `.npmrc` is gitignored. This repository is public, and `npm config set` run in
+    the project directory writes the token there in plaintext.
+  - README documents the registry install and where the token belongs; the git
+    dependency stays documented as the legacy path until every consumer moves.
+  - `__tests__/publishing.test.ts` gates all of it, including a scan for real npm
+    token shapes that still allows the placeholder the README has to show.
+
+  No component changes. `dist/` stays committed and the CI job that proves it is
+  current stays with it, because git-dependency consumers still need both.
+
+### Patch Changes
+
+- 2811694: Three silent-drift gaps closed, the chip cluster settled and gated, and the
+  build made incremental. No component renders differently: the only `src/` change
+  is a doc comment, and `dist` is byte-identical apart from it.
+
+  - `scripts/build-inventory.mjs` filtered on `.tsx`, so `patterns/pill-nav-frosted`
+    — the package's only `.ts` module — was missing from
+    `docs-app/app/decisions/inventory.json` entirely. The page whose premise is
+    that it lists everything listed 88 of 89. It now takes both extensions, the
+    way `build-context.mjs` always has. `counts` corrects to 89 modules, 266
+    exports, patterns 7 → 8.
+
+  - `sameAs` in `machine/context.yaml` is the near-duplicate warning, and four
+    pairs declared it in one direction only — so it helped whichever side you
+    happened to open. `feature-row → glyph-badge`, `chip → stat-chip`,
+    `surface-tiles → surface-cards` and `terminal → traffic-lights` now name each
+    other, and `__tests__/context.test.ts` fails on a one-way declaration.
+    `chip → stat-chip` was the one that mattered: it is the unfinished half of
+    the chip decision in `docs/sections.md` §2, invisible from `chip`.
+
+  - `docs/sections.md` §2 settled. Point 2 (Badge stays product-side, Eyebrow
+    stays the marketing kicker) was never pending work and is now gated rather
+    than labelled. Point 3 resolved: `StatChip`/`MetaChip` keep the pill, because
+    a token gets the rectangle and prose gets the pill — `MetaChip` already draws
+    both treatments in one chip, and its state word is the half that is a token.
+    The table also grew from the documented seven shapes to nine: `TagChip` and
+    `CheckChip` are the same 11px mono tag written twice, recorded only in
+    `evaluator-check.tsx`'s own header. Decided in favour of `TagChip`, which two
+    of the three modules in that family already import; not applied, because it
+    moves pixels and the baselines need the Playwright container.
+
+  - `__tests__/chip-cluster.test.ts` makes that table a test: every chip's radius,
+    size, voice and tracking pinned against source, and every chip-shaped class
+    literal in `src` either registered or named as an exception. The cluster
+    drifted twice in a column nobody was tabulating; it can now only grow in the
+    open.
+
+  - Three dependencies nothing used: `@radix-ui/react-label` (`ui/label.tsx` is a
+    plain `<label>`), `@radix-ui/react-separator` (never had an importer), and
+    `@types/styled-components@5` beside `styled-components@6`, which ships its own
+    types. Gated in `package-contract`: every dependency must be imported from
+    `src/` or named by a stylesheet, and every `@types/x` must match its target's
+    major.
+
+  - `tsc` runs incrementally, so `npm run verify` is 7.0s warm against 10.3s.
+    Output is unaffected — `dist` is byte-identical either way.
+
+  - Counts typed into prose are checked now, in `__tests__/docs-counts.test.ts`.
+    `stories/README.md` claimed 74 of 74 modules and 318 stories against a real 81
+    and 379; `docs/sections.md` claimed one module without a gallery case against
+    a real ten. The README's `#semver:` range also documented `^0.11.0` resolving
+    `v0.11.0` while the package was 0.12.0, which is the fourth time that line has
+    gone stale and the reason `package-contract` was already red.
+
 ## 0.12.0
 
 ### Minor Changes
