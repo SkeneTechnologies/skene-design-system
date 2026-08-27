@@ -346,6 +346,11 @@ function emit(entry, authored) {
   }
 
   p(`    useFor: ${block(authored.useFor, 6)}`)
+  // The inverse index. useFor answers "what is this for"; intent answers
+  // "what do I have for this job", which is the question an agent building a
+  // page actually asks. Tags come from the controlled `intents` vocabulary at
+  // the head of the file — see __tests__/context.test.ts.
+  if (authored.intent?.length) p(`    intent: [${authored.intent.join(', ')}]`)
   for (const [field, itemKey] of [['alsoFor', 'claim'], ['watchFor', 'note']]) {
     if (!authored[field]?.length) continue
     p(`    ${field}:`)
@@ -363,6 +368,22 @@ function emit(entry, authored) {
   }
   if (authored.sameAs?.length) p(`    sameAs: [${authored.sameAs.join(', ')}]`)
   return L.join('\n')
+}
+
+/**
+ * The controlled vocabulary, emitted ahead of the modules so it is the first
+ * thing read. It is a contract rather than folklore precisely because it is
+ * closed: `__tests__/context.test.ts` rejects a module tag that is not declared
+ * here, and a tag declared here that no module uses. A vocabulary that anyone
+ * can extend at the call site indexes nothing — twenty tags that mean one thing
+ * each beat eighty that overlap.
+ */
+function emitIntents(intents) {
+  const lines = ['intents:']
+  for (const [tag, definition] of Object.entries(intents ?? {})) {
+    lines.push(`  ${tag}: ${block(definition, 4)}`)
+  }
+  return lines.join('\n')
 }
 
 export function render(entries, data) {
@@ -389,10 +410,16 @@ export function render(entries, data) {
 # overrides: what a caller can reach from outside. style means the module writes
 #   at least one inline style, which beats any class you pass; className means
 #   the root merges yours through cn; use client means it carries the directive.
+# intent: the reverse index. Every entry below answers \"what is this module
+#   for\"; intent answers the question an agent building a page asks instead —
+#   \"I need a band that contrasts two options, what do I have?\". Grep the
+#   \`intents:\` vocabulary below for the job, then grep this file for the tag.
+#   Tags are a closed set: only what \`intents:\` declares can appear.
 
 version: "1.0.0"
-counts: { modules: ${entries.length}, ui: ${counts.ui ?? 0}, patterns: ${counts.patterns ?? 0}, sections: ${counts.sections ?? 0}, authored: ${written}, assets: ${deriveAssets().length} }
+counts: { modules: ${entries.length}, ui: ${counts.ui ?? 0}, patterns: ${counts.patterns ?? 0}, sections: ${counts.sections ?? 0}, authored: ${written}, assets: ${deriveAssets().length}, intents: ${Object.keys(data.intents ?? {}).length} }
 
+${emitIntents(data.intents)}
 modules:`
   const body = [head, ...entries.map((e) => emit(e, authored.get(e.key)))].join('\n')
   return body + emitAssets(deriveAssets(), data.assets) + '\n'

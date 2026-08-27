@@ -14,6 +14,9 @@ export default defineConfig({
     // copies have no node_modules, so the Playwright specs in them fail the
     // whole run with "Cannot find package '@playwright/test'" — a failure about
     // a directory the developer did not know was being scanned.
-    exclude: ['**/node_modules/**', '**/dist/**', 'docs-app/**', '.claude/**'],
+    // `.runlog/**` for a third reason of the same kind: a run-mode working
+    // directory holds evidence and sometimes a test file parked mid-run, and a
+    // parked file that still gets collected is not parked.
+    exclude: ['**/node_modules/**', '**/dist/**', 'docs-app/**', '.claude/**', '.runlog/**'],
   },
 })

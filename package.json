@@ -22,6 +22,8 @@
     "docs",
     "design-tokens.json",
     "README.md",
+    "AGENTS.md",
+    "llms.txt",
     "CHANGELOG.md",
     "assets",
     "scripts",

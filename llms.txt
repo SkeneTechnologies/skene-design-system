@@ -1,0 +1,31 @@
+# @skene/design-system
+
+Tokens, a Tailwind v4 theme, 89 React components, and machine-readable
+contracts that tell an agent which component to reach for before it writes a
+new one. Published restricted; public to read, not open source.
+
+## Start here
+
+- [AGENTS.md](/AGENTS.md): install, configure, use, and the read order for the contracts below.
+
+## Contracts (YAML, shipped inside the package)
+
+- [machine/context.yaml](/machine/context.yaml): which module to reach for, and what else each covers. 89 modules. Read first.
+- [machine/components.yaml](/machine/components.yaml): what you must not do with a given component.
+- [machine/rules.yaml](/machine/rules.yaml): the reach ladder, the must_not list, ask_first_when.
+- [machine/compositions.yaml](/machine/compositions.yaml): how whole pages are assembled — section order per page archetype, derived from pages that were built.
+- [machine/tokens.yaml](/machine/tokens.yaml): the token vocabulary and which role belongs on which surface.
+- [machine/layouts.yaml](/machine/layouts.yaml): spacing and radius scales, breakpoints, widths; plus the dashboard templates, marked as not shipped here yet.
+- [machine/accessibility.yaml](/machine/accessibility.yaml): a11y contracts, including contrast floors.
+
+## Prose
+
+- [docs/sections.md](/docs/sections.md): decision paths, and every measured overlap with a verdict.
+- [docs/brand.md](/docs/brand.md): voice and brand.
+- [docs/principles.md](/docs/principles.md): the design principles.
+- [docs/ux-patterns.md](/docs/ux-patterns.md): interaction patterns.
+- [README.md](/README.md): the human entry point.
+
+## Data
+
+- [design-tokens.json](/design-tokens.json): 331 token values, the source the CSS and TS are generated from.

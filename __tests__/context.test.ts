@@ -11,6 +11,11 @@
  *
  * The ALLOWLIST is the authoring backlog, in the open. It shrinks to empty as
  * entries land; it must never grow.
+ *
+ * The `intent index` block at the bottom guards the reverse lookup — the tags
+ * that let an agent go from the job to the module instead of the other way
+ * round. Its failure mode is different and worse: an index that is silently
+ * incomplete looks like an answer.
  */
 import { describe, it, expect } from 'vitest'
 import { readFileSync, readdirSync, existsSync, statSync } from 'node:fs'
@@ -34,11 +39,13 @@ const entries = derive() as Array<{
 const authored: Array<{
   module: string
   useFor: string
+  intent?: string[]
   alsoFor?: Array<{ claim: string; via: string }>
   watchFor?: Array<{ note: string; via: string }>
   notFor?: Array<{ instead: string; why: string }>
   sameAs?: string[]
 }> = data.modules
+const vocabulary: Record<string, string> = data.intents ?? {}
 
 /**
  * Modules with no authored context yet. Every name here is a module an agent
@@ -175,6 +182,81 @@ describe('referential integrity', () => {
       expect(a.alsoFor?.length ?? 0, `${a.module} claims no second use`).toBeGreaterThan(0)
       expect(a.notFor?.length ?? 0, `${a.module} names nothing it is wrong for`).toBeGreaterThan(0)
     }
+  })
+})
+
+/**
+ * The intent index — the reverse lookup.
+ *
+ * Everything above answers "what is this module for". An agent BUILDING a page
+ * asks the inverse: "I need a band that contrasts two options — what do I
+ * have?" With 89 modules the only honest answers were read all of them or
+ * guess, and guessing is how this package accumulated twenty documented
+ * clusters of the same visual object drawn twice.
+ *
+ * The index only works if the vocabulary is CLOSED. A tag anyone can coin at
+ * the call site is a synonym waiting to happen — `compare-options` and
+ * `contrast-two-things` splitting the same shelf in half is exactly the failure
+ * the chip cluster already taught this repository. So these four gates run the
+ * same ratchet as the rest of the file: nothing untagged, nothing undeclared,
+ * nothing declared and unused, and nothing tagged so broadly it says nothing.
+ */
+describe('intent index', () => {
+  it('declares a vocabulary with a definition on every tag', () => {
+    // The vocabulary is the contract. A bare tag list is folklore — an agent
+    // cannot tell `mark-a-label` from `show-status` without the sentence.
+    expect(Object.keys(vocabulary).length).toBeGreaterThan(0)
+    const undefined_ = Object.entries(vocabulary)
+      .filter(([, definition]) => !String(definition ?? '').trim())
+      .map(([tag]) => tag)
+    expect(undefined_, 'intents declared with no definition').toEqual([])
+  })
+
+  it('tags every module with at least one intent', () => {
+    const untagged = authored.filter((a) => !(a.intent?.length ?? 0)).map((a) => a.module)
+    // An untagged module is a module the reverse index cannot return, which is
+    // the same failure as having no entry at all — just quieter.
+    expect(untagged, 'modules absent from the intent index').toEqual([])
+  })
+
+  it('uses no tag the vocabulary does not declare', () => {
+    const undeclared = [
+      ...new Set(authored.flatMap((a) => a.intent ?? []).filter((t) => !(t in vocabulary))),
+    ]
+    expect(undeclared, 'intent tags coined at the call site').toEqual([])
+  })
+
+  it('declares no tag nothing uses', () => {
+    // Same ratchet as the allowlist: a shelf with nothing on it sends a reader
+    // looking for something this package does not have.
+    const used = new Set(authored.flatMap((a) => a.intent ?? []))
+    expect(Object.keys(vocabulary).filter((t) => !used.has(t)), 'dead vocabulary').toEqual([])
+  })
+
+  it('keeps every module under four tags', () => {
+    // Three is the cap because the fourth tag is always the one that is only
+    // sort-of true. A module answering six different jobs is not indexed, it is
+    // listed — and a tag that lands on a third of the package has stopped
+    // narrowing anything. FeatureRow is a pitch and its proof; that is two.
+    const CAP = 3
+    const overloaded = authored
+      .filter((a) => (a.intent?.length ?? 0) > CAP)
+      .map((a) => `${a.module} (${a.intent?.length})`)
+    expect(overloaded, `modules carrying more than ${CAP} intents`).toEqual([])
+  })
+
+  it('emits the index into the generated yaml', () => {
+    // The gates above police the authored JSON; this one checks the half a
+    // consumer actually reads. context.yaml is what ships.
+    const out = load(read('machine/context.yaml')) as {
+      intents?: Record<string, string>
+      modules: Record<string, { intent?: string[] }>
+    }
+    expect(Object.keys(out.intents ?? {}).sort()).toEqual(Object.keys(vocabulary).sort())
+    const missing = Object.entries(out.modules)
+      .filter(([, m]) => !(m.intent?.length ?? 0))
+      .map(([key]) => key)
+    expect(missing, 'modules that reached the yaml with no intent').toEqual([])
   })
 })
 
