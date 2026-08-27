@@ -5,10 +5,16 @@ on:
     # Releases are tagged `v0.12.0` — the `v` is part of the tag, not part of
     # the version in package.json, and the guard below is written around that.
     tags: ['v*']
-  # Manual runs exist for the case where the tag pushed fine but the run died
-  # on something transient (registry 5xx, runner eviction). Re-pushing a tag to
-  # retrigger is not an option: npm refuses to republish a version.
+  # Manual runs exist for two cases. One: the tag pushed fine but the run died
+  # on something transient (registry 5xx, runner eviction), and re-pushing a tag
+  # to retrigger is not an option because npm refuses to republish a version.
+  # Two: checking the credential without spending a version number.
   workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Check the credential and pack, but do not publish'
+        type: boolean
+        default: true
 
 # npmjs is the registry (see .runlog/RUN.md), so nothing here writes to GitHub
 # Packages and no `packages: write` is warranted. Checkout is the only thing
@@ -65,12 +71,47 @@ jobs:
         if: github.ref_type != 'tag'
         run: echo "::warning::Manual run — publishing package.json's version unchecked against any tag."
 
+      # Always, before anything that could spend a version number. A missing or
+      # revoked NPM_TOKEN is otherwise discovered by `npm publish` — after
+      # prepublishOnly has run the full verify, and on the one commit where a
+      # failure is most expensive to diagnose.
+      #
+      # Read what this proves and what it does not. `whoami` proves the token
+      # authenticates and names the account it belongs to. It does NOT prove
+      # that account may publish `@skene/*`: for a scope with nothing in it yet,
+      # nothing does, short of the first publish. So a green check here plus a
+      # 402/403 on the first real publish means the token is fine and the
+      # account's rights or plan are not — which is a different fix.
+      - name: Check the npm credential
+        run: |
+          who=$(npm whoami --registry https://registry.npmjs.org) || {
+            echo "::error::NPM_TOKEN is missing, expired or revoked — npm whoami failed."
+            exit 1
+          }
+          echo "authenticated as $who"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      # The dry run stops here. It packs the tarball the same way a publish
+      # would — running prepublishOnly, so the full verify happens — and prints
+      # what would be uploaded, without uploading it.
+      - name: Pack only (dry run)
+        if: inputs.dry_run
+        run: npm publish --dry-run
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
       # No build or verify step here on purpose. `prepublishOnly` runs
       # `npm run verify` (tokens, contrast, tests, build) inside `npm publish`,
       # before the tarball is packed. Repeating it as a separate step would not
       # add a gate — it would only let the two drift, and a green step followed
       # by a `prepublishOnly` that fails differently is the confusing outcome.
+      #
+      # A tag push has no `inputs`, so `inputs.dry_run` is empty there and this
+      # runs — which is the behaviour wanted: tags always publish, only a manual
+      # run can ask not to.
       - name: Publish
+        if: ${{ !inputs.dry_run }}
         run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
