@@ -182,7 +182,10 @@ Four fields per entry earn the read:
   dark values against a light fill, which has shipped text at 1.08:1.
 - **`seen`** — the gallery cases that have ever rendered it. **An empty list
   means nothing in this repository has ever rendered the module, so treat its
-  claims as unproven.** Nine modules are in that state today.
+  claims as unproven.** Four modules are in that state today, and only
+  `ui/sonner` is meant to be one: a toast host renders nothing until something
+  calls it, so it has no resting state to snapshot. `docs/sections.md` names the
+  other three and says what each still needs.
 - **`overrides`** — what a caller can reach from outside. `style` means the
   module writes an inline style that beats any class you pass.
 

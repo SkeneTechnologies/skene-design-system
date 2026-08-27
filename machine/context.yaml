@@ -1231,7 +1231,7 @@ modules:
     import: "@skene/design-system/patterns/pill-nav-frosted"
     exports: [PILL_NAV_FROSTED_STYLE, PILL_NAV_POSITION]
     polarity: inherits
-    seen: []
+    seen: [pattern-pill-nav-frosted]
     useFor: >-
       The two constants PillNav and its drawer share: the frosted wash that
       keeps links legible over arbitrary photography, and the absolute and
@@ -2248,7 +2248,7 @@ modules:
     import: "@skene/design-system/sections/code"
     exports: [Code, PROSE_CODE]
     polarity: applies-both
-    seen: []
+    seen: [section-code]
     overrides: [className]
     customProperties: [--font-size-body]
     props:
@@ -3420,7 +3420,7 @@ modules:
     exports: [IntegrationsHighlight]
     composes: [same-layer/card-animation-integrations, same-layer/light-section-card]
     polarity: inherits
-    seen: []
+    seen: [section-integrations-highlight]
     overrides: [className]
     props:
       IntegrationsHighlight:
@@ -4847,7 +4847,7 @@ modules:
     exports: [SurfaceCards]
     composes: [same-layer/glyph-badge]
     polarity: applies-both
-    seen: []
+    seen: [section-surface-cards]
     overrides: [style, className]
     customProperties: [--font-size-body, --font-size-ui, --font-size-body-sm]
     props:
@@ -4987,7 +4987,7 @@ modules:
     import: "@skene/design-system/sections/team-card"
     exports: [TeamCard, TeamGrid]
     polarity: inherits
-    seen: []
+    seen: [section-team-card]
     overrides: [className]
     customProperties: [--radius-lg, --radius-md]
     props:

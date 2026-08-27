@@ -184,10 +184,17 @@ test('gallery is reachable and every component is claimed by a case', async ({ p
   // so it shipped every spacing value at 80% of the number its own comments
   // claimed and this suite reported green. That is now twice that a module with
   // no case has been the one carrying the defect, which makes the count below a
-  // ratchet on the class rather than a tally. Nine modules still have no case
-  // (`docs/sections.md` names them); `sections/code` is the one that matters
-  // most, at 7 of the consumer corpus's 19 composing routes.
-  expect(names.length).toBeGreaterThanOrEqual(82)
+  // ratchet on the class rather than a tally.
+  //
+  // Raised 82 → 87 on 2026-08-28 with the five straightforward modules off that
+  // list: `section-code`, `pattern-pill-nav-frosted`, `section-surface-cards`,
+  // `section-team-card` and `section-integrations-highlight`. It was the third
+  // of those five sittings that made the point for the third time — writing
+  // `section-integrations-highlight` found the band rendering its animation at
+  // 0x0, in a module whose only defence was that nothing had ever looked at it.
+  // Four modules still have no case (`docs/sections.md` names them and ranks
+  // them); `ui/sonner` is the only one that is meant to be there.
+  expect(names.length).toBeGreaterThanOrEqual(87)
   expect(new Set(names).size, 'duplicate data-visual names').toBe(names.length)
 })
 

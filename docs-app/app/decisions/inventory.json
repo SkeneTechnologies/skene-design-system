@@ -1064,7 +1064,9 @@
       "summary": "",
       "client": false,
       "lines": 13,
-      "cases": [],
+      "cases": [
+        "pattern-pill-nav-frosted"
+      ],
       "demo": null,
       "usage": {
         "module": "pill-nav-frosted",
@@ -1535,7 +1537,9 @@
       "summary": "The inline identifier chip: an event name, a column, a flag, a path.",
       "client": false,
       "lines": 92,
-      "cases": [],
+      "cases": [
+        "section-code"
+      ],
       "demo": null,
       "usage": {
         "module": "code",
@@ -2080,8 +2084,10 @@
       ],
       "summary": "The homepage integrations band: cream copy column plus the four-card GSAP",
       "client": false,
-      "lines": 43,
-      "cases": [],
+      "lines": 60,
+      "cases": [
+        "section-integrations-highlight"
+      ],
       "demo": null,
       "usage": {
         "module": "integrations-highlight",
@@ -2732,7 +2738,9 @@
       "summary": "The four-ways-in grid: a small set of peer cards on a textured field, one of",
       "client": false,
       "lines": 187,
-      "cases": [],
+      "cases": [
+        "section-surface-cards"
+      ],
       "demo": null,
       "usage": {
         "module": "surface-cards",
@@ -2801,7 +2809,9 @@
       "summary": "The person card for the about page: a name, a role, and optionally a",
       "client": false,
       "lines": 125,
-      "cases": [],
+      "cases": [
+        "section-team-card"
+      ],
       "demo": null,
       "usage": {
         "module": "team-card",
@@ -3136,7 +3146,7 @@
   "unbuilt": [],
   "gallery": {
     "route": "/components",
-    "cases": 90
+    "cases": 95
   },
   "counts": {
     "modules": 89,
@@ -3144,7 +3154,7 @@
     "ui": 30,
     "patterns": 8,
     "sections": 51,
-    "noVisual": 9,
+    "noVisual": 4,
     "withUsage": 89
   }
 }

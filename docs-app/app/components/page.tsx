@@ -61,11 +61,16 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@skene/design-system/u
 import { Textarea } from '@skene/design-system/ui/textarea'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@skene/design-system/ui/tooltip'
 
+import { assetUrls } from '@skene/design-system/asset-urls'
+
 import { DitheredMedia } from '@skene/design-system/patterns/dither'
 import { HeroBackdrop } from '@skene/design-system/patterns/hero-backdrop'
 import {
   Accent, DisplayHeading, Eyebrow, NumberedStep, PillNav, PillNavLink, SplitAuthLayout,
 } from '@skene/design-system/patterns/marketing'
+import {
+  PILL_NAV_FROSTED_STYLE, PILL_NAV_POSITION,
+} from '@skene/design-system/patterns/pill-nav-frosted'
 import { Terminal, TerminalLine } from '@skene/design-system/patterns/terminal'
 
 import { SkeneLockup, SkeneMark } from '@skene/design-system/patterns/skene-mark'
@@ -97,6 +102,7 @@ import { DiffColumn, SideBySideDiff } from '@skene/design-system/sections/side-b
 import { TerminalBlock } from '@skene/design-system/sections/terminal-block'
 import { Bridge, BridgeNode } from '@skene/design-system/sections/bridge'
 import { CheckItem, CheckList } from '@skene/design-system/sections/check-list'
+import { Code, PROSE_CODE } from '@skene/design-system/sections/code'
 import { Chip } from '@skene/design-system/sections/chip'
 import {
   ComparisonRow, ComparisonTable, TableCheck, TableDash,
@@ -108,6 +114,7 @@ import {
   FooterColumn, FooterLink, SiteFooter, SocialLink, SocialLinks,
 } from '@skene/design-system/sections/footer'
 import { GlyphBadge } from '@skene/design-system/sections/glyph-badge'
+import { IntegrationsHighlight } from '@skene/design-system/sections/integrations-highlight'
 import { JourneyStep, JourneyTrack, MiniFunnel } from '@skene/design-system/sections/journey-track'
 import { LightSectionCard } from '@skene/design-system/sections/light-section-card'
 import { LogoRow } from '@skene/design-system/sections/logo-row'
@@ -121,14 +128,16 @@ import { RecommendationCard } from '@skene/design-system/sections/recommendation
 import { ScoreRing } from '@skene/design-system/sections/score-ring'
 import { SectionBackdrop } from '@skene/design-system/sections/section-backdrop'
 import { MetaChip, StatChip } from '@skene/design-system/sections/stat-chip'
+import { SurfaceCards } from '@skene/design-system/sections/surface-cards'
 import {
   SurfaceDetail, SurfaceTile, SurfaceTiles,
 } from '@skene/design-system/sections/surface-tiles'
+import { TeamCard, TeamGrid } from '@skene/design-system/sections/team-card'
 import { TrafficLights } from '@skene/design-system/sections/traffic-lights'
 import { TrustFact, TrustPanel } from '@skene/design-system/sections/trust-panel'
 import { ValueCard, ValueCards } from '@skene/design-system/sections/value-cards'
 
-import { AskWidgetCase, BillingToggleCase, HashScroll } from './islands'
+import { AskWidgetCase, BillingToggleCase, FrozenGsap, HashScroll } from './islands'
 
 /**
  * Per-component gallery. NOT a documentation page — the three pages under
@@ -211,6 +220,14 @@ export default function ComponentGalleryPage() {
   return (
     <main className="flex flex-col items-start gap-6 p-6">
       <HashScroll />
+      {/* Holds every GSAP timeline on the page at 2.5s. Two cases below are
+          GSAP-driven and neither can hold a baseline without it — see the
+          component's own header in ./islands for what 2.5 is and why the CSS
+          freeze does not reach this. Mounted once, at the top, rather than per
+          case: the freeze is global by construction (there is one
+          `gsap.globalTimeline`), and two copies would just seek the same
+          timelines twice. */}
+      <FrozenGsap seconds={2.5} />
       <h1 className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
         component gallery
       </h1>
@@ -2398,6 +2415,352 @@ export default function ComponentGalleryPage() {
             />
           </div>
         </div>
+      </Case>
+
+      <Case name="section-code" width="w-[880px]">
+        {/* The inline identifier chip, and the only case on this page whose
+            subject is that a component renders IDENTICALLY in two places.
+
+            What the baseline holds is not the chip's shape — 4px of side
+            padding, 1px top and bottom, a hairline and `rounded-sm` at body
+            size — so much as the fact that each column below matches the one
+            beside it. `Code` is `polarity: applies-both`: the default variant
+            writes `dark` on the `<code>` itself and the `onLight` variant
+            writes `light`, so each resolves ITS OWN tokens wherever a caller
+            drops it. Every row is therefore rendered twice, once under a dark
+            ancestor and once under a cream one, and the two readings have to be
+            the same pixels. Delete either mode class from the module and this
+            frame moves in exactly one column, which names the defect.
+
+            That is worth a baseline because the failure it guards is
+            measured, not hypothetical. The module header records four contrast
+            readings, of which two are a variant rendered in the mode it is
+            never meant to be in: `brand.peach` on `surface.2` under `light` is
+            4.30:1, below the body floor, and `text.primary` on `brand.light`
+            under `dark` is 1.00:1 — not dim, the same colour. "Never meant to"
+            is a hope about where a caller puts it, and pinning is what makes it
+            a guarantee.
+
+            `PROSE_CODE` is the second mechanism and gets a row of its own: a
+            descendant selector for prose the author cannot reach mark by mark.
+            It has NO `onLight` spelling, which is why its row appears in the
+            cream column too — the baseline holds the peach-on-near-black chip
+            sitting inside a cream card, which is the shape a caller gets and
+            has to decide about.
+
+            `sections/code` is the fifth most-used module in the package and it
+            sits on 7 of the 19 composing routes in `machine/compositions.yaml`.
+            Until now it had no case, so none of the 201 baselines covered the
+            most-repeated mark in the estate. */}
+        <div className="grid grid-cols-2 gap-6">
+          <div className="dark space-y-3 rounded-md bg-surface-deep-2 p-6 text-text-muted">
+            <p>
+              The check fails when <Code>upgrade_started</Code> stops firing from{' '}
+              <Code>app/upgrade/route.ts</Code>.
+            </p>
+            <p>
+              On cream: <Code onLight>public.subscriptions</Code> and{' '}
+              <Code onLight>--dry-run</Code>.
+            </p>
+            <p className={PROSE_CODE}>
+              Prose the caller did not author mark by mark, where{' '}
+              <code>PROSE_CODE</code> reaches every <code>code</code> it contains.
+            </p>
+          </div>
+          <div className="light space-y-3 rounded-md bg-brand-light p-6 text-text-muted">
+            <p>
+              The check fails when <Code>upgrade_started</Code> stops firing from{' '}
+              <Code>app/upgrade/route.ts</Code>.
+            </p>
+            <p>
+              On cream: <Code onLight>public.subscriptions</Code> and{' '}
+              <Code onLight>--dry-run</Code>.
+            </p>
+            <p className={PROSE_CODE}>
+              Prose the caller did not author mark by mark, where{' '}
+              <code>PROSE_CODE</code> reaches every <code>code</code> it contains.
+            </p>
+          </div>
+        </div>
+      </Case>
+
+      <Case name="pattern-pill-nav-frosted" width="w-[880px]">
+        {/* Two exported constants and no component, which is why this module
+            spent longest with no case: `scripts/build-inventory.mjs` filtered
+            the layer directories on `.tsx` and dropped the only `.ts` module in
+            the package outright, so /decisions listed 88 modules against
+            context.yaml's 89 and nothing said which one was missing.
+
+            The wash is the half that can regress silently, so the wash is what
+            this frame holds: `chrome.surface-0` mixed to 60% over a HALFTONE,
+            `blur(8px) saturate(180%)` behind it, and a hairline of
+            `chrome.text-primary` at 14%. All four numbers are composited
+            against artwork with hard black-and-white transitions, deliberately
+            — over a flat fill a blur radius is invisible and a saturate
+            multiplier does nothing, so a case on a plain ground would report
+            green through a change to either.
+
+            Both boxes carry the same style; what differs is the position
+            constant. The top one is `PILL_NAV_POSITION.absolute` over hero
+            media, the bottom is `.sticky` inside a scroll container. A static
+            frame CANNOT prove sticky behaviour — at scroll offset 0 a sticky
+            box and a static one are the same pixels — so what is held there is
+            only that the class string still resolves to a bar at the top of its
+            container, inset on both sides. The scroll behaviour itself is
+            unheld and no baseline in this suite can hold it.
+
+            Every colour here is a `chrome.*` role, which is invariant by
+            construction, so the dark and light captures of this case are
+            expected to be identical files. That is the assertion, not an
+            accident: nav chrome that changed with the page mode would be the
+            defect.
+
+            THIS CASE MOVED 18 OTHER BASELINES, once, and the reason is worth
+            knowing before anyone reads that commit as a regression. One
+            composited `backdrop-filter` layer makes Chromium drop LCD subpixel
+            text antialiasing for the whole page, so nine unrelated cases —
+            `light-section-card-steps`, `section-bridge-untitled`,
+            `section-final-cta-eyebrow`, `section-finding-tag`,
+            `section-glyph-badge`, `section-logo-row`, `section-terminal-block`,
+            `section-trust-panel-eyebrow`, `ui-card-surface` — re-rasterised
+            their glyphs in greyscale. Proven rather than assumed: deleting only
+            `backdropFilter` from the style below and rebaselining returned all
+            nine to bytes IDENTICAL to the previous commit. No geometry moved,
+            no colour changed, no capture changed size. It cannot be avoided
+            without dropping the blur, and the blur is half of what this module
+            is. Greyscale is also the steadier rasterisation of the two, so the
+            one-off cost buys slightly less flake everywhere. */}
+        <div className="space-y-6">
+          <div className="relative h-[200px] overflow-hidden rounded-xl">
+            <img
+              src={assetUrls.subpageDither}
+              alt=""
+              aria-hidden
+              className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+            />
+            <div
+              className={`${PILL_NAV_POSITION.absolute} flex items-center justify-between px-6 py-4`}
+              style={PILL_NAV_FROSTED_STYLE}
+            >
+              <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-chrome-text-primary">
+                absolute
+              </span>
+              <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-chrome-text-muted">
+                inset-x-0 top-0 z-[1050]
+              </span>
+            </div>
+          </div>
+
+          <div className="relative h-[160px] overflow-y-auto rounded-xl">
+            <img
+              src={assetUrls.subpageDither}
+              alt=""
+              aria-hidden
+              className="pointer-events-none absolute inset-0 h-[320px] w-full object-cover"
+            />
+            <div
+              className={`${PILL_NAV_POSITION.sticky} flex items-center justify-between px-6 py-4`}
+              style={PILL_NAV_FROSTED_STYLE}
+            >
+              <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-chrome-text-primary">
+                sticky
+              </span>
+              <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-chrome-text-muted">
+                inset-x-0 top-0 z-[1050]
+              </span>
+            </div>
+            <div className="relative h-[320px]" />
+          </div>
+        </div>
+      </Case>
+
+      <Case name="section-surface-cards" width="w-[880px]">
+        {/* The ways-in grid: four peer cards on a textured field, one drawn
+            cream. Second on the exposure list behind `sections/code` — it is on
+            the consumer's home and integrations routes and had no baseline.
+
+            What this frame holds is the grid's two structural arguments, both
+            of which are numbers the module's header defends and neither of
+            which any other gate can see:
+
+            TWO TRACKS, never four and never `auto-fit`. The header records the
+            measurement: four tracks in a ~640px band give each card 139px, 32
+            of which is the card's own padding, and every two-word title wrapped
+            to two lines. This case is 880px wide precisely so the `sm:` grid is
+            live and a regression to `auto-fit` shows up as four columns rather
+            than as a subtle reflow.
+
+            THE MODE CLASSES ON THE CARDS. The featured cell carries `light` and
+            the other three carry `dark`, and both are load-bearing in the way
+            that has actually shipped: without `light` on the cream cell,
+            `text.primary` keeps its dark reading and renders #faf1e9 on a
+            #faf1e9 fill, which is not dim text, it is no text. Two captures per
+            case is what makes that visible — with the classes intact both
+            sweeps produce identical cards, and dropping either class moves
+            exactly one of the two.
+
+            The four `code` chips are taken verbatim from
+            `INTEGRATION_ANIMATION_DETAILS` in
+            `sections/card-animation-integrations`, whose source carries the
+            comments recording what each string was corrected FROM and why: no
+            `audit` subcommand exists, the GitHub surface is an App and not an
+            Actions workflow, and the s-spelling of `analyse-journey` is the one
+            the consuming repo's `check-claims.sh` accepts. The module header
+            asks for a string the caller can point at a source for, and this is
+            the source. */}
+        <SurfaceCards
+          texture={assetUrls.journeyField}
+          surfaces={[
+            {
+              id: 'mcp',
+              icon: '⌥',
+              title: 'MCP server',
+              context: 'Cursor · Claude Code',
+              detail: 'Runs before the agent commits, inside the agent loop rather than after the PR lands.',
+              code: 'skene mcp --cursor',
+            },
+            {
+              id: 'gh',
+              icon: '↵',
+              title: 'GitHub App',
+              context: 'Runs on every PR',
+              detail: 'Install it on the repositories you pick and every pull request gets a review.',
+              code: '/skene fix',
+            },
+            {
+              id: 'api',
+              icon: '↑',
+              title: 'Cloud API',
+              context: 'Any script, any time',
+              detail: 'Hit the API directly from a script, a pipeline, or an internal tool.',
+              code: 'POST /v1/compare',
+            },
+            {
+              id: 'audit',
+              icon: '✓',
+              title: 'Repo audit',
+              context: 'One-time · no commitment',
+              detail: 'A one-time scan of what you have before you adopt anything else.',
+              code: 'uvx skene analyse-journey .',
+            },
+          ]}
+        />
+      </Case>
+
+      <Case name="section-team-card" width="w-[1120px]">
+        {/* Three STATES of one person entry, not three people.
+
+            That is the case's whole design. The module header argues that the
+            media frame "only exists when the media does, so a stack keeps one
+            shape whether every person has a photo or none do", and a grid of
+            three different people cannot show that: the eye reads the
+            difference as three people rather than as three states of the same
+            card. So the same name and role runs in every cell and the frame
+            holds the alignment claim directly — with no media the type starts
+            at the panel's top padding; with media the name sits below a square
+            frame; the bio and link block adds 14px above itself and nothing
+            else moves. It also means nothing here fabricates a colleague. The
+            one name is the one the module's own header uses as its worked
+            example.
+
+            The two media-less cards are as tall as the one with a portrait,
+            and that is the grid's answer rather than a defect in the card:
+            `TeamGrid` is a plain `grid`, whose default `align-items: stretch`
+            runs every row to the height of its tallest cell. Worth knowing
+            before reading this frame, because "one shape" is a claim about the
+            panel, not about how much type fills it.
+
+            Held: the `<li>` panel at `--radius-lg` with 24px of padding, the
+            square media frame at `--radius-md` (aspect-square, not a fixed
+            height, so it tracks the grid's column width), the 17px name, the
+            11px mono uppercase role at 0.07em, and the underline-offset-4 on an
+            anchor passed through `children` — which the module styles so a bare
+            `<a>` needs no call-site classes, and which therefore has no other
+            proof that it applies.
+
+            `TeamGrid` is `sm:grid-cols-2 lg:grid-cols-3` against the VIEWPORT,
+            which is 1280 in this suite, so three across is what a reader of
+            this baseline is looking at. Both grounds in one capture is
+            unnecessary here and deliberately skipped: `polarity: inherits` with
+            `border`/`bg-card` and `text.*` roles throughout means the two mode
+            sweeps already give a cream reading and an ink one of the same
+            markup. */}
+        <TeamGrid>
+          <TeamCard name="Teemu Kinos" role="Founder" />
+          <TeamCard name="Teemu Kinos" role="Founder">
+            Builds the thing and answers the mail.{' '}
+            <a href="#section-team-card">Say hello</a>.
+          </TeamCard>
+          <TeamCard
+            media={<img src={assetUrls.agentOne} alt="" />}
+            name="Teemu Kinos"
+            role="Founder"
+          />
+        </TeamGrid>
+      </Case>
+
+      <Case name="section-integrations-highlight" width="w-[1120px]">
+        {/* The pre-composed homepage band: `LightSectionCard` around a copy
+            column, with `CardAnimationIntegrations` in the visual slot. 42
+            lines of composition and no required props, which is exactly why it
+            had no case — there is nothing to configure, so there was never a
+            moment where somebody had to look at it.
+
+            WRITING THIS CASE BROKE THE MODULE OPEN TWICE, which is the whole
+            argument for the exercise and is why both findings are recorded
+            here rather than only in the changeset.
+
+            First: the animation rendered at 0x0. `LightSectionCard`'s visual
+            column is `place-items-center`, so this module's wrapper was
+            shrink-to-fit, and `CardAnimationIntegrations` is `aspect-square
+            w-full` over two absolutely-positioned children and therefore has no
+            intrinsic width. Measured 51x51 for the wrapper (its own padding,
+            twice) and 0x0 for the animation, in a 469px column. The band shipped
+            as a cream card with an empty right half. FIXED in the same commit,
+            with `w-full` on the wrapper, because a baseline of a blank panel is
+            the exact failure this suite exists to prevent — see the module
+            source for the reasoning.
+
+            Second, and NOT fixed: three of the four cards render their title in
+            invariant `chrome.text-primary`, rgb(250,241,233), against
+            `bg-surface-1`, which is mode-aware and resolves to rgb(244,244,245)
+            under this band's `light`. That is roughly 1.03:1 — the same trap
+            `sections/code`'s header documents, one level up. The one consumer
+            that renders this animation calls `CardAnimationIntegrations`
+            directly and repairs it at the call site with two `!` overrides
+            mapping the chrome roles onto mode-aware ones; the package's own
+            pre-composed band ships the unrepaired pairing. This baseline
+            therefore holds a KNOWN-WRONG contrast reading, deliberately and on
+            the record: it is a regression floor, not an endorsement, and the
+            fix belongs in `card-animation-integrations` where it can be
+            reviewed as its own change.
+
+            What the frame holds is the COMPOSITION, and the composition is the
+            only thing this module is: the cream card's split at `md`, the
+            1350px cap and the 16/24px gutters, the copy column's title, lede,
+            body and actions stack, and the animation sitting in a square visual
+            panel with 24px of padding below `md` and 32 above. Its own copy is
+            baked in — the four-ways-in title and lede are literals in the
+            source, not props — so a wording change upstream lands here as a
+            reflow and nowhere else.
+
+            NOT held: the animation's motion. GSAP is pinned at 2.5s by
+            `FrozenGsap` at the top of this page, which is inside the timeline's
+            stable window (all four cards in at 0.81s, the detail panel fully in
+            at 1.56s, the first swap out at 3.76s), so this baseline shows the
+            first detail — MCP server — active and the other three cards at
+            rest. The other three details, and every transition between them,
+            are held by nothing. `section-card-animation-integrations` says the
+            same thing about the same timeline; this case is here for the band
+            around it. */}
+        <IntegrationsHighlight
+          actions={
+            <>
+              <Button variant="outline">Install the MCP server</Button>
+              <Button variant="outline">Book the audit</Button>
+            </>
+          }
+        />
       </Case>
     </main>
   )

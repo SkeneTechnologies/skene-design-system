@@ -78,7 +78,8 @@ you can call the component without opening its source.
   dark values against a light fill. That has shipped text at 1.08:1.
 - **`seen`** — the gallery cases that have ever rendered it. **An empty list
   means nothing has ever rendered this module, so treat its claims as
-  unproven.** Nine modules are in that state.
+  unproven.** Four modules are in that state, and only `ui/sonner` is meant to
+  be one — a toast host has no resting state to snapshot.
 - **`overrides`** — what a caller can reach from outside. `style` means the
   module writes an inline style that beats any class you pass.
 

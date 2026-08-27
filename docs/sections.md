@@ -239,36 +239,64 @@ product-artifact sections that carried no gallery case, and so no light/dark
 baseline, each got one in `290a19f`, which took `noVisual` to 1: `sonner`, a
 toast host that renders nothing until something calls it, so there is no state
 to snapshot. That was true on 2026-08-15 and this paragraph went on asserting it
-while 9 modules accumulated with no case:
+while ten modules piled up behind it. Six have since been closed, `logo-row` on
+2026-08-27 and five more on 2026-08-28, which leaves this, and the sentence is
+now gated rather than typed: while 4 modules accumulated with no case:
 
-    sonner                        pill-nav-frosted
-    pill-nav-mobile-menu          card-animation-integrations
-    code                          integrations-highlight
-    journey-signal-scene          surface-cards
-    team-card
+    sonner                        pill-nav-mobile-menu
+    card-animation-integrations   journey-signal-scene
 
-`sonner` is the only justified one. The other eight are unproven — `seen: []` in
-`machine/context.yaml`, whose own header says an empty list means nothing in
-this repository has ever rendered the module, so treat its claims as unproven.
+`sonner` is the only justified one, and it is justified permanently rather than
+pending: it is a toast HOST. It renders an empty portal and nothing else until
+something calls `toast()`, so it has no resting state to snapshot — a case for it
+would either capture an empty div, which asserts nothing, or fire a toast, at
+which point the baseline is of `Sonner`'s own overlay rather than of anything
+this package decides. Do not read it as debt and do not write a case for it to
+get the count to zero. The number that matters is one, not zero.
 
-`logo-row` was the tenth until 2026-08-27, and it is why this paragraph is worth
-reading twice. It shipped every spacing value at 80% of the number its own
-comments claimed — a 56px slot floor rendering at 44.8 — and no gate here saw
-it, because a module with no case has no baseline and the per-component suite
-compares nothing to nothing. The defect was found by measuring the rendered
-strip inside a consuming app. `section-logo-row` now exists and the suite's
-floor moved 81 → 82.
+The other three are unproven — `seen: []` in `machine/context.yaml`, whose own
+header says an empty list means nothing in this repository has ever rendered the
+module, so treat its claims as unproven.
 
-Which makes the list above a list of live blind spots, not of tidiness debt.
-Ranked by how much of the estate is exposed: `sections/code` is the worst, at 7
-of the 19 composing routes in `machine/compositions.yaml`'s corpus — the fifth
-most-used module in the whole package and the only spine member with no
-baseline. `sections/surface-cards` is next, on the consumer's home and
-integrations routes. `patterns/pill-nav-frosted` and
-`patterns/pill-nav-mobile-menu` are the consumer's site nav, which every page
-carries. `sections/journey-signal-scene` already has three geometry defects
-filed against it by that consumer, which is the same failure mode as `logo-row`
-and the same reason it survived.
+`logo-row` is why this paragraph is worth reading twice. It shipped every
+spacing value at 80% of the number its own comments claimed — a 56px slot floor
+rendering at 44.8 — and no gate here saw it, because a module with no case has
+no baseline and the per-component suite compares nothing to nothing. The defect
+was found by measuring the rendered strip inside a consuming app, which is the
+one place this package's own gate should never be the second-best instrument.
+`section-logo-row` closed it on 2026-08-27 and the suite's floor moved 81 → 82.
+
+The five closed on 2026-08-28 make the same point a second time and a third.
+`sections/code` was the worst exposure on the list, at 7 of the 19 composing
+routes in `machine/compositions.yaml`'s corpus — the fifth most-used module in
+the package and the only spine member with no baseline. `sections/surface-cards`
+was next, on the consumer's home and integrations routes. And writing the case
+for `sections/integrations-highlight` found the band rendering
+`CardAnimationIntegrations` at **0x0**: `LightSectionCard`'s visual column is
+`place-items-center`, the wrapper was therefore shrink-to-fit, and the animation
+is `aspect-square w-full` over two absolutely-positioned children and so has no
+intrinsic width at all. Measured 51x51 for the wrapper and 0x0 for the animation
+in a 469px column. That module had shipped since 0.10.0 with an empty right half
+and its only defence was that nothing had ever rendered it — the sole consumer
+calls `CardAnimationIntegrations` directly, inside a wrapper of its own. Fixed
+with `w-full` in the same commit that added the case.
+
+The same case turned up a second defect that is NOT fixed and is baselined
+known-wrong on purpose: inside that band's `light`, three of the four animation
+cards render `chrome.text-primary` (rgb 250,241,233) on `surface-1`, which is
+mode-aware and resolves to rgb(244,244,245) there — about 1.03:1. The consumer
+repairs it at its own call site with two `!` overrides mapping the chrome roles
+onto mode-aware ones; the package's pre-composed band ships the pairing
+unrepaired. The baseline holds the regression floor, not an endorsement.
+
+What is left is a list of live blind spots, not tidiness debt.
+`patterns/pill-nav-mobile-menu` is the consumer's mobile nav, which every page
+carries, and it needs an open sheet at a phone viewport before a frame of it
+means anything. `sections/card-animation-integrations` and
+`sections/journey-signal-scene` are both multi-state, so one frame proves one
+state and each needs its states named. `sections/journey-signal-scene` also has
+three geometry defects already filed against it by that consumer, which is the
+same failure mode as `logo-row` and the same reason it survived.
 
 Two mechanisms failed here, not one. The list went stale because a hand-typed
 count has no gate behind it — `__tests__/docs-counts.test.ts` now reads the
