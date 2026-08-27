@@ -1,0 +1,76 @@
+name: publish
+
+on:
+  push:
+    # Releases are tagged `v0.12.0` — the `v` is part of the tag, not part of
+    # the version in package.json, and the guard below is written around that.
+    tags: ['v*']
+  # Manual runs exist for the case where the tag pushed fine but the run died
+  # on something transient (registry 5xx, runner eviction). Re-pushing a tag to
+  # retrigger is not an option: npm refuses to republish a version.
+  workflow_dispatch:
+
+# npmjs is the registry (see .runlog/RUN.md), so nothing here writes to GitHub
+# Packages and no `packages: write` is warranted. Checkout is the only thing
+# that touches this repo, and it only reads.
+permissions:
+  contents: read
+
+concurrency:
+  group: publish-${{ github.ref }}
+  # Deliberately NOT cancel-in-progress, unlike ci.yml. A cancelled publish can
+  # land after the tarball has been accepted but before npm has finished, which
+  # leaves a version that exists on the registry and in no release anyone
+  # intended. Queueing a redundant run costs a runner minute; cancelling a
+  # half-done publish costs a burned version number that can never be reused.
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          # This is what authenticates the publish. setup-node writes the
+          # runner's .npmrc from this URL plus NODE_AUTH_TOKEN at step time.
+          # Never hand-write an .npmrc or echo the token into one: a token in a
+          # file in the workspace is a token that can be committed, printed by a
+          # failing step, or uploaded in an artifact.
+          registry-url: https://registry.npmjs.org
+      - run: npm ci --no-audit --no-fund
+
+      # Four separate incidents in this repo have been a version string that
+      # disagreed with reality, so this is the point of the workflow, not a
+      # formality. A tag pushed against the wrong commit publishes a tarball
+      # whose contents nobody reviewed under a number nobody can reuse — npm
+      # does not allow republishing a version, so the only fix is to burn the
+      # number and cut another release.
+      - name: Tag matches package.json version
+        if: github.ref_type == 'tag'
+        run: |
+          pkg="v$(node -p "require('./package.json').version")"
+          tag="${GITHUB_REF_NAME}"
+          if [ "$pkg" != "$tag" ]; then
+            echo "::error::Tag $tag does not match package.json ($pkg). Delete the tag, fix the version, tag again."
+            exit 1
+          fi
+          echo "$tag matches package.json"
+
+      # A manual run has no tag to check against, so the guard above cannot
+      # protect it. Saying so is better than letting the skip read as a pass.
+      - name: No tag to verify
+        if: github.ref_type != 'tag'
+        run: echo "::warning::Manual run — publishing package.json's version unchecked against any tag."
+
+      # No build or verify step here on purpose. `prepublishOnly` runs
+      # `npm run verify` (tokens, contrast, tests, build) inside `npm publish`,
+      # before the tarball is packed. Repeating it as a separate step would not
+      # add a gate — it would only let the two drift, and a green step followed
+      # by a `prepublishOnly` that fails differently is the confusing outcome.
+      - name: Publish
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

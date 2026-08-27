@@ -13,6 +13,9 @@ docs-app/**/*-darwin.png
 # Claude Code worktrees
 .claude/worktrees/
 
+# npm auth token — must never land in a public repo
+.npmrc
+
 # npm pack output
 *.tgz
 
