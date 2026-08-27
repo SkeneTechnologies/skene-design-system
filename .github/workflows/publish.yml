@@ -86,10 +86,21 @@ jobs:
       # The v0.13.0 release proved the gap concretely, and not in either of the
       # two shapes guessed above: `whoami` passed, and `npm publish` came back
       # `EOTP` — the account requires 2FA and the token was not a kind that may
-      # skip it. Only an Automation token (classic) or a Granular Access Token
-      # bypasses 2FA; a classic Publish token does not, and no check short of
-      # publishing can tell them apart. The publish below now says so on
-      # failure rather than leaving it to be rediscovered.
+      # skip it. No check short of publishing can tell those token kinds apart.
+      #
+      # The right fix is to stop using a token at all. npm's Trusted Publishing
+      # (OIDC) exchanges a GitHub Actions identity token for publish rights, so
+      # nothing long-lived is stored anywhere, and npm now flags bypass-2FA
+      # tokens as a security risk on the page where you would create one. It
+      # cannot be used HERE yet, for one reason: a trusted publisher can only
+      # be configured on a package that already exists on the registry, and
+      # this one has never been published (npm/cli#8544, open — PyPI allows the
+      # pre-registration npm does not). So the first publish needs a token and
+      # every publish after it should not.
+      #
+      # There is also a clock on it: npm has said 2FA-bypass tokens lose the
+      # ability to publish directly around January 2027, leaving them able only
+      # to stage a publish for human approval. Migrating is not optional.
       - name: Check the npm credential
         run: |
           who=$(npm whoami --registry https://registry.npmjs.org) || {
@@ -133,7 +144,7 @@ jobs:
           set -o pipefail
           if ! npm publish 2>&1 | tee /tmp/publish.log; then
             if grep -q "EOTP" /tmp/publish.log; then
-              echo "::error::npm refused the publish with EOTP: the account requires 2FA and NPM_TOKEN is not a token that may skip it. Replace it with an Automation token (npmjs.com -> Access Tokens -> Classic -> Automation) or a Granular Access Token with read-write on @skene. The version was NOT consumed — npm rejects EOTP before accepting the tarball, so retrying with a working token publishes the same number."
+              echo "::error::npm refused the publish with EOTP: the account requires 2FA and NPM_TOKEN is not a token that may skip it. If this package already exists on the registry, configure Trusted Publishing for it instead of issuing another token — see the header of this file. If it does NOT exist yet, trusted publishing cannot be configured, so the first publish needs a Granular Access Token scoped to @skene, read-write, bypass-2FA, with the shortest expiry offered; revoke it once the package exists. The version was NOT consumed — npm rejects EOTP before accepting the tarball, so the same number publishes on retry."
             fi
             exit 1
           fi
