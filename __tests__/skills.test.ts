@@ -113,6 +113,31 @@ describe('what the skills quote is true', () => {
     expect(skill.src).toContain(`${context.counts.modules} modules`)
   })
 
+  it('the unproven-module count is the real number of seen: [] modules', () => {
+    // This one was quoted as nine in the first draft of the skill and ten in
+    // AGENTS.md, which is the exact failure mode the `seen` field exists to
+    // prevent: a claim about how much has been proven, itself unproven. It is
+    // also the count most likely to move, since it drops every time a module
+    // gets its first gallery case.
+    const { modules } = parse(read('machine/context.yaml')) as {
+      modules: Record<string, { seen?: unknown[] }>
+    }
+    const unproven = Object.values(modules).filter(
+      (m) => m && typeof m === 'object' && Array.isArray(m.seen) && m.seen.length === 0,
+    ).length
+    expect(unproven, 'no module is unproven — the gate has nothing to check').toBeGreaterThan(0)
+    const spelled = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'][unproven]
+    for (const [name, src] of [
+      ['skills/skene-design-system/SKILL.md', skills.find((s) => s.name === 'skene-design-system')!.src],
+      ['AGENTS.md', read('AGENTS.md')],
+    ] as const) {
+      expect(
+        src.toLowerCase(),
+        `${name} does not state the real unproven-module count of ${unproven}`,
+      ).toContain(`${spelled} modules are in that state`)
+    }
+  })
+
   it('the archetypes the pages skill tabulates are the ones compositions.yaml carries', () => {
     const comps = parse(read('machine/compositions.yaml')) as {
       archetypes: Record<string, { confidence: string; instances: number }>
