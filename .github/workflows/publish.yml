@@ -82,6 +82,14 @@ jobs:
       # nothing does, short of the first publish. So a green check here plus a
       # 402/403 on the first real publish means the token is fine and the
       # account's rights or plan are not — which is a different fix.
+      #
+      # The v0.13.0 release proved the gap concretely, and not in either of the
+      # two shapes guessed above: `whoami` passed, and `npm publish` came back
+      # `EOTP` — the account requires 2FA and the token was not a kind that may
+      # skip it. Only an Automation token (classic) or a Granular Access Token
+      # bypasses 2FA; a classic Publish token does not, and no check short of
+      # publishing can tell them apart. The publish below now says so on
+      # failure rather than leaving it to be rediscovered.
       - name: Check the npm credential
         run: |
           who=$(npm whoami --registry https://registry.npmjs.org) || {
@@ -110,8 +118,24 @@ jobs:
       # A tag push has no `inputs`, so `inputs.dry_run` is empty there and this
       # runs — which is the behaviour wanted: tags always publish, only a manual
       # run can ask not to.
+      #
+      # The failure is trapped only to explain it. `npm publish` still decides
+      # the outcome, and the step still fails — a publish that reports success
+      # on a rejected upload would be the worst thing this file could do.
       - name: Publish
         if: ${{ !inputs.dry_run }}
-        run: npm publish
+        run: |
+          # pipefail is NOT on by default in an Actions `run:` step — the
+          # default shell is `bash -e {0}`. Without it the pipeline reports
+          # tee's status, tee always succeeds, and a rejected publish would
+          # read as a green one. That is the single worst bug this file could
+          # carry, so it is set explicitly rather than assumed.
+          set -o pipefail
+          if ! npm publish 2>&1 | tee /tmp/publish.log; then
+            if grep -q "EOTP" /tmp/publish.log; then
+              echo "::error::npm refused the publish with EOTP: the account requires 2FA and NPM_TOKEN is not a token that may skip it. Replace it with an Automation token (npmjs.com -> Access Tokens -> Classic -> Automation) or a Granular Access Token with read-write on @skene. The version was NOT consumed — npm rejects EOTP before accepting the tarball, so retrying with a working token publishes the same number."
+            fi
+            exit 1
+          fi
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
