@@ -1,0 +1,156 @@
+# @skene/design-system
+
+Skill file for coding agents. Tokens, a Tailwind v4 theme, 89 components, and
+machine-readable contracts that say which one to reach for.
+
+This file exists because those contracts had no entry point at a name anything
+looks for. They shipped from 2026-08-13 and were pointed at only by README
+prose, which works for an agent reading top-down and not for one that lands in
+the directory and looks for `AGENTS.md`.
+
+## Installation
+
+```bash
+npm install @skene/design-system
+```
+
+The package is published **restricted**, so the install needs a credential. In
+CI, let `actions/setup-node` write the runner's `.npmrc`:
+
+```yaml
+- uses: actions/setup-node@v4
+  with:
+    node-version: 22
+    registry-url: https://registry.npmjs.org
+- run: npm ci
+  env:
+    NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+```
+
+Locally the token belongs in `~/.npmrc`. **Never a project-level `.npmrc`** —
+that is a token in a commit.
+
+Consumers not yet migrated install it as a git dependency instead:
+
+```json
+"@skene/design-system": "git+https://github.com/SkeneTechnologies/skene-design-system.git#semver:^0.12.0"
+```
+
+## Configuration
+
+Two lines at the top of the app's stylesheet:
+
+```css
+@import "tailwindcss";                      /* stays in the app, exactly once */
+@import "@skene/design-system/styles.css";
+```
+
+And one the package cannot add for you:
+
+```css
+@source "../../node_modules/@skene/design-system/dist";
+```
+
+Path is relative to *your* stylesheet — that one is right for
+`src/app/globals.css`; one at `app/globals.css` drops a `../`.
+
+Add it unconditionally. The package declares its own `@source`, which is enough
+under the Tailwind CLI and Vite, but **under Turbopack it is not**: the build
+resolves the `@import` and then never scans the imported file's own `@source`,
+so every utility only the package's components use is silently absent. That
+shipped — `LogoRow` rendered as a zero-height strip, no error and no warning,
+because `min-h-14` never reached the stylesheet. The line is idempotent where
+the package's own `@source` already works, since Tailwind dedupes scanned files.
+
+## Usage
+
+```tsx
+import { Button } from '@skene/design-system/ui/button'
+import { FeatureRow } from '@skene/design-system/sections/feature-row'
+import { tokens } from '@skene/design-system/tokens'
+
+tokens.color.brand.peach       // { light: "#89684a", dark: "#fec089" }
+tokens.color.chrome.surface[0] // "#0a0a0a" — invariant, never inverts
+```
+
+Deep-import for the tightest React Server Components boundary. The root barrel
+carries no `"use client"` directive on purpose, so `import { Card } from
+'@skene/design-system'` stays server-renderable; only the 8 modules that need
+it carry the directive themselves.
+
+## The contracts — read in this order
+
+All of these ship inside the package, so from a consumer they are under
+`node_modules/@skene/design-system/`.
+
+| # | file | answers |
+|---|---|---|
+| 1 | `machine/context.yaml` | **which module to reach for**, and what else each one is good for. 89 modules. Start here, always. |
+| 2 | `machine/components.yaml` | what you must **not** do with the one you picked. |
+| 3 | `machine/rules.yaml` | the reach ladder, the `must_not` list, and `ask_first_when`. |
+| 4 | `machine/tokens.yaml` | the token vocabulary, and which role belongs on which surface. |
+| 5 | `machine/layouts.yaml` | page and section layout contracts. |
+| 6 | `machine/accessibility.yaml` | the a11y contracts, including contrast floors. |
+| — | `docs/sections.md` | prose: decision paths, and every measured overlap with a verdict. |
+| — | `docs/brand.md`, `docs/principles.md`, `docs/ux-patterns.md` | voice, principles, interaction patterns. |
+| — | `design-tokens.json` | the 331 token values themselves. |
+
+One and two are a pair, and the split is deliberate: `components.yaml` states
+constraints and does not say which component to pick, which is why its header
+sends you to `context.yaml` first and back afterwards.
+
+## Before you write a component
+
+**Grep `machine/context.yaml`.** There are 89 modules and a documented history
+of the same visual object being drawn twice by someone who could not find the
+first — twenty measured clusters of it. If you are about to write a card, a
+chip, a table, a framed window or a textured field, it already exists.
+
+Four fields per entry earn the read:
+
+- `useFor` — what it is for.
+- `alsoFor` — what else it covers. Every claim carries a `via` naming the prop,
+  default or export that makes it true, and a test rejects a claim that cannot
+  cite one, so these are read out of source rather than reasoned to.
+- `notFor` — the component you probably meant instead. 144 such edges exist.
+- `sameAs` — a near-duplicate this is easy to confuse with. Enforced symmetric,
+  so it reads the same from either side.
+
+## Fields that bite if you skip them
+
+- **`polarity`** — whether the module puts a theme class on its own root. A
+  light surface on a dark page without it resolves mode-aware tokens to their
+  dark values against a light fill, which has shipped text at 1.08:1.
+- **`seen`** — the gallery cases that have ever rendered it. **An empty list
+  means nothing in this repository has ever rendered the module, so treat its
+  claims as unproven.** Ten modules are in that state today.
+- **`overrides`** — what a caller can reach from outside. `style` means the
+  module writes an inline style that beats any class you pass.
+
+## Rules that are not negotiable
+
+Full list in `machine/rules.yaml`; these three cause the most damage:
+
+1. **`chrome.*` is invariant and cannot invert.** Use it only on surfaces that
+   never flip. Anything on a surface that flips uses the theme-aware `text.*`.
+2. **A light surface on a dark page needs the `light` class on its root.**
+3. **Content is props.** No section hardcodes copy.
+
+## Verifying a change to this package
+
+```bash
+npm run verify        # tokens, contrast, contracts, story coverage, tests, build
+npm run visual        # committed screenshot baselines; needs Docker
+npm run visual:update # regenerate them when a pixel change is intended
+```
+
+`npm run visual` compares committed `*-linux.png` baselines inside a pinned
+Playwright container, and it has to run in that container — a host run
+rasterises fonts differently and every snapshot mismatches.
+
+## Known soft spots
+
+Written down rather than left to be discovered. `docs/sections.md` carries the
+measured overlaps with a verdict for each; read the chip cluster before adding
+any small label — nine shapes, drifted twice in a column nobody was tabulating,
+now pinned by `__tests__/chip-cluster.test.ts`.

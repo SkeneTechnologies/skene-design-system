@@ -19,7 +19,7 @@ in `node_modules/@skene/design-system/`:
 | `docs/sections.md` | prose: the decision paths, and the overlaps with a verdict for each. |
 
 Nothing pointed at these until 2026-08-13, which is the failure they were built
-to prevent: the package has 79 modules and twenty measured clusters where the
+to prevent: the package has 89 modules and twenty measured clusters where the
 same visual object was drawn twice, every one of them by somebody who could not
 find the first. If you are about to write a card, a chip, a table, a framed
 window or a textured field, grep `machine/context.yaml` first.
@@ -303,9 +303,12 @@ npm run verify          # all of the above, plus the build
 
 ### The gallery
 
-`docs-app/` is a Next app rendering all 79 modules as 85 cases in both modes,
-and it is the instrument every duplicate collapse in this package was proven
-against. Run it root-first:
+`docs-app/` is a Next app rendering 79 of the 89 modules as 85 cases in both
+modes, and it is the instrument every duplicate collapse in this package was
+proven against. It said "all 79 modules" for long enough that both halves went
+wrong: the total reached 89, and the ten that gained no case are exactly the
+ones `machine/context.yaml` marks `seen: []` and tells an agent to treat as
+unproven. Run it root-first:
 
 ```bash
 npm ci                  # in the REPO ROOT, not optional
