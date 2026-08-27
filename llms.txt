@@ -18,6 +18,12 @@ new one. Published restricted; public to read, not open source.
 - [machine/layouts.yaml](/machine/layouts.yaml): spacing and radius scales, breakpoints, widths; plus the dashboard templates, marked as not shipped here yet.
 - [machine/accessibility.yaml](/machine/accessibility.yaml): a11y contracts, including contrast floors.
 
+## Skills (Agent Skills, shipped inside the package)
+
+- [skills/skene-design-system-setup/SKILL.md](/skills/skene-design-system-setup/SKILL.md): first-time install, the stylesheet, the Tailwind @source line and the proof it took.
+- [skills/skene-design-system/SKILL.md](/skills/skene-design-system/SKILL.md): picking a component before writing one, the intent index, and the fields that bite.
+- [skills/skene-design-system-pages/SKILL.md](/skills/skene-design-system-pages/SKILL.md): composing a whole page — the spine, the eight archetypes and their confidence.
+
 ## Prose
 
 - [docs/sections.md](/docs/sections.md): decision paths, and every measured overlap with a verdict.

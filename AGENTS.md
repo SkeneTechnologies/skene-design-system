@@ -8,6 +8,47 @@ looks for. They shipped from 2026-08-13 and were pointed at only by README
 prose, which works for an agent reading top-down and not for one that lands in
 the directory and looks for `AGENTS.md`.
 
+## First run — you have just added this to a repo
+
+Do these in order. Step 3 is the one that fails silently, so it is the one with
+a proof attached; the rest fail loudly and need no ceremony.
+
+1. **Install it.** `npm install @skene/design-system` — see Installation below
+   for the credential, since the package is restricted.
+2. **Wire the stylesheet.** The two `@import` lines in Configuration, at the top
+   of the app's own stylesheet.
+3. **Add the `@source` line, then PROVE it took.** This is the step that has
+   shipped a broken page with no error and no warning:
+
+   ```bash
+   npm run build
+   grep -r "min-h-14" .next/static/css/ || echo "NOT GENERATED — @source did not take"
+   ```
+
+   `min-h-14` is a utility only this package's components use, so it reaches the
+   stylesheet only if your build scanned the package. Under Turbopack it does
+   not by default, and the symptom is a component that renders at zero height
+   rather than an error — `LogoRow` shipped exactly that. If the grep misses,
+   the `@source` path in Configuration is wrong for your stylesheet's location:
+   count the `../` again.
+4. **Decide theming.** `next-themes` is an optional peer. Install it if the app
+   flips light/dark; skip it if the app is dark-only. Nothing else in the
+   package needs it.
+5. **Render one component end to end** before building a page — a `Button` is
+   enough. It proves resolution, styles and the theme class in one go.
+6. **Then read `machine/context.yaml`.** Not before: the setup above is
+   mechanical, and the contracts are for deciding what to build.
+
+Two things worth knowing before your first section, because both have shipped
+defects rather than being theoretical:
+
+- A **light surface on a dark page needs the `light` class on its root.**
+  Check the module's `polarity` in `machine/context.yaml`. Without it,
+  mode-aware tokens resolve to their dark values against a light fill, which has
+  shipped text at 1.08:1.
+- **Deep-import.** `@skene/design-system/ui/button`, not the root barrel, when
+  you care about the React Server Components boundary.
+
 ## Installation
 
 ```bash
@@ -77,6 +118,20 @@ Deep-import for the tightest React Server Components boundary. The root barrel
 carries no `"use client"` directive on purpose, so `import { Card } from
 '@skene/design-system'` stays server-renderable; only the 8 modules that need
 it carry the directive themselves.
+
+## Skills — for an agent that has not read this file
+
+The contracts above assume you already came here. Three Agent Skills ship in the
+package so that an agent working in a consumer repo is routed to them by what it
+is doing, without going looking. They split by moment, not by surface:
+
+| skill | fires when |
+|---|---|
+| `skills/skene-design-system-setup` | adding the package to a repo, or its components render unstyled or at zero height |
+| `skills/skene-design-system` | writing or changing any component — before you write it, not after |
+| `skills/skene-design-system-pages` | assembling a whole page or a multi-section band |
+
+From a consumer they are under `node_modules/@skene/design-system/skills/`.
 
 ## The contracts — read in this order
 

@@ -27,6 +27,7 @@
     "CHANGELOG.md",
     "assets",
     "scripts",
+    "skills",
     "__tests__"
   ],
   "exports": {
