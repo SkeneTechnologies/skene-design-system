@@ -116,7 +116,7 @@ describes this path only.
 Installed this way there is no npm registry and no npm token:
 
 ```jsonc
-"@skene/design-system": "git+https://github.com/SkeneTechnologies/skene-design-system.git#semver:^0.14.0"
+"@skene/design-system": "git+https://github.com/SkeneTechnologies/skene-design-system.git#semver:^0.15.0"
 ```
 
 npm resolves `semver:` against git **tags**, and `package-lock.json` pins the
@@ -147,7 +147,7 @@ git push origin main && git push origin v<version>
 
 Verified by installing this package from a clean directory with only the git
 dependency in `package.json`: the range above resolves to the highest matching
-tag and pins the commit. At `^0.14.0` the range resolves `v0.14.0`, the tag the
+tag and pins the commit. At `^0.15.0` the range resolves `v0.15.0`, the tag the
 release that bumped package.json to it also pushed.
 (This sentence read `v0.3.0` for six releases, then `v0.10.0` for another, then
 `v0.11.0` through the 0.12.0 release — the same drift the note above warns
