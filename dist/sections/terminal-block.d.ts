@@ -18,6 +18,25 @@ export interface TerminalBlockLine {
     prompt?: React.ReactNode;
     /** `false` drops the copy button. Output lines rarely want one. */
     copyable?: boolean;
+    /**
+     * Let this line WRAP instead of scrolling inside itself.
+     *
+     * The default is right for a command a reader runs: the line scrolls in
+     * place, the panel keeps its width, and the copy button is the keyboard
+     * route to the far end. It is wrong for a line whose whole text is the
+     * point and is too long to sit on one row — a install command carrying a
+     * URL, on a 390px screen — where scrolling hides the half that matters
+     * behind a gesture nobody makes.
+     *
+     * Wrapping is not one utility. It needs the nowrap cancelled, a break
+     * allowed mid-token (a URL has no spaces to break at), and a hanging indent
+     * so the continuation sits under the command rather than under the prompt.
+     * That is four, and skene-marketing-website writes all four as a `display`
+     * override at three call sites — which also means those three lines carry
+     * markup between the reader and the paste for a reason that has nothing to
+     * do with what they say.
+     */
+    wrap?: boolean;
 }
 export interface TerminalBlockProps {
     lines: TerminalBlockLine[];

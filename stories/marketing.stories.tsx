@@ -73,3 +73,23 @@ export const NumberedSteps: Story = {
     </div>
   ),
 }
+
+/**
+ * The eyebrow on cream.
+ *
+ * Its default border and ink are invariant `chrome.*`, which do not follow a
+ * `light` ancestor — so on a cream panel the chip keeps its dark-page colours
+ * and reads as a smudge. `onLight` is the fix; it was the same two-utility
+ * className override written at three call sites in this package and fourteen
+ * more on the marketing site before the prop existed.
+ */
+export const EyebrowOnCream: Story = {
+  render: () => (
+    <div className="light flex flex-col items-start gap-6 rounded-3xl border border-chrome-line-on-light bg-brand-light p-8">
+      <Eyebrow onLight>How it works</Eyebrow>
+      <DisplayHeading size="section" as="h2" className="text-text-primary">
+        The same chip, on the ground it was not built for
+      </DisplayHeading>
+    </div>
+  ),
+}

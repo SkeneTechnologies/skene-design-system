@@ -1027,7 +1027,7 @@
       ],
       "summary": "The page furniture that makes a marketing surface read as Skene: the floating",
       "client": false,
-      "lines": 236,
+      "lines": 251,
       "cases": [
         "pattern-pill-nav",
         "pattern-display-heading",
@@ -1064,7 +1064,9 @@
       "summary": "",
       "client": false,
       "lines": 13,
-      "cases": [],
+      "cases": [
+        "pattern-pill-nav-frosted"
+      ],
       "demo": null,
       "usage": {
         "module": "pill-nav-frosted",
@@ -1090,7 +1092,9 @@
       "summary": "Overlay + panel rendered as siblings of the nav bar, not inside it — same",
       "client": true,
       "lines": 126,
-      "cases": [],
+      "cases": [
+        "pattern-pill-nav-mobile-menu"
+      ],
       "demo": null,
       "usage": {
         "module": "pill-nav-mobile-menu",
@@ -1116,7 +1120,7 @@
       ],
       "summary": "Floating pill navigation with a marketing-site mobile drawer below `md`.",
       "client": true,
-      "lines": 132,
+      "lines": 165,
       "cases": [
         "pattern-pill-nav"
       ],
@@ -1388,7 +1392,7 @@
       ],
       "summary": "The bridge: GTM ↔ Skene ↔ Engineering. A cream band carrying three cards in a",
       "client": false,
-      "lines": 335,
+      "lines": 334,
       "cases": [
         "section-bridge"
       ],
@@ -1428,7 +1432,10 @@
       "summary": "The PR surface is a GitHub App that posts reviews; nothing ships as an Actions workflow.",
       "client": true,
       "lines": 352,
-      "cases": [],
+      "cases": [
+        "section-card-animation-integrations",
+        "section-card-animation-integrations-last"
+      ],
       "demo": null,
       "usage": {
         "module": "card-animation-integrations",
@@ -1535,7 +1542,9 @@
       "summary": "The inline identifier chip: an event name, a column, a flag, a path.",
       "client": false,
       "lines": 92,
-      "cases": [],
+      "cases": [
+        "section-code"
+      ],
       "demo": null,
       "usage": {
         "module": "code",
@@ -1793,7 +1802,7 @@
       ],
       "summary": "The alternating feature row: copy on one side, a visual on the other, flipping",
       "client": false,
-      "lines": 429,
+      "lines": 447,
       "cases": [
         "section-feature-row"
       ],
@@ -2080,8 +2089,10 @@
       ],
       "summary": "The homepage integrations band: cream copy column plus the four-card GSAP",
       "client": false,
-      "lines": 43,
-      "cases": [],
+      "lines": 60,
+      "cases": [
+        "section-integrations-highlight"
+      ],
       "demo": null,
       "usage": {
         "module": "integrations-highlight",
@@ -2108,7 +2119,10 @@
       "summary": "A documented exception to `machine/rules.yaml`'s `styled_components_for_new_features`.",
       "client": false,
       "lines": 1215,
-      "cases": [],
+      "cases": [
+        "section-journey-signal-scene",
+        "section-journey-signal-scene-medium"
+      ],
       "demo": null,
       "usage": {
         "module": "journey-signal-scene",
@@ -2240,7 +2254,7 @@
       ],
       "summary": "The inverted section: one cream card carrying a whole section's worth of copy",
       "client": false,
-      "lines": 191,
+      "lines": 192,
       "cases": [
         "section-light-section-card",
         "light-section-card-steps"
@@ -2279,8 +2293,10 @@
       ],
       "summary": "The proof strip: a heading, a stat line, a row of logo slots, and a caption",
       "client": false,
-      "lines": 176,
-      "cases": [],
+      "lines": 195,
+      "cases": [
+        "section-logo-row"
+      ],
       "demo": null,
       "usage": {
         "module": "logo-row",
@@ -2730,7 +2746,9 @@
       "summary": "The four-ways-in grid: a small set of peer cards on a textured field, one of",
       "client": false,
       "lines": 187,
-      "cases": [],
+      "cases": [
+        "section-surface-cards"
+      ],
       "demo": null,
       "usage": {
         "module": "surface-cards",
@@ -2799,7 +2817,9 @@
       "summary": "The person card for the about page: a name, a role, and optionally a",
       "client": false,
       "lines": 125,
-      "cases": [],
+      "cases": [
+        "section-team-card"
+      ],
       "demo": null,
       "usage": {
         "module": "team-card",
@@ -2829,7 +2849,7 @@
       ],
       "summary": "The install block: a terminal frame holding one or more shell lines, each with",
       "client": true,
-      "lines": 273,
+      "lines": 304,
       "cases": [
         "section-terminal-block"
       ],
@@ -3134,7 +3154,7 @@
   "unbuilt": [],
   "gallery": {
     "route": "/components",
-    "cases": 89
+    "cases": 100
   },
   "counts": {
     "modules": 89,
@@ -3142,7 +3162,7 @@
     "ui": 30,
     "patterns": 8,
     "sections": 51,
-    "noVisual": 10,
+    "noVisual": 1,
     "withUsage": 89
   }
 }

@@ -106,13 +106,138 @@ describe('machine/compositions.yaml', () => {
     expect(overclaimed, 'load_bearing asserted from a single route').toEqual([])
   })
 
-  it('says what the corpus does not cover', () => {
-    // Home and pricing import no section from this package, so there is no
-    // observed recipe for either. A contract that quietly omits that reads as
-    // complete. `seen: []` in context.yaml is the precedent: an unproven thing
-    // is marked, not dropped.
-    const nc = (doc as { not_covered?: unknown[] }).not_covered
+  it('says what the corpus does not cover, and never both ways about one route', () => {
+    // A contract that quietly omits what it did not read reads as complete.
+    // `seen: []` in context.yaml is the precedent: an unproven thing is marked,
+    // not dropped.
+    //
+    // The second half of this is the one with scar tissue. v0.13.0 shipped this
+    // file recording `(site)/page.tsx` and `(site)/pricing/page.tsx` under
+    // `not_covered` as importing no section from this package. Both imported
+    // heavily — seventeen modules and nine — at the very commit `corpus.commit`
+    // names, and they were the two densest routes in the corpus. Six modules
+    // appeared nowhere in the file as a result, two of them `sections/feature-row`
+    // (which machine/rules.yaml MANDATES for a marketing card) and
+    // `sections/final-cta` (the closer), so an agent following the archetypes
+    // built a page with neither.
+    //
+    // The old assertion here was `toMatch(/pricing/)` — it passed because the
+    // false claim mentioned pricing, which is the whole problem with asserting
+    // on the presence of a word. Being covered and being uncovered are the two
+    // halves of one corpus; a route can be in exactly one of them.
+    const nc = (doc as { not_covered?: { route?: string }[] }).not_covered
     expect(Array.isArray(nc) && nc.length > 0, 'nothing recorded as not covered').toBe(true)
-    expect(JSON.stringify(nc)).toMatch(/pricing/)
+    expect(JSON.stringify(nc), 'the alternatives subtree is no longer recorded').toMatch(
+      /alternatives/,
+    )
+
+    const cited = new Set(
+      Object.values(
+        (doc as { archetypes: Record<string, { routes?: Record<string, string[]> }> }).archetypes,
+      ).flatMap((a) => Object.keys(a.routes ?? {})),
+    )
+    expect(
+      nc!.map((n) => n.route).filter((r): r is string => !!r && cited.has(r)),
+      'these routes are cited by an archetype AND recorded as not covered',
+    ).toEqual([])
+  })
+})
+
+/**
+ * The file against itself.
+ *
+ * Every number in `compositions.yaml` is derived from the `routes:` maps that
+ * sit beside it, so every number is recomputable — and until 2026-08-27 none of
+ * them was checked. The corpus lost two routes, every `in: N, of: M` in the file
+ * went two short, and the suite reported green because it only ever asked
+ * whether the named modules existed.
+ *
+ * What these cannot check is whether the corpus is COMPLETE. That needs someone
+ * to re-read the consumer, which is how the original defect was found and is
+ * recorded in `corpus.history`. What they can check is that the file never again
+ * states a count its own evidence does not support.
+ */
+describe('compositions.yaml is consistent with its own citations', () => {
+  interface Archetype {
+    instances?: number
+    load_bearing?: string[]
+    optional?: { module: string; in: number; of: number }[]
+    observed?: string[]
+    routes?: Record<string, string[]>
+  }
+  const archetypes = (doc as { archetypes: Record<string, Archetype> }).archetypes
+  const corpus = (doc as { corpus: Record<string, number> }).corpus
+  const spine = (doc as { spine: { module: string; in: number; of: number }[] }).spine
+
+  /** Route -> its import list, flattened across every archetype. */
+  const routes: Record<string, string[]> = Object.fromEntries(
+    Object.values(archetypes).flatMap((a) => Object.entries(a.routes ?? {})),
+  )
+  const all = Object.keys(routes)
+
+  it('the corpus counts are the citations counted', () => {
+    expect(all.length, 'routes_composing_sections is not the number of routes cited').toBe(
+      corpus.routes_composing_sections,
+    )
+    // The one number with no citation behind it: how many route files exist on
+    // the branch. It can only be checked by reading the consumer, so it is
+    // checked for internal arithmetic instead.
+    expect(corpus.routes_read).toBe(
+      corpus.routes_composing_sections + corpus.routes_importing_nothing,
+    )
+    const seen = new Set(Object.values(routes).flat())
+    expect(seen.size, 'modules_seen is not the number of distinct modules cited').toBe(
+      corpus.modules_seen,
+    )
+  })
+
+  it('every spine count is the count of routes that cite the module', () => {
+    for (const s of spine) {
+      const n = all.filter((r) => routes[r].includes(s.module)).length
+      expect({ module: s.module, in: s.in, of: s.of }).toEqual({
+        module: s.module,
+        in: n,
+        of: all.length,
+      })
+    }
+  })
+
+  it.each(Object.entries(archetypes))('%s: instances is its route count', (_id, a) => {
+    expect(a.instances).toBe(Object.keys(a.routes ?? {}).length)
+  })
+
+  it.each(Object.entries(archetypes))('%s: load_bearing appears in every route', (_id, a) => {
+    const rs = Object.keys(a.routes ?? {})
+    const notEverywhere = (a.load_bearing ?? []).filter(
+      (m) => !rs.every((r) => routes[r].includes(m)),
+    )
+    expect(notEverywhere, 'named load_bearing but missing from a cited route').toEqual([])
+  })
+
+  it.each(Object.entries(archetypes))('%s: every optional count is recomputable', (_id, a) => {
+    const rs = Object.keys(a.routes ?? {})
+    for (const o of a.optional ?? []) {
+      const n = rs.filter((r) => routes[r].includes(o.module)).length
+      expect({ module: o.module, in: o.in, of: o.of }).toEqual({
+        module: o.module,
+        in: n,
+        of: rs.length,
+      })
+    }
+  })
+
+  it.each(Object.entries(archetypes))('%s: no module in a route goes undeclared', (_id, a) => {
+    // A module a cited route imports but the recipe never names is the shape
+    // the two dropped routes took at the file level: present in the evidence,
+    // absent from the guidance.
+    const declared = new Set([
+      ...(a.load_bearing ?? []),
+      ...(a.optional ?? []).map((o) => o.module),
+      ...(a.observed ?? []),
+    ])
+    const undeclared = [...new Set(Object.values(a.routes ?? {}).flat())].filter(
+      (m) => !declared.has(m),
+    )
+    expect(undeclared, 'imported by a cited route, named by no recipe').toEqual([])
   })
 })

@@ -178,7 +178,37 @@ test('gallery is reachable and every component is claimed by a case', async ({ p
   // meant the duplication findings against them — one caption strip written out
   // four times, VerifyRow copied line-for-line — had no way to be proven
   // harmless. A merge that cannot be shown to change nothing is not a merge.
-  expect(names.length).toBeGreaterThanOrEqual(81)
+  //
+  // Raised 81 → 82 on 2026-08-27 with `section-logo-row`, for the third time
+  // and for the same reason: `LogoRow` had no case, so no baseline covered it,
+  // so it shipped every spacing value at 80% of the number its own comments
+  // claimed and this suite reported green. That is now twice that a module with
+  // no case has been the one carrying the defect, which makes the count below a
+  // ratchet on the class rather than a tally.
+  //
+  // Raised 82 → 87 on 2026-08-28 with the five straightforward modules off that
+  // list: `section-code`, `pattern-pill-nav-frosted`, `section-surface-cards`,
+  // `section-team-card` and `section-integrations-highlight`. It was the third
+  // of those five sittings that made the point for the third time — writing
+  // `section-integrations-highlight` found the band rendering its animation at
+  // 0x0, in a module whose only defence was that nothing had ever looked at it.
+  //
+  // Raised 87 → 88 on 2026-08-28 with `pattern-pill-nav-mobile-menu`, the
+  // consumer's mobile nav, which every page of it carries. It is the first case
+  // on the gallery that is an iframe: every layer in that module is `md:hidden`
+  // and this suite runs at 1280, so an inline case captured an element with no
+  // box at all.
+  //
+  // Raised 88 → 92 on 2026-08-28 with the last two, TWO cases each, because one
+  // frame proves one state and both are multi-state:
+  // `section-card-animation-integrations` at two playheads on its cycling
+  // timeline, and `section-journey-signal-scene` at WIDE+GTM and
+  // MEDIUM+Engineering. The second of those holds a rendering that is BROKEN on
+  // purpose — the module reads 18 CSS custom properties this package does not
+  // define — which is a regression floor and a filed defect, not an
+  // endorsement. `ui/sonner` is now the only module with no case, and it is
+  // meant to be: a toast host has no resting state to snapshot.
+  expect(names.length).toBeGreaterThanOrEqual(92)
   expect(new Set(names).size, 'duplicate data-visual names').toBe(names.length)
 })
 

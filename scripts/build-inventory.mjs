@@ -82,6 +82,21 @@ const EXPLICIT = {
   // omitted, the -eyebrow one exercises it.
   'sections/trust-panel': ['section-trust-panel', 'section-trust-panel-eyebrow'],
   'sections/final-cta': ['section-final-cta', 'section-final-cta-eyebrow'],
+  // Two cases each, at two states, because one frame proves one state.
+  // `card-animation-integrations` cycles four details on a GSAP loop, so the
+  // pair is captured at two playheads — 2.5s and 9.5s — and either frame alone
+  // would let a component that never swapped pass. `journey-signal-scene` picks
+  // one of three hand-placed layouts by measuring its container and carries a
+  // GTM/Engineering toggle, so the pair holds WIDE+GTM and MEDIUM+Engineering;
+  // the `-medium` one is where every defect filed against it shows.
+  'sections/card-animation-integrations': [
+    'section-card-animation-integrations',
+    'section-card-animation-integrations-last',
+  ],
+  'sections/journey-signal-scene': [
+    'section-journey-signal-scene',
+    'section-journey-signal-scene-medium',
+  ],
 }
 /** Modules with no gallery case but a live demo on a composed route. */
 const DEMO_ROUTE = {

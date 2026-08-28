@@ -119,11 +119,10 @@ export function Bridge({ eyebrow, title, titleAs = 'h2', lede, caption, children
                         // pair. It used to be a hand-rolled copy of the same span — same
                         // geometry, same two inline styles — because Eyebrow's own colours
                         // are invariant `chrome.*` and render near-invisible on this band's
-                        // cream. Overriding them through className is the same fix without
-                        // the copy: twMerge replaces the border and text utilities, the
-                        // 11px/0.16em inline styles come from the component, and the
-                        // rendering is unchanged.
-                        _jsx(Eyebrow, { className: "border-chrome-line-on-light text-text-muted", children: eyebrow })) : null, title ? (_jsx(Title, { className: cn('mx-auto max-w-[880px] text-[clamp(2rem,3.4vw,3.4rem)] font-normal leading-[1.08] tracking-[-0.02em] text-text-primary', eyebrow && 'mt-6'), children: title })) : null, lede ? (
+                        // cream. That was a two-utility className override here until
+                        // `onLight` landed on the component; the prop sets the same two
+                        // and the rendering is unchanged.
+                        _jsx(Eyebrow, { onLight: true, children: eyebrow })) : null, title ? (_jsx(Title, { className: cn('mx-auto max-w-[880px] text-[clamp(2rem,3.4vw,3.4rem)] font-normal leading-[1.08] tracking-[-0.02em] text-text-primary', eyebrow && 'mt-6'), children: title })) : null, lede ? (
                         // The top margin is the gap BETWEEN two things, so it belongs to
                         // the pair rather than to the lede. With nothing above it there is
                         // nothing to be spaced from, and 20px of it would read as the slot

@@ -5,8 +5,21 @@
  * Each of these is on the live site and was previously reproducible only by
  * copying markup out of skene-marketing-website.
  */
-export { PillNav, PillNavLink, type PillNavProps } from './pill-nav.js';
+export { PillNav, PillNavLink, type PillNavProps, type PillNavLinkProps } from './pill-nav.js';
 export interface EyebrowProps {
+    /**
+     * The chip is on a cream panel rather than the dark page.
+     *
+     * Its default border and ink are INVARIANT chrome tokens, which is right on
+     * the dark ground and wrong on cream — they do not follow a `light`
+     * ancestor, so the chip keeps its dark-page colours inside a cream card.
+     * Three modules in this package already worked around that by writing the
+     * same two-utility override at the call site
+     * (`light-section-card.tsx`, `faq-band.tsx`, `bridge.tsx`), and
+     * skene-marketing-website writes it at fourteen more. Fourteen call sites of
+     * one recipe is what a prop is for.
+     */
+    onLight?: boolean;
     className?: string;
     children: React.ReactNode;
 }
@@ -16,7 +29,7 @@ export interface EyebrowProps {
  * Uses `font.tracking.eyebrow` (0.16em) and `font.size.pill`, which existed as
  * tokens with nothing rendering them.
  */
-export declare function Eyebrow({ className, children }: EyebrowProps): import("react").JSX.Element;
+export declare function Eyebrow({ onLight, className, children }: EyebrowProps): import("react").JSX.Element;
 export interface DisplayHeadingProps {
     /** `hero` is the homepage size, `page` a subpage h1, `section` a section head. */
     size?: 'hero' | 'page' | 'section';

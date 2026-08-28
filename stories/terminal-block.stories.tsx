@@ -64,3 +64,25 @@ export const WithOutput: Story = {
 export const SingleLine: Story = {
   args: { className: 'w-[520px]', lines: [{ command: 'npx skene analyze' }] },
 }
+
+/**
+ * A line long enough that scrolling it in place hides the half that matters.
+ *
+ * `wrap` cancels the nowrap, allows a break mid-token — a URL has no spaces to
+ * break at — and hangs the continuation under the command rather than under the
+ * prompt. The clipboard still receives `command` unchanged.
+ */
+export const WrappedLine: Story = {
+  args: {
+    className: 'w-[360px]',
+    title: 'Install the TUI',
+    lines: [
+      { command: 'npx skene analyze' },
+      {
+        command:
+          'curl -LsSf https://astral.sh/uv/install.sh | sh && uv tool install skene',
+        wrap: true,
+      },
+    ],
+  },
+}

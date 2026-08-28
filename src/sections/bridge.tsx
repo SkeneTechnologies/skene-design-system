@@ -274,11 +274,10 @@ export function Bridge({
               // pair. It used to be a hand-rolled copy of the same span — same
               // geometry, same two inline styles — because Eyebrow's own colours
               // are invariant `chrome.*` and render near-invisible on this band's
-              // cream. Overriding them through className is the same fix without
-              // the copy: twMerge replaces the border and text utilities, the
-              // 11px/0.16em inline styles come from the component, and the
-              // rendering is unchanged.
-              <Eyebrow className="border-chrome-line-on-light text-text-muted">
+              // cream. That was a two-utility className override here until
+              // `onLight` landed on the component; the prop sets the same two
+              // and the rendering is unchanged.
+              <Eyebrow onLight>
                 {eyebrow}
               </Eyebrow>
             ) : null}

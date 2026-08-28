@@ -122,3 +122,99 @@ padding that a future pass should expect to trim.
   the same all-or-nothing content model the marketing site component has today; making the
   three panels' content configurable via props is a separate, larger design decision about
   the component's public API and is not bundled into a straight port.
+
+---
+
+## Known defects at 0.12.0
+
+Filed 2026-08-27 by `skene-marketing-website`, which is still this component's
+only consumer and which keeps a local fork rather than importing it. Every item
+below was measured against that fork
+(`src/components/core/JourneySignalScene/index.tsx`, where each correction is
+annotated in place). None of them was recorded here, in the source, or in the
+0.12.0 CHANGELOG entry before this section.
+
+The reason they all shipped: **nothing in this repository consumed `MEDIUM`
+before the marketing site's home hero did.** The story renders the scene at a
+few widths; the gallery renders it once. Neither exercised the layout at the
+width a hero column actually gives it.
+
+### G1 — `WIDE_MIN: 720` sends tablets to the desktop layout
+
+`journey-signal-scene.tsx:888`. At 768 a hero stacks and the scene takes the
+full ~730px column, which is over 720, so WIDE fires and scales its 1100px
+stage to 0.66 — panel body copy at **8.6px**. The tablet gets the desktop
+layout and the desktop gets the phone one. The consumer runs 900, the width
+where WIDE holds 0.82 or better; below it MEDIUM reads better at any size.
+
+This one is pure geometry and does not depend on content, so it is true here
+exactly as it is true there.
+
+### G2 — `MEDIUM.left.w: 170` ellipsises both Evidence rows
+
+`journey-signal-scene.tsx:874`. The panel's entire job is naming the file and
+the table, and at 170 neither fits: this package's own labels are
+`app/onboarding/route.ts` (23 characters after the `code` badge) and
+`public.accounts`. The consumer runs 230, which clears its longer label with
+16px to spare, and gives the 60 back from the centre card (382 → 322, which
+still holds `skene.track(…, {` unwrapped).
+
+Note the packaged label is three characters LONGER than the consumer's, so
+this clips harder here than in the fork where it was found.
+
+### G3 — `MEDIUM.h: 640` has no floor under the PR review panel
+
+`journey-signal-scene.tsx:871`. `right` starts at y 300 and the Engineering
+view runs its three panels much taller than the GTM view they were laid out
+against (132 / 238 / 354 versus 132 / 192 / 216). The consumer measured 5px of
+slack and moved to 690. Any copy change to that panel clips inside
+`overflow-hidden` chrome, which is the silent kind of clipping.
+
+Measured on the fork, whose PR panel copy differs from this one's; the
+mechanism — a MEDIUM height laid out against the shorter of two views — is the
+same either way.
+
+### G4 — the reserved top strip is a PORTING hazard, not a defect here
+
+**This was filed as a defect and it is not one in this package.** The consumer
+reports the View control landing inside the centre card at MEDIUM, because its
+`ToggleRow` is `position: absolute; top: 20; right: 24` of the STAGE while
+`MEDIUM.center.y` is 24.
+
+This component does not do that. `ViewSwitchRow` is flow layout below the stage
+(`journey-signal-scene.tsx:445-449`) and its comment records why: the two views
+render at different heights and an absolutely-positioned switch overlapped the
+card's own footnote. So `center.y: 24` is safe here.
+
+It is worth writing down anyway, because the fork moved the switch back onto
+the stage and hit exactly the failure this file's comment predicts. If the
+switch ever returns to an overlay, MEDIUM needs every box below y 48.
+
+### C1 — the stage is light, deliberately, and a consumer cannot change it
+
+`--color-background-darker: #ffffff`, and `softPulse` is ink rather than peach
+because peach measures ~1.2:1 on cream. That is correct for the `Bridge` band
+this was built for, and wrong for a near-black hero, which is what the
+marketing site's approved wireframe draws. There is no tone prop, so the
+consumer cannot ask for the other reading. Its fork carries both in a
+`sceneTokens` block.
+
+### C2 — the content is hardcoded, and it is the pre-swap set
+
+`onboarding_started`, `public.accounts`, Signed up / Onboarding started /
+Reached first value, and an `orders` ambient table. The consumer swapped to the
+SaaS upgrade set on 2026-08-26 to match its wireframe and had no way to do that
+from a call site: **this component takes no props at all**, which
+`machine/context.yaml` now records as the only section with neither `props` nor
+`accepts`.
+
+"A props API for the content block" is listed in Out of scope above as "a
+separate, larger design decision". That was a reasonable call for the port. It
+is now the thing keeping a 506-line fork alive, so it is the decision to take.
+
+### Why none of this is fixed in this commit
+
+G1 to G3 change what the component renders, and the only surface that could
+verify the change is the consumer that does not import it. C1 and C2 are the
+API decision the port deliberately deferred. Both want a maintainer, not a
+drive-by. What was missing was the record, and that is what this section is.

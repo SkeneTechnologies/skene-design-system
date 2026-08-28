@@ -13,7 +13,11 @@
 #   Whether the module puts a theme class on its own root. A light surface on a
 #   dark page needs one, and a missing one renders cream on cream.
 # seen: gallery case ids under docs-app /components. An empty list means nothing
-#   in this repository has ever rendered it — treat its claims as unproven.
+#   in this repository has ever rendered it — treat its claims as unproven. The
+#   ids resolve in the shipped `@skene/design-system/inventory.json`, which
+#   carries every module's cases, exports and line count beside the ten resolved
+#   design decisions. Until 2026-08-27 that file sat outside `files`, so a
+#   `seen:` entry was a pointer a consuming agent could not follow.
 # overrides: what a caller can reach from outside. style means the module writes
 #   at least one inline style, which beats any class you pass; className means
 #   the root merges yours through cn; use client means it carries the directive.
@@ -22,6 +26,16 @@
 #   "I need a band that contrasts two options, what do I have?". Grep the
 #   `intents:` vocabulary below for the job, then grep this file for the tag.
 #   Tags are a closed set: only what `intents:` declares can appear.
+# props: the module's OWN fields, per export. Read from an `export interface
+#   <Owner>Props` in the source where one exists, and otherwise from the
+#   shipped `dist/<layer>/<module>.d.ts` — which is how the whole `ui/*`
+#   layer is covered, since shadcn declares its parameter types inline.
+#   Defaults come from the implementation: a destructuring default, or a cva
+#   `defaultVariants` block.
+# accepts: the base type each export spreads onto its element. It is why
+#   `onClick`, `id` and `aria-*` work on a module that declares none of
+#   them, and it is the difference between "this takes three props" and "this
+#   takes three props and everything a <button> takes".
 
 version: "1.0.0"
 counts: { modules: 89, ui: 30, patterns: 8, sections: 51, authored: 89, assets: 26, intents: 20 }
@@ -95,6 +109,11 @@ modules:
     polarity: inherits
     seen: [ui-accordion]
     overrides: [className, use client]
+    accepts:
+      AccordionItem: React.ComponentProps<typeof AccordionPrimitive.Item>
+      AccordionTrigger: React.ComponentProps<typeof AccordionPrimitive.Trigger>
+      AccordionContent: React.ComponentProps<typeof AccordionPrimitive.Content>
+      Accordion: (AccordionPrimitive.AccordionSingleProps | AccordionPrimitive.AccordionMultipleProps)
     useFor: >-
       Radix disclosure list. One trigger, one panel, animated open and close.
     intent: [reveal-on-demand]
@@ -120,6 +139,18 @@ modules:
     polarity: inherits
     seen: [ui-alert-dialog]
     overrides: [className, use client]
+    accepts:
+      AlertDialogOverlay: React.ComponentProps<typeof AlertDialogPrimitive.Overlay>
+      AlertDialogContent: React.ComponentProps<typeof AlertDialogPrimitive.Content>
+      AlertDialogHeader: "React.ComponentProps<\"div\">"
+      AlertDialogFooter: "React.ComponentProps<\"div\">"
+      AlertDialogTitle: React.ComponentProps<typeof AlertDialogPrimitive.Title>
+      AlertDialogDescription: React.ComponentProps<typeof AlertDialogPrimitive.Description>
+      AlertDialogAction: React.ComponentProps<typeof AlertDialogPrimitive.Action>
+      AlertDialogCancel: React.ComponentProps<typeof AlertDialogPrimitive.Cancel>
+      AlertDialog: AlertDialogPrimitive.AlertDialogProps
+      AlertDialogTrigger: AlertDialogPrimitive.AlertDialogTriggerProps
+      AlertDialogPortal: AlertDialogPrimitive.AlertDialogPortalProps
     useFor: >-
       Radix modal that demands an answer before anything continues.
     intent: [interrupt-the-reader]
@@ -143,6 +174,13 @@ modules:
     polarity: inherits
     seen: [ui-alert]
     overrides: [className]
+    props:
+      Alert:
+        variant: { type: "\"default\" | \"destructive\"" }
+    accepts:
+      Alert: "React.ComponentProps<\"div\">"
+      AlertTitle: "React.ComponentProps<\"h5\">"
+      AlertDescription: "React.ComponentProps<\"div\">"
     useFor: >-
       A static inline notice inside a page — not a toast, not a modal.
     intent: [show-status]
@@ -166,6 +204,11 @@ modules:
     polarity: inherits
     seen: [ui-badge]
     overrides: [className]
+    props:
+      Badge:
+        variant: { type: "\"default\" | \"destructive\" | \"outline\" | \"secondary\"" }
+    accepts:
+      Badge: React.HTMLAttributes<HTMLDivElement>
     useFor: >-
       The product surface's status marker: a small rounded label with four
       variants.
@@ -191,6 +234,17 @@ modules:
     polarity: inherits
     seen: [ui-breadcrumb]
     overrides: [className]
+    props:
+      BreadcrumbLink:
+        asChild: { type: boolean }
+    accepts:
+      Breadcrumb: "React.ComponentProps<\"nav\">"
+      BreadcrumbList: "React.ComponentProps<\"ol\">"
+      BreadcrumbItem: "React.ComponentProps<\"li\">"
+      BreadcrumbLink: "React.ComponentProps<\"a\">"
+      BreadcrumbPage: "React.ComponentProps<\"span\">"
+      BreadcrumbSeparator: "React.ComponentProps<\"li\">"
+      BreadcrumbEllipsis: "React.ComponentProps<\"span\">"
     useFor: >-
       The path back up a product hierarchy.
     intent: [navigate]
@@ -214,6 +268,13 @@ modules:
     polarity: inherits
     seen: [ui-button]
     overrides: [className]
+    props:
+      Button:
+        asChild: { type: boolean, default: "false" }
+        variant: { type: "\"link\" | \"default\" | \"destructive\" | \"outline\" | \"secondary\" | \"ghost\"" }
+        size: { type: "\"default\" | \"sm\" | \"lg\" | \"icon\"" }
+    accepts:
+      Button: React.ButtonHTMLAttributes<HTMLButtonElement>
     useFor: >-
       The action primitive. Six variants, four sizes.
     intent: [drive-an-action]
@@ -241,8 +302,15 @@ modules:
     overrides: [className]
     props:
       Card:
-        variant: { type: CardVariant; }
-        asChild: { type: boolean; }
+        variant: { type: CardVariant, default: "\"default\"" }
+        asChild: { type: boolean, default: "false" }
+    accepts:
+      Card: "React.ComponentProps<\"div\">"
+      CardHeader: "React.ComponentProps<\"div\">"
+      CardTitle: "React.ComponentProps<\"div\">"
+      CardDescription: "React.ComponentProps<\"div\">"
+      CardContent: "React.ComponentProps<\"div\">"
+      CardFooter: "React.ComponentProps<\"div\">"
     useFor: >-
       The generic product container: header, content, footer.
       `variant="surface"` is the flat flavour of the same card —
@@ -292,6 +360,8 @@ modules:
     polarity: inherits
     seen: [ui-checkbox]
     overrides: [className, use client]
+    accepts:
+      Checkbox: React.ComponentProps<typeof CheckboxPrimitive.Root>
     useFor: >-
       Radix checkbox with the package's focus ring.
     intent: [collect-input]
@@ -316,6 +386,10 @@ modules:
     polarity: inherits
     seen: [ui-collapsible]
     overrides: [use client]
+    accepts:
+      Collapsible: CollapsiblePrimitive.CollapsibleProps
+      CollapsibleTrigger: CollapsiblePrimitive.CollapsibleTriggerProps
+      CollapsibleContent: CollapsiblePrimitive.CollapsibleContentProps
     useFor: >-
       Radix show/hide for one region.
     intent: [reveal-on-demand]
@@ -339,6 +413,16 @@ modules:
     polarity: inherits
     seen: [ui-command]
     overrides: [className, use client]
+    accepts:
+      Command: React.ComponentProps<typeof CommandPrimitive>
+      CommandInput: React.ComponentProps<typeof CommandPrimitive.Input>
+      CommandList: React.ComponentProps<typeof CommandPrimitive.List>
+      CommandEmpty: React.ComponentProps<typeof CommandPrimitive.Empty>
+      CommandGroup: React.ComponentProps<typeof CommandPrimitive.Group>
+      CommandSeparator: React.ComponentProps<typeof CommandPrimitive.Separator>
+      CommandItem: React.ComponentProps<typeof CommandPrimitive.Item>
+      CommandShortcut: "React.ComponentProps<\"span\">"
+      CommandDialog: DialogProps
     useFor: >-
       cmdk palette: a searchable list with groups and shortcuts.
     intent: [navigate, reveal-on-demand]
@@ -363,6 +447,17 @@ modules:
     polarity: inherits
     seen: [ui-dialog]
     overrides: [className, use client]
+    accepts:
+      DialogOverlay: React.ComponentProps<typeof DialogPrimitive.Overlay>
+      DialogContent: React.ComponentProps<typeof DialogPrimitive.Content>
+      DialogHeader: "React.ComponentProps<\"div\">"
+      DialogFooter: "React.ComponentProps<\"div\">"
+      DialogTitle: React.ComponentProps<typeof DialogPrimitive.Title>
+      DialogDescription: React.ComponentProps<typeof DialogPrimitive.Description>
+      Dialog: DialogPrimitive.DialogProps
+      DialogTrigger: DialogPrimitive.DialogTriggerProps
+      DialogPortal: DialogPrimitive.DialogPortalProps
+      DialogClose: DialogPrimitive.DialogCloseProps
     useFor: >-
       Radix modal for a task the reader may abandon.
     intent: [interrupt-the-reader]
@@ -389,6 +484,29 @@ modules:
     seen: [ui-dropdown-menu]
     overrides: [className, use client]
     customProperties: [--radix-dropdown-menu-content-transform-origin, --radix-dropdown-menu-content-available-height]
+    props:
+      DropdownMenuSubTrigger:
+        inset: { type: boolean }
+      DropdownMenuItem:
+        inset: { type: boolean }
+      DropdownMenuLabel:
+        inset: { type: boolean }
+    accepts:
+      DropdownMenuSubTrigger: React.ComponentProps<typeof DropdownMenuPrimitive.SubTrigger>
+      DropdownMenuSubContent: React.ComponentProps<typeof DropdownMenuPrimitive.SubContent>
+      DropdownMenuContent: React.ComponentProps<typeof DropdownMenuPrimitive.Content>
+      DropdownMenuItem: React.ComponentProps<typeof DropdownMenuPrimitive.Item>
+      DropdownMenuCheckboxItem: React.ComponentProps<typeof DropdownMenuPrimitive.CheckboxItem>
+      DropdownMenuRadioItem: React.ComponentProps<typeof DropdownMenuPrimitive.RadioItem>
+      DropdownMenuLabel: React.ComponentProps<typeof DropdownMenuPrimitive.Label>
+      DropdownMenuSeparator: React.ComponentProps<typeof DropdownMenuPrimitive.Separator>
+      DropdownMenuShortcut: "React.ComponentProps<\"span\">"
+      DropdownMenu: DropdownMenuPrimitive.DropdownMenuProps
+      DropdownMenuTrigger: DropdownMenuPrimitive.DropdownMenuTriggerProps
+      DropdownMenuGroup: DropdownMenuPrimitive.DropdownMenuGroupProps
+      DropdownMenuPortal: DropdownMenuPrimitive.DropdownMenuPortalProps
+      DropdownMenuSub: DropdownMenuPrimitive.DropdownMenuSubProps
+      DropdownMenuRadioGroup: DropdownMenuPrimitive.DropdownMenuRadioGroupProps
     useFor: >-
       Radix menu hung off a trigger.
     intent: [navigate, reveal-on-demand]
@@ -412,6 +530,11 @@ modules:
     seen: [ui-hover-card]
     overrides: [className, use client]
     customProperties: [--radix-hover-card-content-transform-origin]
+    accepts:
+      HoverCardContent: React.ComponentProps<typeof HoverCardPrimitive.Content>
+      HoverCard: HoverCardPrimitive.HoverCardProps
+      HoverCardTrigger: HoverCardPrimitive.HoverCardTriggerProps
+      HoverCardPortal: HoverCardPrimitive.HoverCardPortalProps
     useFor: >-
       Preview on hover, no click.
     intent: [reveal-on-demand]
@@ -436,6 +559,18 @@ modules:
     seen: [ui-input-group]
     overrides: [className, use client]
     customProperties: [--radius]
+    props:
+      InputGroupAddon:
+        align: { type: "\"inline-start\" | \"inline-end\" | \"block-start\" | \"block-end\"", default: "\"inline-start\"" }
+      InputGroupButton:
+        size: { type: "\"sm\" | \"xs\" | \"icon-xs\" | \"icon-sm\"", default: "\"xs\"" }
+    accepts:
+      InputGroup: "React.ComponentProps<\"div\">"
+      InputGroupAddon: "React.ComponentProps<\"div\">"
+      InputGroupButton: "Omit<React.ComponentProps<typeof Button>, \"size\">"
+      InputGroupText: "React.ComponentProps<\"span\">"
+      InputGroupInput: "React.ComponentProps<\"input\">"
+      InputGroupTextarea: "React.ComponentProps<\"textarea\">"
     useFor: >-
       An input with addons welded to it — prefix, suffix, inline button.
     intent: [collect-input]
@@ -459,6 +594,8 @@ modules:
     polarity: inherits
     seen: [ui-input]
     overrides: [className]
+    accepts:
+      Input: "React.ComponentProps<\"input\">"
     useFor: >-
       The single-line text field.
     intent: [collect-input]
@@ -482,6 +619,8 @@ modules:
     polarity: inherits
     seen: [ui-label]
     overrides: [className]
+    accepts:
+      Label: "React.ComponentProps<\"label\">"
     useFor: >-
       The form label, wired to Radix's accessible name.
     intent: [collect-input, mark-a-label]
@@ -507,6 +646,15 @@ modules:
     seen: [ui-navigation-menu]
     overrides: [className, use client]
     customProperties: [--radix-navigation-menu-viewport-height, --radix-navigation-menu-viewport-width]
+    accepts:
+      NavigationMenu: React.ComponentProps<typeof NavigationMenuPrimitive.Root>
+      NavigationMenuList: React.ComponentProps<typeof NavigationMenuPrimitive.List>
+      NavigationMenuTrigger: React.ComponentProps<typeof NavigationMenuPrimitive.Trigger>
+      NavigationMenuContent: React.ComponentProps<typeof NavigationMenuPrimitive.Content>
+      NavigationMenuViewport: React.ComponentProps<typeof NavigationMenuPrimitive.Viewport>
+      NavigationMenuIndicator: React.ComponentProps<typeof NavigationMenuPrimitive.Indicator>
+      NavigationMenuItem: NavigationMenuPrimitive.NavigationMenuItemProps
+      NavigationMenuLink: NavigationMenuPrimitive.NavigationMenuLinkProps
     useFor: >-
       Radix top navigation with dropdown panels.
     intent: [navigate, reveal-on-demand]
@@ -532,6 +680,11 @@ modules:
     seen: [ui-popover]
     overrides: [className, use client]
     customProperties: [--radix-popover-content-transform-origin]
+    accepts:
+      PopoverContent: React.ComponentProps<typeof PopoverPrimitive.Content>
+      Popover: PopoverPrimitive.PopoverProps
+      PopoverTrigger: PopoverPrimitive.PopoverTriggerProps
+      PopoverAnchor: PopoverPrimitive.PopoverAnchorProps
     useFor: >-
       Radix floating panel anchored to a trigger.
     intent: [reveal-on-demand]
@@ -555,6 +708,8 @@ modules:
     polarity: inherits
     seen: [ui-progress]
     overrides: [style, className, use client]
+    accepts:
+      Progress: React.ComponentProps<typeof ProgressPrimitive.Root>
     useFor: >-
       A determinate bar with the brand gradient indicator.
     intent: [show-status, show-a-metric]
@@ -581,6 +736,20 @@ modules:
     seen: [ui-select]
     overrides: [className, use client]
     customProperties: [--radix-select-content-available-height, --radix-select-content-transform-origin, --radix-select-trigger-width]
+    props:
+      SelectTrigger:
+        size: { type: "\"sm\" | \"default\"", default: "\"default\"" }
+    accepts:
+      Select: React.ComponentProps<typeof SelectPrimitive.Root>
+      SelectGroup: React.ComponentProps<typeof SelectPrimitive.Group>
+      SelectValue: React.ComponentProps<typeof SelectPrimitive.Value>
+      SelectTrigger: React.ComponentProps<typeof SelectPrimitive.Trigger>
+      SelectContent: React.ComponentProps<typeof SelectPrimitive.Content>
+      SelectLabel: React.ComponentProps<typeof SelectPrimitive.Label>
+      SelectItem: React.ComponentProps<typeof SelectPrimitive.Item>
+      SelectSeparator: React.ComponentProps<typeof SelectPrimitive.Separator>
+      SelectScrollUpButton: React.ComponentProps<typeof SelectPrimitive.ScrollUpButton>
+      SelectScrollDownButton: React.ComponentProps<typeof SelectPrimitive.ScrollDownButton>
     useFor: >-
       Radix select with the package's two sizes.
     intent: [collect-input]
@@ -604,6 +773,21 @@ modules:
     polarity: inherits
     seen: [ui-settings-field]
     overrides: [className, use client]
+    props:
+      SettingsInput:
+        tone: { type: "SettingsFieldVariantProps[\"tone\"]" }
+      SettingsSelect:
+        size: { type: "\"default\" | \"sm\"", default: "\"default\"" }
+        tone: { type: "\"default\" | \"muted\"" }
+      SettingsSwitch:
+        label: { type: string }
+        labelPosition: { type: "\"left\" | \"right\"", default: "\"left\"" }
+        labelClassName: { type: string }
+        description: { type: string }
+    accepts:
+      SettingsInput: "React.ComponentProps<typeof Input> & Pick<SettingsFieldVariantProps, \"validation\" | \"mono\">"
+      SettingsSelect: "Omit<React.ComponentProps<\"select\">, \"size\">"
+      SettingsSwitch: React.ComponentProps<typeof Switch>
     useFor: >-
       The workspace form row: label, control, description, in one component.
     intent: [collect-input]
@@ -630,6 +814,13 @@ modules:
     polarity: inherits
     seen: [ui-sheet]
     overrides: [className, use client]
+    accepts:
+      SheetContent: SheetContentProps
+      SheetHeader: "React.ComponentProps<\"div\">"
+      SheetTitle: React.ComponentProps<typeof DialogPrimitive.Title>
+      Sheet: DialogPrimitive.DialogProps
+      SheetTrigger: DialogPrimitive.DialogTriggerProps
+      SheetClose: DialogPrimitive.DialogCloseProps
     useFor: >-
       A side panel that slides in from an edge.
     intent: [reveal-on-demand, navigate]
@@ -652,6 +843,8 @@ modules:
     polarity: inherits
     seen: [ui-skeleton]
     overrides: [className]
+    accepts:
+      Skeleton: React.HTMLAttributes<HTMLDivElement>
     useFor: >-
       A loading placeholder block.
     intent: [show-status]
@@ -676,6 +869,8 @@ modules:
     polarity: inherits
     seen: [ui-slider]
     overrides: [className, use client]
+    accepts:
+      Slider: React.ComponentProps<typeof SliderPrimitive.Root>
     useFor: >-
       Radix range control.
     intent: [collect-input]
@@ -698,6 +893,8 @@ modules:
     polarity: inherits
     seen: []
     overrides: [use client]
+    accepts:
+      Toaster: ToasterProps
     useFor: >-
       The toast host. Mount once, near the root.
     intent: [interrupt-the-reader, show-status]
@@ -722,6 +919,8 @@ modules:
     polarity: inherits
     seen: [ui-switch]
     overrides: [className, use client]
+    accepts:
+      Switch: React.ComponentProps<typeof SwitchPrimitives.Root>
     useFor: >-
       The instant on/off control.
     intent: [collect-input]
@@ -744,6 +943,15 @@ modules:
     polarity: inherits
     seen: [ui-table]
     overrides: [className]
+    accepts:
+      Table: "React.ComponentProps<\"table\">"
+      TableHeader: "React.ComponentProps<\"thead\">"
+      TableBody: "React.ComponentProps<\"tbody\">"
+      TableFooter: "React.ComponentProps<\"tfoot\">"
+      TableRow: "React.ComponentProps<\"tr\">"
+      TableHead: "React.ComponentProps<\"th\">"
+      TableCell: "React.ComponentProps<\"td\">"
+      TableCaption: "React.ComponentProps<\"caption\">"
     useFor: >-
       The semantic product table.
     intent: [tabulate-data]
@@ -770,6 +978,11 @@ modules:
     polarity: inherits
     seen: [ui-tabs]
     overrides: [className, use client]
+    accepts:
+      TabsList: React.ComponentProps<typeof TabsPrimitive.List>
+      TabsTrigger: React.ComponentProps<typeof TabsPrimitive.Trigger>
+      TabsContent: React.ComponentProps<typeof TabsPrimitive.Content>
+      Tabs: TabsPrimitive.TabsProps
     useFor: >-
       Mutually exclusive views, as a segmented control.
     intent: [navigate, reveal-on-demand]
@@ -794,6 +1007,8 @@ modules:
     polarity: inherits
     seen: [ui-textarea]
     overrides: [className]
+    accepts:
+      Textarea: "React.ComponentProps<\"textarea\">"
     useFor: >-
       The multi-line field.
     intent: [collect-input]
@@ -817,6 +1032,11 @@ modules:
     polarity: inherits
     seen: [ui-tooltip]
     overrides: [className, use client]
+    accepts:
+      TooltipContent: React.ComponentProps<typeof TooltipPrimitive.Content>
+      TooltipProvider: TooltipPrimitive.TooltipProviderProps
+      Tooltip: TooltipPrimitive.TooltipProps
+      TooltipTrigger: TooltipPrimitive.TooltipTriggerProps
     useFor: >-
       A one-line label on hover or focus.
     intent: [reveal-on-demand]
@@ -950,6 +1170,7 @@ modules:
     customProperties: [--font-size-pill, --font-tracking-eyebrow, --font-size-marketing-hero, --font-size-marketing-xxl, --font-size-marketing-xl, --font-line-height-tight, --font-size-card-title]
     props:
       Eyebrow:
+        onLight: { type: boolean, default: "false" }
         children: { type: React.ReactNode, required: true }
       DisplayHeading:
         size: { type: "'hero' | 'page' | 'section'", default: "'page'" }
@@ -1010,7 +1231,7 @@ modules:
     import: "@skene/design-system/patterns/pill-nav-frosted"
     exports: [PILL_NAV_FROSTED_STYLE, PILL_NAV_POSITION]
     polarity: inherits
-    seen: []
+    seen: [pattern-pill-nav-frosted]
     useFor: >-
       The two constants PillNav and its drawer share: the frosted wash that
       keeps links legible over arbitrary photography, and the absolute and
@@ -1037,7 +1258,7 @@ modules:
     client: true
     composes: [same-layer/pill-nav-frosted]
     polarity: inherits
-    seen: []
+    seen: [pattern-pill-nav-mobile-menu]
     overrides: [className, use client]
     props:
       PillNavMobileMenuToggle:
@@ -1094,6 +1315,11 @@ modules:
         actions: { type: React.ReactNode }
         position: { type: "'absolute' | 'sticky'", default: "'absolute'" }
         children: { type: React.ReactNode, required: true }
+      PillNavLink:
+        href: { type: string }
+        children: { type: React.ReactNode, required: true }
+        active: { type: boolean, default: "false" }
+        asChild: { type: boolean, default: "false" }
     useFor: >-
       The marketing site's top navigation: a frosted pill floating over hero
       media, with a full-screen drawer below md so a phone gets the links
@@ -1759,7 +1985,7 @@ modules:
     client: true
     composes: [lib/use-container-scale]
     polarity: inherits
-    seen: []
+    seen: [section-card-animation-integrations, section-card-animation-integrations-last]
     overrides: [style, className, use client]
     customProperties: [--cursor]
     props:
@@ -2022,7 +2248,7 @@ modules:
     import: "@skene/design-system/sections/code"
     exports: [Code, PROSE_CODE]
     polarity: applies-both
-    seen: []
+    seen: [section-code]
     overrides: [className]
     customProperties: [--font-size-body]
     props:
@@ -3194,7 +3420,7 @@ modules:
     exports: [IntegrationsHighlight]
     composes: [same-layer/card-animation-integrations, same-layer/light-section-card]
     polarity: inherits
-    seen: []
+    seen: [section-integrations-highlight]
     overrides: [className]
     props:
       IntegrationsHighlight:
@@ -3228,7 +3454,7 @@ modules:
     exports: [JourneySignalScene]
     client: true
     polarity: inherits
-    seen: []
+    seen: [section-journey-signal-scene, section-journey-signal-scene-medium]
     overrides: [use client]
     customProperties: [--font-primary, --font-geist-sans, --font-mono, --font-geist-mono, --font-size-xs, --font-size-base, --line-height-relaxed, --radius-xs]
     useFor: >-
@@ -3645,7 +3871,7 @@ modules:
     import: "@skene/design-system/sections/logo-row"
     exports: [LogoSlot, LogoRow]
     polarity: inherits
-    seen: []
+    seen: [section-logo-row]
     overrides: [style, className]
     customProperties: [--radius-md, --logo-row-count]
     props:
@@ -4621,7 +4847,7 @@ modules:
     exports: [SurfaceCards]
     composes: [same-layer/glyph-badge]
     polarity: applies-both
-    seen: []
+    seen: [section-surface-cards]
     overrides: [style, className]
     customProperties: [--font-size-body, --font-size-ui, --font-size-body-sm]
     props:
@@ -4761,7 +4987,7 @@ modules:
     import: "@skene/design-system/sections/team-card"
     exports: [TeamCard, TeamGrid]
     polarity: inherits
-    seen: []
+    seen: [section-team-card]
     overrides: [className]
     customProperties: [--radius-lg, --radius-md]
     props:
@@ -4844,6 +5070,7 @@ modules:
         display: { type: React.ReactNode }
         prompt: { type: React.ReactNode }
         copyable: { type: boolean }
+        wrap: { type: boolean }
     useFor: >-
       The install block: a terminal frame holding one or more shell lines,
       each with its own copy button.

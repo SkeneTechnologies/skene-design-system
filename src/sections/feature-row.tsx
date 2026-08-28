@@ -294,7 +294,25 @@ export function FeatureRow({
         )}
       >
         {n ? (
-          <span className="absolute right-6 top-[22px] font-mono text-[11px] text-chrome-text-muted-warm">
+          // `aria-hidden`, unconditionally, and it is not a preference.
+          //
+          // The numeral is furniture: it is positioned into the corner rather
+          // than into the reading flow, the heading beside it already carries
+          // the whole accessible name, and an ordinal read aloud before every
+          // heading is noise. `NumberedStep`'s numeral has always done this
+          // (`patterns/marketing.tsx`); this one did not, and nothing on it is
+          // reachable from a call site — no prop touches `n`'s element — so a
+          // consumer could not fix it either. Measured live from the
+          // accessibility tree on skene-marketing-website: `/` exposed a bare
+          // "01" and "03" StaticText from two FeatureRow benefits while the
+          // hand-rolled "02" between them was correctly silent.
+          //
+          // Not a prop, because there is no case for the other setting: a
+          // numeral that carries meaning of its own is not this element.
+          <span
+            aria-hidden="true"
+            className="absolute right-6 top-[22px] font-mono text-[11px] text-chrome-text-muted-warm"
+          >
             {n}
           </span>
         ) : null}

@@ -127,6 +127,12 @@ describe('what the skills quote is true', () => {
     ).length
     expect(unproven, 'no module is unproven — the gate has nothing to check').toBeGreaterThan(0)
     const spelled = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'][unproven]
+    // `modules? (are|is)`: the count reached 1 on 2026-08-28, and this was
+    // written when it could only be plural. The sentence still has to carry the
+    // real number in words — that is the whole gate — but it should not have to
+    // be ungrammatical to satisfy the assertion. Widening the match is the
+    // right way round; rewording the docs to "one modules are" is not.
+    const claim = new RegExp(`${spelled} modules? (are|is) in that state`)
     for (const [name, src] of [
       ['skills/skene-design-system/SKILL.md', skills.find((s) => s.name === 'skene-design-system')!.src],
       ['AGENTS.md', read('AGENTS.md')],
@@ -134,7 +140,7 @@ describe('what the skills quote is true', () => {
       expect(
         src.toLowerCase(),
         `${name} does not state the real unproven-module count of ${unproven}`,
-      ).toContain(`${spelled} modules are in that state`)
+      ).toMatch(claim)
     }
   })
 

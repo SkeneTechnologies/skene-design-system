@@ -10,8 +10,11 @@
  * `machine/components.yaml` answers "what must I not do with this" — its `rules`
  * are prohibitions, and they are correct. Nothing shipped answers "what else is
  * this good for". The two files that did — `scripts/usage-data.json` and the
- * generated `inventory.json` — are both outside `package.json` `files`, so a
- * consuming agent has never seen either. What it does see is the file-header
+ * generated `inventory.json` — were both outside `package.json` `files`, so a
+ * consuming agent had never seen either. (`inventory.json` ships as of
+ * 2026-08-27, exported as `@skene/design-system/inventory.json`; it is what
+ * turns a `seen:` case id into something a reader can actually look at.)
+ * What it does see is the file-header
  * comment, which says what the component was BUILT for. That framing is exactly
  * what makes a reader write a near-copy instead of reusing what is there, and
  * the twenty duplicate clusters in this package are the receipt.
@@ -131,10 +134,13 @@ export function propsOf(src) {
   for (const m of src.matchAll(/export interface (\w+)Props \{([\s\S]*?)\n\}/g)) {
     const owner = m[1]
     const fields = {}
-    for (const f of m[2].matchAll(/^ {2}(\w+)(\??):\s*([^\n]+?),?$/gm)) {
+    // `[,;]?` not `,?`: our own interfaces separate members with commas, the
+    // vendored shadcn ones with semicolons, and stripping only the comma is how
+    // `ui/card`'s `variant` derived as `CardVariant;`.
+    for (const f of m[2].matchAll(/^ {2}(\w+)(\??):\s*([^\n]+?)[,;]?$/gm)) {
       const [, name, optional, type] = f
       if (name === 'className') continue
-      fields[name] = { type: type.trim().replace(/,$/, ''), required: optional !== '?' }
+      fields[name] = { type: type.trim().replace(/[,;]$/, ''), required: optional !== '?' }
     }
     // Defaults live in the destructuring, not the interface.
     const sig = src.match(
@@ -148,6 +154,227 @@ export function propsOf(src) {
     if (Object.keys(fields).length) out[owner] = fields
   }
   return out
+}
+
+/**
+ * The prop table for a module that declares no `XProps` interface of its own.
+ *
+ * ## Why this exists
+ *
+ * `propsOf` reads `export interface <Owner>Props { … }` out of the source,
+ * which is how every `sections/*` and `patterns/*` module is written. The
+ * `ui/*` layer is shadcn and is written the other way round: the parameter type
+ * is inline and structural — `React.ComponentProps<"button">`,
+ * `React.ComponentProps<typeof AccordionPrimitive.Item>`, a `VariantProps<…>`
+ * intersection — so `propsOf` found nothing and all 30 `ui/*` modules shipped a
+ * context entry with no prop signature at all. That is the layer `rules.yaml`
+ * `priority_order` tells an agent to reach for FIRST, so the one layer with the
+ * strongest "use this" instruction was the one with the least information about
+ * how to call it, and a reader had to open `dist/*.d.ts` by hand or guess.
+ *
+ * ## Why `dist/*.d.ts` and not the source
+ *
+ * The source hides the two facts that matter behind indirection: a cva variant
+ * table is a runtime object, and `React.ComponentProps<typeof X>` is a type
+ * TypeScript has to resolve. `tsc` has already done both by the time it writes
+ * the `.d.ts`, which is where a `variant` union appears as the literal string
+ * of its members. `dist/` is committed and shipped, so this adds no build-order
+ * dependency that a consumer could miss — but it does mean `npm run context`
+ * must run AFTER `tsc`, which is why the `build` script was reordered.
+ *
+ * ## What comes out
+ *
+ * `props` in exactly the shape `propsOf` produces, so nothing downstream needs
+ * a second parser: the module's OWN fields (a declared `XProps` body, an inline
+ * `& { … }`, or a cva variant table) with types and, where the source
+ * destructuring or a `defaultVariants` block states one, defaults.
+ * `accepts` is emitted beside it and is the other half of the answer: the base
+ * type each export spreads onto its element, which is what tells a caller that
+ * `onClick`, `id` and `aria-*` reach the DOM without being declared anywhere.
+ */
+const DIST = resolve(ROOT, 'dist')
+
+const stripNullish = (t) =>
+  t.replace(/\s*\|\s*null\s*\|\s*undefined\s*$/, '').replace(/\s*\|\s*undefined\s*$/, '').trim()
+
+const oneLine = (t) => t.replace(/\s+/g, ' ').trim()
+
+/**
+ * Split `A, Pick<B, "x" | "y">, C` on the commas that separate types, not the
+ * ones inside a type argument list. `String.split(',')` shreds every `Pick<…>`
+ * and `Omit<…>` in the package.
+ */
+function splitTopLevel(clause) {
+  const out = []
+  let depth = 0
+  let buf = ''
+  for (const ch of clause) {
+    if (ch === '<' || ch === '(' || ch === '[' || ch === '{') depth++
+    else if (ch === '>' || ch === ')' || ch === ']' || ch === '}') depth--
+    if (ch === ',' && depth === 0) {
+      out.push(buf)
+      buf = ''
+      continue
+    }
+    buf += ch
+  }
+  if (buf.trim()) out.push(buf)
+  return out.map((t) => t.trim()).filter(Boolean)
+}
+
+/** `{ a?: T; b: U }` body -> field map. Shared by the interface and inline paths. */
+function fieldsOfBody(body) {
+  const fields = {}
+  for (const f of body.matchAll(/^\s*(\w+)(\??):\s*([^\n]+?);?\s*$/gm)) {
+    const [, name, optional, type] = f
+    if (name === 'className') continue
+    fields[name] = { type: stripNullish(oneLine(type)), required: optional !== '?' }
+  }
+  return fields
+}
+
+/**
+ * cva variant tables, as `tsc` widened them.
+ *
+ * `declare const buttonVariants: (props?: ({ variant?: "link" | "default" … })`
+ * is the only place the allowed values of `variant` and `size` are written down
+ * as data. Reading the source instead would mean evaluating the cva call.
+ */
+export function cvaVariantsOfDts(dts) {
+  const out = {}
+  for (const m of dts.matchAll(/declare const (\w+):\s*\(props\?:\s*\(\{([\s\S]*?)\n\}\s*&/g)) {
+    out[m[1]] = fieldsOfBody(m[2])
+  }
+  return out
+}
+
+/** `export interface XProps extends A, B { … }` -> its own body and its bases. */
+function interfacesOfDts(dts) {
+  const out = {}
+  for (const m of dts.matchAll(/export interface (\w+)((?:\s+extends\s+[^{]+)?)\s*\{([\s\S]*?)\n\}/g)) {
+    out[m[1]] = { extends: oneLine(m[2].replace(/^\s*extends\s+/, '')), fields: fieldsOfBody(m[3]) }
+  }
+  return out
+}
+
+/**
+ * Every exported component in a `.d.ts`, with the type expression it takes.
+ *
+ * Three declaration shapes ship here and all three are load-bearing:
+ * `declare function X({ … }: T)` (most of shadcn), `declare const X: React.FC<T>`
+ * and `declare const X: React.ForwardRefExoticComponent<T & React.RefAttributes<E>>`
+ * (the Radix roots and triggers that are re-exported untouched). A cva builder
+ * matches none of them, which is what keeps `buttonVariants` out of the table:
+ * it returns a class string and is not a component.
+ */
+function componentsOfDts(dts) {
+  const out = []
+  const JSX = String.raw`(?:React\.|import\("react"\)\.)?JSX\.Element`
+  for (const m of dts.matchAll(new RegExp(String.raw`declare function (\w+)\(\{([^}]*)\}:\s*([\s\S]*?)\):\s*${JSX}`, 'g'))) {
+    out.push({ name: m[1], destructured: m[2], type: oneLine(m[3]) })
+  }
+  for (const m of dts.matchAll(new RegExp(String.raw`declare const (\w+):\s*\(\{([^}]*)\}:\s*([\s\S]*?)\)\s*=>\s*${JSX}`, 'g'))) {
+    out.push({ name: m[1], destructured: m[2], type: oneLine(m[3]) })
+  }
+  for (const m of dts.matchAll(/declare const (\w+):\s*(?:React\.|import\("react"\)\.)?(FC|ForwardRefExoticComponent)<([\s\S]*?)>;/g)) {
+    out.push({ name: m[1], destructured: '', type: oneLine(m[3]) })
+  }
+  return out
+}
+
+/** `React.RefAttributes<…>` is noise in an answer about props. */
+const dropRefAttributes = (t) =>
+  oneLine(t.replace(/\s*&\s*(?:React\.|import\("react"\)\.)?RefAttributes<[^>]*>/g, ''))
+
+/**
+ * Defaults, which live in the implementation and never in the `.d.ts`.
+ *
+ * Two sources, and both are needed: `asChild = false` in the destructuring, and
+ * the `defaultVariants` block of the cva call, which is what makes
+ * `variant="default"` true without any caller writing it.
+ */
+function defaultsOfSource(src, name) {
+  const out = {}
+  const sig = src.match(new RegExp(String.raw`function ${name}\(\{([\s\S]*?)\}\s*:`))
+  if (sig) for (const d of sig[1].matchAll(/(\w+)\s*=\s*([^,\n]+)/g)) out[d[1]] = d[2].trim()
+  return out
+}
+
+function cvaDefaultsOfSource(src, builder) {
+  const at = src.indexOf(`const ${builder} = cva(`)
+  if (at === -1) return {}
+  const next = src.indexOf('= cva(', at + 6)
+  const scope = src.slice(at, next === -1 ? undefined : next)
+  const block = scope.match(/defaultVariants:\s*\{([^}]*)\}/)
+  if (!block) return {}
+  const out = {}
+  for (const d of block[1].matchAll(/(\w+):\s*"?([\w-]+)"?/g)) out[d[1]] = d[2]
+  return out
+}
+
+/**
+ * The whole fallback: props and `accepts` for one module, from its shipped
+ * types. Returns empty objects when there is no `.d.ts`, which is the honest
+ * answer for a module `tsc` has not emitted yet.
+ */
+export function dtsContractOf(layer, module, src) {
+  let dts
+  try {
+    dts = readFileSync(resolve(DIST, layer, `${module}.d.ts`), 'utf8')
+  } catch {
+    return { props: {}, accepts: {} }
+  }
+  const cva = cvaVariantsOfDts(dts)
+  const ifaces = interfacesOfDts(dts)
+  const props = {}
+  const accepts = {}
+
+  for (const c of componentsOfDts(dts)) {
+    const fields = {}
+    const bases = []
+    // The parameter type is an intersection; each arm is either the module's
+    // own shape (a declared interface, an inline object, a variant table) or a
+    // base the component spreads. An interface arm is resolved rather than
+    // recorded: `ButtonProps extends React.ButtonHTMLAttributes<…>,
+    // VariantProps<typeof buttonVariants>` carries the variant table one level
+    // down, and stopping at the interface name is how `variant` and `size` —
+    // the two props anybody actually needs to look up — went missing on the
+    // first pass. Hence a worklist, with a seen-set so a self-referential
+    // extends cannot spin.
+    const work = dropRefAttributes(c.type).split(/\s&\s/)
+    const done = new Set()
+    while (work.length) {
+      const arm = work.shift().trim()
+      if (!arm || done.has(arm)) continue
+      done.add(arm)
+      const iface = ifaces[arm] ?? ifaces[arm.replace(/^(?:Omit|Pick)<\s*/, '').replace(/\s*,[\s\S]*$/, '')]
+      if (iface) {
+        Object.assign(fields, iface.fields)
+        // Top-level commas only: `Pick<A, "x" | "y">` must stay one arm.
+        if (iface.extends) work.push(...splitTopLevel(iface.extends))
+        continue
+      }
+      const variantOf = arm.match(/^VariantProps<typeof (\w+)>$/)
+      if (variantOf && cva[variantOf[1]]) {
+        Object.assign(fields, cva[variantOf[1]])
+        for (const [k, v] of Object.entries(cvaDefaultsOfSource(src, variantOf[1]))) {
+          if (fields[k]) fields[k].default = v
+        }
+        continue
+      }
+      if (arm.startsWith('{')) {
+        Object.assign(fields, fieldsOfBody(arm.replace(/^\{|\}$/g, '').replace(/;\s*/g, ';\n')))
+        continue
+      }
+      bases.push(arm)
+    }
+    for (const [k, v] of Object.entries(defaultsOfSource(src, c.name))) {
+      if (fields[k]) fields[k].default = v
+    }
+    if (Object.keys(fields).length) props[c.name] = fields
+    if (bases.length) accepts[c.name] = bases.join(' & ')
+  }
+  return { props, accepts }
 }
 
 /**
@@ -221,6 +448,21 @@ const EXPLICIT = {
   // omitted, the -eyebrow one exercises it.
   'sections/trust-panel': ['section-trust-panel', 'section-trust-panel-eyebrow'],
   'sections/final-cta': ['section-final-cta', 'section-final-cta-eyebrow'],
+  // Two cases each, at two states, because one frame proves one state.
+  // `card-animation-integrations` cycles four details on a GSAP loop, so the
+  // pair is captured at two playheads — 2.5s and 9.5s — and either frame alone
+  // would let a component that never swapped pass. `journey-signal-scene` picks
+  // one of three hand-placed layouts by measuring its container and carries a
+  // GTM/Engineering toggle, so the pair holds WIDE+GTM and MEDIUM+Engineering;
+  // the `-medium` one is where every defect filed against it shows.
+  'sections/card-animation-integrations': [
+    'section-card-animation-integrations',
+    'section-card-animation-integrations-last',
+  ],
+  'sections/journey-signal-scene': [
+    'section-journey-signal-scene',
+    'section-journey-signal-scene-medium',
+  ],
 }
 export function seenOf(layer, singular, module) {
   const explicit = EXPLICIT[`${layer}/${module}`]
@@ -237,6 +479,29 @@ export function derive() {
       if (!file.endsWith('.tsx') && !file.endsWith('.ts')) continue
       const module = file.replace(/\.tsx?$/, '')
       const src = readFileSync(resolve(ROOT, dir, file), 'utf8')
+      // `ui/*` is read from `dist/*.d.ts` unconditionally, the other two layers
+      // from their own source with the `.d.ts` as the fallback.
+      //
+      // Not a preference — `propsOf` is wrong on shadcn source and right on
+      // ours, because the two are written in different dialects. Our interfaces
+      // separate members with `,` and shadcn's with `;`, and `propsOf`'s field
+      // pattern only strips the comma: `ui/card`'s `variant` derived as the
+      // type `CardVariant;`, semicolon included, and every consumer looking it
+      // up got a type that does not exist. That is also why nine `ui/*` modules
+      // looked covered — they declare an `XProps` interface, so `propsOf`
+      // matched and produced a table with the wrong types in it and no
+      // defaults, while the other 21 produced nothing at all.
+      //
+      // The `.d.ts` has neither problem: `tsc` has already resolved
+      // `VariantProps<…>` into its literal union and normalised the members, so
+      // one path covers all 30. `propsOf`'s comma-only strip is fixed below
+      // regardless, because a latent parser bug is not a thing to leave in
+      // place because nothing currently reaches it.
+      const ownProps = propsOf(src)
+      const fromDts =
+        layer !== 'ui' && Object.keys(ownProps).length
+          ? { props: ownProps, accepts: {} }
+          : dtsContractOf(layer, module, src)
       out.push({
         key: `${layer}/${module}`,
         layer,
@@ -248,7 +513,8 @@ export function derive() {
         polarity: polarityOf(src),
         seen: seenOf(layer, singular, module),
         overrides: mechanismsOf(src),
-        props: propsOf(src),
+        props: fromDts.props,
+        accepts: fromDts.accepts,
         types: typesOf(src),
       })
     }
@@ -329,6 +595,12 @@ function emit(entry, authored) {
     }
   }
 
+  const acceptOwners = Object.keys(entry.accepts ?? {})
+  if (acceptOwners.length) {
+    p(`    accepts:`)
+    for (const owner of acceptOwners) p(`      ${owner}: ${scalar(entry.accepts[owner])}`)
+  }
+
   const typeNames = Object.keys(entry.types)
   if (typeNames.length) {
     p(`    types:`)
@@ -406,7 +678,11 @@ export function render(entries, data) {
 #   Whether the module puts a theme class on its own root. A light surface on a
 #   dark page needs one, and a missing one renders cream on cream.
 # seen: gallery case ids under docs-app /components. An empty list means nothing
-#   in this repository has ever rendered it — treat its claims as unproven.
+#   in this repository has ever rendered it — treat its claims as unproven. The
+#   ids resolve in the shipped \`@skene/design-system/inventory.json\`, which
+#   carries every module's cases, exports and line count beside the ten resolved
+#   design decisions. Until 2026-08-27 that file sat outside \`files\`, so a
+#   \`seen:\` entry was a pointer a consuming agent could not follow.
 # overrides: what a caller can reach from outside. style means the module writes
 #   at least one inline style, which beats any class you pass; className means
 #   the root merges yours through cn; use client means it carries the directive.
@@ -415,6 +691,16 @@ export function render(entries, data) {
 #   \"I need a band that contrasts two options, what do I have?\". Grep the
 #   \`intents:\` vocabulary below for the job, then grep this file for the tag.
 #   Tags are a closed set: only what \`intents:\` declares can appear.
+# props: the module's OWN fields, per export. Read from an \`export interface
+#   <Owner>Props\` in the source where one exists, and otherwise from the
+#   shipped \`dist/<layer>/<module>.d.ts\` — which is how the whole \`ui/*\`
+#   layer is covered, since shadcn declares its parameter types inline.
+#   Defaults come from the implementation: a destructuring default, or a cva
+#   \`defaultVariants\` block.
+# accepts: the base type each export spreads onto its element. It is why
+#   \`onClick\`, \`id\` and \`aria-*\` work on a module that declares none of
+#   them, and it is the difference between "this takes three props" and "this
+#   takes three props and everything a <button> takes".
 
 version: "1.0.0"
 counts: { modules: ${entries.length}, ui: ${counts.ui ?? 0}, patterns: ${counts.patterns ?? 0}, sections: ${counts.sections ?? 0}, authored: ${written}, assets: ${deriveAssets().length}, intents: ${Object.keys(data.intents ?? {}).length} }

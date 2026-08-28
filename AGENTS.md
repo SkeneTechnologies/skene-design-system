@@ -182,7 +182,12 @@ Four fields per entry earn the read:
   dark values against a light fill, which has shipped text at 1.08:1.
 - **`seen`** — the gallery cases that have ever rendered it. **An empty list
   means nothing in this repository has ever rendered the module, so treat its
-  claims as unproven.** Ten modules are in that state today.
+  claims as unproven.** ONE module is in that state today and it is
+  meant to be: `ui/sonner`, a toast host that renders nothing until something
+  calls it, so it has no resting state to snapshot. Every other module in the
+  package has been rendered on `/components` and has a light and a dark baseline
+  behind it. Two of them hold a state that is known to be WRONG and say so in
+  the case — see `docs/sections.md`.
 - **`overrides`** — what a caller can reach from outside. `style` means the
   module writes an inline style that beats any class you pass.
 

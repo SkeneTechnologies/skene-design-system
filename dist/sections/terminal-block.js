@@ -145,7 +145,13 @@ export function TerminalBlock({ lines, title, note, copyLabel = 'copy', copiedLa
                     const cmdId = `${uid}-cmd-${i}`;
                     const labelId = `${uid}-label-${i}`;
                     const prompt = line.prompt === undefined ? '$' : line.prompt;
-                    return (_jsxs("div", { className: "flex min-w-0 items-center gap-[12px] py-[8px]", children: [prompt ? (_jsx("span", { "aria-hidden": true, className: "shrink-0 select-none text-semantic-matcha", children: prompt })) : null, _jsx("span", { id: cmdId, className: "min-w-0 flex-1 overflow-x-auto whitespace-nowrap", children: line.display ?? line.command }), line.copyable === false ? null : (_jsx(Button, { type: "button", variant: "outline", size: "sm", onClick: () => void copy(line.command, i), "aria-labelledby": `${labelId} ${cmdId}`, className: cn(
+                    return (_jsxs("div", { className: "flex min-w-0 items-center gap-[12px] py-[8px]", children: [prompt ? (_jsx("span", { "aria-hidden": true, className: "shrink-0 select-none text-semantic-matcha", children: prompt })) : null, _jsx("span", { id: cmdId, className: cn('min-w-0 flex-1', line.wrap
+                                    ? // `pl-[16px]` with `text-indent:-16px` is a hanging
+                                        // indent: the first row starts flush beside the prompt
+                                        // and every continuation row sits 16px in, so a wrapped
+                                        // command reads as one command and not as two lines.
+                                        'whitespace-normal [overflow-wrap:anywhere] pl-[16px] [text-indent:-16px]'
+                                    : 'overflow-x-auto whitespace-nowrap'), children: line.display ?? line.command }), line.copyable === false ? null : (_jsx(Button, { type: "button", variant: "outline", size: "sm", onClick: () => void copy(line.command, i), "aria-labelledby": `${labelId} ${cmdId}`, className: cn(
                                 // 24px is the WCAG 2.2 2.5.8 target floor, which is what the
                                 // prototype's comment on this height is recording.
                                 'h-[24px] shrink-0 px-[8px] font-mono text-[11px] font-normal duration-200 ease-out', 
