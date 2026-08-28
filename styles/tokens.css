@@ -20,10 +20,13 @@
 
 :root {
   /* @generated:tokens-start */
-  /* color (94) */
+  /* color (114) */
   --color-brand-bronze: #8c6b47;
   --color-brand-gold: #e8c260;
   --color-brand-light: #faf1e9;
+  --color-brand-peach-light: #fdd4aa;
+  --color-brand-cream-dim: #ecdccf;
+  --color-brand-bronze-deep: #5a4532;
   --color-brand-peach-deep: #f97316;
   --color-accent-violet: #c9a2dd;
   --color-accent-blue: #9bbbd5;
@@ -37,6 +40,14 @@
   --color-chrome-surface-deep-2: #0b0b0b;
   --color-chrome-surface-elevated: #2c2c2c;
   --color-chrome-surface-border: #363636;
+  --color-chrome-surface-overlay: #0f0f0f;
+  --color-chrome-surface-hover-subtle: #111111;
+  --color-chrome-surface-band: #161616;
+  --color-chrome-surface-card: #1c1c1c;
+  --color-chrome-surface-hairline: #1f1f1f;
+  --color-chrome-surface-divider: #232323;
+  --color-chrome-surface-row: #252525;
+  --color-chrome-surface-hover-strong: #525252;
   --color-chrome-line-subtle: rgba(255, 255, 255, 0.12);
   --color-chrome-line-strong: rgba(255, 255, 255, 0.2);
   --color-chrome-line-on-light: rgba(20, 20, 20, 0.14);
@@ -49,6 +60,8 @@
   --color-chrome-text-gray: #a1a1a1;
   --color-chrome-text-gray-light: #c8cdd3;
   --color-chrome-text-gold-soft: #d4b050;
+  --color-chrome-text-gray-cool: #9ca3af;
+  --color-chrome-text-caption: #737373;
   --color-text-gold-soft: #d4b050;
   --color-semantic-matcha-deep: #1a3300;
   --color-semantic-destructive: var(--destructive);
@@ -67,6 +80,13 @@
   --color-terminal-chrome-github-dark-surface: #161b22;
   --color-terminal-chrome-github-border: #30363d;
   --color-terminal-chrome-github-text: #c9d1d9;
+  --color-terminal-chrome-github-dark-muted: #8b949e;
+  --color-terminal-chrome-github-dark-raised: #21262d;
+  --color-terminal-chrome-github-dark-accent-fg: #58a6ff;
+  --color-terminal-chrome-github-dark-success-fg: #3fb950;
+  --color-terminal-chrome-github-dark-success-emphasis: #238636;
+  --color-terminal-chrome-github-dark-danger-fg: #f85149;
+  --color-terminal-chrome-github-dark-warning-fg: #e3b341;
   --color-terminal-chrome-vscode-teal: #4ec9b0;
   --color-terminal-chrome-tailwind-emerald: #22c55e;
   --color-terminal-chrome-warm-tan: #ac8b5d;
@@ -450,14 +470,17 @@
   --color-tooltip-border: var(--tooltip-border);
   --color-warning: var(--warning);
 
-  /* color (94) */
+  /* color (114) */
   --color-accent-blue: var(--color-accent-blue);
   --color-accent-violet: var(--color-accent-violet);
   --color-brand-bronze: var(--color-brand-bronze);
+  --color-brand-bronze-deep: var(--color-brand-bronze-deep);
+  --color-brand-cream-dim: var(--color-brand-cream-dim);
   --color-brand-gold: var(--color-brand-gold);
   --color-brand-light: var(--color-brand-light);
   --color-brand-peach: var(--color-brand-peach);
   --color-brand-peach-deep: var(--color-brand-peach-deep);
+  --color-brand-peach-light: var(--color-brand-peach-light);
   --color-brand-peach-text: var(--color-brand-peach-text);
   --color-chrome-line-on-light: var(--color-chrome-line-on-light);
   --color-chrome-line-strong: var(--color-chrome-line-strong);
@@ -466,14 +489,24 @@
   --color-chrome-surface-1: var(--color-chrome-surface-1);
   --color-chrome-surface-2: var(--color-chrome-surface-2);
   --color-chrome-surface-3: var(--color-chrome-surface-3);
+  --color-chrome-surface-band: var(--color-chrome-surface-band);
   --color-chrome-surface-border: var(--color-chrome-surface-border);
+  --color-chrome-surface-card: var(--color-chrome-surface-card);
   --color-chrome-surface-darker: var(--color-chrome-surface-darker);
   --color-chrome-surface-deep: var(--color-chrome-surface-deep);
   --color-chrome-surface-deep-2: var(--color-chrome-surface-deep-2);
+  --color-chrome-surface-divider: var(--color-chrome-surface-divider);
   --color-chrome-surface-elevated: var(--color-chrome-surface-elevated);
+  --color-chrome-surface-hairline: var(--color-chrome-surface-hairline);
+  --color-chrome-surface-hover-strong: var(--color-chrome-surface-hover-strong);
+  --color-chrome-surface-hover-subtle: var(--color-chrome-surface-hover-subtle);
   --color-chrome-surface-mid-gray: var(--color-chrome-surface-mid-gray);
+  --color-chrome-surface-overlay: var(--color-chrome-surface-overlay);
+  --color-chrome-surface-row: var(--color-chrome-surface-row);
+  --color-chrome-text-caption: var(--color-chrome-text-caption);
   --color-chrome-text-gold-soft: var(--color-chrome-text-gold-soft);
   --color-chrome-text-gray: var(--color-chrome-text-gray);
+  --color-chrome-text-gray-cool: var(--color-chrome-text-gray-cool);
   --color-chrome-text-gray-light: var(--color-chrome-text-gray-light);
   --color-chrome-text-muted: var(--color-chrome-text-muted);
   --color-chrome-text-muted-strong: var(--color-chrome-text-muted-strong);
@@ -515,8 +548,15 @@
   --color-terminal-chrome-github-danger-bg: var(--color-terminal-chrome-github-danger-bg);
   --color-terminal-chrome-github-danger-emphasis: var(--color-terminal-chrome-github-danger-emphasis);
   --color-terminal-chrome-github-danger-fg: var(--color-terminal-chrome-github-danger-fg);
+  --color-terminal-chrome-github-dark-accent-fg: var(--color-terminal-chrome-github-dark-accent-fg);
   --color-terminal-chrome-github-dark-bg: var(--color-terminal-chrome-github-dark-bg);
+  --color-terminal-chrome-github-dark-danger-fg: var(--color-terminal-chrome-github-dark-danger-fg);
+  --color-terminal-chrome-github-dark-muted: var(--color-terminal-chrome-github-dark-muted);
+  --color-terminal-chrome-github-dark-raised: var(--color-terminal-chrome-github-dark-raised);
+  --color-terminal-chrome-github-dark-success-emphasis: var(--color-terminal-chrome-github-dark-success-emphasis);
+  --color-terminal-chrome-github-dark-success-fg: var(--color-terminal-chrome-github-dark-success-fg);
   --color-terminal-chrome-github-dark-surface: var(--color-terminal-chrome-github-dark-surface);
+  --color-terminal-chrome-github-dark-warning-fg: var(--color-terminal-chrome-github-dark-warning-fg);
   --color-terminal-chrome-github-light-bg: var(--color-terminal-chrome-github-light-bg);
   --color-terminal-chrome-github-light-border: var(--color-terminal-chrome-github-light-border);
   --color-terminal-chrome-github-light-muted: var(--color-terminal-chrome-github-light-muted);

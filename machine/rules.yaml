@@ -93,7 +93,7 @@ consumers:
       where these tokens and generators were written, and it still holds its
       own copies — 30 files under components/ui/ that share a name with a
       module in src/ui/, and a design-tokens.json at 1.3.0 against the
-      package's 2.7.0. So a change here reaches the dashboard only after a
+      package's 2.8.0. So a change here reaches the dashboard only after a
       migration that has not started; treat its divergence as unmeasured.
   - repo: unidentified auth app
     surface: site
