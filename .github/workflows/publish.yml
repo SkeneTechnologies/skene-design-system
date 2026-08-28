@@ -8,19 +8,27 @@ on:
   # Manual runs exist for two cases. One: the tag pushed fine but the run died
   # on something transient (registry 5xx, runner eviction), and re-pushing a tag
   # to retrigger is not an option because npm refuses to republish a version.
-  # Two: checking the credential without spending a version number.
+  # Two: packing the tarball to see what would ship, without spending a
+  # version number.
   workflow_dispatch:
     inputs:
       dry_run:
-        description: 'Check the credential and pack, but do not publish'
+        description: 'Pack the tarball, but do not publish'
         type: boolean
         default: true
 
 # npmjs is the registry (see .runlog/RUN.md), so nothing here writes to GitHub
-# Packages and no `packages: write` is warranted. Checkout is the only thing
-# that touches this repo, and it only reads.
+# Packages and no `packages: write` is warranted. Checkout only reads.
+#
+# `id-token: write` is the one write scope, and it is what makes this file
+# tokenless. It does not grant write access to anything in GitHub — it lets the
+# job MINT a short-lived OIDC identity token describing itself (this repo, this
+# workflow, this ref), which npm exchanges for publish rights against a trusted
+# publisher configured on the package. The credential lives for the length of
+# one step and cannot be stolen from a secret store, because it is not in one.
 permissions:
   contents: read
+  id-token: write
 
 concurrency:
   group: publish-${{ github.ref }}
@@ -40,12 +48,29 @@ jobs:
         with:
           node-version: 22
           cache: npm
-          # This is what authenticates the publish. setup-node writes the
-          # runner's .npmrc from this URL plus NODE_AUTH_TOKEN at step time.
-          # Never hand-write an .npmrc or echo the token into one: a token in a
-          # file in the workspace is a token that can be committed, printed by a
-          # failing step, or uploaded in an artifact.
+          # Still needed: it points the runner's .npmrc at npmjs, which is what
+          # `npm publish` reads to know where to go. It no longer carries a
+          # NODE_AUTH_TOKEN, because there is no longer a token to carry.
           registry-url: https://registry.npmjs.org
+
+      # Trusted publishing needs npm 11.5.1 or newer, and Node 22 ships npm 10.
+      # Without this the publish fails asking for authentication, which reads
+      # like a permissions problem and is not one.
+      - name: npm new enough for trusted publishing
+        run: |
+          npm install -g npm@latest
+          have=$(npm --version)
+          echo "npm $have"
+          # Asserted rather than assumed: `npm@latest` resolving to something
+          # older than the floor would otherwise surface as an auth error at
+          # the worst moment. Compared with sort -V rather than the semver
+          # package, because this step runs BEFORE `npm ci` and there is no
+          # dependency tree to require anything out of yet.
+          if [ "$(printf '%s\n%s\n' 11.5.1 "$have" | sort -V | head -1)" != "11.5.1" ]; then
+            echo "::error::npm $have is older than 11.5.1; trusted publishing needs 11.5.1+"
+            exit 1
+          fi
+
       - run: npm ci --no-audit --no-fund
 
       # Four separate incidents in this repo have been a version string that
@@ -71,58 +96,18 @@ jobs:
         if: github.ref_type != 'tag'
         run: echo "::warning::Manual run — publishing package.json's version unchecked against any tag."
 
-      # Always, before anything that could spend a version number. A missing or
-      # revoked NPM_TOKEN is otherwise discovered by `npm publish` — after
-      # prepublishOnly has run the full verify, and on the one commit where a
-      # failure is most expensive to diagnose.
+      # NO CREDENTIAL CHECK, deliberately, and its absence is the point.
       #
-      # Read what this proves and what it does not. `whoami` proves the token
-      # authenticates and names the account it belongs to. It does NOT prove
-      # that account may publish `@skene/*`: for a scope with nothing in it yet,
-      # nothing does, short of the first publish. So a green check here plus a
-      # 402/403 on the first real publish means the token is fine and the
-      # account's rights or plan are not — which is a different fix.
+      # There used to be an `npm whoami` here to catch a dead token before
+      # `prepublishOnly` ran the full verify. Under trusted publishing there is
+      # no credential to check ahead of time: the OIDC token is minted by the
+      # publish itself, so nothing exists to interrogate a step earlier. Its
+      # last incarnation had already been demoted to advisory after it blocked
+      # a release on a 401 that only meant the token could not read /-/whoami.
       #
-      # The v0.13.0 release proved the gap concretely, and not in either of the
-      # two shapes guessed above: `whoami` passed, and `npm publish` came back
-      # `EOTP` — the account requires 2FA and the token was not a kind that may
-      # skip it. No check short of publishing can tell those token kinds apart.
-      #
-      # The right fix is to stop using a token at all. npm's Trusted Publishing
-      # (OIDC) exchanges a GitHub Actions identity token for publish rights, so
-      # nothing long-lived is stored anywhere, and npm now flags bypass-2FA
-      # tokens as a security risk on the page where you would create one. It
-      # cannot be used HERE yet, for one reason: a trusted publisher can only
-      # be configured on a package that already exists on the registry, and
-      # this one has never been published (npm/cli#8544, open — PyPI allows the
-      # pre-registration npm does not). So the first publish needs a token and
-      # every publish after it should not.
-      #
-      # There is also a clock on it: npm has said 2FA-bypass tokens lose the
-      # ability to publish directly around January 2027, leaving them able only
-      # to stage a publish for human approval. Migrating is not optional.
-      #
-      # ADVISORY, not a gate. v0.13.0's second attempt failed HERE, on a token
-      # that may well have been able to publish: `whoami` reads `/-/whoami`,
-      # which a Granular Access Token scoped to packages alone is not entitled
-      # to, so it answers 401 for a token whose publish rights are fine. A check
-      # that cannot tell that apart from a revoked token must not decide whether
-      # a release happens — it was blocking releases to save a few minutes of
-      # CI, and the minutes are the cheaper thing.
-      #
-      # Failing late is safe here, which is what makes advisory the right call:
-      # npm rejects bad credentials BEFORE accepting a tarball, so a publish
-      # that fails on auth costs a run, never the version number. EOTP on the
-      # first attempt demonstrated exactly that.
-      - name: Check the npm credential
-        run: |
-          if who=$(npm whoami --registry https://registry.npmjs.org 2>&1); then
-            echo "authenticated as $who"
-          else
-            echo "::warning::npm whoami failed ($who). That is expected for a Granular Access Token without user-read scope, and also what a revoked token looks like — the publish below decides which. It cannot spend the version number either way."
-          fi
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      # Failing late stays safe for the same reason it always did here: npm
+      # rejects bad credentials BEFORE accepting a tarball, so a failure costs
+      # a run and never the version number.
 
       # The dry run stops here. It packs the tarball the same way a publish
       # would — running prepublishOnly, so the full verify happens — and prints
@@ -130,8 +115,6 @@ jobs:
       - name: Pack only (dry run)
         if: inputs.dry_run
         run: npm publish --dry-run
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       # No build or verify step here on purpose. `prepublishOnly` runs
       # `npm run verify` (tokens, contrast, tests, build) inside `npm publish`,
@@ -157,9 +140,9 @@ jobs:
           set -o pipefail
           if ! npm publish 2>&1 | tee /tmp/publish.log; then
             if grep -q "EOTP" /tmp/publish.log; then
-              echo "::error::npm refused the publish with EOTP: the account requires 2FA and NPM_TOKEN is not a token that may skip it. If this package already exists on the registry, configure Trusted Publishing for it instead of issuing another token — see the header of this file. If it does NOT exist yet, trusted publishing cannot be configured, so the first publish needs a Granular Access Token scoped to @skene, read-write, bypass-2FA, with the shortest expiry offered; revoke it once the package exists. The version was NOT consumed — npm rejects EOTP before accepting the tarball, so the same number publishes on retry."
+              echo "::error::npm refused the publish with EOTP, which means it authenticated with a TOKEN rather than through trusted publishing — check that NODE_AUTH_TOKEN has not been reintroduced. Under trusted publishing 2FA does not apply."
+            elif grep -qE "404|E404|not authorized|ENEEDAUTH" /tmp/publish.log; then
+              echo "::error::npm rejected the OIDC identity. The trusted publisher on the package must name THIS repository and THIS workflow file (.github/workflows/publish.yml), and the job must hold id-token: write. A config created after 2026-05-20 must also explicitly allow the npm publish action. The version was NOT consumed."
             fi
             exit 1
           fi
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

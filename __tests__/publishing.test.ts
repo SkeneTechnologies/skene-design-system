@@ -85,29 +85,29 @@ describe('a token cannot be committed', () => {
   })
 })
 
-describe('the credential check cannot block a release it cannot judge', () => {
-  // v0.13.0 failed twice, and the SECOND failure was this check rather than
-  // npm: `npm whoami` reads `/-/whoami`, which a Granular Access Token scoped
-  // to packages alone is not entitled to, so it 401s for a token whose publish
-  // rights may be perfectly fine. The check existed to save a few minutes of
-  // CI on a dead token; it was spending releases instead, and the minutes are
-  // the cheaper thing.
-  //
-  // Advisory is safe here specifically because npm rejects bad credentials
-  // before accepting a tarball — a late failure costs a run, never the version
-  // number, which the EOTP rejection demonstrated.
-  const workflow = read('.github/workflows/publish.yml')
-  const start = workflow.indexOf('- name: Check the npm credential')
-  const step = workflow.slice(start, workflow.indexOf('- name:', start + 10))
+describe('there is no credential to pre-check', () => {
+  // This suite used to assert an `npm whoami` step existed and was advisory.
+  // The step is gone, and its absence is now the assertion: under trusted
+  // publishing the credential is minted by the publish itself, so there is
+  // nothing to interrogate a step earlier. A whoami reappearing would mean
+  // someone put a token back.
+  // Comment lines stripped before matching. The file EXPLAINS at length why the
+  // whoami step was removed, and a test that matched the prose would force the
+  // explanation to be deleted to stay green — which would lose exactly the
+  // reasoning a future reader needs before putting the step back.
+  const executable = read('.github/workflows/publish.yml')
+    .split('\n')
+    .filter((l) => !/^\s*#/.test(l))
+    .join('\n')
 
-  it('is present at all', () => {
-    expect(start, 'the credential check is gone entirely').toBeGreaterThan(-1)
-    expect(step).toContain('npm whoami')
+  it('does not pre-flight a credential that does not exist yet', () => {
+    expect(executable, 'npm whoami is back; check whether a token came with it').not.toContain(
+      'npm whoami',
+    )
   })
 
-  it('warns rather than failing the job', () => {
-    expect(step, 'whoami failure should be a ::warning::, not an ::error::').toContain('::warning::')
-    expect(step, 'the credential check must not exit non-zero').not.toMatch(/exit 1/)
+  it('still explains why, so nobody re-adds it from first principles', () => {
+    expect(read('.github/workflows/publish.yml')).toMatch(/NO CREDENTIAL CHECK/)
   })
 })
 
@@ -204,9 +204,34 @@ describe('the publish workflow', () => {
     expect(triggers.push?.tags?.some((t) => t.startsWith('v')), 'not tag-triggered').toBe(true)
   })
 
-  it('takes its credential from a secret, through the environment', () => {
+  it('carries no long-lived credential at all', () => {
+    // Inverted at 0.13.0. This used to assert the token came from a secret
+    // through the environment, which was the right shape while there WAS a
+    // token. Trusted publishing removes it: the job mints a short-lived OIDC
+    // identity token at publish time, so there is nothing in a secret store to
+    // leak, rotate or forget to revoke.
+    //
+    // Asserting the absence is the whole point. Re-adding NODE_AUTH_TOKEN
+    // would silently work — npm prefers a token over OIDC — and the migration
+    // would quietly undo itself.
     const src = read(path)
-    expect(src).toMatch(/NODE_AUTH_TOKEN:\s*\$\{\{\s*secrets\./)
+    const uses = [...src.matchAll(/^\s*NODE_AUTH_TOKEN:.*$/gm)].map((m) => m[0].trim())
+    expect(uses, 'a token was reintroduced; trusted publishing is being bypassed').toEqual([])
+    expect(src, 'no secret should be referenced at all').not.toMatch(/\$\{\{\s*secrets\.NPM_TOKEN/)
+  })
+
+  it('mints an OIDC token, and asks for no other write scope', () => {
+    const src = read(path)
+    expect(src, 'id-token: write is what makes the publish tokenless').toMatch(/id-token:\s*write/)
+  })
+
+  it('pins npm new enough for trusted publishing', () => {
+    // Node 22 ships npm 10; trusted publishing needs 11.5.1+. Without the
+    // upgrade the publish fails asking for authentication, which reads like a
+    // permissions problem and is not one.
+    const src = read(path)
+    expect(src).toMatch(/npm install -g npm@/)
+    expect(src, 'the version floor is not asserted, only hoped for').toContain('11.5.1')
   })
 
   it('never writes an npmrc by hand', () => {
@@ -231,10 +256,21 @@ describe('the publish workflow', () => {
   it('asks for no more permission than publishing needs', () => {
     // Publishing to npmjs needs nothing from GitHub. A workflow holding
     // write scopes it never uses is the blast radius of the next mistake.
+    // `id-token: write` is the single permitted exception, and it is not a
+    // grant over anything in GitHub: it lets the job mint an OIDC token
+    // DESCRIBING itself, which npm exchanges for publish rights. Every other
+    // scope must still be read or none — the allowance is for that one name,
+    // not for write scopes generally.
     const perms = (wf as never as { permissions?: Record<string, string> }).permissions
     expect(perms, 'permissions not pinned; the default token is read-write').toBeTruthy()
     for (const [scope, level] of Object.entries(perms!)) {
-      expect(`${scope}:${level}`, 'publishing needs no write scope').toMatch(/:(read|none)$/)
+      if (scope === 'id-token') {
+        expect(level, 'id-token is present for OIDC and should be write').toBe('write')
+        continue
+      }
+      expect(`${scope}:${level}`, 'publishing needs no write scope but id-token').toMatch(
+        /:(read|none)$/,
+      )
     }
   })
 })
