@@ -12,6 +12,9 @@ export declare const tokens: {
             readonly bronze: "#8c6b47";
             readonly gold: "#e8c260";
             readonly light: "#faf1e9";
+            readonly peachLight: "#fdd4aa";
+            readonly creamDim: "#ecdccf";
+            readonly bronzeDeep: "#5a4532";
             readonly peachDeep: "#f97316";
         };
         readonly accent: {
@@ -30,6 +33,14 @@ export declare const tokens: {
                 readonly deep2: "#0b0b0b";
                 readonly elevated: "#2c2c2c";
                 readonly border: "#363636";
+                readonly overlay: "#0f0f0f";
+                readonly hoverSubtle: "#111111";
+                readonly band: "#161616";
+                readonly card: "#1c1c1c";
+                readonly hairline: "#1f1f1f";
+                readonly divider: "#232323";
+                readonly row: "#252525";
+                readonly hoverStrong: "#525252";
             };
             readonly line: {
                 readonly subtle: "rgba(255, 255, 255, 0.12)";
@@ -46,6 +57,8 @@ export declare const tokens: {
                 readonly gray: "#a1a1a1";
                 readonly grayLight: "#c8cdd3";
                 readonly goldSoft: "#d4b050";
+                readonly grayCool: "#9ca3af";
+                readonly caption: "#737373";
             };
         };
         readonly surface: {
@@ -163,6 +176,13 @@ export declare const tokens: {
             readonly githubDarkSurface: "#161b22";
             readonly githubBorder: "#30363d";
             readonly githubText: "#c9d1d9";
+            readonly githubDarkMuted: "#8b949e";
+            readonly githubDarkRaised: "#21262d";
+            readonly githubDarkAccentFg: "#58a6ff";
+            readonly githubDarkSuccessFg: "#3fb950";
+            readonly githubDarkSuccessEmphasis: "#238636";
+            readonly githubDarkDangerFg: "#f85149";
+            readonly githubDarkWarningFg: "#e3b341";
             readonly vscodeTeal: "#4ec9b0";
             readonly tailwindEmerald: "#22c55e";
             readonly warmTan: "#ac8b5d";

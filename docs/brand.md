@@ -10,7 +10,7 @@ _Generated from `design-tokens.json` by `scripts/generate-token-docs.mjs`. Do no
 between the markers — change the JSON and run `npm run tokens`. `npm run tokens:check`
 fails the build if this block is stale._
 
-_Source version 2.7.0, 221 tokens, of which 54 are mode-aware and
+_Source version 2.8.0, 241 tokens, of which 54 are mode-aware and
 shown here in every mode they declare._
 
 ### color
@@ -22,6 +22,9 @@ shown here in every mode they declare._
 | `color.brand.bronze` | `#8c6b47` |  |
 | `color.brand.gold` | `#e8c260` |  |
 | `color.brand.light` | `#faf1e9` |  |
+| `color.brand.peachLight` | `#fdd4aa` | A lighter peach than `brand.peach` resolves in dark (#fec089), used as INK on a dark ground — the pull-quote and lead-in colour on the about pages. INVARIANT, like `peachDeep` and unlike `peach` beside it: no light value has been designed, and on a cream ground this would fail AA. Do not read the name as a hover state. This exact value was the prototype's `--primary-hover` and the shadcn arbitration replaced it with #ebdccf (`legacy.peachHover`) — see KNOWN_DRIFT in `__tests__/pairing.test.ts`. This token is the ink, not a reinstatement of that decision. |
+| `color.brand.creamDim` | `#ecdccf` | A dimmer, warmer cream than `brand.light` (#faf1e9) — testimonial body copy on a 5%-cream card, where full cream is too loud. 13.41:1 on `chrome.surface.1`. One digit from `legacy.peachHover` (#ebdccf) and NOT the same colour; do not fold the two together without looking at both rendered. |
+| `color.brand.bronzeDeep` | `#5a4532` | A darker bronze than `brand.bronze` (#8c6b47) — the outline of an unreached step in a progress row, where the reached ones are peach. A BORDER, not text: it measures 1.99:1 on `chrome.surface.1` and would not clear any text floor there. |
 | `color.brand.peachDeep` | `#f97316` | INVARIANT, unlike brand.peach and brand.peachText beside it — the same #f97316 in both modes. The name reads as a sibling of brand.peach and it is not one, which is a trap: used as text on a cream ground it measures 2.51:1 against a 4.5 floor, and skene-site shipped exactly that on 2026-08-15 across four inline links at three viewports. This token is a gradient endpoint and a dark-ground accent. For text that must survive a light ancestor use brand.peach, which resolves #89684a inside `light`. Note the contrast gate cannot catch the misuse: `brand.peach-deep\|*` is in skip_pairs, so it is excused against EVERY background. |
 | `color.accent.violet` | `#c9a2dd` | Feature-row icon tint. Promoted from the Stand demo capture; nothing in the package was within ΔE 52 (nearest was neon.engagement). Mode-invariant on purpose — drawn against dark surfaces only, like the rest of the brand palette. |
 | `color.accent.blue` | `#9bbbd5` | Feature-row icon tint. Promoted from the Stand demo capture; nearest existing was neon.engineering at ΔE 24.3, far too saturated to substitute. Mode-invariant — see accent.violet. |
@@ -35,6 +38,14 @@ shown here in every mode they declare._
 | `color.chrome.surface.deep2` | `#0b0b0b` |  |
 | `color.chrome.surface.elevated` | `#2c2c2c` |  |
 | `color.chrome.surface.border` | `#363636` |  |
+| `color.chrome.surface.overlay` | `#0f0f0f` | The floating panel — dropdown, popover, command menu. Between `surface.0` (#0a0a0a) and `surface.1` (#171717): dark enough to read as lifted off the page rather than as another card. Chrome-only: the mode-aware `color.surface.*` ladder has no `overlay` because no light value has been designed for one. |
+| `color.chrome.surface.hoverSubtle` | `#111111` | The hover fill for a card sitting on `surface.0`. The step is deliberately smaller than the one to `surface.1`, so the change reads as a state and not as a different card. Pairs with `hoverStrong` at the light end of this ladder, the way `line.subtle` pairs with `line.strong`. |
+| `color.chrome.surface.band` | `#161616` | A full-width section band, one hair under `surface.1`. Marketing stacks bands of alternating value down a page; this is the darker of the two and `surface.1` is the lighter. |
+| `color.chrome.surface.card` | `#1c1c1c` | A card fill on a `surface.1` or `deep` band. Sits between `deep` (#1a1a1a) and `surface.2` (#212121) — closer to its band than a full rung, which is what stops a grid of cards reading as a checkerboard. |
+| `color.chrome.surface.hairline` | `#1f1f1f` | The faintest opaque rule on the dark ladder — the divider inside an overlay panel, where `surface.border` (#363636) is far too loud. Opaque, and in `surface.*` rather than `chrome.line.*` on purpose: `chrome.line` is alpha-only by design (see `line.subtle`) because those rules stack on four different grounds, whereas a rule inside a panel has exactly one ground and does not need to composite. |
+| `color.chrome.surface.divider` | `#232323` | The rule between rows in a card or widget, and the fill of a raised row in the same component — one value doing both jobs, which is normal on a dark ladder. One rung under `midGray` (#2a2a2a). See `hairline` for why an opaque rule lives in `surface.*`. |
+| `color.chrome.surface.row` | `#252525` | A field, code block, or row set inside a card — lighter than the card so the nested box reads as raised. Just under `elevated` (#2c2c2c), which is the same idea one rung louder. |
+| `color.chrome.surface.hoverStrong` | `#525252` | The hover fill at the light end of this ladder — a step indicator resting on `surface.3` (#4a4a4a). The counterpart of `hoverSubtle`. NOT to be confused with the light value of the mode-aware `color.text.muted`, which is the same hex: that token resolves #8c8c8c in dark, so a dark-only consumer that reaches for it gets a different colour than it drew. This one is invariant and is a background. |
 | `color.chrome.line.subtle` | `rgba(255, 255, 255, 0.12)` | Default hairline between sections and on cards. Alpha rather than an opaque token because sections stack on four different grounds (surface.1, deep, deep2, surface.2) and an opaque border is correct on exactly one of them. |
 | `color.chrome.line.strong` | `rgba(255, 255, 255, 0.2)` | Emphasised hairline — active/hovered card edges. See line.subtle for why alpha. |
 | `color.chrome.line.onLight` | `rgba(20, 20, 20, 0.14)` | Hairline for the inverted case: dark rule on a cream/peach fill. |
@@ -47,6 +58,8 @@ shown here in every mode they declare._
 | `color.chrome.text.gray` | `#a1a1a1` |  |
 | `color.chrome.text.grayLight` | `#c8cdd3` |  |
 | `color.chrome.text.goldSoft` | `#d4b050` |  |
+| `color.chrome.text.grayCool` | `#9ca3af` | Tailwind `gray-400` — the inactive label in a tab or step row. Cooler than `text.gray` (#a1a1a1), which is neutral, and louder than `text.muted`. The three are a ramp, not synonyms. 7.06:1 on `surface.1`. |
+| `color.chrome.text.caption` | `#737373` | The 9px uppercase eyebrow/caption ink — one rung dimmer than `text.muted` (#8c8c8c). MEASURED, not assumed: 4.18:1 on `surface.0` and 3.78:1 on `surface.1`, both under the 4.5 body floor. It is tokenised because the consumer already ships it at every eyebrow and a token is the only way to fix all of them at once; raising it is a design call. Not this package's `text.muted`: skene-marketing-website binds its own `--color-text-muted` to this value, which is why its `Eyebrow` header comment names it that. |
 | `color.surface.0` | light `#fafafa` · dark `#0a0a0a` |  |
 | `color.surface.1` | light `#f4f4f5` · dark `#171717` |  |
 | `color.surface.2` | light `#ececef` · dark `#212121` |  |
@@ -87,6 +100,13 @@ shown here in every mode they declare._
 | `color.terminalChrome.githubDarkSurface` | `#161b22` |  |
 | `color.terminalChrome.githubBorder` | `#30363d` |  |
 | `color.terminalChrome.githubText` | `#c9d1d9` |  |
+| `color.terminalChrome.githubDarkMuted` | `#8b949e` | Primer dark `fg.muted` — secondary text in the PR mockup: timestamps, the check-run summary, the diff-hunk header. The dark counterpart of `githubLightMuted`. |
+| `color.terminalChrome.githubDarkRaised` | `#21262d` | The rung above `githubDarkSurface` (#161b22) in the dark PR mockup — secondary-button fill, diff-hunk header bar, table header. Primer dark `border.muted` carries the same value; here it is a fill. |
+| `color.terminalChrome.githubDarkAccentFg` | `#58a6ff` | Primer dark `accent.fg` — the link blue on a branch name, a commit sha, an inline `code` reference. |
+| `color.terminalChrome.githubDarkSuccessFg` | `#3fb950` | Primer dark `success.fg` — the green a passing check is written and drawn in. Text and icons only; a filled control uses `githubDarkSuccessEmphasis`. The `Dark` infix is load-bearing: `githubSuccessFg` and `githubDangerFg` below are Primer LIGHT values under unprefixed names, so an unprefixed dark sibling would read as their pair and is not one. |
+| `color.terminalChrome.githubDarkSuccessEmphasis` | `#238636` | Primer dark `success.emphasis` — the fill behind a merge button, and the border and tint of a passing badge. Darker than `githubDarkSuccessFg` because it sits UNDER text rather than being it; the two are not interchangeable. |
+| `color.terminalChrome.githubDarkDangerFg` | `#f85149` | Primer dark `danger.fg` — a failing check, a removed diff line, and the tint behind either. The dark counterpart of `githubDangerFg`. |
+| `color.terminalChrome.githubDarkWarningFg` | `#e3b341` | GitHub dark warning yellow — the triangle on a check that neither passed nor failed. Deliberately NOT Primer's dark `attention.fg` (#d29922): the mockup renders this lighter yellow, and the token records what renders rather than what the palette says it should be. |
 | `color.terminalChrome.vscodeTeal` | `#4ec9b0` |  |
 | `color.terminalChrome.tailwindEmerald` | `#22c55e` |  |
 | `color.terminalChrome.warmTan` | `#ac8b5d` |  |

@@ -1,7 +1,7 @@
 // Generated from design-tokens.json by scripts/generate-tokens-ts.mts.
 // Do not edit by hand — change the JSON and run `npm run tokens`.
-// Source version: 2.7.0
-// Last updated: 2026-08-12
+// Source version: 2.8.0
+// Last updated: 2026-08-28
 export const tokens = {
     color: {
         brand: {
@@ -16,6 +16,9 @@ export const tokens = {
             bronze: "#8c6b47",
             gold: "#e8c260",
             light: "#faf1e9",
+            peachLight: "#fdd4aa",
+            creamDim: "#ecdccf",
+            bronzeDeep: "#5a4532",
             peachDeep: "#f97316",
         },
         accent: {
@@ -34,6 +37,14 @@ export const tokens = {
                 deep2: "#0b0b0b",
                 elevated: "#2c2c2c",
                 border: "#363636",
+                overlay: "#0f0f0f",
+                hoverSubtle: "#111111",
+                band: "#161616",
+                card: "#1c1c1c",
+                hairline: "#1f1f1f",
+                divider: "#232323",
+                row: "#252525",
+                hoverStrong: "#525252",
             },
             line: {
                 subtle: "rgba(255, 255, 255, 0.12)",
@@ -50,6 +61,8 @@ export const tokens = {
                 gray: "#a1a1a1",
                 grayLight: "#c8cdd3",
                 goldSoft: "#d4b050",
+                grayCool: "#9ca3af",
+                caption: "#737373",
             },
         },
         surface: {
@@ -167,6 +180,13 @@ export const tokens = {
             githubDarkSurface: "#161b22",
             githubBorder: "#30363d",
             githubText: "#c9d1d9",
+            githubDarkMuted: "#8b949e",
+            githubDarkRaised: "#21262d",
+            githubDarkAccentFg: "#58a6ff",
+            githubDarkSuccessFg: "#3fb950",
+            githubDarkSuccessEmphasis: "#238636",
+            githubDarkDangerFg: "#f85149",
+            githubDarkWarningFg: "#e3b341",
             vscodeTeal: "#4ec9b0",
             tailwindEmerald: "#22c55e",
             warmTan: "#ac8b5d",

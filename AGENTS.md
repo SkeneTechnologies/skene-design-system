@@ -149,7 +149,7 @@ All of these ship inside the package, so from a consumer they are under
 | 7 | `machine/accessibility.yaml` | the a11y contracts, including contrast floors. |
 | — | `docs/sections.md` | prose: decision paths, and every measured overlap with a verdict. |
 | — | `docs/brand.md`, `docs/principles.md`, `docs/ux-patterns.md` | voice, principles, interaction patterns. |
-| — | `design-tokens.json` | the 331 token values themselves. |
+| — | `design-tokens.json` | the 241 token values themselves. |
 
 One and two are a pair, and the split is deliberate: `components.yaml` states
 constraints and does not say which component to pick, which is why its header
