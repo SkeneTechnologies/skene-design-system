@@ -93,6 +93,26 @@ Nothing else from skene-marketing-website's `public/` belongs here:
 
 Consumers pass their own via the `dither` and `video` props on `DitheredMedia`.
 
+## `skene-tui.gif`
+
+The terminal UI, running. 571 KB, and it earns its place the way the halftone
+fields do: it is the one asset that shows what `skene` looks like when you run
+it, and no component can reproduce a screen recording from tokens.
+
+It is here because it was nowhere. It lived only under the marketing repo's
+`.webanatomy/build-page/_shared/assets/`, which is wireframe scaffolding rather
+than a served directory, so the page that wanted it could not reach it: the
+`/developers` cream band was drawn around this gif and shipped a `TerminalBlock`
+of static text instead, with a comment recording that the asset "lives only
+under `.webanatomy/_shared` and is not in `public/`". A design stranded outside
+both repositories produced a visible downgrade on a live page, which is the
+argument for the package owning brand assets rather than each consumer keeping
+its own copy.
+
+Consumers reference it the same way as the rest: import from
+`@skene/design-system/assets/skene-tui.gif`, or resolve it through
+`asset-urls`.
+
 ## How the live site serves these
 
 Worth knowing, because it is not what you would guess: they are plain static
