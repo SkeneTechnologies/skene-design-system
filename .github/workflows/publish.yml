@@ -139,10 +139,67 @@ jobs:
           # carry, so it is set explicitly rather than assumed.
           set -o pipefail
           if ! npm publish 2>&1 | tee /tmp/publish.log; then
+            # These branches classify a failure that npm has already decided.
+            # They exist to save the next release from a wrong hypothesis, so
+            # the standard they are held to is not "does it usually help" but
+            # "can it ever be confidently wrong". A misfiled ::error:: is worse
+            # than silence: it carries the authority of the workflow, it names
+            # a specific subsystem, and whoever is mid-release will go and edit
+            # that subsystem. Hence: most specific pattern first, every pattern
+            # anchored to something npm only prints for that one condition, and
+            # an explicit else for everything else.
             if grep -q "EOTP" /tmp/publish.log; then
               echo "::error::npm refused the publish with EOTP, which means it authenticated with a TOKEN rather than through trusted publishing — check that NODE_AUTH_TOKEN has not been reintroduced. Under trusted publishing 2FA does not apply."
-            elif grep -qE "404|E404|not authorized|ENEEDAUTH" /tmp/publish.log; then
+            elif grep -qE "E409|409 Conflict" /tmp/publish.log; then
+              # 2026-08-28, publishing v0.14.0. npm returned:
+              #
+              #   npm error code E409
+              #   npm error 409 Conflict - PUT https://registry.npmjs.org/@skene%2Fdesign-system
+              #     - Failed to save packument. A common cause is if you try to publish a new
+              #       package before the previous package has been fully processed.
+              #
+              # No branch described a 409, and the branch below then claimed it
+              # anyway: its old pattern led with a bare `404`, which matched the
+              # digits in the `_logs/2026-08-28T09_14_04_404Z-debug-0.log` path
+              # npm prints on every failure. So the run announced that the
+              # trusted publisher was misconfigured. It was not. Nothing in this
+              # tag, the tarball, or the npm-side configuration was wrong, and a
+              # plain re-run of the identical workflow — no bump, no re-tag, no
+              # config change — published `+ @skene/design-system@0.14.0`. The
+              # false explanation cost a full diagnostic cycle spent auditing a
+              # correct configuration, which is exactly the failure mode this
+              # whole block was written to prevent.
+              #
+              # A 409 is the registry rejecting a WRITE it could not serialise
+              # against its own replicas. It is the one class here that is
+              # neither our fault nor actionable: the correct response is to run
+              # the same thing again. Saying that plainly matters as much as
+              # naming the cause, because the instinct on a failed publish is to
+              # bump the version, and bumping is precisely wrong — npm refused
+              # the packument write, so the version was never recorded and is
+              # still free to use.
+              echo "::error::npm returned 409 Conflict ('Failed to save packument'). This is a TRANSIENT registry-side write conflict on npmjs — not a problem with this repository, the tag, the tarball, the OIDC identity, or the trusted publisher. The version was NOT consumed. Fix: re-run this workflow unchanged. Do NOT bump the version, do NOT delete and re-push the tag, and do NOT edit the trusted-publisher configuration."
+            elif grep -qE "E404|ENEEDAUTH|not authorized|npm (error|ERR!) 404" /tmp/publish.log; then
+              # The pattern here used to lead with a bare `404`, which matched
+              # those three digits ANYWHERE in a verbose npm log — a byte count,
+              # a port, a hash fragment, an unrelated request logged earlier in
+              # the run. That is how a failure with nothing to do with identity
+              # can be told it has an identity problem. Every alternative is now
+              # anchored to a token npm emits only when it means HTTP 404 or an
+              # authorisation refusal: `E404` is npm's error code (`npm error
+              # code E404`), and `npm error 404` / `npm ERR! 404` are the status
+              # lines from the current and pre-11 CLIs respectively. Real 404
+              # detection is unaffected — npm cannot report a 404 publish
+              # failure without printing at least one of these.
               echo "::error::npm rejected the OIDC identity. The trusted publisher on the package must name THIS repository and THIS workflow file (.github/workflows/publish.yml), and the job must hold id-token: write. A config created after 2026-05-20 must also explicitly allow the npm publish action. The version was NOT consumed."
+            else
+              # Silence was the old behaviour for an unmatched failure, and
+              # silence is defensible — but only if the chain above cannot claim
+              # the failure by accident, which is now true. Say explicitly that
+              # nothing was recognised, so the next unclassified code is read
+              # off npm's own output instead of being pattern-matched against
+              # whichever advice happened to be printed.
+              echo "::error::npm publish failed with a code this workflow does not recognise. Read npm's output above rather than any explanation here, and do not assume the trusted publisher is at fault. npm rejects a publish before it accepts the tarball, so a failed run has not consumed the version — if the code turns out to be transient (5xx, a timeout), re-running unchanged is safe."
             fi
             exit 1
           fi
