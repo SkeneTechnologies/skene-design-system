@@ -37,7 +37,7 @@ consumers:
     surface: site
     installs: true
     installs_verified: "2026-08-27, branch staging @ a874e83, against v0.13.0"
-    version: "github:SkeneTechnologies/skene-design-system#semver:^0.13.0"
+    version: "github:SkeneTechnologies/skene-design-system#semver:^0.14.0"
     theme_default: dark
     reach:
       import_statements: 222

@@ -1,5 +1,410 @@
 # @skene/design-system
 
+## 0.14.0
+
+### Minor Changes
+
+- a3c9e83: Four corrections to the machine-readable contracts, all of them about the
+  consumer this package could not see.
+
+  - `machine/rules.yaml` recorded `skene-marketing-website` as
+    `installs: false`, with an assertion of zero `@skene/design-system` matches
+    in its package.json, its lockfile and its source. That was measured against
+    that repo's `main`; the work was on a branch. It installs 0.12.0 and imports
+    the package on 222 statements across 33 files — more reach than any other
+    consumer. An agent reading the file before working on that site concluded the
+    design system did not apply to it. Same correction in README.md.
+  - `docs-app/app/decisions/inventory.json` now ships, exported as
+    `@skene/design-system/inventory.json`. It was outside `files`, so every
+    `seen:` in context.yaml was a pointer a consuming agent could not follow.
+    Cost: +55KB packed.
+  - `machine/context.yaml` gains `props` and `accepts` for the whole `ui/*`
+    layer, derived from `dist/*.d.ts` by a new `dtsContractOf()` in
+    `scripts/build-context.mjs`. 30 of 30 ui modules previously shipped with no
+    usable prop signature, on the layer `rules.yaml` tells an agent to reach for
+    first. `build` now runs `context` after `tsc`.
+  - `machine/layouts.yaml` was dashboard-only and its own coverage pointer
+    resolved to `present_here: false`. It gains a `marketing` block — band
+    rhythm, ground alternation, the 5fr/7fr split, the cream inset, the gap
+    constants — transcribed from the twenty pages that already obey it. The
+    dashboard content moves under `dashboard:` unchanged.
+
+- 3094d36: compositions.yaml: re-derive the corpus that dropped its two densest routes
+
+  `machine/compositions.yaml` stated that `(site)/page.tsx` and
+  `(site)/pricing/page.tsx` "import no design-system section at all" and recorded
+  both under `not_covered`. Checked against the commit the file itself cites
+  (`b96b935` on `skene-marketing-website@claude/calcom-style-wireframes-a64a8e`),
+  that is false: the home route imports seventeen modules and the pricing route
+  nine, including `sections/plan-card`, which the entry named as absent.
+
+  So the archetypes were derived from 17 routes rather than 19 and every
+  `in: N, of: M` denominator was short by two. Worse than the counts: six modules
+  appear only on the two dropped routes and so appeared nowhere in the file —
+  `patterns/dither`, `sections/evaluator-list`, `sections/feature-row`,
+  `sections/final-cta`, `sections/plan-card`, `sections/question-grid`. Two of
+  those are load-bearing. `sections/feature-row` is what
+  `render_marketing_cards_as_feature_row` in `machine/rules.yaml` mandates for a
+  marketing card, and `sections/final-cta` is the closing band. An agent
+  following `skills/skene-design-system-pages` composed a page with neither.
+
+  Re-derived rather than annotated. Both routes were read at `b96b935` and added
+  as archetypes of their own — `home-page` and `pricing-page`, both `single`,
+  because neither matches an existing shape and one instance generalises to
+  nothing. The corpus is now 20 routes read, 19 composing, 40 modules seen; every
+  spine denominator, archetype `instances` and `optional` count is re-counted;
+  `not_covered` keeps only `(landing)/alternatives/*` and everything outside the
+  site. `corpus.history` carries the whole record rather than dropping it.
+
+  `__tests__/compositions.test.ts` is what makes this stick. It now recomputes
+  every number in the file from the `routes:` maps beside it — corpus counts,
+  spine `in`/`of`, per-archetype `instances` and `optional`, that a
+  `load_bearing` module really does appear in every cited route, and that no
+  module a cited route imports goes unnamed by its recipe. It also fails if a
+  route is ever both cited by an archetype and recorded as `not_covered`, which
+  is the shape the original defect took. The old assertion there was
+  `toMatch(/pricing/)`, and it passed _because_ the false claim mentioned
+  pricing.
+
+  `skills/skene-design-system-pages`, `README.md` and the
+  `skene-marketing-website` entry in `machine/rules.yaml` follow the same numbers.
+
+- d11a293: Four additions asked for by `skene-marketing-website`, each replacing a
+  workaround it writes at multiple call sites.
+
+  - `Eyebrow` gains `onLight`. Its default border and ink are invariant
+    `chrome.*` and do not follow a `light` ancestor, so on a cream panel the chip
+    keeps its dark-page colours. Three modules in this package
+    (`LightSectionCard`, `FaqBand`, `Bridge`) worked around that with the same
+    two-utility `className` override, and the consumer writes it at fourteen more
+    call sites. All three in-package sites now pass the prop; the rendering is
+    identical.
+  - `PillNavLink` gains `asChild`, the Slot pattern `ui/button` and `ui/card`
+    already use, so a menu trigger or a `next/link` composes the bar's slot
+    instead of copying its seven-utility class string. `href` becomes optional
+    and is not forwarded under `asChild`; an item without one is skipped when
+    `PillNav` builds the mobile drawer.
+  - `TerminalBlockLine` gains `wrap`. The default still scrolls the line in
+    place, which is right for a command a reader runs. `wrap` is for the line
+    whose whole text is the point and cannot sit on one row at 390px: it cancels
+    the nowrap, allows a break mid-token, and hangs the continuation under the
+    command. The consumer writes those four utilities as a `display` override at
+    three sites, which also puts markup between the reader and the paste for a
+    reason that has nothing to do with what the line says.
+  - `FeatureRow`'s `n` is now `aria-hidden`, unconditionally. It is a corner
+    marker, the heading beside it carries the whole accessible name, and no prop
+    reached it — so a consumer could not fix it either. Measured from the
+    accessibility tree on the live site: two `FeatureRow` benefits exposed a bare
+    "01" and "03" while a hand-rolled "02" between them was correctly silent.
+    `NumberedStep`'s numeral has always done this.
+
+### Patch Changes
+
+- 72dff23: Five of the nine unproven modules get their first visual case, and one of them
+  was broken
+
+  `machine/context.yaml` marked nine modules `seen: []`, and its own header says
+  an empty list means nothing in this repository has ever rendered the module, so
+  treat its claims as unproven. None of the 201 committed baselines covered any of
+  them. That is not a coverage statistic. It is the same hole `LogoRow` fell
+  through: a module with no case has no baseline, the per-component suite compares
+  nothing to nothing and reports green, and the defect is found later by measuring
+  the rendered thing inside a consuming app — which is the one place a package's
+  own gate should never be the second-best instrument.
+
+  It happened again here, on the third of the five. `IntegrationsHighlight`
+  rendered `CardAnimationIntegrations` at **0x0**. `LightSectionCard`'s visual
+  column is `grid place-items-center`, so this module's wrapper was shrink-to-fit,
+  and the animation is `aspect-square w-full` over two absolutely-positioned
+  children and therefore has no intrinsic width at all. Measured in the gallery at
+  a 469px visual column: the wrapper resolved to 51x51, its own 25.6px padding
+  twice and nothing between, and the animation to 0x0. The band had shipped since
+  0.10.0 as a cream card with an empty right half, and its only defence was that
+  nothing had ever rendered it — the sole consumer calls
+  `CardAnimationIntegrations` directly, inside a wrapper of its own. **Fixed**,
+  with `w-full` on that wrapper, in the same commit as the case: a baseline of a
+  blank panel is precisely the failure this exercise exists to prevent.
+
+  The same case found a second defect, which is **not** fixed and is baselined
+  known-wrong deliberately. Inside that band's `light`, three of the four
+  animation cards render their title in invariant `chrome.text-primary`,
+  rgb(250,241,233), against `bg-surface-1`, which is mode-aware and resolves to
+  rgb(244,244,245) there — roughly 1.03:1, the trap `sections/code`'s own header
+  documents one level down. The consumer repairs it at its call site with two `!`
+  overrides mapping the chrome roles onto mode-aware ones. The fix belongs in
+  `card-animation-integrations`, where it can be reviewed as its own change; until
+  then the baseline holds a regression floor, not an endorsement.
+
+  The five cases and what each baseline holds:
+
+  - **`section-code`** — the biggest exposure on the list, at 7 of the 19
+    composing routes in `machine/compositions.yaml`'s corpus, the fifth most-used
+    module in the package and the only spine member with no baseline. The frame
+    holds a MATCH, not a shape: every row is rendered twice, once under a dark
+    ancestor and once under a cream one, and the two columns have to be identical
+    pixels. `Code` is `polarity: applies-both` — each variant pins its own mode
+    class so it resolves its own tokens wherever a caller drops it — and deleting
+    either class moves exactly one column. The module header records the two
+    readings that makes real: 4.30:1 for the default under `light`, and 1.00:1,
+    the same colour, for `onLight` under `dark`. `PROSE_CODE` gets its own row,
+    including inside the cream column, where a peach-on-near-black chip is what a
+    caller actually gets.
+  - **`pattern-pill-nav-frosted`** — two constants and no component, which is why
+    it lasted longest: `scripts/build-inventory.mjs` filtered on `.tsx` and
+    dropped the package's only `.ts` module outright. The frame holds the wash
+    composited over a halftone: `chrome.surface-0` at 60%, `blur(8px)
+saturate(180%)`, and a 14% `chrome.text-primary` hairline. Over a flat fill a
+    blur radius is invisible and a saturate multiplier does nothing, so the
+    artwork behind it is load-bearing. Both position constants render; sticky
+    BEHAVIOUR is not held and no static frame can hold it.
+  - **`section-surface-cards`** — the ways-in grid, second on the exposure list
+    and on the consumer's home and integrations routes. Holds two structural
+    arguments: two tracks and never `auto-fit` (four tracks in a ~640px band give
+    each card 139px and every two-word title wraps), and the `light` on the
+    featured cell against `dark` on the rest, without which `text.primary`
+    resolves to #faf1e9 on a #faf1e9 fill. The four `code` chips are taken
+    verbatim from `INTEGRATION_ANIMATION_DETAILS`, whose source records what each
+    was corrected from.
+  - **`section-team-card`** — three STATES of one entry, not three people: the
+    module's claim is that the panel keeps one shape with a photo and without, and
+    three different names would read as three people rather than as that. It also
+    means nothing here fabricates a colleague. Holds the `--radius-lg` panel at
+    24px, the square `--radius-md` media frame, the 17px name, the 11px mono role
+    at 0.07em, and the underline-offset on an anchor passed through `children`,
+    which the module styles and which had no other proof that it applies.
+  - **`section-integrations-highlight`** — the composition, which is all this
+    module is: the cream card's split at `md`, the 1350px cap, and the copy stack
+    beside a square visual. Its copy is literals in the source rather than props,
+    so an upstream wording change lands here as a reflow and nowhere else.
+
+  Two of the five are GSAP-driven and could not hold a frame at all before this.
+  `FREEZE_CSS` and Playwright's `animations: 'disabled'` cover CSS animations,
+  transitions and the Web Animations API; they do not reach GSAP, which drives
+  inline styles off its own ticker. `docs-app/app/components/islands.tsx` now
+  ships `FrozenGsap`, which disables the ScrollTriggers without killing their
+  animations, then seeks every timeline from 0 with events live so the
+  `.call()`-driven active card actually resolves. Its header records why each of
+  those three details is load-bearing, and why `gsap` is imported there without
+  being declared as a docs-app dependency.
+
+  The suite's floor moves 82 → 87. Four modules still have no case:
+  `ui/sonner`, `patterns/pill-nav-mobile-menu`,
+  `sections/card-animation-integrations` and `sections/journey-signal-scene`.
+  `docs/sections.md` now says which of those is permanent — `sonner` is a toast
+  host with no resting state, and writing a case for it to reach zero would
+  capture an empty portal — and what the other three each still need.
+
+- a5081e1: `LogoRow` rendered at 80% of its own documented size. The module was written on
+  Tailwind's numeric spacing scale, and this package sets `--spacing: 0.2rem`, so
+  `min-h-14` measured 44.8px where the comment beside it says the wireframe's
+  56px is kept as the minimum. `gap-3.5` measured 11.2px against 14, and `mb-6` /
+  `mt-3.5` were off by the same fifth.
+
+  The four utilities become the literal px the wireframe draws — `min-h-[56px]`,
+  `gap-[14px]`, `mb-[24px]`, `mt-[14px]` — which is the convention
+  `artifact-shell`, `funnel` and `integration-rows` already document at length.
+  **This changes rendering:** slots grow 44.8 → 56px and the row gaps grow 11.2 →
+  14px. Visual baselines covering the proof strip need updating.
+
+- 743583d: LogoRow gets the visual case that would have caught its geometry defect
+
+  `grep -rn "logo-row\|LogoRow" docs-app/app` returned nothing. `LogoRow` had no
+  `data-visual` case on `/components`, so none of the 199 committed baselines
+  covered it, so it shipped every spacing value at 80% of the number its own
+  comments claimed — a documented 56px slot floor rendering at 44.8px, a
+  documented 14px gap rendering at 11.2px — and the per-component visual suite
+  reported green throughout. The defect was found by measuring the rendered strip
+  inside a consuming app, which is the one place this package's own gate should
+  never be the second-best instrument.
+
+  `section-logo-row` now exists and holds the geometry: the slot floor, the
+  inter-slot gap, and the margins above and below the strip. It renders on both
+  grounds in one frame, because this band declares none of its own and follows a
+  `light` ancestor onto cream. No logo sits in a slot: the empty slot is the
+  component's argument and the module header forbids a fabricated mark in a
+  story, a demo or sample data, so a case that filled one to look better would be
+  the first place that rule broke.
+
+  The suite's floor moves 81 → 82. That is the third time it has been raised for
+  this reason, so `docs/sections.md` now ranks the nine modules that still have no
+  case by how much of the estate they expose rather than only listing them —
+  `sections/code` first, at 7 of the 19 composing routes in
+  `machine/compositions.yaml` and the only spine member with no baseline.
+
+- c1967d5: `PillNavMobileMenu` gets a baseline, and the gallery gets its first iframe
+
+  `patterns/pill-nav-mobile-menu` is the consuming site's mobile navigation, which
+  every page of it carries, and it was `seen: []` — nothing in this repository had
+  ever rendered it, so every claim its contract makes was unproven.
+
+  It could not simply be added to `/components`. Every layer in the module carries
+  `md:hidden`, which is a VIEWPORT media query, and the visual suite runs at
+  1280x900: rendered inline, the toggle, the backdrop and the panel are all
+  `display: none`, so a case there captures an element with no box. That is not a
+  thin baseline, it is none. Nothing inside the page can change it either — a
+  container cannot narrow a media query, and overriding `md:hidden` from the call
+  site would hold geometry the component never produces, which is worse than
+  holding nothing.
+
+  A same-origin iframe has its own viewport. `docs-app/app/components/mobile-menu`
+  renders the open sheet, and the case embeds it at 390x760, where the module's own
+  breakpoint decides unchanged. That also settles the second half: the panel is
+  `fixed inset-0`, so what it fills IS the viewport, and a 1280-wide capture would
+  have been a baseline of a phone sheet stretched across a desktop.
+
+  The frame holds the open sheet on #141414, measured off the render rather than
+  read off the classes: the frosted bar over it at z-1050 against the panel and
+  backdrop at z-1040, which is the shipped z-order and the thing most likely to
+  break silently; the panel's top inset of 44.8px, which is `pt-14` at this
+  package's `--spacing: 0.2rem` rather than the 56 the class name suggests, and
+  which clears the frame's 43.69px bar by 1.1px; 19.2px of side padding; four link
+  rows at 24px type on 12.8px of vertical padding with a 1px white/10 hairline
+  between each and one under the last; the active link at rgb(254,192,137) against
+  white/90 for the rest; and the actions row at 19.2px padding and a 6.4px gap. Both toggle states
+  are in the bar, the same component twice at a 4px radius and 12px mono, because
+  the closed one is otherwise unreachable — the panel it belongs to is what covers
+  the screen.
+
+  Three things are deliberately NOT held, and the case says so: the transition
+  between states, because the module returns `null` when closed and there is no
+  intermediate DOM; the `document.body.style.overflow` lock, which is a side effect
+  with no pixels; and everything at 768 and up, where every layer is `display:
+none` by design and correctly renders nothing.
+
+  The open state is a literal `true` rather than state a click has to reach. The
+  suite has no interaction step before its main capture, so a case that clicked its
+  way open would be capturing the end of a transition rather than a declared state,
+  and `onOpenChange` is a no-op because a link that closed the sheet mid-capture is
+  a flake, not a feature. `dark` is written explicitly on the route: the drawer is
+  invariant nav chrome with no light reading, so both mode sweeps produce identical
+  files, and that is the assertion rather than an accident.
+
+  Floor 87 → 88. Two unproven modules remain,
+  `sections/card-animation-integrations` and `sections/journey-signal-scene`, both
+  multi-state; `ui/sonner` stays uncovered on purpose.
+
+- 765c7e5: The last two unproven modules get cases, and one of them reads 18 CSS custom
+  properties this package does not define
+
+  `sections/card-animation-integrations` and `sections/journey-signal-scene` were
+  the last two modules marked `seen: []`, meaning nothing in this repository had
+  ever rendered them, meaning every claim their contracts make was unproven. Both
+  are multi-state, so one frame proves one state: each gets TWO cases, at two
+  named states, with what is NOT held written into the case beside what is.
+
+  **`sections/card-animation-integrations`**, at two playheads on its own cycling
+  timeline. `ICON_STYLES` carries a `light` and a `dark` pair for each of four card
+  variants and only the active card takes the light one, so a single frame proves
+  one row of that table and cannot tell "card 0 is lit because the playhead is at
+  2.5s" from "card 0 is always lit". `section-card-animation-integrations` holds
+  t=2.5s (all four cards in and at rest, card 0 active, detail 0 in the panel, in
+  the stable window 1.56 → 3.76) and `-last` holds t=9.5s (card 3 active, detail 3,
+  inside the loop's final branch, which is written differently from the other three
+  and has no other cover). Not held by either: the entry stagger, the three swap
+  transitions, the closing fade, and details 1 and 2. A cycling timeline cannot be
+  covered by frames, only sampled by them, and two samples is where the sampling
+  starts proving the cycle moves.
+
+  **`sections/journey-signal-scene`**, at WIDE + GTM and MEDIUM + Engineering. It
+  picks one of three hand-placed layouts by measuring its own container and carries
+  a view toggle, so four combinations matter; the two held are the one the module
+  was designed against and the one where every filed defect shows. The two unheld
+  corners are named in the case rather than left to be found, and so is COMPACT,
+  which needs a container under 420 and therefore the iframe treatment
+  `pattern-pill-nav-mobile-menu` uses. The view is pinned by clicking the toggle
+  once on mount — the module's own documented handover, "for good the moment
+  someone reaches for the toggle themselves" — because otherwise it auto-advances
+  every 6s while on screen and the capture lands wherever the clock is.
+
+  **The defect that case found is the largest of this sweep.** The module reads 24
+  CSS custom properties and **18 of them are not defined anywhere in this
+  package**: every `--color-terminalChrome-*` it uses, plus `--color-text`,
+  `--color-text-dark`, `--color-text-light`, the three `--color-text-on-dark`
+  variants, `--color-accent-muted`, `--color-background-darker`,
+  `--color-border-on-dark`, `--color-chrome-accent` and `--color-chrome-muted`.
+  None carries a `var()` fallback, so each resolves to
+  invalid-at-computed-value-time: backgrounds go transparent, colours fall back to
+  `inherit`. The GTM view survives on inherited ink and two literals. The
+  Engineering view asks for `--color-terminalChrome-githubDarkBg` and
+  `--color-terminalChrome-githubDarkSurface`, gets transparent, then paints
+  `#ffffff` text on the white stage — measured as `background-color: rgba(0,0,0,0)`
+  with `color: rgb(255,255,255)` on both the centre card and the PR panel.
+
+  The two mode captures of that case are the proof and they DIFFER, which they
+  must not: the scene sits under an explicit `light` wrapper, so the page's mode
+  should reach nothing inside it. What reaches in is the fallback — `color` on an
+  undefined property resolves to `inherit`, so the panels take the gallery case's
+  own `text-foreground`, ink under the light sweep and near-white under the dark
+  one, and the Engineering view is legible in one baseline and almost absent in the
+  other. A component whose ink is decided by a page two levels up is the defect
+  stated as a picture.
+
+  The values exist in `design-tokens.json` under `terminalChrome` and reach
+  `src/tokens/index.ts`; the CSS generator never emits them under those names. It
+  survived because nothing was looking from either end: the module is a straight
+  port, its header says so, and the tokens came across while the definitions did
+  not — and the one app that renders this scene defines every missing name in its
+  own `globals.css` while running a FORK rather than importing this module. The
+  package's copy has no consumer, and `seen: []` meant this repository had not
+  rendered it either.
+
+  **Not fixed here, and deliberately so.** Eighteen undefined properties inside
+  1,214 lines of styled-components is a token decision — whether the generator
+  should emit `terminalChrome` or the module should move onto the roles that
+  already exist — and it needs its own commit. So does ask 12, the three geometry
+  defects the consuming site has filed against this module's MEDIUM layout
+  (`WIDE_MIN = 720` at :888, `MEDIUM.left.w = 170` at :874, `MEDIUM.h = 640` at
+  :871), all re-verified against v0.13.0 and all visible or measurable in the
+  `-medium` frame: the Evidence rows ellipsise at 170, and the PR panel runs ~330
+  of its 340 stage units, so the missing floor is real even though it has not
+  clipped yet. Both are baselined as they are, for the same reason: a fix lands as
+  a picture of what changed once a baseline exists, and as a list of names and a
+  promise before one does. The `-medium` frame is a regression floor and a filed
+  defect, not an endorsement, and it is expected to move twice.
+
+  `FrozenGsap` grew per-case playheads to make the first pair possible, matched by
+  selector rather than by a wrapper element so the cases that already have
+  baselines keep their DOM. It also grew a 100ms interval that never stops, and
+  that is not belt-and-braces: the first version watched for thirty frames and one
+  slow `components — light` run lost `section-card-animation-integrations` with no
+  actual image and no diff, which is what a live GSAP loop looks like from
+  `toHaveScreenshot`. The animated modules sit behind their own chunks, so on a
+  loaded worker they can build their timelines after the watcher has stopped
+  watching, and a timeline created after the last frame escapes the freeze
+  entirely. Two clean verify runs since.
+
+  Two prose gates were widened rather than satisfied by ungrammatical prose:
+  `__tests__/docs-counts.test.ts` now matches `modules?` and
+  `__tests__/skills.test.ts` matches `modules? (are|is)`, because the gated count
+  reached 1 and both patterns were written when it could only be plural. The number
+  still has to be the real one in both places, which is the whole gate.
+
+  Floor 88 → 92. `ui/sonner` is now the only module with no case, and it is meant
+  to be one: a toast host renders nothing until something calls it, so a case for
+  it would capture an empty portal.
+
+- bf51032: skene-design-system-pages: stop routing marketing band spacing at the dashboard shell
+
+  v0.13.0 promoted the dashboard page-shell gutters into `shipped_here` in
+  `machine/layouts.yaml` as `page_gutters`, `gap-4 px-4 py-6 sm:px-6 lg:px-8`,
+  `utilities_resolve_here: true`, described as "the shipped contract" with no
+  surface scoping — and `skills/skene-design-system-pages` sent a page builder to
+  that file for "Section order within one band, spacing and widths". Scoping the
+  entry with `surface: dashboard` and a warning does not fix the routing; the
+  skill still pointed an agent at a dashboard-first file without naming the block
+  it should read.
+
+  Measured in a browser against the package's own compiled stylesheet, at
+  `--spacing: 0.2rem` and a 16px root: `py-6` resolves to **19.2px** of band
+  padding and `gap-4` to **12.8px**, against a marketing band's
+  `py-[96px] md:py-[128px]` and `gap-[32px] lg:gap-[64px]`. Five times and
+  two-to-five times apart. Compose a marketing page on `page_gutters` and every
+  band collapses to a dashboard row.
+
+  The pages skill now carries the two numbers, sends band geometry to section 5
+  `marketing` (`status: composed_here`), and sends the dashboard shell, the
+  workspace templates and the T-codes to the blocks that own them.
+
 ## 0.13.0
 
 ### Minor Changes
