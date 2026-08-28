@@ -36,13 +36,13 @@ consumers:
   - repo: skene-marketing-website
     surface: site
     installs: true
-    installs_verified: "2026-08-27, branch staging @ a874e83, against v0.13.0"
+    installs_verified: "2026-08-28, branch chore/ds-0.14.0 @ 8ecd9b9, against v0.14.0. Lockfile resolves 2e55aa5, the v0.14.0 tag and this repo's main. Typecheck, build, lint:copy, lint:classes and agent readability (492/492, live checks included) all green. That consumer branch is PR #68 and is not merged: skene-marketing-website main still installs 0.13.0 until it is."
     version: "github:SkeneTechnologies/skene-design-system#semver:^0.14.0"
     theme_default: dark
     reach:
-      import_statements: 222
-      files: 33
-      css_directives: 2
+      import_statements: 226
+      files: 36
+      css_directives: 3
       routes: 20
       distinct_specifiers: 49
       by_layer: { sections: 162, patterns: 31, ui: 23, utils: 3, asset-urls: 3 }
