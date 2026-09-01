@@ -79,13 +79,59 @@ looked" into "it passed". So adding a check to `scripts/eval.mjs` means adding a
 fixture that makes it fail, and the test suite refuses a scoreable check that no
 fixture breaks.
 
+## Generating candidates
+
+```bash
+npm run eval:generate -- --dry-run          # plan + prompt, calls nothing
+npm run eval:generate -- --case product-security
+npm run eval:generate -- --n 3 --effort xhigh
+npm run eval -- --candidates evals/runs/<stamp> --measure
+```
+
+**The agent gets `DESIGN.md` and one tool.** Not a context dump — dumping the
+whole tree would measure "does a big pile of docs work" and prove nothing about
+the split the tree exists for. `read_design_file` resolves nothing outside
+`DESIGN.md` and `design/`, so the agent cannot fall back to `machine/*.yaml`,
+the source, or the gallery. That restriction *is* the experiment: it puts the
+model in the position of an agent in someone else's editor with a URL and no
+checkout, which is the reader `DESIGN.md` was built for and the one nothing had
+ever tested.
+
+**The retrieval trace is the finding.** Every path the agent opens is recorded,
+so a run answers questions no other gate here can:
+
+- which files an agent actually reaches for, and in what order
+- how many it needs before it can build a page — the routing table in
+  `DESIGN.md` claims one or two; a run says whether that holds
+- which paths it tries that **do not exist**, reported separately. A miss is the
+  docs implying a file that was never generated, and it is a docs bug.
+
+Each run writes `<label>.tsx` beside a `<label>.json` carrying the model, the
+effort, the turn count, token usage, a dollar estimate, and the trace.
+
+**Runs are not fixtures.** Output goes to `evals/runs/<stamp>/`, which git
+ignores, never to `candidates/`. A generated file landing among the fixtures
+would turn a finding about the model into a red build. For the same reason
+scoring a run wants `--measure`, which reports without enforcing the `bad-*`
+convention — a generated candidate makes no claim about whether it should fail.
+
+**Every run costs money.** `--dry-run` prints the plan and the full prompt
+without calling anything. Credentials come from the environment or an
+`ant auth login` profile; nothing here prompts for a key or stores one.
+
 ## What is still missing
 
-**Candidates are hand-written.** Nothing here yet generates one from a brief by
-handing an agent `DESIGN.md` and nothing else — which is the real experiment,
-and the reason `--candidates` takes a directory. Until that runs, this measures
-that the scorer works and that the contracts are expressible as checks; it does
-not yet measure a model.
+**Nothing has run this against a model yet.** It is written and its pure parts
+are tested — the path sandbox against traversal and contract-file escapes, the
+fence stripper, the tool schema — but this environment has no API key, so no
+real candidate has been generated and no trace has been collected. The first
+run is the first real measurement, and it may well find that the harness needs
+adjusting before the design system does.
+
+**No judge.** Everything scored is deterministic and cites a contract. Whether
+the copy is any good, or the section order argues the brief, is not something a
+regex decides — that is where a model-graded rubric would go, and it is not
+here.
 
 **No rendered stage.** Structure and vocabulary are checkable from source.
 Whether the result *looks* right is not.

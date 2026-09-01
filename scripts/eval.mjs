@@ -58,6 +58,13 @@ const flag = (name) => {
   return i === -1 ? null : args[i + 1]
 }
 const asJson = args.includes('--json')
+/**
+ * Measure mode: report, do not enforce. The `bad-*` naming convention is a
+ * property of the committed FIXTURES, which assert the scorer. A generated
+ * candidate carries no such claim, and its failures are the finding — exiting
+ * non-zero on them would turn a result about the model into a red build.
+ */
+const measure = args.includes('--measure')
 const onlyCase = flag('case')
 const candidatesDir = flag('candidates') ?? 'evals/candidates'
 
@@ -430,11 +437,12 @@ function main() {
       // A fixture named `bad-*` is SUPPOSED to fail. The loop is only honest if
       // the scorer is known to catch what it claims to, so the fixtures assert
       // the scorer rather than the design system.
-      const expectFail = c.label.startsWith('bad-')
-      const ok = expectFail ? c.failed > 0 : c.failed === 0
+      const expectFail = !measure && c.label.startsWith('bad-')
+      const ok = measure ? true : expectFail ? c.failed > 0 : c.failed === 0
       if (!ok) anyUnexpected = true
       const mark = ok ? '\x1b[32m✓\x1b[0m' : '\x1b[31m✗\x1b[0m'
-      console.log(`  ${mark} ${c.label}  ${c.passed}/${c.scored} checks pass${
+      const mk = measure ? (c.failed ? '\x1b[31m✗\x1b[0m' : '\x1b[32m✓\x1b[0m') : mark
+      console.log(`  ${mk} ${c.label}  ${c.passed}/${c.scored} checks pass${
         expectFail ? `  (fixture, expected to fail)` : ''
       }`)
       for (const r of c.results) {

@@ -24,3 +24,7 @@ storybook-static/
 
 # Run-mode working files: target, gap list, evidence. Never shipped.
 .runlog/
+
+# Generated eval candidates. Each run costs money and is a measurement,
+# not a fixture — evals/candidates/ holds the committed fixtures.
+evals/runs/

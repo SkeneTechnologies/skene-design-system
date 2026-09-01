@@ -24,6 +24,7 @@ import { readFileSync, readdirSync, existsSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { load } from 'js-yaml'
 import { run } from '../scripts/eval.mjs'
+import { resolveDesignPath, asTsx, READ_TOOL } from '../scripts/eval-generate.mjs'
 
 const ROOT = resolve(__dirname, '..')
 const read = (p: string) => readFileSync(resolve(ROOT, p), 'utf8')
@@ -121,5 +122,65 @@ describe('the eval scorer', () => {
     expect(pkg.scripts.eval).toBeTruthy()
     expect(pkg.files).toContain('evals')
     expect(readdirSync(resolve(ROOT, 'evals/cases')).filter((f) => f.endsWith('.yaml')).length).toBeGreaterThan(1)
+  })
+})
+
+/**
+ * The generator hands an agent DESIGN.md and a tool that can read the design
+ * tree AND NOTHING ELSE. That restriction is the experiment — an agent that can
+ * fall back to `machine/*.yaml` or the source is not the reader DESIGN.md was
+ * built for — so it is also the one part worth testing without an API key.
+ */
+describe('the candidate generator', () => {
+  it.each([
+    ['DESIGN.md', true],
+    ['design/index.md', true],
+    ['design/tokens.md', true],
+    ['design/pages/product-page.md', true],
+    ['design/sections/artifact-shell.md', true],
+    // The contracts are the thing being held back: an agent that reads the YAML
+    // is not being tested on the Markdown.
+    ['machine/context.yaml', false],
+    ['machine/rules.yaml', false],
+    ['package.json', false],
+    ['README.md', false],
+    // Traversal, resolved before it is judged rather than pattern-matched.
+    ['design/../machine/rules.yaml', false],
+    ['../../etc/passwd', false],
+    ['/etc/passwd', false],
+    // Inside the tree but absent: a miss, not an escape.
+    ['design/nope.md', false],
+  ])('read_design_file(%s) allowed: %s', (path, allowed) => {
+    expect(Boolean(resolveDesignPath(path as string))).toBe(allowed)
+  })
+
+  it('declares a strict tool schema', () => {
+    expect(READ_TOOL.name).toBe('read_design_file')
+    expect(READ_TOOL.input_schema.additionalProperties).toBe(false)
+    expect(READ_TOOL.input_schema.required).toEqual(['path'])
+  })
+
+  // The prompt asks for a bare file. Models add a fence anyway, and a fence in
+  // the candidate would make every import invisible to the scorer's parser —
+  // scoring zero modules used and reading as a page that imported nothing.
+  it.each([
+    ['```tsx\nconst a = 1\n```', 'const a = 1\n'],
+    ['```typescript\nconst a = 1\n```', 'const a = 1\n'],
+    ['```\nconst a = 1\n```', 'const a = 1\n'],
+    ['const a = 1', 'const a = 1\n'],
+  ])('strips a fence from %j', (input, expected) => {
+    expect(asTsx(input as string)).toBe(expected as string)
+  })
+
+  it('is wired, and its output is not committed as a fixture', () => {
+    const pkg = JSON.parse(read('package.json')) as {
+      scripts: Record<string, string>
+      devDependencies: Record<string, string>
+    }
+    expect(pkg.scripts['eval:generate']).toBeTruthy()
+    expect(pkg.devDependencies['@anthropic-ai/sdk']).toBeTruthy()
+    // A generated candidate landing in evals/candidates/ would turn a finding
+    // about the model into a red build, so runs go somewhere git ignores.
+    expect(read('.gitignore')).toContain('evals/runs/')
   })
 })
