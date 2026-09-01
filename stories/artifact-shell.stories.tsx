@@ -116,6 +116,36 @@ export const Frames: Story = {
   ),
 }
 
+/**
+ * The same three fields drawn in CSS, `field="css"`, against the raster.
+ *
+ * They are deliberately not identical: the shipped assets are an ordered dither
+ * over a photographic wash and the CSS is a regular grid over a linear one. The
+ * pair is here so the difference is reviewable rather than described, because
+ * the choice between them is a real trade — the CSS field cannot be the page's
+ * Largest Contentful Paint and the raster usually is. `styles/effects.css`
+ * carries the measurement above `.skene-field`.
+ */
+export const FieldsRasterVsCss: Story = {
+  render: () => (
+    <div className="grid gap-6">
+      {(['gh', 'db', 'jr'] as const).map((k) => (
+        <div key={k} className="grid gap-4 md:grid-cols-2">
+          {(['image', 'css'] as const).map((f) => (
+            <ArtFrame key={f} kind={k} field={f}>
+              <ArtPanel bar={<ArtTitle>{`${k} · ${f}`}</ArtTitle>}>
+                <p className="text-[13px] text-text-muted">
+                  {f === 'image' ? 'Raster field, counts as LCP.' : 'CSS field, cannot be LCP.'}
+                </p>
+              </ArtPanel>
+            </ArtFrame>
+          ))}
+        </div>
+      ))}
+    </div>
+  ),
+}
+
 /** `row` lays two panels side by side inside one frame. */
 export const FrameRow: Story = {
   render: () => (

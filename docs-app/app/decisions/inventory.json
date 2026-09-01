@@ -1286,7 +1286,7 @@
       ],
       "summary": "The shell every artifact sits in: a textured field, a bordered frame, the",
       "client": false,
-      "lines": 596,
+      "lines": 631,
       "cases": [
         "section-artifact-shell"
       ],

@@ -85,6 +85,22 @@ export interface ArtFrameProps {
    * ON a field rather than a panel with a coloured border.
    */
   row?: boolean
+  /**
+   * How the field is drawn. `image` is the shipped raster and the default;
+   * `css` is the same three fields as gradients, in `styles/effects.css`.
+   *
+   * The choice is a performance one and the comment above `.skene-field` in
+   * that stylesheet carries the measurement. Short version: a raster on a frame
+   * this size is normally the page's Largest Contentful Paint, and swapping it
+   * for CSS moved LCP from 1534 ms to 640 ms on a test page by making the
+   * heading the largest paint instead. Neither masking the image to its visible
+   * band nor downscaling it achieves that; only not being an image does.
+   *
+   * It defaults to `image` because the two are not pixel-identical — the raster
+   * is an ordered dither over a photographic wash and the CSS is a regular grid
+   * over a linear one. Opt in where the frame is big enough to gate LCP.
+   */
+  field?: 'image' | 'css'
   className?: string
   children?: React.ReactNode
 }
@@ -121,11 +137,30 @@ export interface ArtFrameProps {
  *
  * Decorative: nothing here is announced, and the children own the frame.
  */
-export function ArtFrame({ kind, row = false, className, children }: ArtFrameProps) {
+export function ArtFrame({
+  kind,
+  row = false,
+  field = 'image',
+  className,
+  children,
+}: ArtFrameProps) {
+  const css = field === 'css'
   return (
     <div
+      /*
+        `data-field` is what `.skene-field` keys off, and it is set only on the
+        CSS path so the attribute never appears without the class that reads it.
+      */
+      data-field={css ? kind : undefined}
       className={cn(
-        'min-w-0 overflow-hidden rounded-xl bg-surface-deep-2 bg-cover bg-center bg-no-repeat',
+        'min-w-0 overflow-hidden rounded-xl bg-surface-deep-2',
+        /*
+          `bg-cover bg-center bg-no-repeat` belongs to the raster. The CSS field
+          sets its own three-layer `background-size`, `-position` and `-repeat`,
+          and leaving the utilities on would override the shorthand the class
+          declares, which shows up as one enormous dot rather than a grid.
+        */
+        css ? 'skene-field' : 'bg-cover bg-center bg-no-repeat',
         row
           ? // The child stretches so a two-card row keeps equal heights; min-w-0
             // so a long line inside it wraps instead of widening the track.
@@ -133,7 +168,7 @@ export function ArtFrame({ kind, row = false, className, children }: ArtFramePro
           : 'p-[16px] md:p-[32px] lg:p-[48px]',
         className,
       )}
-      style={{ backgroundImage: `url(${TEXTURE_URL[kind]})` }}
+      style={css ? undefined : { backgroundImage: `url(${TEXTURE_URL[kind]})` }}
     >
       {children}
     </div>

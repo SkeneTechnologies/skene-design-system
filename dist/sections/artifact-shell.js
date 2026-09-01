@@ -44,12 +44,20 @@ const TEXTURE_URL = {
  *
  * Decorative: nothing here is announced, and the children own the frame.
  */
-export function ArtFrame({ kind, row = false, className, children }) {
-    return (_jsx("div", { className: cn('min-w-0 overflow-hidden rounded-xl bg-surface-deep-2 bg-cover bg-center bg-no-repeat', row
+export function ArtFrame({ kind, row = false, field = 'image', className, children, }) {
+    const css = field === 'css';
+    return (_jsx("div", { "data-field": css ? kind : undefined, className: cn('min-w-0 overflow-hidden rounded-xl bg-surface-deep-2', 
+        /*
+          `bg-cover bg-center bg-no-repeat` belongs to the raster. The CSS field
+          sets its own three-layer `background-size`, `-position` and `-repeat`,
+          and leaving the utilities on would override the shorthand the class
+          declares, which shows up as one enormous dot rather than a grid.
+        */
+        css ? 'skene-field' : 'bg-cover bg-center bg-no-repeat', row
             ? // The child stretches so a two-card row keeps equal heights; min-w-0
                 // so a long line inside it wraps instead of widening the track.
                 'flex min-h-[16rem] items-center p-[6%] md:min-h-[22rem] [&>*]:min-w-0 [&>*]:flex-auto'
-            : 'p-[16px] md:p-[32px] lg:p-[48px]', className), style: { backgroundImage: `url(${TEXTURE_URL[kind]})` }, children: children }));
+            : 'p-[16px] md:p-[32px] lg:p-[48px]', className), style: css ? undefined : { backgroundImage: `url(${TEXTURE_URL[kind]})` }, children: children }));
 }
 /**
  * The artifact frame itself: a bordered, rounded, clipped box with an optional

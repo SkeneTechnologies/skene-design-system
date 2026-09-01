@@ -59,6 +59,22 @@ export interface ArtFrameProps {
      * ON a field rather than a panel with a coloured border.
      */
     row?: boolean;
+    /**
+     * How the field is drawn. `image` is the shipped raster and the default;
+     * `css` is the same three fields as gradients, in `styles/effects.css`.
+     *
+     * The choice is a performance one and the comment above `.skene-field` in
+     * that stylesheet carries the measurement. Short version: a raster on a frame
+     * this size is normally the page's Largest Contentful Paint, and swapping it
+     * for CSS moved LCP from 1534 ms to 640 ms on a test page by making the
+     * heading the largest paint instead. Neither masking the image to its visible
+     * band nor downscaling it achieves that; only not being an image does.
+     *
+     * It defaults to `image` because the two are not pixel-identical — the raster
+     * is an ordered dither over a photographic wash and the CSS is a regular grid
+     * over a linear one. Opt in where the frame is big enough to gate LCP.
+     */
+    field?: 'image' | 'css';
     className?: string;
     children?: React.ReactNode;
 }
@@ -94,7 +110,7 @@ export interface ArtFrameProps {
  *
  * Decorative: nothing here is announced, and the children own the frame.
  */
-export declare function ArtFrame({ kind, row, className, children }: ArtFrameProps): import("react").JSX.Element;
+export declare function ArtFrame({ kind, row, field, className, children, }: ArtFrameProps): import("react").JSX.Element;
 export interface ArtPanelProps {
     /**
      * The header strip. Usually traffic lights and an `<ArtTitle>`. Omitted

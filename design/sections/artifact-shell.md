@@ -27,6 +27,7 @@ The shell every drawn Skene Cloud artifact is built from: the textured field, th
 | --- | --- | --- | --- | --- |
 | `ArtFrame` | `kind` | 'gh' \| 'db' \| 'jr' | **yes** |  |
 | `ArtFrame` | `row` | `boolean` |  | `false` |
+| `ArtFrame` | `field` | `'image' \| 'css'` |  | `'image'` |
 | `ArtFrame` | `children` | `React.ReactNode` |  |  |
 | `ArtPanel` | `bar` | `React.ReactNode` |  |  |
 | `ArtPanel` | `children` | `React.ReactNode` |  |  |
