@@ -17,7 +17,7 @@
  * What it does see is the file-header
  * comment, which says what the component was BUILT for. That framing is exactly
  * what makes a reader write a near-copy instead of reusing what is there, and
- * the twenty duplicate clusters in this package are the receipt.
+ * the ten duplicate clusters in this package are the receipt.
  *
  * ## Derived vs authored, and why the split is the whole design
  *

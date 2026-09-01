@@ -191,7 +191,7 @@ describe('referential integrity', () => {
  * Everything above answers "what is this module for". An agent BUILDING a page
  * asks the inverse: "I need a band that contrasts two options — what do I
  * have?" With 89 modules the only honest answers were read all of them or
- * guess, and guessing is how this package accumulated twenty documented
+ * guess, and guessing is how this package accumulated ten adjudicated
  * clusters of the same visual object drawn twice.
  *
  * The index only works if the vocabulary is CLOSED. A tag anyone can coin at

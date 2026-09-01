@@ -185,10 +185,12 @@ const unproven = moduleIds.filter((id) => (modules[id].seen ?? []).length === 0)
 
 /**
  * The adjudicated duplicate clusters, read out of inventory.json rather than
- * quoted. The prose elsewhere in this repository says "twenty measured
- * clusters" in five places with nothing backing it, and README says "the ten
- * resolved design decisions" two lines above saying twenty. This file cites the
- * registry it can count.
+ * quoted. This file cited the registry from the start, because the prose around
+ * it said "twenty measured clusters" in seven places with nothing behind it —
+ * while README said "the ten resolved design decisions" two rows above saying
+ * twenty. Those seven were corrected on 2026-09-01 and are now gated by
+ * `agent-entry-point.test.ts`; deriving it here stays the reason this file
+ * never had to be one of them.
  */
 const decisions = (
   JSON.parse(readFileSync(resolve(root, 'docs-app/app/decisions/inventory.json'), 'utf8'))

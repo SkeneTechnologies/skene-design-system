@@ -218,6 +218,57 @@ describe('the counts quoted to agents are true', () => {
     ).toContain(`${word.charAt(0).toUpperCase()}${word.slice(1)} archetypes`)
   })
 
+  // "twenty measured clusters" was quoted in SEVEN places — README, AGENTS,
+  // both halves of the component skill, a test comment, compositions.yaml and
+  // build-context.mjs — with nothing behind it, while README said "the ten
+  // resolved design decisions" two rows above saying twenty. Ten is what the
+  // registry holds. Every surface now quotes it, and this is what keeps them
+  // quoting it: the count comes from inventory.json, not from the prose.
+  it.each([
+    'README.md',
+    'AGENTS.md',
+    'skills/skene-design-system/SKILL.md',
+    '__tests__/context.test.ts',
+    'scripts/build-context.mjs',
+    'machine/compositions.yaml',
+  ])('%s does not quote a cluster count the registry cannot back', (file) => {
+    const decisions = JSON.parse(read('docs-app/app/decisions/inventory.json')).decisions as unknown[]
+    // Flatten first. The claim is wrapped prose in every one of these files and
+    // three of them wrap it mid-phrase behind a comment prefix (` * `, `# `,
+    // YAML block indent) — the first cut of this gate matched a single line and
+    // was blind to `ten adjudicated\n * clusters`, which is to say blind to two
+    // of the six files it claimed to cover.
+    const body = read(file).replace(/^[\s*#]+/gm, ' ').replace(/\s+/g, ' ')
+    const CARDINAL: Record<string, number> = {
+      one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8,
+      nine: 9, ten: 10, eleven: 11, twelve: 12, twenty: 20, thirty: 30,
+    }
+    const ORDINAL: Record<string, number> = {
+      tenth: 10, eleventh: 11, twelfth: 12, 'twenty-first': 21, 'twenty-second': 22,
+    }
+    const qualifier = '(?:adjudicated |documented |measured |duplicate )?'
+    for (const [, word] of body.matchAll(
+      new RegExp(String.raw`\b([\w-]+) ${qualifier}clusters?\b`, 'g'),
+    )) {
+      const w = word.toLowerCase()
+      // An ordinal is a different claim — "an eleventh cluster" says this is
+      // the NEXT one, so it must be n+1. Dropping ordinals as unparseable is
+      // how the first cut passed `the twenty-first duplicate cluster` while
+      // the registry held ten.
+      if (w in ORDINAL) {
+        expect(
+          ORDINAL[w],
+          `${file} calls something the ${w} cluster; the registry holds ${decisions.length}, so the next is ${decisions.length + 1}`,
+        ).toBe(decisions.length + 1)
+      } else if (w in CARDINAL) {
+        expect(
+          CARDINAL[w],
+          `${file} quotes ${CARDINAL[w]} clusters; inventory.json holds ${decisions.length} adjudicated decisions`,
+        ).toBe(decisions.length)
+      }
+    }
+  })
+
   it('the README gallery paragraph quotes the real case coverage', () => {
     const withCases = inventory.modules.filter((m) => (m.cases ?? []).length > 0)
     const cases = inventory.modules.reduce((n, m) => n + (m.cases ?? []).length, 0)

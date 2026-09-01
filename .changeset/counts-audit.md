@@ -32,11 +32,8 @@ this the only gated count was "89 modules", in two of the three entry points —
 and its comment cited "the 8 modules that need `use client`" as its example of
 another count that was true.
 
-Left alone deliberately: "twenty measured clusters", repeated in `README.md`,
-`AGENTS.md`, both skills and a test comment. Nothing in the repository backs it.
-`inventory.json` carries ten adjudicated decisions (six resolved) and
-`docs/sections.md` gives three overlaps a verdict, and `README.md` says "the ten
-resolved design decisions" two lines above saying twenty. The right number is a
-judgement about history rather than a lookup, so it is reported rather than
-guessed. `DESIGN.md` now cites the registry it can count instead of repeating
-the figure.
+Reported, then fixed in a follow-up: "twenty measured clusters" was quoted in
+seven places — `README.md`, `AGENTS.md`, both halves of the component skill, a
+test comment, `machine/compositions.yaml` and `scripts/build-context.mjs` —
+with nothing behind it, while `README.md` said "the ten resolved design
+decisions" two rows above saying twenty. The registry holds ten.

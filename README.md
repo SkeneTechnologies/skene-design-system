@@ -30,10 +30,12 @@ in `node_modules/@skene/design-system/`:
 | `inventory.json` | the generated index: every module with its exports, line count, gallery **cases** and authored usage, plus the ten resolved design decisions with their verdicts. This is what `seen:` in `context.yaml` points at. Import it as `@skene/design-system/inventory.json`, or read `docs-app/app/decisions/inventory.json` under the package root. |
 
 Nothing pointed at these until 2026-08-13, which is the failure they were built
-to prevent: the package has 89 modules and twenty measured clusters where the
+to prevent: the package has 89 modules and ten adjudicated clusters where the
 same visual object was drawn twice, every one of them by somebody who could not
-find the first. If you are about to write a card, a chip, a table, a framed
-window or a textured field, grep `machine/context.yaml` first.
+find the first. Each is in `inventory.json` with its verdict — the same ten
+named two rows above, which this sentence read as "twenty" until 2026-09-01.
+If you are about to write a card, a chip, a table, a framed window or a
+textured field, grep `machine/context.yaml` first.
 
 This repo exists because those two apps had drifted into one design system split
 in half. The dashboard owned `design-tokens.json` and the generators; the
