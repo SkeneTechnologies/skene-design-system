@@ -214,3 +214,108 @@
     --font-size-marketing-xl: 28px;
   }
 }
+
+/* ── Halftone fields, as CSS rather than as a raster ────────────────────── */
+
+/* Usage: <div class="skene-field" data-field="jr">…</div>, or `field="css"` on
+   `ArtFrame`, which sets both attributes for you.
+
+   These reproduce `assets/card1_bg.webp`, `card2_bg.webp` and `card3_bg.webp`
+   — the peach, mauve and green halftone fields — as a colour wash under two
+   offset dot grids. They exist for one measured reason.
+
+   ## The measurement
+
+   Largest Contentful Paint takes the biggest painted element, and a raster
+   backdrop on a full-width frame is almost always it. Measured 2026-09-01 with
+   Lighthouse 13.4.1, mobile emulation, on one page with the same artwork three
+   ways:
+
+     texture as an image            LCP 1534 ms, element = the frame
+     texture masked to its band     LCP 1509 ms, element = the frame
+     texture as CSS                 LCP  640 ms, element = the <h1>
+
+   The middle row is the one worth keeping, because it is the fix everyone
+   reaches for first. Painting the artwork only in the ~30px band that is
+   actually visible does NOT help: Chrome measures the element's painted box,
+   not the part a reader can see, so occluding ninety percent of it changes
+   nothing. Downscaling does not help either — the 0.05 bits-per-pixel
+   threshold below which Chrome ignores an image is computed from natural size,
+   and `card1_bg` re-encoded to 900px still measures 0.55.
+
+   With the field as CSS there is no image to be the largest paint, so LCP
+   falls to whatever text paints first, which is FCP. On the marketing site
+   that is roughly 4.5 s against roughly 1.2 s.
+
+   ## What it is not
+
+   It is not pixel-identical to the raster. The shipped assets are an ordered
+   dither over a photographic wash; this is a regular grid over a linear one.
+   At the ~30px band an `ArtFrame` shows, it reads as the same material; side
+   by side at full bleed it is flatter and more even. That is why `field`
+   defaults to `image` and this is opt-in per call site rather than a swap. Use
+   it where the frame is large enough to be the LCP element, which is the money
+   pages, and keep the raster where the field itself is the point.
+
+   Two dot phases at different sizes, not one: a single grid at this pitch
+   reads as a screen door rather than a dither. The pitch is 7px because the
+   assets measure ~28px of dot period at 1462 wide, which is ~7px at the width
+   a frame's band occupies on a phone. */
+
+/* The nine colours below are sampled from the assets, not taken from the
+   palette, and they are local custom properties rather than tokens for that
+   reason: they are an approximation of a piece of artwork, not a role anything
+   else should reach for. Naming them keeps the provenance visible and keeps
+   nine hex literals out of the gradient lists. Sampled with a heavy blur for
+   the wash and a min/max over a 80px window for the dots. */
+
+.skene-field {
+  background-repeat: repeat, repeat, repeat, no-repeat;
+  background-size: 6px 6px, 6px 6px, 6px 6px, 100% 100%;
+  background-position: 0 0, 3px 3px, 1.5px 4.5px, 0 0;
+
+  background-image:
+    radial-gradient(circle at 50% 50%, var(--skene-field-dot-a) 0 1.9px, transparent 2.1px),
+    radial-gradient(circle at 50% 50%, var(--skene-field-dot-b) 0 1.8px, transparent 2.0px),
+    radial-gradient(circle at 50% 50%, var(--skene-field-dot-c) 0 1.2px, transparent 1.4px),
+    linear-gradient(
+      150deg,
+      var(--skene-field-wash-1) 0%,
+      var(--skene-field-wash-2) 29%,
+      var(--skene-field-wash-3) 63%,
+      var(--skene-field-wash-4) 100%
+    );
+}
+
+/* jr — card1_bg.webp, the peach field: journeys, funnels, measurement. */
+.skene-field[data-field='jr'] {
+  --skene-field-dot-a: #f3b664;
+  --skene-field-dot-b: #b3c2da;
+  --skene-field-dot-c: #efd9b4;
+  --skene-field-wash-1: #e0b98f;
+  --skene-field-wash-2: #d8ba9b;
+  --skene-field-wash-3: #c9beb0;
+  --skene-field-wash-4: #c4bfb6;
+}
+
+/* gh — card2_bg.webp, the mauve field: GitHub, PRs, editor chrome. */
+.skene-field[data-field='gh'] {
+  --skene-field-dot-a: #d3a588;
+  --skene-field-dot-b: #94adf2;
+  --skene-field-dot-c: #d9c4e0;
+  --skene-field-wash-1: #c2a4b2;
+  --skene-field-wash-2: #c3a4b1;
+  --skene-field-wash-3: #aaaacc;
+  --skene-field-wash-4: #a6aad1;
+}
+
+/* db — card3_bg.webp, the green field: schema, connections, keys. */
+.skene-field[data-field='db'] {
+  --skene-field-dot-a: #e0c960;
+  --skene-field-dot-b: #99cfdd;
+  --skene-field-dot-c: #d5e3ac;
+  --skene-field-wash-1: #bacd98;
+  --skene-field-wash-2: #becd94;
+  --skene-field-wash-3: #a2d1b1;
+  --skene-field-wash-4: #9ad3bb;
+}
