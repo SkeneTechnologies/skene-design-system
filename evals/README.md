@@ -119,19 +119,64 @@ convention — a generated candidate makes no claim about whether it should fail
 without calling anything. Credentials come from the environment or an
 `ant auth login` profile; nothing here prompts for a key or stores one.
 
+## Rendering it
+
+```bash
+npm run eval:render                        # every fixture, both themes
+npm run eval:render -- --case product-security --shot
+```
+
+Source checks read the file. The defect this package keeps shipping is not in
+the file: text at 1.08:1 happens when a token RESOLVES wrong against a ground
+three ancestors up, and no amount of reading the candidate will show it.
+
+So this renders. The candidate is bundled against the real `dist/`,
+server-rendered, given a stylesheet Tailwind generates by scanning `dist/` and
+the candidate, and loaded in Chromium. Every run of visible text is measured:
+computed colour, the first opaque background above it, ratio against the floors
+in `machine/accessibility.yaml`. Both themes, because `chrome.*` and `themed`
+share their dark values and diverge only in light.
+
+It found the defect on its first full run: `bad-light-without-class`, built to
+trip the *source* check, measures **1.07:1**. Two checks agreeing from opposite
+directions is the point.
+
+**It will not score what it cannot see.** Text on a background image has no
+computable ground — the textured fields are exactly that — so it is reported as
+unscorable, never as a pass. And a colour the harness cannot read throws rather
+than being skipped: the first cut parsed `rgb()` only, so every `oklch()` colour
+was dropped silently. That was eleven of twelve text runs on the first page
+measured, and it reported a clean page.
+
+Not in `npm run verify`: it needs a browser, like `npm run visual`. The test
+suite skips it when Chromium is absent rather than failing — a red build for a
+missing browser teaches people to ignore red builds.
+
+## Judging the argument
+
+```bash
+npm run eval:judge -- --dry-run --case product-security
+npm run eval:judge -- --candidates evals/runs/<stamp>
+```
+
+Neither the scorer nor the renderer can answer what the brief actually asks: does
+the page make the argument it was commissioned to make, in an order that carries
+it? A page can satisfy `load_bearing` and still put the evidence before the thing
+the evidence is about, which reverses it.
+
+Three rules keep this from becoming a vibe. It scores the **brief**, never the
+taste — the rubric is the case's own `must_argue` plus the archetype's `argues`
+line from `compositions.yaml`. Every verdict must **cite** a module, a section or
+an ordering, and `dropUncited` discards the ones that do not — enforced in code,
+because a rule that lives only in a prompt is one the model may decline to
+follow. And it never overrides a contract: where a rule is machine-checkable the
+machine owns it, and the judge is **advisory** — it never fails a build.
+
 ## What is still missing
 
-**Nothing has run this against a model yet.** It is written and its pure parts
-are tested — the path sandbox against traversal and contract-file escapes, the
-fence stripper, the tool schema — but this environment has no API key, so no
-real candidate has been generated and no trace has been collected. The first
-run is the first real measurement, and it may well find that the harness needs
-adjusting before the design system does.
-
-**No judge.** Everything scored is deterministic and cites a contract. Whether
-the copy is any good, or the section order argues the brief, is not something a
-regex decides — that is where a model-graded rubric would go, and it is not
-here.
-
-**No rendered stage.** Structure and vocabulary are checkable from source.
-Whether the result *looks* right is not.
+**No model has run either half.** The generator and the judge are written, their
+pure parts are tested, and `--dry-run` prints exactly what would be sent — but
+this environment has no `ANTHROPIC_API_KEY` and no `ant` CLI, so nothing has
+called a model. That is a credential, not a design problem: both are one
+command away on a machine that has one. The renderer, which needs no key, has
+run and is reported above.

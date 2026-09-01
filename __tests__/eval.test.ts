@@ -25,6 +25,7 @@ import { resolve } from 'node:path'
 import { load } from 'js-yaml'
 import { run } from '../scripts/eval.mjs'
 import { resolveDesignPath, asTsx, READ_TOOL } from '../scripts/eval-generate.mjs'
+import { dropUncited, promptFor, SCHEMA } from '../scripts/eval-judge.mjs'
 
 const ROOT = resolve(__dirname, '..')
 const read = (p: string) => readFileSync(resolve(ROOT, p), 'utf8')
@@ -184,4 +185,100 @@ describe('the candidate generator', () => {
     // about the model into a red build, so runs go somewhere git ignores.
     expect(read('.gitignore')).toContain('evals/runs/')
   })
+})
+
+/**
+ * The judge is advisory and needs a key to run, so what is testable is the part
+ * that keeps it from becoming a vibe: it may not report a finding it cannot
+ * cite. That rule is ENFORCED here rather than requested in the prompt, because
+ * a rule only in a prompt is a rule the model may decline to follow.
+ */
+describe('the judge', () => {
+  it('drops any finding that cites nothing', () => {
+    const r = dropUncited({
+      verdict: 'partly',
+      order_holds: true,
+      unmet: [
+        { claim: 'a', why: 'b', cites: 'sections/artifact-shell' },
+        { claim: 'c', why: 'd', cites: '   ' },
+        { claim: 'e', why: 'f' },
+      ],
+      findings: [{ note: 'x', cites: 'band 2 before band 1' }, { note: 'y', cites: '' }],
+    } as never)
+    expect(r.unmet).toHaveLength(1)
+    expect(r.findings).toHaveLength(1)
+    expect(r.dropped).toBe(3)
+  })
+
+  it('asks about the brief, and hands the model the archetype it is judging', () => {
+    const kase = {
+      archetype: 'product-page',
+      brief: 'A page for someone evaluating trust.',
+      must_argue: ['the product is real'],
+    }
+    const p = promptFor(kase as never, 'import { X } from "y"')
+    expect(p).toContain('product-page')
+    expect(p).toContain('the product is real')
+    // compositions.yaml owns what the shape argues; the judge is told it.
+    expect(p).toContain('Show the thing running before you argue about it')
+  })
+
+  it('requires a citation in its own output schema', () => {
+    const unmet = (SCHEMA as never as { properties: Record<string, never> }).properties.unmet as {
+      items: { required: string[] }
+    }
+    expect(unmet.items.required).toContain('cites')
+  })
+})
+
+/**
+ * The renderer needs Chromium. It is present in this image and may not be in
+ * CI, so the suite skips rather than fails when it is absent — a red build for
+ * a missing browser teaches people to ignore red builds.
+ */
+const CHROMIUM = ['/opt/pw-browsers']
+  .filter((b) => existsSync(b))
+  .flatMap((b) => readdirSync(b).filter((d) => /^chromium-\d+$/.test(d)).map((d) => `${b}/${d}/chrome-linux/chrome`))
+  .find((p) => existsSync(p))
+
+describe.skipIf(!CHROMIUM)('the renderer', () => {
+  it(
+    'renders the good fixtures and measures real text in both themes',
+    async () => {
+      const { render } = await import('../scripts/eval-render.mjs')
+      const report = (await render({ caseFilter: 'use-case-analytics' })) as {
+        label: string
+        error?: string
+        themes?: { theme: string; scored: number; failures: unknown[] }[]
+      }[]
+      const good = report.find((r) => r.label === 'good')
+      expect(good?.error, 'the good fixture must render').toBeUndefined()
+      expect(good?.themes?.map((t) => t.theme)).toEqual(['dark', 'light'])
+      // A run that measures nothing proves nothing: the first cut parsed only
+      // `rgb()` and silently skipped every `oklch()` colour, which was eleven
+      // of twelve text runs, and reported a clean page.
+      for (const t of good?.themes ?? []) expect(t.scored).toBeGreaterThan(5)
+      for (const t of good?.themes ?? []) expect(t.failures).toEqual([])
+    },
+    120_000,
+  )
+
+  it(
+    'catches the light-ground defect on real pixels',
+    async () => {
+      const { render } = await import('../scripts/eval-render.mjs')
+      const report = (await render({ caseFilter: 'product-security' })) as {
+        label: string
+        themes?: { failures: { ratio: number }[] }[]
+      }[]
+      // Built to trip the SOURCE check `polarity`. The renderer confirms it
+      // independently, and puts a number on it.
+      const bad = report.find((r) => r.label === 'bad-light-without-class')
+      const worst = Math.min(
+        ...(bad?.themes ?? []).flatMap((t) => t.failures.map((f) => f.ratio)),
+      )
+      expect(worst).toBeLessThan(2)
+    },
+    180_000,
+  )
 })
