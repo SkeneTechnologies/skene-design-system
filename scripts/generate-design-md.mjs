@@ -71,6 +71,26 @@ const pkg = JSON.parse(readFileSync(resolve(root, 'package.json'), 'utf8'))
  */
 const DOCS = String(pkg.designDocs ?? '').replace(/\/$/, '')
 
+/**
+ * The address that works TODAY, derived rather than written down.
+ *
+ * The repository is public, so GitHub already serves every one of these files
+ * over HTTPS with `access-control-allow-origin: *`. That is the whole of "the
+ * tree must be reachable by an agent with no checkout" — no deploy, no routes,
+ * no infrastructure. The canonical origin above is nicer and is where this
+ * moves once it is deployed; until then a reader that only has a URL needs one
+ * that resolves, and a document naming an address that 404s is worse than one
+ * naming none.
+ *
+ * Built from `repository.url` so it cannot drift from the repo it points at.
+ */
+const RAW = (() => {
+  const m = /github\.com[:/]+([\w.-]+)\/([\w.-]+?)(?:\.git)?$/.exec(
+    String(pkg.repository?.url ?? pkg.repository ?? ''),
+  )
+  return m ? `https://raw.githubusercontent.com/${m[1]}/${m[2]}/main` : null
+})()
+
 // ---------------------------------------------------------------- formatting
 
 /**
@@ -897,7 +917,14 @@ everything else is. Nothing below needs you to have read anything above it.
 
 Then open **one** more file. Each is self-contained — it restates the rules
 rather than linking back here, so you never need two open at once.`,
-        `Everything below is at **${DOCS}/**. Fetch a path, do not guess a file — the listing under each row is the whole of it.`,
+        [
+          `Everything below is at **${DOCS}/**. Fetch a path, do not guess a file — the listing under each row is the whole of it.`,
+          RAW
+            ? `If that origin does not answer yet, the same files are served by GitHub from the public repository, which needs no deployment and sends \`access-control-allow-origin: *\`: **${RAW}/**. Swap the base, keep the path — \`${RAW}/design/index.md\` is the same file as \`${DOCS}/design/index.md\`.`
+            : null,
+        ]
+          .filter(Boolean)
+          .join('\n\n'),
         table(
           ['you are', 'fetch', 'roughly'],
           [

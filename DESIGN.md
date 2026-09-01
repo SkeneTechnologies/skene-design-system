@@ -19,6 +19,8 @@ rather than linking back here, so you never need two open at once.
 
 Everything below is at **https://www.skene.ai/resources/docs/**. Fetch a path, do not guess a file — the listing under each row is the whole of it.
 
+If that origin does not answer yet, the same files are served by GitHub from the public repository, which needs no deployment and sends `access-control-allow-origin: *`: **https://raw.githubusercontent.com/SkeneTechnologies/skene-design-system/main/**. Swap the base, keep the path — `https://raw.githubusercontent.com/SkeneTechnologies/skene-design-system/main/design/index.md` is the same file as `https://www.skene.ai/resources/docs/design/index.md`.
+
 | you are | fetch | roughly |
 | --- | --- | --- |
 | finding a module, by intent or by name | `https://www.skene.ai/resources/docs/design/index.md` | 6k tokens |

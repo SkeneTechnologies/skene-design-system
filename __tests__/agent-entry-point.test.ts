@@ -311,6 +311,23 @@ describe('the counts quoted to agents are true', () => {
     expect(expected).toBe('/resources/docs')
   })
 
+  /**
+   * The fallback has to be real, and derived.
+   *
+   * The repository is public, so GitHub serves the tree today with no
+   * deployment at all. DESIGN.md names that base beside the canonical origin,
+   * built from `repository.url` — a hand-typed copy would be a second place the
+   * owner/name lives, which is how a pointer goes stale without anyone editing
+   * the thing it points at.
+   */
+  it('DESIGN.md names a fallback base derived from the repository', () => {
+    const pkg = JSON.parse(read('package.json')) as { repository: { url: string } }
+    const m = /github\.com[:/]+([\w.-]+)\/([\w.-]+?)(?:\.git)?$/.exec(pkg.repository.url)
+    expect(m, 'repository.url is not a github URL').toBeTruthy()
+    const raw = `https://raw.githubusercontent.com/${m![1]}/${m![2]}/main`
+    expect(read('DESIGN.md')).toContain(raw)
+  })
+
   it('the README gallery paragraph quotes the real case coverage', () => {
     const withCases = inventory.modules.filter((m) => (m.cases ?? []).length > 0)
     const cases = inventory.modules.reduce((n, m) => n + (m.cases ?? []).length, 0)
