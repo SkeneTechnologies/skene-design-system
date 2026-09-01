@@ -166,7 +166,8 @@ were already here.
 
 | you are | open |
 |---|---|
-| orienting: scales, rules, floors, the index | `DESIGN.md` |
+| orienting: rules, scales, floors, page archetypes | `DESIGN.md` — the short one |
+| finding a module, by intent or by name | `design/index.md` |
 | picking a colour or a value | `design/tokens.md` — every token value, kept out of `DESIGN.md` |
 | building a whole page | `design/pages/<archetype>.md` — 10 of them |
 | reaching for one module | `design/<module>.md`, at the module's own path |

@@ -71,13 +71,26 @@ const pkg = JSON.parse(readFileSync(resolve(root, 'package.json'), 'utf8'))
  * would end a table cell, and a bare `<section>` would render as an element and
  * vanish. Tags already inside backticks are left alone.
  */
-const prose = (s) =>
-  String(s ?? '')
+const prose = (s) => {
+  // Split on code spans and rewrite only what is OUTSIDE them. Doing it with a
+  // lookaround instead put backticks INSIDE a span — `design/<module>.md`
+  // came out as `design/`<module>`.md`, which renders as broken code with a
+  // stray tag. Anything already in backticks is by definition already safe.
+  const parts = String(s ?? '')
     .replace(/\r?\n+/g, ' ')
-    .replace(/(^|[^`])<(\/?[a-zA-Z][a-zA-Z0-9-]*)>(?!`)/g, '$1`<$2>`')
-    // `__tests__/roles.test.ts` unbackticked is a pair of emphasis markers.
-    .replace(/(^|[^`])(__tests__\/[\w./-]+)(?!`)/g, '$1`$2`')
+    .split(/(`[^`]*`)/)
+  return parts
+    .map((part, i) =>
+      i % 2
+        ? part
+        : part
+            .replace(/<(\/?[a-zA-Z][a-zA-Z0-9-]*)>/g, '`<$1>`')
+            // `__tests__/roles.test.ts` unbackticked is a pair of emphasis markers.
+            .replace(/(__tests__\/[\w./-]+)/g, '`$1`'),
+    )
+    .join('')
     .trim()
+}
 
 /** As `prose`, plus the pipe escape a table cell needs and prose does not. */
 const cell = (s) => prose(s).replace(/\|/g, '\\|')
@@ -667,34 +680,71 @@ function scaleBlock() {
   return parts.filter(Boolean).join('\n\n')
 }
 
-function designMd() {
-  const nsOrder = ['ui', 'patterns', 'sections']
-  const catalogue = nsOrder
-    .map((ns) => {
-      const ids = moduleIds.filter((id) => id.startsWith(`${ns}/`))
-      const t = table(
-        ['module', 'use for'],
-        ids.map((id) => [`[${id}](${modulePath(id)})`, cell(modules[id].useFor)]),
-      )
-      return t ? `### ${ns}/ — ${ids.length} modules\n\n${t}` : null
-    })
+const NAMESPACES = ['ui', 'patterns', 'sections']
+const idsIn = (ns) => moduleIds.filter((id) => id.startsWith(`${ns}/`))
+
+/**
+ * The two module indexes, in their own leaf.
+ *
+ * Inlined they were 8.9k of DESIGN.md's 12.3k — 72% of the orienting file was
+ * two overlapping answers to "which module?", paid for by every agent that
+ * opened it to check a rule or a scale. They are one fetch now, and DESIGN.md
+ * says what they cost before you spend it.
+ *
+ * `from` is where the links resolve from: `design/index.md` is one level below
+ * DESIGN.md, so the same module path needs a different prefix in each.
+ */
+function moduleIndexes(from) {
+  const path = (id) => (from === 'design' ? `${id.split('/')[0]}/${id.split('/')[1]}.md` : modulePath(id))
+
+  const catalogue = NAMESPACES.map((ns) => {
+    const ids = idsIn(ns)
+    const t = table(
+      ['module', 'use for'],
+      ids.map((id) => [`[${id}](${path(id)})`, cell(modules[id].useFor)]),
+    )
+    return t ? `### ${ns}/ — ${ids.length} modules\n\n${t}` : null
+  })
     .filter(Boolean)
     .join('\n\n')
-
-  const pageRows = Object.entries(compositions.archetypes).map(([name, spec]) => [
-    `[${name}](design/pages/${name}.md)`,
-    code(spec.confidence),
-    String(spec.instances),
-    cell(spec.argues),
-  ])
 
   const intentRows = [...intentIndex.entries()]
     .sort(([a], [b]) => a.localeCompare(b))
     .map(([tag, ids]) => [
       code(tag),
       cell(context.intents?.[tag] ?? ''),
-      ids.map((id) => `[${id.split('/')[1]}](${modulePath(id)})`).join(', '),
+      ids.map((id) => `[${id.split('/')[1]}](${path(id)})`).join(', '),
     ])
+
+  return { catalogue, intentRows }
+}
+
+function indexDoc() {
+  const { catalogue, intentRows } = moduleIndexes('design')
+  return doc([
+    '# Module index',
+    banner(['machine/context.yaml']),
+    `All ${moduleIds.length} modules, two ways. Find the row, open that one file, stop — each module page is self-sufficient and costs about a tenth of this one.`,
+    section(
+      'By intent — read this backwards',
+      [
+        `You know what you are trying to DO. The tag takes you to the candidates without reading ${moduleIds.length} entries. The vocabulary is closed and declared at the head of \`machine/context.yaml\`.`,
+        table(['intent', 'means', 'modules'], intentRows),
+      ].join('\n\n'),
+    ),
+    section('By namespace', catalogue),
+    NON_NEGOTIABLES,
+    `---\n\nRules, scales, contrast floors and the page templates: [DESIGN.md](../DESIGN.md).`,
+  ])
+}
+
+function designMd() {
+  const pageRows = Object.entries(compositions.archetypes).map(([name, spec]) => [
+    `[${name}](design/pages/${name}.md)`,
+    code(spec.confidence),
+    String(spec.instances),
+    cell(spec.argues),
+  ])
 
   return doc([
     '# Skene design system — DESIGN.md',
@@ -711,23 +761,28 @@ function designMd() {
     } page templates, ${[...walkTokens(tokens)].length} tokens.`,
     section(
       'How to read this',
-      `One fetch per question. This file carries the system — tokens, scales, rules,
-contrast floors, and the index below. Then open **one** more file:
+      [
+        `One fetch per question. This file is the short one: the rules that cannot be
+broken, the scales, the contrast floors, the page archetypes, and where
+everything else is. Nothing below needs you to have read anything above it.
 
-- building a whole page → \`design/pages/<archetype>.md\`
-- reaching for a component → \`design/<module>.md\`
-
-Do not read the whole tree. The index tables below are the retrieval step: find
-the row, open that file, stop.
-
-**Before you write a component, look for it here.** There are ${
-        context.counts.modules
-      } modules and a
-documented history of the same visual object being drawn twice by someone who
-could not find the first: ${decisions.length} such collisions have been
-adjudicated (${resolvedDecisions} resolved), each one recorded in
-\`inventory.json\` with its verdict. If you are about to write a card, a chip, a
-table, a framed window or a textured field, it exists.`,
+Then open **one** more file. Each is self-contained — it restates the rules
+rather than linking back here, so you never need two open at once.`,
+        table(
+          ['you are', 'open', 'roughly'],
+          [
+            ['finding a module, by intent or by name', '`design/index.md`', '9k tokens'],
+            ['reaching for one module you can name', '`design/<module>.md`', '2k'],
+            ['building a whole page', '`design/pages/<archetype>.md`', '3k'],
+            ['picking a colour or a value', '`design/tokens.md`', '7k'],
+          ],
+        ),
+        `Do not read the tree. There are ${
+          moduleIds.length + Object.keys(compositions.archetypes).length + 3
+        } files here and together they are
+larger than the YAML they were generated from — the split buys you a cheap
+answer to ONE question, not a cheap corpus. Read the row, open the file, stop.`,
+      ].join('\n\n'),
     ),
     NON_NEGOTIABLES,
     section(
@@ -765,13 +820,20 @@ table, a framed window or a textured field, it exists.`,
       ].join('\n\n'),
     ),
     section(
-      'Intent index — read this backwards',
+      'Finding a module',
       [
-        'You know what you are trying to do. Find the tag, open the module.',
-        table(['intent', 'means', 'modules'], intentRows),
+        `All ${moduleIds.length} of them are indexed in **[design/index.md](design/index.md)** — by intent, which is the one to read when you know what you are trying to DO rather than what it is called, and by namespace. Kept out of this file because it is the largest thing in it and answers a different question from the rules and scales here.`,
+        table(
+          ['namespace', 'modules', 'what lives there'],
+          [
+            ['`ui/`', String(idsIn('ui').length), 'the primitives — buttons, inputs, tables, overlays'],
+            ['`patterns/`', String(idsIn('patterns').length), 'page furniture and surface treatments'],
+            ['`sections/`', String(idsIn('sections').length), 'whole marketing bands and drawn artifacts'],
+          ],
+        ),
+        `Before you write a component, look there. ${decisions.length} collisions where one visual object was drawn twice have already been adjudicated — every one by somebody who could not find the first.`,
       ].join('\n\n'),
     ),
-    section('Module index', catalogue),
     section('Scales', scaleBlock()),
     section('Tokens', tokenSummary()),
     section(
@@ -829,6 +891,7 @@ table, a framed window or a textured field, it exists.`,
 const emissions = new Map()
 emissions.set('DESIGN.md', designMd())
 emissions.set('design/tokens.md', tokensDoc())
+emissions.set('design/index.md', indexDoc())
 for (const id of moduleIds) emissions.set(modulePath(id), moduleDoc(id))
 for (const archetype of Object.keys(compositions.archetypes)) {
   emissions.set(`design/pages/${archetype}.md`, pageDoc(archetype))
@@ -876,7 +939,7 @@ if (check) {
     writeFileSync(abs, content)
   }
   console.log(
-    `wrote ${emissions.size} files: DESIGN.md, design/tokens.md, ${moduleIds.length} modules, ${
+    `wrote ${emissions.size} files: DESIGN.md, design/index.md, design/tokens.md, ${moduleIds.length} modules, ${
       Object.keys(compositions.archetypes).length
     } page templates.`,
   )

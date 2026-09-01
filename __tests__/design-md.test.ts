@@ -59,11 +59,13 @@ describe('DESIGN.md', () => {
   it('emits nothing that is not a module, an archetype or a named leaf', () => {
     const expected = new Set([
       'DESIGN.md',
-      // The one leaf that is neither: the token values, split out of DESIGN.md
-      // because they are the largest thing in it and are wanted only when
-      // picking a value. Any OTHER unexpected file is an orphan — a module
+      // The two leaves that are neither. Both were split out of DESIGN.md for
+      // the same reason — inlined, the token values and the module indexes were
+      // together 82% of it, paid for by every agent that opened it to check a
+      // rule or a scale. Any OTHER unexpected file is an orphan: a module
       // renamed without regenerating leaves its old page behind.
       'design/tokens.md',
+      'design/index.md',
       ...moduleIds.map((id) => `design/${id}.md`),
       ...archetypes.map((a) => `design/pages/${a}.md`),
     ])

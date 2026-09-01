@@ -37,7 +37,7 @@ Every claim cites the prop, default or export that makes it true. A claim that c
 | claim | via |
 | --- | --- |
 | Any two-word binary switch — the pricing wording lives entirely in props. `monthlyLabel`/`yearlyLabel` are `ReactNode`, so "USD / EUR", "Self-serve / Enterprise", "Cloud / Self-hosted" all work with no code change. | `prop BillingToggle.monthlyLabel` |
-| Labels that carry a badge: since they are `ReactNode` and the row is `flex items-center gap-3`, `yearlyLabel={<>Billed yearly `<Chip>`-20%`</Chip>`</>}` renders inline. | `prop BillingToggle.yearlyLabel` |
+| Labels that carry a badge: since they are `ReactNode` and the row is `flex items-center gap-3`, `yearlyLabel={<>Billed yearly <Chip>-20%</Chip></>}` renders inline. | `prop BillingToggle.yearlyLabel` |
 | Driving more than one section from one switch. It holds no internal state, so a single `useState` in a page island can feed the `PlanGrid` prices and a comparison table from the same value — the demo (`docs-app/app/pricing-demo.tsx`) does exactly this pattern with one plan grid. | `prop BillingToggle.onValueChange` |
 | Placement and scale via `className`, which merges into the outer flex row through tailwind-merge: `mx-auto`, `justify-center`, `text-[12px]` all take. | `className` |
 
