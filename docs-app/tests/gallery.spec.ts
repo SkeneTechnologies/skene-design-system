@@ -4,10 +4,13 @@ import { test, expect } from '@playwright/test'
  * One snapshot per page. The pages are dense on purpose, so a single diff
  * covers every primitive and pattern rather than needing one test each.
  */
+/* Relative, not root-relative: the app is served under a basePath and
+   `baseURL` carries it, so a leading slash would resolve against the origin
+   and land on a 404. */
 const PAGES = [
-  ['index', '/'],
-  ['surfaces', '/surfaces'],
-  ['pages', '/pages'],
+  ['index', ''],
+  ['surfaces', 'surfaces'],
+  ['pages', 'pages'],
 ] as const
 
 for (const [name, path] of PAGES) {

@@ -1,6 +1,20 @@
 import { defineConfig, devices } from '@playwright/test'
 
 /**
+ * The prefix every route in this app is served under.
+ *
+ * `next.config.ts` derives `basePath` from `designDocs` in the package
+ * manifest, so nothing here is served at `/`. Derived from the same field
+ * rather than written out, because the two drifting apart is exactly the
+ * failure this constant exists to have fixed once.
+ */
+const BASE_PATH = new URL(
+  (require('../package.json') as { designDocs: string }).designDocs,
+).pathname.replace(/\/$/, '')
+
+const ORIGIN = 'http://127.0.0.1:3210'
+
+/**
  * Visual coverage for the package.
  *
  * The 26 unit tests are structural — token coverage, client boundaries,
@@ -34,7 +48,12 @@ export default defineConfig({
   },
   snapshotPathTemplate: '{testDir}/__screenshots__/{arg}-{platform}{ext}',
   use: {
-    baseURL: 'http://127.0.0.1:3210',
+    /*
+      Trailing slash, and the specs navigate with RELATIVE paths. A leading
+      slash in `page.goto` is resolved against the origin and discards the
+      basePath, which would send every test to a 404 that still screenshots.
+    */
+    baseURL: `${ORIGIN}${BASE_PATH}/`,
     ...devices['Desktop Chrome'],
     viewport: { width: 1280, height: 900 },
     deviceScaleFactor: 1,
@@ -46,7 +65,16 @@ export default defineConfig({
     // bundle whose React internals disagree, which crashes prerendering on a
     // different random page each run.
     command: 'NODE_ENV=production npx next build && npx next start -p 3210',
-    url: 'http://127.0.0.1:3210',
+    /*
+      The basePath, not the bare origin. `basePath` means `/` is a 404, and
+      Playwright's readiness probe treats a 404 as not-ready, so polling the
+      origin never succeeds: the job sat until the 300s webServer timeout and
+      reported `Timed out waiting 300000ms from config.webServer` with no other
+      output, which reads like a slow or hanging build rather than a URL that
+      was never going to answer. Locally it was invisible, because
+      `reuseExistingServer` skips the probe outside CI.
+    */
+    url: `${ORIGIN}${BASE_PATH}`,
     reuseExistingServer: !process.env.CI,
     timeout: 300_000,
   },
