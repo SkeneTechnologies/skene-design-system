@@ -3,7 +3,7 @@
  * ever fails, either the checks drifted or a contract changed under them.
  */
 import { ArtFrame, ArtPanel, ArtTitle, DataTable, DataRow, DataCell } from '@skene/design-system/sections/artifact-shell'
-import { KeyValueTable, KeyValueRow } from '@skene/design-system/sections/key-value-table'
+import { KeyValueTable, TableNote } from '@skene/design-system/sections/key-value-table'
 import { TrustPanel, TrustFact } from '@skene/design-system/sections/trust-panel'
 import { FeatureRow } from '@skene/design-system/sections/feature-row'
 
@@ -26,10 +26,14 @@ export default function SecurityPage() {
       </section>
 
       <section className="py-[96px] md:py-[128px]">
-        <KeyValueTable>
-          <KeyValueRow label="Data residency" value="eu-west-1" />
-          <KeyValueRow label="Retention" value="30 days" />
-        </KeyValueTable>
+        <KeyValueTable
+          columns={[{ header: 'Control' }, { header: 'Value', mono: true }]}
+          rows={[
+            { id: 'residency', cells: ['Data residency', 'eu-west-1'] },
+            { id: 'retention', cells: ['Retention', '30 days'] },
+          ]}
+        />
+        <TableNote>Both are set per workspace and shown here as configured.</TableNote>
       </section>
 
       <section className="py-[96px] md:py-[128px]">
@@ -39,8 +43,8 @@ export default function SecurityPage() {
       </section>
 
       <section className="py-[64px] md:py-[80px]">
-        <TrustPanel heading="What we will not do">
-          <TrustFact>Your source never leaves the region you chose.</TrustFact>
+        <TrustPanel title="What we will not do">
+          <TrustFact title="Region pinned">Your source never leaves the region you chose.</TrustFact>
         </TrustPanel>
       </section>
     </>

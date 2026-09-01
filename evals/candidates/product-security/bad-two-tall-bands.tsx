@@ -9,7 +9,7 @@ export default function SecurityPage() {
         <ArtFrame kind="gh"><ArtPanel>scopes</ArtPanel></ArtFrame>
       </section>
       <section className="py-[128px] md:py-[176px]">
-        <TrustPanel heading="What we will not do"><TrustFact>Region pinned.</TrustFact></TrustPanel>
+        <TrustPanel title="What we will not do"><TrustFact title="Region pinned">eu-west-1 only.</TrustFact></TrustPanel>
       </section>
     </>
   )
