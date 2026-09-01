@@ -113,28 +113,32 @@ describe('DESIGN.md', () => {
   })
 
   /**
-   * `DESIGN.md` ships; the tree it routes to is SERVED.
+   * Shipped AND served, which is not a contradiction.
    *
-   * `machine/*.yaml` (~100k tokens) and `design/` (~136k) are the same facts
-   * for two different readers: an agent with the checkout greps the YAML, an
-   * agent with a URL fetches the tree. Shipping both put ~136k of a surface
-   * most consumers never open into every install. So the YAML ships, the tree
-   * is served, and nobody holds both. `DESIGN.md` itself stays in the tarball
-   * — it is 3.7k and it is the map.
+   * These were briefly split — the tree pulled from the tarball on the argument
+   * that it cost every install ~136k tokens. That number was misleading: tokens
+   * are only spent when something READS them, and on disk the tree is 708KB
+   * beside 13MB of assets. Removing it saved nothing measurable and broke the
+   * one consumer that publishes it, which installs the package and would have
+   * served the files straight out of `node_modules`.
+   *
+   * So both. An agent with the checkout reads `node_modules/.../design/`; an
+   * agent with only a URL fetches the same path over HTTP. Shipping never
+   * prevented serving.
    */
-  it('ships DESIGN.md and serves the tree, rather than shipping both', () => {
+  it('ships the tree and serves it', () => {
     expect(pkg.files).toContain('DESIGN.md')
+    expect(pkg.files).toContain('design')
     expect(pkg.exports['./DESIGN.md']).toBe('./DESIGN.md')
-    expect(pkg.files, 'the tree is served, not shipped').not.toContain('design')
-    expect(pkg.exports['./design/*'], 'an export for a path the tarball omits').toBeUndefined()
-    // A route that does not exist makes the whole arrangement a dead pointer,
-    // which is the failure `llms.txt` already shipped once with inventory.json.
+    expect(pkg.exports['./design/*']).toBe('./design/*')
+    // A route that does not exist makes the served half a dead pointer, which
+    // is the failure `llms.txt` already shipped once with inventory.json.
     for (const r of [
       'docs-app/app/DESIGN.md/route.ts',
       'docs-app/app/design/[...path]/route.ts',
       'docs-app/app/styles.css/route.ts',
     ]) {
-      expect(existsSync(resolve(ROOT, r)), `${r} is missing, so the tree is neither shipped nor served`).toBe(true)
+      expect(existsSync(resolve(ROOT, r)), `${r} is missing, so the served half does not exist`).toBe(true)
     }
   })
 

@@ -9,12 +9,13 @@ new one. Published restricted; public to read, not open source.
 - [AGENTS.md](/AGENTS.md): install, configure, use, and the read order for the contracts below.
 - [DESIGN.md](/DESIGN.md): the same contracts as Markdown, for an agent with a context budget rather than a checkout. Rules, scales, contrast floors, the page archetypes, and where the rest is. The short one — open it first. Generated; the YAML is still the authority.
 
-## One file per question (generated from the contracts, SERVED not shipped)
+## One file per question (generated from the contracts)
 
-Served at **https://www.skene.ai/resources/docs/**, not in the npm tarball. `machine/` and `design/` are the
-same facts for two different readers, so the YAML ships and the tree is served —
-no consumer carries both. `DESIGN.md` ships as well, and names this origin.
-The stylesheet is at `https://www.skene.ai/resources/docs/styles.css`.
+In the npm tarball AND served at **https://www.skene.ai/resources/docs/**. Both,
+because they reach different readers: from a checkout, read
+`node_modules/@skene/design-system/design/`; with only a URL, fetch the same
+path over HTTP. The stylesheet is at
+`https://www.skene.ai/resources/docs/styles.css`.
 
 - `design/pages/` — one file per page template: section order, what is load-bearing, the band grammar, and the routes it was derived from. Ten of them, e.g. `design/pages/product-page.md`. The index is in DESIGN.md.
 - `design/` — one file per module, at the module's own path, e.g. `design/sections/artifact-shell.md`: what it is for, props, what it is NOT for, and what you must not do.

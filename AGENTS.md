@@ -164,11 +164,12 @@ The table above assumes a checkout and a budget. `DESIGN.md` and the tree under
 question — the shape Vercel's `design.md` is built around, over contracts that
 were already here.
 
-`DESIGN.md` ships in the package. **The tree under `design/` does not** — it is
-SERVED, at `https://www.skene.ai/resources/docs/`, because `machine/` and `design/` are the same facts for two
-different readers and no consumer needs both. An agent with the checkout greps
-the YAML; an agent with a URL fetches the tree. Paths below are relative to that
-origin, and `DESIGN.md` names it in full.
+The tree ships in the package AND is served at
+`https://www.skene.ai/resources/docs/`. Both, because they reach different
+readers and shipping never prevented serving: an agent with the checkout reads
+`node_modules/@skene/design-system/design/`, an agent with only a URL fetches
+the same file over HTTP. On disk it is 708KB beside 13MB of assets, so the
+question of whether to ship it was never a real cost.
 
 | you are | open |
 |---|---|
