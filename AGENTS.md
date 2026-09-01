@@ -155,6 +155,27 @@ One and two are a pair, and the split is deliberate: `components.yaml` states
 constraints and does not say which component to pick, which is why its header
 sends you to `context.yaml` first and back afterwards.
 
+### If you cannot open seven files
+
+The table above assumes a checkout and a budget. `DESIGN.md` and the tree under
+`design/` carry the same facts as Markdown, split so that ONE fetch answers one
+question — the shape Vercel's `design.md` is built around, over contracts that
+were already here.
+
+| you are | open |
+|---|---|
+| orienting: tokens, scales, rules, floors, the index | `DESIGN.md` |
+| building a whole page | `design/pages/<archetype>.md` — 10 of them |
+| reaching for one module | `design/<module>.md`, at the module's own path |
+
+Do not read the tree. The index tables in `DESIGN.md` are the retrieval step:
+find the row, open that one file, stop.
+
+All of it is **generated** by `scripts/generate-design-md.mjs` from the YAML
+above, which stays the authority. `npm run design` regenerates;
+`npm run design:check` runs inside `npm run verify` and fails the build when a
+contract was edited and the Markdown was not.
+
 ## Before you write a component
 
 **Grep `machine/context.yaml`.** There are 89 modules and a documented history
