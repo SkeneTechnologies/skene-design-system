@@ -146,17 +146,21 @@ function briefFor(kase) {
 
 // --------------------------------------------------------------------- run
 
-async function generate(client, kase) {
-  const trace = []
+/**
+ * The system blocks, exactly as sent. Built here rather than inline so that
+ * `--dry-run` prints the real thing: the first version printed only the
+ * instructions and the brief, leaving out the block carrying DESIGN.md and the
+ * file listing — which is most of what the model sees. A dry run that shows a
+ * fraction of the prompt is worse than none, because it invites you to reason
+ * about a prompt that is not the one being sent.
+ *
+ * Stable prefix first so it caches across cases and repeats: render order is
+ * tools -> system -> messages, and these two blocks are identical for every
+ * candidate in a run. Only the brief varies, and it sits after the breakpoint.
+ */
+export function systemBlocks() {
   const design = readFileSync(resolve(root, 'DESIGN.md'), 'utf8')
-
-  /**
-   * Stable prefix first so it caches across cases and repeats: the render order
-   * is tools -> system -> messages, and DESIGN.md plus the tree listing are
-   * identical for every candidate in a run. Only the brief varies, and it sits
-   * after the last breakpoint.
-   */
-  const system = [
+  return [
     { type: 'text', text: SYSTEM },
     {
       type: 'text',
@@ -164,7 +168,11 @@ async function generate(client, kase) {
       cache_control: { type: 'ephemeral' },
     },
   ]
+}
 
+async function generate(client, kase) {
+  const trace = []
+  const system = systemBlocks()
   const messages = [{ role: 'user', content: briefFor(kase) }]
   const usage = { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }
   let turns = 0
@@ -243,12 +251,33 @@ async function main() {
   const outDir = resolve(root, 'evals/runs', stamp)
 
   if (dryRun) {
-    console.log(`model ${MODEL}, effort ${EFFORT}, ${N} candidate(s) per case`)
-    console.log(`cases: ${cases.map((c) => c.name).join(', ')}`)
+    // Everything the model sees, in the order it sees it, with nothing elided.
+    const system = systemBlocks()
+    const briefs = cases.map((c) => briefFor(c))
+    const est = (s) => `~${Math.round(String(s).length / 4).toLocaleString()} tok`
+    const wire = [
+      ['tools', JSON.stringify([READ_TOOL])],
+      ...system.map((b, i) => [`system[${i}]${b.cache_control ? ' (cached)' : ''}`, b.text]),
+      ...cases.map((c, i) => [`messages[0] user — ${c.name}`, briefs[i]]),
+    ]
+
+    console.log(`model ${MODEL}, effort ${EFFORT}, adaptive thinking, streamed`)
+    console.log(`${N} candidate(s) per case: ${cases.map((c) => c.name).join(', ')}`)
     console.log(`would write to evals/runs/${stamp}/`)
-    console.log(`\nreadable by the agent: DESIGN.md + ${designTreeListing().length} files under design/`)
-    console.log(`\n--- system prompt ---\n${SYSTEM}`)
-    console.log(`\n--- brief for ${cases[0].name} ---\n${briefFor(cases[0])}`)
+    console.log(`readable via read_design_file: DESIGN.md + ${designTreeListing().length} files under design/\n`)
+    console.log('request, in render order:')
+    for (const [label, text] of wire) console.log(`  ${label.padEnd(34)} ${est(text)}`)
+    console.log(
+      `  ${'TOTAL first request'.padEnd(34)} ~${Math.round(
+        wire.reduce((n, [, t]) => n + String(t).length, 0) / 4,
+      ).toLocaleString()} tok, of which ~${Math.round(
+        String(system[1].text).length / 4,
+      ).toLocaleString()} cached after the first call`,
+    )
+
+    for (const [label, text] of wire) {
+      console.log(`\n${'='.repeat(76)}\n${label}\n${'='.repeat(76)}\n${text}`)
+    }
     return
   }
 
