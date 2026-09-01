@@ -1,0 +1,19 @@
+# A brief, not a spec. The agent gets this and DESIGN.md — nothing else.
+#
+# Derived from a route that exists: (site)/product/security/page.tsx is one of
+# the four routes the product-page archetype was read out of, so the recipe
+# being scored here was measured on a page of exactly this kind.
+archetype: product-page
+brief: >-
+  A page for a security-conscious engineering lead evaluating whether Skene can
+  be trusted with their repositories. They need to see what it touches, what it
+  stores, and what it refuses to do — and they will not read a paragraph that
+  asserts trustworthiness without something checkable beside it.
+must_argue:
+  - the product is real and running, shown rather than described
+  - the reference facts are inspectable, not summarised
+  - the evidence sits after the artifact, not before it
+notes: >-
+  compositions.yaml marks only sections/artifact-shell load-bearing for this
+  archetype, and its watch_for says the artifact VARIES — pick the one that
+  carries the claim rather than the one at the top of the optional list.

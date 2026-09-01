@@ -1,0 +1,10 @@
+# The second archetype, chosen because its load_bearing has TWO entries rather
+# than one — a candidate can satisfy the shape by accident with one, not two.
+archetype: use-case-page
+brief: >-
+  A page for a growth team who lost a week to a checkout event that silently
+  stopped firing. They want to see the workflow running on their own shape of
+  data, and the reference table under it, before any argument about why.
+must_argue:
+  - the workflow is real, shown as its own data
+  - the reference half is a table, not prose
