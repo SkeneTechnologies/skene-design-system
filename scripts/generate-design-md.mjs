@@ -164,6 +164,19 @@ for (const [id, m] of Object.entries(modules)) {
 
 const unproven = moduleIds.filter((id) => (modules[id].seen ?? []).length === 0)
 
+/**
+ * The adjudicated duplicate clusters, read out of inventory.json rather than
+ * quoted. The prose elsewhere in this repository says "twenty measured
+ * clusters" in five places with nothing backing it, and README says "the ten
+ * resolved design decisions" two lines above saying twenty. This file cites the
+ * registry it can count.
+ */
+const decisions = (
+  JSON.parse(readFileSync(resolve(root, 'docs-app/app/decisions/inventory.json'), 'utf8'))
+    .decisions ?? []
+)
+const resolvedDecisions = decisions.filter((d) => d.status === 'resolved').length
+
 // ------------------------------------------------- blocks repeated per-file
 
 /**
@@ -635,8 +648,10 @@ the row, open that file, stop.
         context.counts.modules
       } modules and a
 documented history of the same visual object being drawn twice by someone who
-could not find the first — twenty measured clusters of it. If you are about to
-write a card, a chip, a table, a framed window or a textured field, it exists.`,
+could not find the first: ${decisions.length} such collisions have been
+adjudicated (${resolvedDecisions} resolved), each one recorded in
+\`inventory.json\` with its verdict. If you are about to write a card, a chip, a
+table, a framed window or a textured field, it exists.`,
     ),
     NON_NEGOTIABLES,
     section(

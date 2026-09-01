@@ -315,12 +315,19 @@ npm run verify          # all of the above, plus the build
 
 ### The gallery
 
-`docs-app/` is a Next app rendering 79 of the 89 modules as 85 cases in both
+`docs-app/` is a Next app rendering 88 of the 89 modules as 97 cases in both
 modes, and it is the instrument every duplicate collapse in this package was
-proven against. It said "all 79 modules" for long enough that both halves went
-wrong: the total reached 89, and the ten that gained no case are exactly the
-ones `machine/context.yaml` marks `seen: []` and tells an agent to treat as
-unproven. Run it root-first:
+proven against. The one module with no case is exactly the one
+`machine/context.yaml` marks `seen: []` and tells an agent to treat as
+unproven — `ui/sonner`, a toast host with no resting state to snapshot.
+
+This sentence has now gone stale twice. It said "all 79 modules" until the
+total reached 89, was corrected to "79 of the 89 modules as 85 cases, and the
+ten that gained no case", and that correction was stale in turn — the real
+figures were 88, 97 and one. A count in a document an agent is meant to trust
+is a claim like any other, and this one is now gated: see
+`__tests__/agent-entry-point.test.ts`, which reads them out of
+`inventory.json`. Run it root-first:
 
 ```bash
 npm ci                  # in the REPO ROOT, not optional

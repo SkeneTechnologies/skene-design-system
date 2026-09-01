@@ -21,8 +21,10 @@ the row, open that file, stop.
 
 **Before you write a component, look for it here.** There are 89 modules and a
 documented history of the same visual object being drawn twice by someone who
-could not find the first — twenty measured clusters of it. If you are about to
-write a card, a chip, a table, a framed window or a textured field, it exists.
+could not find the first: 10 such collisions have been
+adjudicated (6 resolved), each one recorded in
+`inventory.json` with its verdict. If you are about to write a card, a chip, a
+table, a framed window or a textured field, it exists.
 
 ## Rules that are not negotiable
 

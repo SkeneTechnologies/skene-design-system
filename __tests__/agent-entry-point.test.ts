@@ -27,6 +27,7 @@
 import { describe, it, expect } from 'vitest'
 import { readFileSync, existsSync, readdirSync, lstatSync, readlinkSync } from 'node:fs'
 import { resolve } from 'node:path'
+import { load } from 'js-yaml'
 
 const ROOT = resolve(__dirname, '..')
 const read = (p: string) => readFileSync(resolve(ROOT, p), 'utf8')
@@ -148,11 +149,81 @@ describe('the counts quoted to agents are true', () => {
     ['README.md', () => read('README.md')],
   ])('%s quotes the real module count', (_name, src) => {
     // Presence of the CURRENT figure, not "every number before the word
-    // modules". Both files make other true module counts — "the 8 modules that
-    // need `use client`" — and a test that flattened those into one rule would
-    // be satisfied by deleting the useful ones.
+    // modules". Both files make other true module counts, and a test that
+    // flattened those into one rule would be satisfied by deleting the useful
+    // ones. They are checked one by one below instead.
     expect(src(), `does not state the real total of ${counts.modules} modules`).toContain(
       `${counts.modules} modules`,
+    )
+  })
+
+  // Every count above was the only one checked, and on 2026-09-01 an audit
+  // found four more that had gone wrong, each in a sentence an agent acts on:
+  //
+  //   - AGENTS.md said "only the 8 modules that need it carry the directive"
+  //     when 28 do. That number traced to a real bug: build-inventory.mjs
+  //     matched only `'use client'` and 21 of the 29 directives in src are
+  //     written `"use client";`, so inventory.json — the file a consumer reads
+  //     to decide whether a deep import keeps its server boundary — was wrong
+  //     for 21 of 89 modules.
+  //   - llms.txt said 331 token values against 241 on disk.
+  //   - llms.txt said the pages skill tabulates eight archetypes; it is ten,
+  //     and the skill itself says ten. The index was wrong about the file it
+  //     indexes.
+  //   - README's gallery paragraph said "79 of the 89 modules as 85 cases, and
+  //     the ten that gained no case" against 88, 97 and one — and that
+  //     paragraph was ITSELF the correction of an earlier staleness, written
+  //     to explain how the previous figure had rotted.
+  //
+  // The pattern is the point. A count nobody derives goes stale, the prose
+  // around it goes on sounding careful, and the more confidently a sentence
+  // explains a past drift the less likely anyone is to re-check it. Each one
+  // below reads its figure out of the generated source.
+  const inventory = JSON.parse(read('docs-app/app/decisions/inventory.json')) as {
+    modules: { module: string; client?: boolean; cases?: unknown[] }[]
+  }
+
+  it('AGENTS.md quotes the real number of client modules', () => {
+    const clients = inventory.modules.filter((m) => m.client).length
+    expect(agents, `does not state the real ${clients} client modules`).toContain(
+      `${clients} modules that need`,
+    )
+  })
+
+  it('llms.txt quotes the real token count', () => {
+    const json = JSON.parse(read('design-tokens.json')) as Record<string, unknown>
+    const isLeaf = (x: unknown): boolean =>
+      typeof x === 'object' && x !== null && ('$value' in x || '$modes' in x)
+    const count = (node: Record<string, unknown>, top = false): number =>
+      Object.entries(node).reduce((n, [k, v]) => {
+        if (top && (k.startsWith('$') || k === 'version' || k === 'lastUpdated')) return n
+        if (isLeaf(v)) return n + 1
+        if (typeof v === 'object' && v !== null) return n + count(v as Record<string, unknown>)
+        return n
+      }, 0)
+    expect(llms).toContain(`${count(json, true)} token values`)
+  })
+
+  it('llms.txt quotes the real archetype count, the way the skill it indexes does', () => {
+    const compositions = load(read('machine/compositions.yaml')) as {
+      archetypes: Record<string, unknown>
+    }
+    const words = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten']
+    const n = Object.keys(compositions.archetypes).length
+    const word = words[n] ?? String(n)
+    expect(llms, `llms.txt does not say ${word} archetypes`).toContain(`${word} archetypes`)
+    expect(
+      read('skills/skene-design-system-pages/SKILL.md'),
+      `the pages skill does not say ${word} archetypes`,
+    ).toContain(`${word.charAt(0).toUpperCase()}${word.slice(1)} archetypes`)
+  })
+
+  it('the README gallery paragraph quotes the real case coverage', () => {
+    const withCases = inventory.modules.filter((m) => (m.cases ?? []).length > 0)
+    const cases = inventory.modules.reduce((n, m) => n + (m.cases ?? []).length, 0)
+    const readme = read('README.md')
+    expect(readme, 'README does not state the real rendered-module count').toContain(
+      `${withCases.length} of the ${inventory.modules.length} modules as ${cases} cases`,
     )
   })
 })

@@ -116,8 +116,10 @@ tokens.color.chrome.surface[0] // "#0a0a0a" — invariant, never inverts
 
 Deep-import for the tightest React Server Components boundary. The root barrel
 carries no `"use client"` directive on purpose, so `import { Card } from
-'@skene/design-system'` stays server-renderable; only the 8 modules that need
-it carry the directive themselves.
+'@skene/design-system'` stays server-renderable; only the 28 modules that need
+it carry the directive themselves. Which 28 is a fact you should read rather
+than remember: `client: true` in `machine/context.yaml`, and the `client` field
+in `inventory.json`.
 
 ## Skills — for an agent that has not read this file
 

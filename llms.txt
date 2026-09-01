@@ -28,7 +28,7 @@ new one. Published restricted; public to read, not open source.
 
 - [skills/skene-design-system-setup/SKILL.md](/skills/skene-design-system-setup/SKILL.md): first-time install, the stylesheet, the Tailwind @source line and the proof it took.
 - [skills/skene-design-system/SKILL.md](/skills/skene-design-system/SKILL.md): picking a component before writing one, the intent index, and the fields that bite.
-- [skills/skene-design-system-pages/SKILL.md](/skills/skene-design-system-pages/SKILL.md): composing a whole page — the spine, the eight archetypes and their confidence.
+- [skills/skene-design-system-pages/SKILL.md](/skills/skene-design-system-pages/SKILL.md): composing a whole page — the spine, the ten archetypes and their confidence.
 
 ## Prose
 
@@ -40,4 +40,4 @@ new one. Published restricted; public to read, not open source.
 
 ## Data
 
-- [design-tokens.json](/design-tokens.json): 331 token values, the source the CSS and TS are generated from.
+- [design-tokens.json](/design-tokens.json): 241 token values, the source the CSS and TS are generated from.

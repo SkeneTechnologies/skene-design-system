@@ -12,7 +12,7 @@
         "AccordionContent"
       ],
       "summary": "",
-      "client": false,
+      "client": true,
       "lines": 63,
       "cases": [
         "ui-accordion"
@@ -50,7 +50,7 @@
         "AlertDialogCancel"
       ],
       "summary": "",
-      "client": false,
+      "client": true,
       "lines": 147,
       "cases": [
         "ui-alert-dialog"
@@ -235,7 +235,7 @@
         "Checkbox"
       ],
       "summary": "",
-      "client": false,
+      "client": true,
       "lines": 33,
       "cases": [
         "ui-checkbox"
@@ -265,7 +265,7 @@
         "CollapsibleContent"
       ],
       "summary": "",
-      "client": false,
+      "client": true,
       "lines": 12,
       "cases": [
         "ui-collapsible"
@@ -301,7 +301,7 @@
         "CommandSeparator"
       ],
       "summary": "",
-      "client": false,
+      "client": true,
       "lines": 155,
       "cases": [
         "ui-command"
@@ -338,7 +338,7 @@
         "DialogDescription"
       ],
       "summary": "",
-      "client": false,
+      "client": true,
       "lines": 132,
       "cases": [
         "ui-dialog"
@@ -380,7 +380,7 @@
         "DropdownMenuRadioGroup"
       ],
       "summary": "",
-      "client": false,
+      "client": true,
       "lines": 215,
       "cases": [
         "ui-dropdown-menu"
@@ -411,7 +411,7 @@
         "HoverCardPortal"
       ],
       "summary": "",
-      "client": false,
+      "client": true,
       "lines": 37,
       "cases": [
         "ui-hover-card"
@@ -444,7 +444,7 @@
         "InputGroupTextarea"
       ],
       "summary": "",
-      "client": false,
+      "client": true,
       "lines": 171,
       "cases": [
         "ui-input-group"
@@ -535,7 +535,7 @@
         "NavigationMenuViewport"
       ],
       "summary": "",
-      "client": false,
+      "client": true,
       "lines": 152,
       "cases": [
         "ui-navigation-menu"
@@ -566,7 +566,7 @@
         "PopoverAnchor"
       ],
       "summary": "",
-      "client": false,
+      "client": true,
       "lines": 37,
       "cases": [
         "ui-popover"
@@ -594,7 +594,7 @@
         "Progress"
       ],
       "summary": "",
-      "client": false,
+      "client": true,
       "lines": 32,
       "cases": [
         "ui-progress"
@@ -631,7 +631,7 @@
         "SelectValue"
       ],
       "summary": "",
-      "client": false,
+      "client": true,
       "lines": 188,
       "cases": [
         "ui-select"
@@ -661,7 +661,7 @@
         "SettingsSwitch"
       ],
       "summary": "",
-      "client": false,
+      "client": true,
       "lines": 198,
       "cases": [
         "ui-settings-field"
@@ -694,7 +694,7 @@
         "SheetTitle"
       ],
       "summary": "",
-      "client": false,
+      "client": true,
       "lines": 102,
       "cases": [
         "ui-sheet"
@@ -750,7 +750,7 @@
         "Slider"
       ],
       "summary": "",
-      "client": false,
+      "client": true,
       "lines": 60,
       "cases": [
         "ui-slider"
@@ -778,7 +778,7 @@
         "Toaster"
       ],
       "summary": "",
-      "client": false,
+      "client": true,
       "lines": 30,
       "cases": [],
       "demo": null,
@@ -804,7 +804,7 @@
         "Switch"
       ],
       "summary": "",
-      "client": false,
+      "client": true,
       "lines": 32,
       "cases": [
         "ui-switch"
@@ -870,7 +870,7 @@
         "TabsContent"
       ],
       "summary": "",
-      "client": false,
+      "client": true,
       "lines": 59,
       "cases": [
         "ui-tabs"
@@ -929,7 +929,7 @@
         "TooltipProvider"
       ],
       "summary": "",
-      "client": false,
+      "client": true,
       "lines": 35,
       "cases": [
         "ui-tooltip"
@@ -2117,7 +2117,7 @@
         "JourneySignalScene"
       ],
       "summary": "A documented exception to `machine/rules.yaml`'s `styled_components_for_new_features`.",
-      "client": false,
+      "client": true,
       "lines": 1215,
       "cases": [
         "section-journey-signal-scene",

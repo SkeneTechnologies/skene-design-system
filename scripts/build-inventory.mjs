@@ -173,7 +173,14 @@ for (const { dir, layer, importBase } of LAYERS) {
       import: `${importBase}/${name}`,
       exports: exportsOf(src),
       summary: summaryOf(src),
-      client: src.trimStart().startsWith("'use client'"),
+      // Both quote styles. This matched only the single-quoted form until
+      // 2026-09-01, and 21 of the 29 directives in src are written
+      // `"use client";` — so this file reported 7 client modules where
+      // machine/context.yaml reported 28, and the README's "the 8 modules that
+      // need it" traces back to here. An agent reading inventory.json to decide
+      // whether a deep import keeps its server boundary got the wrong answer
+      // for 21 of 89 modules, and silently.
+      client: /^['"]use client['"]/.test(src.trimStart()),
       lines: src.split('\n').length,
       /** Gallery cases that show this module, isolated and in both modes. */
       cases: visualsFor(layer, name),
