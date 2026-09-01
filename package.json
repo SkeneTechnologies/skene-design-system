@@ -20,7 +20,6 @@
     "styles",
     "machine",
     "docs",
-    "design",
     "DESIGN.md",
     "design-tokens.json",
     "README.md",
@@ -50,7 +49,6 @@
     "./inventory.json": "./docs-app/app/decisions/inventory.json",
     "./docs/*": "./docs/*",
     "./DESIGN.md": "./DESIGN.md",
-    "./design/*": "./design/*",
     "./skills/*": "./skills/*",
     "./package.json": "./package.json",
     ".": {

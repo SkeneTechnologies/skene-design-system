@@ -60,21 +60,12 @@ Every claim cites the prop, default or export that makes it true. A claim that c
 
 Gallery cases with a committed light and dark baseline: `ui-sheet`.
 
-## Rules that are not negotiable
+## What binds this module
 
-1. **`chrome.*` is invariant and cannot invert.** `color.chrome.surface.*` and
-   `color.chrome.text.*` are always dark. Use them only on a surface that never
-   flips — a terminal, a log panel, a code frame. Anything on a surface that
-   flips uses the theme-aware `color.text.*` / `color.surface.*`. The two share
-   their dark values and diverge only in light, so the wrong pick looks correct
-   until someone opens light mode.
-2. **A light surface on a dark page needs the `light` class on its own root.**
-   Without it the mode-aware tokens resolve to their dark values against a light
-   fill. That has shipped text at 1.08:1. Check the module's `polarity` first —
-   `applies-light` means the module already does this for you.
-3. **Content is props.** No section hardcodes copy.
+- **Polarity `inherits`.** It puts no theme class on its own root, so it takes the page. Place it on a light fill and the `light` class is yours to add, or its mode-aware tokens resolve to their DARK values against that fill — measured at 1.07:1 on rendered pixels.
 
-Theming is class-based and the package ships base mode `dark`. Contrast floors: body text 4.5:1, large text 3:1 (WCAG 2.2).
+These are the rules this module can break. The full set, the surface roles and
+the contrast floors are in [DESIGN.md](../../DESIGN.md).
 
 ---
 

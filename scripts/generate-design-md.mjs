@@ -247,6 +247,72 @@ ${rules.priority_order
 
 Ask first when: ${rules.ask_first_when.map((r) => code(r)).join(', ')}.`
 
+
+/**
+ * The rules THIS module can break, not the three rules restated.
+ *
+ * The generic block was 228 tokens on every leaf — 38% of the smallest ones —
+ * and it was generic because it was copied, not because the facts are. Measured
+ * across the 89 modules: the light-class warning binds on 76 and on the other
+ * 13 it tells the reader to worry about a class the module already applies;
+ * `content is props` is a sections/patterns concern, noise on 30 primitives;
+ * `chrome.*` invariance touches about a third. Every input needed to say which
+ * ones bind is already in context.yaml, so this computes them. Shorter, and
+ * what survives is true of the module you are reading.
+ */
+function bindingRules(id) {
+  const m = modules[id]
+  const ns = id.split('/')[0]
+  const lines = []
+
+  const polarity = m.polarity
+  if (polarity === 'inherits') {
+    lines.push(
+      `- **Polarity \`inherits\`.** It puts no theme class on its own root, so it takes the page. Place it on a light fill and the \`light\` class is yours to add, or its mode-aware tokens resolve to their DARK values against that fill — measured at 1.07:1 on rendered pixels.`,
+    )
+  } else if (polarity === 'applies-light') {
+    lines.push(
+      `- **Polarity \`applies-light\`.** It puts \`light\` on its own root and brings its own ground. You do NOT owe it the light class, and adding one around it is redundant at best.`,
+    )
+  } else if (polarity === 'applies-dark') {
+    lines.push(
+      `- **Polarity \`applies-dark\`.** It puts \`dark\` on its own root — a dark subtree wherever you place it, including inside a light surface.`,
+    )
+  } else if (polarity === 'applies-both') {
+    lines.push(
+      `- **Polarity \`applies-both\`.** It has both forms and applies one of them; which is a call-site decision. Read Constraints above before placing it on a ground that flips.`,
+    )
+  }
+
+  // The invariant-dark role only binds where the module is in that world at
+  // all. Its own prose is the evidence — a module that never mentions a
+  // terminal, chrome or a fixed-dark panel cannot misuse chrome.* by accident.
+  const prose = [
+    m.useFor ?? '',
+    ...(m.alsoFor ?? []).map((c) => c.claim ?? ''),
+    ...(m.watchFor ?? []).map((w) => (typeof w === 'object' ? w.note ?? '' : String(w))),
+    ...(constraintsByModule.get(id)?.entry?.rules ?? []),
+  ]
+    .join(' ')
+    .toLowerCase()
+  if (/chrome|terminal|fixed[ -]dark/.test(prose)) {
+    lines.push(
+      `- **\`chrome.*\` is invariant.** This module is in the fixed-dark world, so the distinction bites here: \`chrome.*\` never inverts and belongs only on a surface that never flips. Anything on a surface that follows the theme uses \`text.*\` / \`surface.*\`. The two share their dark values, so the wrong pick looks correct until someone opens light mode.`,
+    )
+  }
+
+  if (ns === 'sections' || ns === 'patterns') {
+    lines.push(`- **Content is props.** This ${ns === 'sections' ? 'section' : 'pattern'} hardcodes no copy; the page supplies it.`)
+  }
+
+  return `## What binds this module
+
+${lines.join('\n')}
+
+These are the rules this module can break. The full set, the surface roles and
+the contrast floors are in [DESIGN.md](../../DESIGN.md).`
+}
+
 // ------------------------------------------------------------ module pages
 
 /**
@@ -427,7 +493,7 @@ Treat the props and the polarity as documentation of intent, not of behaviour.`,
           ),
         )
       : null,
-    NON_NEGOTIABLES,
+    bindingRules(id),
     `---\n\nSystem-wide tokens, scales and the full module index: [DESIGN.md](../../DESIGN.md).`,
   ])
 }

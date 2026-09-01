@@ -164,13 +164,23 @@ The table above assumes a checkout and a budget. `DESIGN.md` and the tree under
 question — the shape Vercel's `design.md` is built around, over contracts that
 were already here.
 
+`DESIGN.md` ships in the package. **The tree under `design/` does not** — it is
+SERVED, from the docs app, because `machine/` and `design/` are the same facts
+for two different readers and no consumer needs both. An agent with the checkout
+greps the YAML; an agent with a URL fetches the tree. Paths below are relative
+to that origin, and `DESIGN.md` names it.
+
 | you are | open |
 |---|---|
-| orienting: rules, scales, floors, page archetypes | `DESIGN.md` — the short one |
+| orienting: rules, scales, floors, page archetypes | `DESIGN.md` — the short one, and it ships |
 | finding a module, by intent or by name | `design/index.md` |
 | picking a colour or a value | `design/tokens.md` — every token value, kept out of `DESIGN.md` |
 | building a whole page | `design/pages/<archetype>.md` — 10 of them |
 | reaching for one module | `design/<module>.md`, at the module's own path |
+
+The stylesheet is served too, at `styles.css`. That is deliberate: the CSS loads
+in the reader's browser rather than in your context, so the token vocabulary
+costs nothing to use and only the names have to be documented.
 
 Do not read the tree. The index tables in `DESIGN.md` are the retrieval step:
 find the row, open that one file, stop.

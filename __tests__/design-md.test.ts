@@ -112,20 +112,59 @@ describe('DESIGN.md', () => {
     expect(broken, `${file} links to missing files`).toEqual([])
   })
 
-  // Same failure as the contracts' own pointer test: a document telling an
-  // agent to open `design/pages/product-page.md` is a lie if the tarball has
-  // no `design/`.
-  it('ships in the tarball', () => {
+  /**
+   * `DESIGN.md` ships; the tree it routes to is SERVED.
+   *
+   * `machine/*.yaml` (~100k tokens) and `design/` (~136k) are the same facts
+   * for two different readers: an agent with the checkout greps the YAML, an
+   * agent with a URL fetches the tree. Shipping both put ~136k of a surface
+   * most consumers never open into every install. So the YAML ships, the tree
+   * is served, and nobody holds both. `DESIGN.md` itself stays in the tarball
+   * — it is 3.7k and it is the map.
+   */
+  it('ships DESIGN.md and serves the tree, rather than shipping both', () => {
     expect(pkg.files).toContain('DESIGN.md')
-    expect(pkg.files).toContain('design')
     expect(pkg.exports['./DESIGN.md']).toBe('./DESIGN.md')
-    expect(pkg.exports['./design/*']).toBe('./design/*')
+    expect(pkg.files, 'the tree is served, not shipped').not.toContain('design')
+    expect(pkg.exports['./design/*'], 'an export for a path the tarball omits').toBeUndefined()
+    // A route that does not exist makes the whole arrangement a dead pointer,
+    // which is the failure `llms.txt` already shipped once with inventory.json.
+    for (const r of [
+      'docs-app/app/DESIGN.md/route.ts',
+      'docs-app/app/design/[...path]/route.ts',
+      'docs-app/app/styles.css/route.ts',
+    ]) {
+      expect(existsSync(resolve(ROOT, r)), `${r} is missing, so the tree is neither shipped nor served`).toBe(true)
+    }
   })
 
   // Restated per-file on purpose — an agent that opens one module page and
   // follows no link out of it still has to be told. See the generator header.
-  it.each(emitted())('%s carries the non-negotiable rules', (file) => {
-    expect(read(file)).toContain('Rules that are not negotiable')
+  //
+  // A MODULE page carries the rules it can actually break, computed from its
+  // own polarity, namespace and prose; the generic block was 228 tokens on
+  // every leaf and told thirteen modules to worry about a class they apply
+  // themselves. Everything else — DESIGN.md, the page templates, the index,
+  // the token values — keeps the full set, because those are the files where
+  // composition is decided and all three bind.
+  it.each(emitted())('%s carries the rules that bind it', (file) => {
+    const body = read(file)
+    const isModulePage =
+      file.startsWith('design/') &&
+      !file.startsWith('design/pages/') &&
+      !['design/index.md', 'design/tokens.md'].includes(file)
+    expect(body).toContain(isModulePage ? 'What binds this module' : 'Rules that are not negotiable')
+  })
+
+  // The point of computing it is that the polarity line MATCHES the module.
+  // Generic text that happens to be shorter would be no better than before.
+  it.each(moduleIds)('%s states its own polarity, not a generic rule', (id) => {
+    const body = read(`design/${id}.md`)
+    const polarity = (context.modules[id] as { polarity?: string }).polarity
+    if (!polarity) return
+    expect(body).toContain(`Polarity \`${polarity}\``)
+    // A module that brings its own ground must not be told to add the class.
+    if (polarity === 'applies-light') expect(body).toContain('do NOT owe it the light class')
   })
 
   it('warns on every module nothing has ever rendered', () => {
