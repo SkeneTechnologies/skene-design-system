@@ -23,11 +23,11 @@ Nodes in a row joined by arrows, with a value and a note on each edge.
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
-| `FlowDiagram` | `children` | `React.ReactNode` | yes |  |
+| `FlowDiagram` | `children` | `React.ReactNode` | **yes** |  |
 | `FlowDiagram` | `note` | `React.ReactNode` |  |  |
-| `FlowNode` | `label` | `React.ReactNode` | yes |  |
+| `FlowNode` | `label` | `React.ReactNode` | **yes** |  |
 | `FlowNode` | `detail` | `React.ReactNode` |  |  |
 | `FlowEdge` | `value` | `React.ReactNode` |  |  |
 | `FlowEdge` | `meta` | `React.ReactNode` |  |  |

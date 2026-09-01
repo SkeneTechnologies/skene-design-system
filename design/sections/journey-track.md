@@ -23,14 +23,16 @@ The numbered steps of a funnel on one line, where the connector between two step
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
-| `JourneyTrack` | `steps` | `JourneyStepItem[]` | yes |  |
+| `JourneyTrack` | `steps` | `JourneyStepItem[]` | **yes** |  |
 | `JourneyTrack` | `title` | `React.ReactNode` |  |  |
 | `JourneyTrack` | `subtitle` | `React.ReactNode` |  |  |
-| `MiniFunnel` | `rows` | `MiniFunnelRowItem[]` | yes |  |
+| `MiniFunnel` | `rows` | `MiniFunnelRowItem[]` | **yes** |  |
 
-## Types
+## Types — not components
+
+These are TypeScript types, not exports you can render. `<JourneyStepItem />` is not a component; the type describes the shape of a value you pass to one of the exports above. The name usually reads like a component, which is why this heading says so.
 
 | type | shape |
 | --- | --- |
@@ -43,7 +45,7 @@ Every claim cites the prop, default or export that makes it true. A claim that c
 
 | claim | via |
 | --- | --- |
-| Any three-state pipeline, not just a purchase funnel: onboarding checklists, deploy stages, data-source health. States are the fixed `good \\| warn \\| danger` triple bound to matcha/amber/red — the same vocabulary `Finding` uses — and `note` is free prose, so the domain lives entirely in the caller's copy. | `type JourneyStepItem.note` |
+| Any three-state pipeline, not just a purchase funnel: onboarding checklists, deploy stages, data-source health. States are the fixed `good \| warn \| danger` triple bound to matcha/amber/red — the same vocabulary `Finding` uses — and `note` is free prose, so the domain lives entirely in the caller's copy. | `type JourneyStepItem.note` |
 | Building your own layout from `JourneyStep`, which is exported separately. Its `index` prop is a `ReactNode` and `JourneyTrack` merely fills in the 1-based position, so rendering steps directly lets you pass a glyph (✓, ✕, an icon) or your own numbering into the ring. | `export JourneyStep` |
 | Both orientations with no prop: the track is a stacked column below `md` and a row from `md` up, and the connector's gradient angle rides a `--journey-connector-angle` custom property specifically because an inline style cannot hold a media query. You get vertical and horizontal for free — but only that pairing; forcing one orientation means overriding classes. | `inline style` |
 | Server rendering and animated composition. There is no `use client` and no internal state — state arrives as props — so a track that advances composes by re-rendering, and it drops into a server component without pulling a client boundary around its siblings. | `type JourneyStepItem.state` |
@@ -55,7 +57,7 @@ Every claim cites the prop, default or export that makes it true. A claim that c
 | instead | why |
 | --- | --- |
 | `MiniFunnel` | A measured funnel chart. `MiniFunnel` has no axis and no scale, the widths are authored rather than computed, and its fill is `brand.peach` on purpose so quantities never borrow the status triple. For a shape-at-a-glance trend use `Sparkline`; for real numbers use a chart. |
-| `PipelineStepper` | A progress indicator for a running job, or an interactive wizard. `PipelineStepper` owns the `done \\| active \\| pending` vocabulary and emphasises the active step; `JourneyTrack` has no active state, no state at all, and no click handling. |
+| `PipelineStepper` | A progress indicator for a running job, or an interactive wizard. `PipelineStepper` owns the `done \| active \| pending` vocabulary and emphasises the active step; `JourneyTrack` has no active state, no state at all, and no click handling. |
 
 ## Easy to confuse with
 

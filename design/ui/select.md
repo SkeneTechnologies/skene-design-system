@@ -23,7 +23,7 @@ Radix select with the package's two sizes.
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
 | `SelectTrigger` | `size` | `"sm" \| "default"` |  | `"default"` |
 

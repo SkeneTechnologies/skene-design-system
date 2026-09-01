@@ -23,11 +23,11 @@ The verdict block: an avatar, a claim in bold, and the evidence under it, in a p
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
 | `AgentCallout` | `avatar` | `React.ReactNode` |  |  |
 | `AgentCallout` | `eyebrow` | `React.ReactNode` |  |  |
-| `AgentCallout` | `children` | `React.ReactNode` | yes |  |
+| `AgentCallout` | `children` | `React.ReactNode` | **yes** |  |
 | `AgentCallout` | `evidence` | `React.ReactNode` |  |  |
 
 ## Also for

@@ -23,14 +23,14 @@ The chrome that frames a product mock inside a marketing section: rounded border
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
 | `ProductWindow` | `tone` | `ProductWindowTone` |  | `'light'` |
 | `ProductWindow` | `title` | `React.ReactNode` |  |  |
 | `ProductWindow` | `status` | `React.ReactNode` |  |  |
-| `ProductWindow` | `children` | `React.ReactNode` | yes |  |
+| `ProductWindow` | `children` | `React.ReactNode` | **yes** |  |
 | `WindowStatus` | `tone` | `'healthy' \| 'live'` |  | `'healthy'` |
-| `WindowStatus` | `children` | `React.ReactNode` | yes |  |
+| `WindowStatus` | `children` | `React.ReactNode` | **yes** |  |
 
 ## Also for
 

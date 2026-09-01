@@ -46,11 +46,27 @@ const root = resolve(import.meta.dirname, '..')
 const readYaml = (p) => yaml.load(readFileSync(resolve(root, p), 'utf8'))
 
 const context = readYaml('machine/context.yaml')
+const components = readYaml('machine/components.yaml')
 const compositions = readYaml('machine/compositions.yaml')
 const layouts = readYaml('machine/layouts.yaml')
 const rules = readYaml('machine/rules.yaml')
 
 const modules = context.modules
+
+/**
+ * components.yaml keys on the component name and carries the module path in its
+ * `import` field, with a `.tsx` context.yaml does not have. Same join the
+ * generator makes — it is where the enum values for a prop live.
+ */
+const constraintsByModule = new Map()
+for (const group of ['primitives', 'patterns', 'sections']) {
+  for (const [name, entry] of Object.entries(components[group] ?? {})) {
+    const imp = entry?.import
+    if (typeof imp !== 'string') continue
+    const id = imp.replace(/^@skene\/design-system\//, '').replace(/\.tsx$/, '')
+    if (modules[id]) constraintsByModule.set(id, { name, entry })
+  }
+}
 
 const args = process.argv.slice(2)
 const flag = (name) => {
@@ -102,6 +118,45 @@ function classNames(src) {
   const out = []
   for (const [, v] of src.matchAll(/class(?:Name)?=\{?["'`]([\s\S]*?)["'`]\}?/g)) out.push(v)
   for (const [, v] of src.matchAll(/\bcn\(([\s\S]*?)\)/g)) out.push(v)
+  return out
+}
+
+/**
+ * JSX elements with their attribute names, scanned rather than regexed.
+ *
+ * A regex cannot do this: `columns={[{ header: 'Field' }]}` nests braces and
+ * quotes inside one attribute, so matching to the next `>` truncates the tag
+ * mid-value and invents attributes out of the remainder. This walks the tag
+ * tracking depth and records identifiers followed by `=` at depth zero.
+ */
+export function jsxElements(src) {
+  const out = []
+  const re = /<([A-Z][\w.]*)/g
+  let m
+  while ((m = re.exec(src))) {
+    const name = m[1]
+    let i = re.lastIndex
+    let depth = 0
+    let quote = null
+    const attrs = []
+    let word = ''
+    for (; i < src.length; i += 1) {
+      const c = src[i]
+      if (quote) {
+        if (c === quote) quote = null
+        continue
+      }
+      if (c === '"' || c === "'" || c === '`') { quote = c; continue }
+      if (c === '{' || c === '[' || c === '(') { depth += 1; continue }
+      if (c === '}' || c === ']' || c === ')') { depth -= 1; continue }
+      if (depth > 0) continue
+      if (c === '>') break
+      if (/[\w-]/.test(c)) { word += c; continue }
+      if (c === '=' && word) { attrs.push(word); word = ''; continue }
+      word = ''
+    }
+    out.push({ name, attrs, at: m.index })
+  }
   return out
 }
 
@@ -364,9 +419,92 @@ function checkContentIsProps(src) {
   }
 }
 
+
+/**
+ * Does the candidate call components that exist, with props they take?
+ *
+ * The gap this closes was found by building a page by hand and then probing
+ * the scorer with a deliberately broken one: `kind="purple"` on a required
+ * enum, invented `spin`/`elevation` props, and `KeyValueRow` — a TYPE — used
+ * as a component. It scored 6/6, identical to the correct page, because every
+ * other check reads imports and class strings. All ten committed fixtures
+ * turned out to call APIs that do not exist, and nothing noticed.
+ */
+function checkProps(src) {
+  const used = usedModules(src)
+  const byExport = new Map()
+  const typeOnly = new Map()
+  const allowedValues = new Map()
+  for (const [id] of used) {
+    const m = modules[id]
+    if (!m) continue
+    for (const e of m.exports ?? []) byExport.set(e, id)
+    for (const t of Object.keys(m.types ?? {})) if (!byExport.has(t)) typeOnly.set(t, id)
+  }
+  // Enum values live in components.yaml, keyed `Export.prop`.
+  for (const [id] of used) {
+    const entry = constraintsByModule.get(id)?.entry
+    for (const [k, v] of Object.entries(entry?.props ?? {})) {
+      if (Array.isArray(v)) allowedValues.set(k, v)
+    }
+  }
+
+  const FREE = new Set(['className', 'key', 'style', 'children', 'ref', 'id'])
+  const problems = []
+
+  for (const el of jsxElements(src)) {
+    const moduleId = byExport.get(el.name)
+    if (!moduleId) {
+      if (typeOnly.has(el.name)) {
+        problems.push(
+          `\`<${el.name}>\` is a TYPE in ${typeOnly.get(el.name)}, not a component — it describes the shape of a value you pass to an export, and cannot be rendered.`,
+        )
+      }
+      // A name imported from nowhere in the package is either local or an
+      // invented module, and `module_exists` already owns that case.
+      continue
+    }
+    const spec = modules[moduleId]?.props?.[el.name]
+    if (!spec) continue
+
+    const known = new Set(Object.keys(spec))
+    const passthrough = Boolean(modules[moduleId]?.accepts?.[el.name])
+    for (const a of el.attrs) {
+      if (FREE.has(a) || /^(data|aria)-/.test(a)) continue
+      if (known.has(a)) continue
+      if (passthrough) continue
+      problems.push(`\`${el.name}\` takes no prop \`${a}\` (${moduleId}).`)
+    }
+    for (const [prop, p] of Object.entries(spec)) {
+      const required = typeof p === 'object' && p !== null && p.required
+      if (required && prop !== 'children' && !el.attrs.includes(prop)) {
+        problems.push(`\`${el.name}\` is missing required prop \`${prop}\` (${moduleId}).`)
+      }
+    }
+    for (const a of el.attrs) {
+      const allowed = allowedValues.get(`${el.name}.${a}`)
+      if (!allowed) continue
+      const m = new RegExp(`\\b${a}=["']([^"']*)["']`).exec(src.slice(el.at))
+      if (m && !allowed.includes(m[1])) {
+        problems.push(
+          `\`${el.name}.${a}="${m[1]}"\` is not one of ${allowed.map((v) => `\`${v}\``).join(', ')}.`,
+        )
+      }
+    }
+  }
+
+  return {
+    id: 'props_exist',
+    cites: 'context.yaml exports/props/types; components.yaml props',
+    status: problems.length ? 'fail' : 'pass',
+    detail: problems.length ? problems.slice(0, 6).join(' ') : 'every component and prop is one the module declares.',
+  }
+}
+
 const CHECKS = [
   checkLoadBearing,
   checkModulesExist,
+  checkProps,
   checkPolarity,
   checkArbitraryHex,
   checkChrome,

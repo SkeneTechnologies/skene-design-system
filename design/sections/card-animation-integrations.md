@@ -23,13 +23,15 @@ Four integration cards on a textured field, cycling detail copy with GSAP: MCP s
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
 | `CardAnimationIntegrations` | `backgroundImage` | `string` |  | `INTEGRATIONS_TEXTURE` |
 | `CardAnimationIntegrations` | `cards` | `IntegrationAnimationCard[]` |  | `INTEGRATION_ANIMATION_CARDS` |
 | `CardAnimationIntegrations` | `details` | `IntegrationAnimationDetail[]` |  | `INTEGRATION_ANIMATION_DETAILS` |
 
-## Types
+## Types — not components
+
+These are TypeScript types, not exports you can render. `<IntegrationAnimationCard />` is not a component; the type describes the shape of a value you pass to one of the exports above. The name usually reads like a component, which is why this heading says so.
 
 | type | shape |
 | --- | --- |

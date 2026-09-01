@@ -23,7 +23,7 @@ The proof strip: a centred heading, a stat line, a row of outlined logo slots, a
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
 | `LogoSlot` | `children` | `React.ReactNode` |  |  |
 | `LogoSlot` | `label` | `string` |  |  |

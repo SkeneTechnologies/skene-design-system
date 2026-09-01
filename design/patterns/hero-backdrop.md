@@ -23,12 +23,12 @@ A dark hero strip: a background image at low opacity, a gradient fading to the p
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
 | `HeroBackdrop` | `image` | `string` |  |  |
 | `HeroBackdrop` | `imageOpacity` | `number` |  | `0.9` |
 | `HeroBackdrop` | `fadeTo` | `string` |  | `'var(--color-chrome-surface-darker)'` |
-| `HeroBackdrop` | `children` | `React.ReactNode` | yes |  |
+| `HeroBackdrop` | `children` | `React.ReactNode` | **yes** |  |
 
 ## Also for
 

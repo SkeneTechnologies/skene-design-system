@@ -23,14 +23,14 @@ The marketing site's top navigation: a frosted pill floating over hero media, wi
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
 | `PillNav` | `brand` | `React.ReactNode` |  |  |
 | `PillNav` | `actions` | `React.ReactNode` |  |  |
 | `PillNav` | `position` | `'absolute' \| 'sticky'` |  | `'absolute'` |
-| `PillNav` | `children` | `React.ReactNode` | yes |  |
+| `PillNav` | `children` | `React.ReactNode` | **yes** |  |
 | `PillNavLink` | `href` | `string` |  |  |
-| `PillNavLink` | `children` | `React.ReactNode` | yes |  |
+| `PillNavLink` | `children` | `React.ReactNode` | **yes** |  |
 | `PillNavLink` | `active` | `boolean` |  | `false` |
 | `PillNavLink` | `asChild` | `boolean` |  | `false` |
 

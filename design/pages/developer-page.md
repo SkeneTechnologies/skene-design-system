@@ -29,16 +29,16 @@ In **every** route of this archetype. Leave one out and the page is a different 
 
 ## Optional
 
-`in N of M` is a count of what was built, not a recommendation. Pick for the claim you are making.
+`in N of M` is a count of what was built, not a recommendation. Pick for the claim you are making, then open that module for the rest.
 
-| module | in | use for |
+| module | in | for |
 | --- | --- | --- |
-| [sections/value-cards](../sections/value-cards.md) | 1 of 2 | A responsive card band whose argument is carried by tone rather than by copy: N cards stating what the current situation costs, then one stating what it becomes. `ValueCard` takes a mono `label`, a `title` line and an optional body, and the `tone` union (`'cost' \\| 'gain'`) is the only thing that moves — `cost` borrows `semantic.errorRed` for the label and a neutral 14% hairline, `gain` takes `brand.peach` with a 34% border and a left-to-right directional wash so the last card reads as an arrival rather than one more tile. It exists so a band can make a turn; a row of identically-weighted cards degrades into a feature list and says nothing. |
-| [sections/traffic-lights](../sections/traffic-lights.md) | 1 of 2 | The three window-chrome dots — red, yellow, green, 10px each — as one `aria-hidden` group at an 8px gap. It exists so a shell bar, an editor header or a GitHub file header can carry window furniture without hand-rolling three spans, which is what five files were doing: `TerminalBlock` and `PrReview` in this package, and two skene-site routes that each declared a local copy plus a comment saying the fix belonged upstream. |
+| [sections/value-cards](../sections/value-cards.md) | 1 of 2 | A responsive card band whose argument is carried by tone rather than by copy: N cards stating what the current situation costs, then one stating wh… |
+| [sections/traffic-lights](../sections/traffic-lights.md) | 1 of 2 | The three window-chrome dots — red, yellow, green, 10px each — as one `aria-hidden` group at an 8px gap. |
 | [sections/pr-review](../sections/pr-review.md) | 1 of 2 | The pull-request artifact: Skene's review on a PR, with findings by severity, a suggested fix and the file it lands in. |
-| [sections/finding-card](../sections/finding-card.md) | 1 of 2 | Three small pieces that together fill a product window with Skene's actual argument: `Finding` (a status-tagged row — tag, title, consequence), `MetricCard` (the headline number with a coloured delta), and `Sparkline` (an authored bar shape). The point of the set is the contradiction — a metric that looks fine above a list of steps that are unmeasured or renamed — so the status vocabulary is fixed at `good \\| warn \\| danger` bound to `semantic.matcha / warningAmber / errorRed`, the same three the dashboard uses. All content is props; nothing here knows what a Skene finding says. |
+| [sections/finding-card](../sections/finding-card.md) | 1 of 2 | Three small pieces that together fill a product window with Skene's actual argument: `Finding` (a status-tagged row — tag, title, consequence), `Me… |
 | [sections/side-by-side-diff](../sections/side-by-side-diff.md) | 1 of 2 | Two columns of code with added and removed lines marked — what was written beside what was expected. |
-| [sections/agent-callout](../sections/agent-callout.md) | 1 of 2 | The verdict block: an avatar, a claim in bold, and the evidence under it, in a peach-bordered frame on its own tinted ground. It is the moment Skene speaks on the page. |
+| [sections/agent-callout](../sections/agent-callout.md) | 1 of 2 | The verdict block: an avatar, a claim in bold, and the evidence under it, in a peach-bordered frame on its own tinted ground. |
 | [sections/faq-band](../sections/faq-band.md) | 1 of 2 | The FAQ band: a heading column that stays put, and the questions beside it on a cream ground with a hairline per row and a round toggle. |
 | [sections/key-value-table](../sections/key-value-table.md) | 1 of 2 | The reference table: keys and values at two densities, with a masked value, a note and the 11px tag chip. |
 
@@ -48,21 +48,12 @@ Five shared modules out of two routes is the strongest intersection in the corpu
 
 ## Polarity obligations
 
-| module | polarity | what you owe it |
+| polarity | what you owe it | modules in this template |
 | --- | --- | --- |
-| `sections/code` | `applies-both` | Has both forms and applies one of them. Which one is a call-site decision — read the module page before you place it on a ground that flips. |
-| `patterns/marketing` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
-| `sections/trust-panel` | `applies-light` | Puts `light` on its own root. It brings its own ground — you owe it nothing. |
-| `sections/artifact-shell` | `applies-light` | Puts `light` on its own root. It brings its own ground — you owe it nothing. |
-| `sections/terminal-block` | `applies-dark` | Puts `dark` on its own root. A dark subtree wherever you place it. |
-| `sections/value-cards` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
-| `sections/traffic-lights` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
-| `sections/pr-review` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
-| `sections/finding-card` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
-| `sections/side-by-side-diff` | `applies-dark` | Puts `dark` on its own root. A dark subtree wherever you place it. |
-| `sections/agent-callout` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
-| `sections/faq-band` | `applies-light` | Puts `light` on its own root. It brings its own ground — you owe it nothing. |
-| `sections/key-value-table` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
+| `applies-light` | Puts `light` on its own root. It brings its own ground — you owe it nothing. | `sections/trust-panel`, `sections/artifact-shell`, `sections/faq-band` |
+| `applies-dark` | Puts `dark` on its own root. A dark subtree wherever you place it. | `sections/terminal-block`, `sections/side-by-side-diff` |
+| `applies-both` | Has both forms and applies one of them. Which one is a call-site decision — read the module page before you place it on a ground that flips. | `sections/code` |
+| `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. | `patterns/marketing`, `sections/value-cards`, `sections/traffic-lights`, `sections/pr-review`, `sections/finding-card`, `sections/agent-callout`, `sections/key-value-table` |
 
 ## Band grammar
 

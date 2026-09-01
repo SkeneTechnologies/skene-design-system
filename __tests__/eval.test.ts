@@ -51,6 +51,7 @@ const EXPECTED: Record<string, string[]> = {
   'product-security/bad-two-tall-bands': ['rhythm_tall_once'],
   'product-security/bad-card-grid-and-local-copy': ['local_copy', 'marketing_card'],
   'use-case-analytics/bad-half-the-shape': ['load_bearing'],
+  'use-case-analytics/bad-invented-props': ['props_exist'],
 }
 
 describe('the eval scorer', () => {

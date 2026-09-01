@@ -34,7 +34,7 @@ Every claim cites the prop, default or export that makes it true. A claim that c
 
 | instead | why |
 | --- | --- |
-| `StatPill` | Saying something. These are furniture and carry no state; a dot that means a state, with the word beside it, is `StatPill`, which binds bad \\| warn \\| ok to the semantic colours. |
+| `StatPill` | Saying something. These are furniture and carry no state; a dot that means a state, with the word beside it, is `StatPill`, which binds bad \| warn \| ok to the semantic colours. |
 | `Terminal` | A whole terminal frame. `patterns/terminal` already paints its own lights in CSS — reach for this only when you are building the bar yourself. |
 
 ## Easy to confuse with

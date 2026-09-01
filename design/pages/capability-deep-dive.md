@@ -23,14 +23,14 @@ Nothing appears in every route of this archetype.
 
 Too few routes to intersect, so this is what was **there**, not what is required — the file records it rather than generalising it. Read it as evidence of how these modules have been composed together, and pick for the claim you are making.
 
-| module | use for |
+| module | for |
 | --- | --- |
-| [sections/code](../sections/code.md) | The inline identifier chip inside a sentence: an event name, a column, a flag, a path. Extracted from SEVEN copies — six byte-identical component declarations across skene-site route files, verified by comparing the emitted class string, plus a seventh spelling as `PROSE_CODE`, the same recipe as a descendant selector for prose the author cannot reach element by element. The oldest open entry on that repository's gap list, on a site where an event name appears in nearly every paragraph of body copy. |
-| [patterns/marketing](../patterns/marketing.md) | The page furniture the marketing surface repeats: the nav bar over the hero, the display heading and its peach accent, the eyebrow kicker, the numbered step, and the split auth layout. |
+| [sections/code](../sections/code.md) | The inline identifier chip inside a sentence: an event name, a column, a flag, a path. |
+| [patterns/marketing](../patterns/marketing.md) | The page furniture the marketing surface repeats: the nav bar over the hero, the display heading and its peach accent, the eyebrow kicker, the numb… |
 | [sections/evaluator-panel](../sections/evaluator-panel.md) | The two-pane evaluator: the index on one side, one evaluation's requirements on the other. |
 | [sections/artifact-shell](../sections/artifact-shell.md) | The shell every drawn Skene Cloud artifact is built from: the textured field, the light app window, its panels, the status pill and the data table. |
-| [sections/pipeline-stepper](../sections/pipeline-stepper.md) | A labelled progress track: N steps with state rings, joined by connectors the STEPPER owns and fills from the state of the step on their left, above an optional title/subtitle. It was built for a long job running inside a light `ProductWindow`, and two decisions carry that job — connectors are derived rather than drawn per-step, so N dots read as one track filling left to right; and emphasis runs backwards from instinct, with the ACTIVE step taking the label weight and a peach halo while done steps recede to matcha, because a running job's question is "what is it doing now", not "what has it finished". |
-| [sections/agent-callout](../sections/agent-callout.md) | The verdict block: an avatar, a claim in bold, and the evidence under it, in a peach-bordered frame on its own tinted ground. It is the moment Skene speaks on the page. |
+| [sections/pipeline-stepper](../sections/pipeline-stepper.md) | A labelled progress track: N steps with state rings, joined by connectors the STEPPER owns and fills from the state of the step on their left, abov… |
+| [sections/agent-callout](../sections/agent-callout.md) | The verdict block: an avatar, a claim in bold, and the evidence under it, in a peach-bordered frame on its own tinted ground. |
 | [sections/evaluator-verify](../sections/evaluator-verify.md) | The requirements an evaluation depends on: one row per event, its verdict, and the fields it must carry. |
 
 ## Watch for
@@ -39,15 +39,12 @@ One route, and evaluator-panel's only appearance in the corpus. evaluator-panel 
 
 ## Polarity obligations
 
-| module | polarity | what you owe it |
+| polarity | what you owe it | modules in this template |
 | --- | --- | --- |
-| `sections/code` | `applies-both` | Has both forms and applies one of them. Which one is a call-site decision — read the module page before you place it on a ground that flips. |
-| `patterns/marketing` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
-| `sections/evaluator-panel` | `applies-dark` | Puts `dark` on its own root. A dark subtree wherever you place it. |
-| `sections/artifact-shell` | `applies-light` | Puts `light` on its own root. It brings its own ground — you owe it nothing. |
-| `sections/pipeline-stepper` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
-| `sections/agent-callout` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
-| `sections/evaluator-verify` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
+| `applies-light` | Puts `light` on its own root. It brings its own ground — you owe it nothing. | `sections/artifact-shell` |
+| `applies-dark` | Puts `dark` on its own root. A dark subtree wherever you place it. | `sections/evaluator-panel` |
+| `applies-both` | Has both forms and applies one of them. Which one is a call-site decision — read the module page before you place it on a ground that flips. | `sections/code` |
+| `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. | `patterns/marketing`, `sections/pipeline-stepper`, `sections/agent-callout`, `sections/evaluator-verify` |
 
 ## Band grammar
 

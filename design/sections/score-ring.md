@@ -23,13 +23,13 @@ A score against a scale: a partial arc on a track with the value inside it.
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
-| `ScoreRing` | `value` | `number` | yes |  |
+| `ScoreRing` | `value` | `number` | **yes** |  |
 | `ScoreRing` | `max` | `number` |  | `100` |
 | `ScoreRing` | `status` | `ScoreRingStatus` |  | `'warn'` |
 | `ScoreRing` | `size` | `number` |  | `64` |
-| `ScoreRing` | `label` | `string` | yes |  |
+| `ScoreRing` | `label` | `string` | **yes** |  |
 
 ## Also for
 
@@ -51,7 +51,7 @@ Every claim cites the prop, default or export that makes it true. A claim that c
 
 | note | via |
 | --- | --- |
-| `status` binds the reserved good \\| warn \\| danger vocabulary and never peach: peach is the action colour, so a peach fault reads as a call to action. | `prop ScoreRing.status` |
+| `status` binds the reserved good \| warn \| danger vocabulary and never peach: peach is the action colour, so a peach fault reads as a call to action. | `prop ScoreRing.status` |
 | The default is warn, not good, so a forgotten prop cannot paint a failing score in the reassurance colour. | `default status='warn'` |
 | `label` is required because the visible digits are aria-hidden — it is the accessible name, not decoration. | `prop ScoreRing.label` |
 

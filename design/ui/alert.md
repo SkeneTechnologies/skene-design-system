@@ -23,7 +23,7 @@ A static inline notice inside a page — not a toast, not a modal.
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
 | `Alert` | `variant` | `"default" \| "destructive"` |  |  |
 

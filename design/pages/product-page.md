@@ -25,23 +25,23 @@ In **every** route of this archetype. Leave one out and the page is a different 
 
 ## Optional
 
-`in N of M` is a count of what was built, not a recommendation. Pick for the claim you are making.
+`in N of M` is a count of what was built, not a recommendation. Pick for the claim you are making, then open that module for the rest.
 
-| module | in | use for |
+| module | in | for |
 | --- | --- | --- |
-| [patterns/marketing](../patterns/marketing.md) | 3 of 4 | The page furniture the marketing surface repeats: the nav bar over the hero, the display heading and its peach accent, the eyebrow kicker, the numbered step, and the split auth layout. |
-| [sections/trust-panel](../sections/trust-panel.md) | 2 of 4 | A cream panel split into a claim and its evidence: heading, lede and a row of links on the left, a stack of `TrustFact` items on a deeper cream to the right. The split is the argument — the reassurance is not a paragraph asserting itself but a paragraph standing next to checkable facts, which is why the evidence track is the wider of the two (`0.9fr 1.1fr`). It is a fixed-polarity object: the root carries `light` unconditionally, so it is a cream card on a dark page, with a peach bloom rising from the bottom-left corner that the token system gets right on cream for free. |
+| [patterns/marketing](../patterns/marketing.md) | 3 of 4 | The page furniture the marketing surface repeats: the nav bar over the hero, the display heading and its peach accent, the eyebrow kicker, the numb… |
+| [sections/trust-panel](../sections/trust-panel.md) | 2 of 4 | A cream panel split into a claim and its evidence: heading, lede and a row of links on the left, a stack of `TrustFact` items on a deeper cream to… |
 | [sections/integration-rows](../sections/integration-rows.md) | 2 of 4 | The integrations artifact: what Skene is attached to, and whether each connection is live. |
 | [sections/key-value-table](../sections/key-value-table.md) | 2 of 4 | The reference table: keys and values at two densities, with a masked value, a note and the 11px tag chip. |
 | [sections/overview-tiles](../sections/overview-tiles.md) | 2 of 4 | The workspace overview: a row of small tiles, each a caption, one number and what the number is made of. |
 | [sections/discovery-table](../sections/discovery-table.md) | 1 of 4 | The discovery artifact: the events Skene found, where it found them, and whether each one verified. |
-| [sections/journey-track](../sections/journey-track.md) | 1 of 4 | The numbered steps of a funnel on one line, where the connector between two steps is a gradient running from one step's status colour to the next's — the seam carries the state, not just the nodes. That is the section's argument, not a flourish: breakage happens *in the link* (an event that stops firing between checkout and confirmation), and the eye should find it before reading a label. The module also exports `MiniFunnel`, the small authored label/value/bar readout that usually sits beside the track. |
+| [sections/journey-track](../sections/journey-track.md) | 1 of 4 | The numbered steps of a funnel on one line, where the connector between two steps is a gradient running from one step's status colour to the next's… |
 | [sections/surface-tiles](../sections/surface-tiles.md) | 1 of 4 | The surfaces a product runs on, as a row of tiles with one picked out, and the panel that explains the chosen one. |
-| [sections/surface-cards](../sections/surface-cards.md) | 1 of 4 | A compact grid of peer cards on a textured field, one of them drawn cream, where every card carries its own detail: the “ways in” band, four surfaces two across. |
+| [sections/surface-cards](../sections/surface-cards.md) | 1 of 4 | A compact grid of peer cards on a textured field, one of them drawn cream, where every card carries its own detail: the “ways in” band, four surfac… |
 | [sections/pr-review](../sections/pr-review.md) | 1 of 4 | The pull-request artifact: Skene's review on a PR, with findings by severity, a suggested fix and the file it lands in. |
-| [sections/check-list](../sections/check-list.md) | 1 of 4 | The rule-separated feature list with a peach check — the single highest-frequency element on a Skene marketing page, previously hand-written at every call site. `CheckList` is a bare `<ul>` that sets one CSS variable (`--check-rule`); `CheckItem` is an `<li>` whose separator is a *top border on each row* rather than a divider element, so a list of one still reads as part of its card instead of floating. The check is a real `aria-hidden` `<span>`, not a `::before`, precisely so a screen reader does not announce "tick" before every line. |
-| [sections/stat-chip](../sections/stat-chip.md) | 1 of 4 | Two small pills that sit beside headings: `StatChip` asserts something true right now ("121 stars"), `MetaChip` marks something not shipped yet (prose, a hairline divider, then a peach status word). They are two components rather than one with a `variant` precisely so a forgotten prop can never turn a roadmap item into a live claim about the product — two names cannot be defaulted into each other. Both derive their border and fill from `currentColor` via `color-mix`, which is what lets one chip survive both the dark page and the cream `LightSectionCard` with no `onLight` prop. |
-| [sections/code](../sections/code.md) | 1 of 4 | The inline identifier chip inside a sentence: an event name, a column, a flag, a path. Extracted from SEVEN copies — six byte-identical component declarations across skene-site route files, verified by comparing the emitted class string, plus a seventh spelling as `PROSE_CODE`, the same recipe as a descendant selector for prose the author cannot reach element by element. The oldest open entry on that repository's gap list, on a site where an event name appears in nearly every paragraph of body copy. |
+| [sections/check-list](../sections/check-list.md) | 1 of 4 | The rule-separated feature list with a peach check — the single highest-frequency element on a Skene marketing page, previously hand-written at eve… |
+| [sections/stat-chip](../sections/stat-chip.md) | 1 of 4 | Two small pills that sit beside headings: `StatChip` asserts something true right now ("121 stars"), `MetaChip` marks something not shipped yet (pr… |
+| [sections/code](../sections/code.md) | 1 of 4 | The inline identifier chip inside a sentence: an event name, a column, a flag, a path. |
 
 ## Watch for
 
@@ -49,22 +49,11 @@ Only artifact-shell is in all four. What varies is which artifact — the discov
 
 ## Polarity obligations
 
-| module | polarity | what you owe it |
+| polarity | what you owe it | modules in this template |
 | --- | --- | --- |
-| `sections/artifact-shell` | `applies-light` | Puts `light` on its own root. It brings its own ground — you owe it nothing. |
-| `patterns/marketing` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
-| `sections/trust-panel` | `applies-light` | Puts `light` on its own root. It brings its own ground — you owe it nothing. |
-| `sections/integration-rows` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
-| `sections/key-value-table` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
-| `sections/overview-tiles` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
-| `sections/discovery-table` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
-| `sections/journey-track` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
-| `sections/surface-tiles` | `applies-light` | Puts `light` on its own root. It brings its own ground — you owe it nothing. |
-| `sections/surface-cards` | `applies-both` | Has both forms and applies one of them. Which one is a call-site decision — read the module page before you place it on a ground that flips. |
-| `sections/pr-review` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
-| `sections/check-list` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
-| `sections/stat-chip` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
-| `sections/code` | `applies-both` | Has both forms and applies one of them. Which one is a call-site decision — read the module page before you place it on a ground that flips. |
+| `applies-light` | Puts `light` on its own root. It brings its own ground — you owe it nothing. | `sections/artifact-shell`, `sections/trust-panel`, `sections/surface-tiles` |
+| `applies-both` | Has both forms and applies one of them. Which one is a call-site decision — read the module page before you place it on a ground that flips. | `sections/surface-cards`, `sections/code` |
+| `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. | `patterns/marketing`, `sections/integration-rows`, `sections/key-value-table`, `sections/overview-tiles`, `sections/discovery-table`, `sections/journey-track`, `sections/pr-review`, `sections/check-list`, `sections/stat-chip` |
 
 ## Band grammar
 

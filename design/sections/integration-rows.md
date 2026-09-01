@@ -23,9 +23,9 @@ The integrations artifact: what Skene is attached to, and whether each connectio
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
-| `IntegrationRows` | `rows` | `Integration[]` | yes |  |
+| `IntegrationRows` | `rows` | `Integration[]` | **yes** |  |
 | `IntegrationRows` | `title` | `React.ReactNode` |  |  |
 | `IntegrationRows` | `source` | `React.ReactNode` |  |  |
 | `IntegrationRows` | `separator` | `React.ReactNode` |  | `'/'` |
@@ -33,7 +33,9 @@ The integrations artifact: what Skene is attached to, and whether each connectio
 | `IntegrationRows` | `summaryStatus` | `StatPillStatus` |  | `'ok'` |
 | `IntegrationRows` | `actions` | `React.ReactNode` |  |  |
 
-## Types
+## Types — not components
+
+These are TypeScript types, not exports you can render. `<Integration />` is not a component; the type describes the shape of a value you pass to one of the exports above. The name usually reads like a component, which is why this heading says so.
 
 | type | shape |
 | --- | --- |

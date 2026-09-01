@@ -23,14 +23,14 @@ The about-page person card and its grid: a name as a heading, a role in the smal
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
-| `TeamCard` | `name` | `React.ReactNode` | yes |  |
-| `TeamCard` | `role` | `React.ReactNode` | yes |  |
+| `TeamCard` | `name` | `React.ReactNode` | **yes** |  |
+| `TeamCard` | `role` | `React.ReactNode` | **yes** |  |
 | `TeamCard` | `media` | `React.ReactNode` |  |  |
 | `TeamCard` | `as` | `'h2' \| 'h3' \| 'h4'` |  |  |
 | `TeamCard` | `children` | `React.ReactNode` |  |  |
-| `TeamGrid` | `children` | `React.ReactNode` | yes |  |
+| `TeamGrid` | `children` | `React.ReactNode` | **yes** |  |
 
 ## Also for
 

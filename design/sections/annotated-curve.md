@@ -23,14 +23,16 @@ A narrative plotting frame: a Catmull-Rom spline drawn through hand-authored 0-1
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
-| `AnnotatedCurve` | `points` | `CurvePoint[]` | yes |  |
+| `AnnotatedCurve` | `points` | `CurvePoint[]` | **yes** |  |
 | `AnnotatedCurve` | `stroke` | `CurveStrokeToken` |  | `'brand-peach'` |
 | `AnnotatedCurve` | `aspect` | `number` |  | `2` |
 | `AnnotatedCurve` | `offset` | `number` |  | `14` |
 
-## Types
+## Types — not components
+
+These are TypeScript types, not exports you can render. `<CurvePoint />` is not a component; the type describes the shape of a value you pass to one of the exports above. The name usually reads like a component, which is why this heading says so.
 
 | type | shape |
 | --- | --- |
@@ -43,7 +45,7 @@ Every claim cites the prop, default or export that makes it true. A claim that c
 | claim | via |
 | --- | --- |
 | Falling, dipping, or S-shaped stories, not just the rising one. `y` runs from the top (0 = top), so any progression is just a different y sequence, and `stroke` picks from a 5-token union (`brand-peach`, `brand-peach-deep`, `accent-violet`, `accent-blue`, `semantic-matcha`) — a decline in `semantic-error-red` is the one thing NOT available, since red is not in `CurveStrokeToken`. | `type CurvePoint.y` |
-| Denser callout layouts by alternating sides. `place` takes `above \\| below \\| left \\| right` and `align` takes `start \\| center \\| end`, so callouts can zig-zag above and below the sweep, and a node near the frame edge can anchor its box by its own left or right edge instead of hanging outside. `offset` (default 14px) tunes the gap for all of them at once. | `type CurvePoint.place` |
+| Denser callout layouts by alternating sides. `place` takes `above \| below \| left \| right` and `align` takes `start \| center \| end`, so callouts can zig-zag above and below the sweep, and a node near the frame edge can anchor its box by its own left or right edge instead of hanging outside. `offset` (default 14px) tunes the gap for all of them at once. | `type CurvePoint.place` |
 | Shaping the sweep without adding content: a point with `label` omitted is an anchor — no marker, no box, no entry in the `<ol>`. That is how you get a curve that runs edge to edge, or a deliberate valley between two labelled peaks, with only two or three actual callouts. | `type CurvePoint.label` |
 | Reshaping the band via `aspect` (default 2), which sets both the wrapper's `aspectRatio` and the derived viewBox height. A wide hero strip (`aspect={4}`) or a squarer inline figure (`aspect={1.2}`) both scale uniformly because `preserveAspectRatio` is `xMidYMid meet`. | `default aspect=2` |
 | Rich callouts, not just strings. `label` is a `ReactNode`, so a box can hold a figure plus a caption, a `Chip`, or emphasis markup; per-point `className` merges into the callout `<li>`, which is the intended place to override the default `max-w-[62%]` width for one long box. | `type CurvePoint.label` |

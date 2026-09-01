@@ -25,16 +25,16 @@ In **every** route of this archetype. Leave one out and the page is a different 
 
 ## Optional
 
-`in N of M` is a count of what was built, not a recommendation. Pick for the claim you are making.
+`in N of M` is a count of what was built, not a recommendation. Pick for the claim you are making, then open that module for the rest.
 
-| module | in | use for |
+| module | in | for |
 | --- | --- | --- |
 | [sections/artifact-shell](../sections/artifact-shell.md) | 1 of 2 | The shell every drawn Skene Cloud artifact is built from: the textured field, the light app window, its panels, the status pill and the data table. |
 | [sections/key-value-table](../sections/key-value-table.md) | 1 of 2 | The reference table: keys and values at two densities, with a masked value, a note and the 11px tag chip. |
-| [sections/finding-card](../sections/finding-card.md) | 1 of 2 | Three small pieces that together fill a product window with Skene's actual argument: `Finding` (a status-tagged row — tag, title, consequence), `MetricCard` (the headline number with a coloured delta), and `Sparkline` (an authored bar shape). The point of the set is the contradiction — a metric that looks fine above a list of steps that are unmeasured or renamed — so the status vocabulary is fixed at `good \\| warn \\| danger` bound to `semantic.matcha / warningAmber / errorRed`, the same three the dashboard uses. All content is props; nothing here knows what a Skene finding says. |
-| [sections/value-cards](../sections/value-cards.md) | 1 of 2 | A responsive card band whose argument is carried by tone rather than by copy: N cards stating what the current situation costs, then one stating what it becomes. `ValueCard` takes a mono `label`, a `title` line and an optional body, and the `tone` union (`'cost' \\| 'gain'`) is the only thing that moves — `cost` borrows `semantic.errorRed` for the label and a neutral 14% hairline, `gain` takes `brand.peach` with a 34% border and a left-to-right directional wash so the last card reads as an arrival rather than one more tile. It exists so a band can make a turn; a row of identically-weighted cards degrades into a feature list and says nothing. |
-| [sections/check-list](../sections/check-list.md) | 1 of 2 | The rule-separated feature list with a peach check — the single highest-frequency element on a Skene marketing page, previously hand-written at every call site. `CheckList` is a bare `<ul>` that sets one CSS variable (`--check-rule`); `CheckItem` is an `<li>` whose separator is a *top border on each row* rather than a divider element, so a list of one still reads as part of its card instead of floating. The check is a real `aria-hidden` `<span>`, not a `::before`, precisely so a screen reader does not announce "tick" before every line. |
-| [sections/glyph-badge](../sections/glyph-badge.md) | 1 of 2 | The round disc a glyph sits in at the head of a row: a circle, a hairline, a peach mark centred in it, `aria-hidden` always. It is the disc `TrustFact` draws, lifted out so it is reachable without the `<li>`, the separating rule and the qualifier slot that come with a fact row. `tone` picks the ground — `tint` is the cream-panel pair (`chrome.line.onLight` over a 12% peach wash), `muted` is the themed pair that follows the page — and `size` is one number, written to `style` so the glyph inside keeps whatever type size it inherits. |
+| [sections/finding-card](../sections/finding-card.md) | 1 of 2 | Three small pieces that together fill a product window with Skene's actual argument: `Finding` (a status-tagged row — tag, title, consequence), `Me… |
+| [sections/value-cards](../sections/value-cards.md) | 1 of 2 | A responsive card band whose argument is carried by tone rather than by copy: N cards stating what the current situation costs, then one stating wh… |
+| [sections/check-list](../sections/check-list.md) | 1 of 2 | The rule-separated feature list with a peach check — the single highest-frequency element on a Skene marketing page, previously hand-written at eve… |
+| [sections/glyph-badge](../sections/glyph-badge.md) | 1 of 2 | The round disc a glyph sits in at the head of a row: a circle, a hairline, a peach mark centred in it, `aria-hidden` always. |
 
 ## Watch for
 
@@ -42,15 +42,10 @@ Do not read this as a template. One module in common across two pages that other
 
 ## Polarity obligations
 
-| module | polarity | what you owe it |
+| polarity | what you owe it | modules in this template |
 | --- | --- | --- |
-| `sections/recommendation-card` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
-| `sections/artifact-shell` | `applies-light` | Puts `light` on its own root. It brings its own ground — you owe it nothing. |
-| `sections/key-value-table` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
-| `sections/finding-card` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
-| `sections/value-cards` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
-| `sections/check-list` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
-| `sections/glyph-badge` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
+| `applies-light` | Puts `light` on its own root. It brings its own ground — you owe it nothing. | `sections/artifact-shell` |
+| `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. | `sections/recommendation-card`, `sections/key-value-table`, `sections/finding-card`, `sections/value-cards`, `sections/check-list`, `sections/glyph-badge` |
 
 ## Band grammar
 

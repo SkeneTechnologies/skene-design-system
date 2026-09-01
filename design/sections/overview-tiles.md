@@ -23,11 +23,11 @@ The workspace overview: a row of small tiles, each a caption, one number and wha
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
-| `OverviewTiles` | `children` | `React.ReactNode` | yes |  |
-| `OverviewTile` | `label` | `React.ReactNode` | yes |  |
-| `OverviewTile` | `value` | `React.ReactNode` | yes |  |
+| `OverviewTiles` | `children` | `React.ReactNode` | **yes** |  |
+| `OverviewTile` | `label` | `React.ReactNode` | **yes** |  |
+| `OverviewTile` | `value` | `React.ReactNode` | **yes** |  |
 | `OverviewTile` | `note` | `React.ReactNode` |  |  |
 
 ## Also for

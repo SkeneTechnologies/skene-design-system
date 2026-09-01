@@ -23,13 +23,13 @@ A pricing tier card plus the grid that holds a row of them (`PlanGrid` + `PlanCa
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
-| `PlanGrid` | `children` | `React.ReactNode` | yes |  |
-| `PlanCard` | `tier` | `React.ReactNode` | yes |  |
+| `PlanGrid` | `children` | `React.ReactNode` | **yes** |  |
+| `PlanCard` | `tier` | `React.ReactNode` | **yes** |  |
 | `PlanCard` | `tierAs` | `'h2' \| 'h3'` |  |  |
 | `PlanCard` | `flag` | `React.ReactNode` |  |  |
-| `PlanCard` | `price` | `React.ReactNode` | yes |  |
+| `PlanCard` | `price` | `React.ReactNode` | **yes** |  |
 | `PlanCard` | `unit` | `React.ReactNode` |  |  |
 | `PlanCard` | `summary` | `React.ReactNode` |  |  |
 | `PlanCard` | `features` | `React.ReactNode` |  |  |

@@ -23,18 +23,20 @@ The two-pane evaluator: the index on one side, one evaluation's requirements on 
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
 | `EvaluatorPanel` | `crumb` | `React.ReactNode` |  |  |
 | `EvaluatorPanel` | `summary` | `{ status: StatPillStatus; label: React.ReactNode }` |  |  |
-| `EvaluatorPanel` | `list` | `EvaluatorPanelList` | yes |  |
-| `EvaluatorPanel` | `detail` | `EvaluatorPanelDetail` | yes |  |
+| `EvaluatorPanel` | `list` | `EvaluatorPanelList` | **yes** |  |
+| `EvaluatorPanel` | `detail` | `EvaluatorPanelDetail` | **yes** |  |
 | `EvaluatorPanel` | `note` | `React.ReactNode` |  |  |
 | `EvaluatorPanel` | `split` | `boolean` |  | `false` |
 | `EvaluatorPanel` | `activeIndex` | `number` |  | `0` |
 | `EvaluatorPanel` | `frame` | `ArtFrameKind \| false` |  | `'jr'` |
 
-## Types
+## Types — not components
+
+These are TypeScript types, not exports you can render. `<EvaluatorPanelList />` is not a component; the type describes the shape of a value you pass to one of the exports above. The name usually reads like a component, which is why this heading says so.
 
 | type | shape |
 | --- | --- |

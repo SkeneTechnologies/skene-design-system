@@ -23,15 +23,15 @@ The site footer as a set of composable parts — `SiteFooter` (brand column, lin
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
 | `SiteFooter` | `brand` | `React.ReactNode` |  |  |
 | `SiteFooter` | `wordmark` | `React.ReactNode` |  |  |
 | `SiteFooter` | `copyright` | `React.ReactNode` |  |  |
 | `SiteFooter` | `legal` | `React.ReactNode` |  |  |
-| `SiteFooter` | `children` | `React.ReactNode` | yes |  |
-| `FooterColumn` | `title` | `React.ReactNode` | yes |  |
-| `FooterColumn` | `children` | `React.ReactNode` | yes |  |
+| `SiteFooter` | `children` | `React.ReactNode` | **yes** |  |
+| `FooterColumn` | `title` | `React.ReactNode` | **yes** |  |
+| `FooterColumn` | `children` | `React.ReactNode` | **yes** |  |
 
 ## Also for
 
@@ -41,7 +41,7 @@ Every claim cites the prop, default or export that makes it true. A claim that c
 | --- | --- |
 | The sub-components stand alone. `FooterColumn` is a self-contained `<nav>` with its own heading and grid, so a link cluster works in a mega-menu, a sitemap block, or a docs index without `SiteFooter` around it. | `export FooterColumn` |
 | Router-aware links: `FooterColumn` children are `ReactNode`, so `next/link` (or any framework Link) can be used directly where client-side navigation matters — `FooterLink` is a plain `<a href>` with no `asChild`. | `export FooterColumn` |
-| A bar-only footer. `brand`, `wordmark`, `copyright` and `legal` are all optional and the bottom bar only renders when `copyright \\|\\| legal` is present, so a minimal legal strip is reachable. | `prop SiteFooter.brand` |
+| A bar-only footer. `brand`, `wordmark`, `copyright` and `legal` are all optional and the bottom bar only renders when `copyright \|\| legal` is present, so a minimal legal strip is reachable. | `prop SiteFooter.brand` |
 | `wordmark` takes any `ReactNode` — a product name, a single tagline word, an inline SVG — and it is `aria-hidden`, so it never enters the accessibility tree whatever you put there. | `prop SiteFooter.wordmark` |
 | `brand` is a free slot: logo plus copy plus `SocialLinks` in the demo, but a newsletter form or a status badge fits the same column (`col-span-full lg:col-span-1`). | `prop SiteFooter.brand` |
 

@@ -23,7 +23,7 @@ The homepage integrations band: cream copy column plus the four-card GSAP animat
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
 | `IntegrationsHighlight` | `backgroundImage` | `string` |  |  |
 | `IntegrationsHighlight` | `actions` | `React.ReactNode` |  |  |

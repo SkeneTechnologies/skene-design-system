@@ -23,12 +23,12 @@ Nothing appears in every route of this archetype.
 
 Too few routes to intersect, so this is what was **there**, not what is required — the file records it rather than generalising it. Read it as evidence of how these modules have been composed together, and pick for the claim you are making.
 
-| module | use for |
+| module | for |
 | --- | --- |
-| [sections/bridge](../sections/bridge.md) | A whole cream band (a `<section>`, not a card) that lays N `BridgeNode` cards in a row, interleaves arrows between them, and inverts one of them to dark and lifts it. It exists to argue POSITION — that the featured thing sits between the others — and the tone difference is the argument, not styling: three cards in one tone read as three peers and the band says nothing. Structurally it is also the package's one doubly-nested inversion (`light` band, `dark` card inside it), so it doubles as the worked example of how the two subtree switches nest. |
+| [sections/bridge](../sections/bridge.md) | A whole cream band (a `<section>`, not a card) that lays N `BridgeNode` cards in a row, interleaves arrows between them, and inverts one of them to… |
 | [sections/faq-band](../sections/faq-band.md) | The FAQ band: a heading column that stays put, and the questions beside it on a cream ground with a hairline per row and a round toggle. |
-| [sections/trust-panel](../sections/trust-panel.md) | A cream panel split into a claim and its evidence: heading, lede and a row of links on the left, a stack of `TrustFact` items on a deeper cream to the right. The split is the argument — the reassurance is not a paragraph asserting itself but a paragraph standing next to checkable facts, which is why the evidence track is the wider of the two (`0.9fr 1.1fr`). It is a fixed-polarity object: the root carries `light` unconditionally, so it is a cream card on a dark page, with a peach bloom rising from the bottom-left corner that the token system gets right on cream for free. |
-| [sections/value-cards](../sections/value-cards.md) | A responsive card band whose argument is carried by tone rather than by copy: N cards stating what the current situation costs, then one stating what it becomes. `ValueCard` takes a mono `label`, a `title` line and an optional body, and the `tone` union (`'cost' \\| 'gain'`) is the only thing that moves — `cost` borrows `semantic.errorRed` for the label and a neutral 14% hairline, `gain` takes `brand.peach` with a 34% border and a left-to-right directional wash so the last card reads as an arrival rather than one more tile. It exists so a band can make a turn; a row of identically-weighted cards degrades into a feature list and says nothing. |
+| [sections/trust-panel](../sections/trust-panel.md) | A cream panel split into a claim and its evidence: heading, lede and a row of links on the left, a stack of `TrustFact` items on a deeper cream to… |
+| [sections/value-cards](../sections/value-cards.md) | A responsive card band whose argument is carried by tone rather than by copy: N cards stating what the current situation costs, then one stating wh… |
 
 ## Watch for
 
@@ -36,12 +36,11 @@ One route. load_bearing is empty on purpose — with a single instance nothing c
 
 ## Polarity obligations
 
-| module | polarity | what you owe it |
+| polarity | what you owe it | modules in this template |
 | --- | --- | --- |
-| `sections/bridge` | `applies-both` | Has both forms and applies one of them. Which one is a call-site decision — read the module page before you place it on a ground that flips. |
-| `sections/faq-band` | `applies-light` | Puts `light` on its own root. It brings its own ground — you owe it nothing. |
-| `sections/trust-panel` | `applies-light` | Puts `light` on its own root. It brings its own ground — you owe it nothing. |
-| `sections/value-cards` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
+| `applies-light` | Puts `light` on its own root. It brings its own ground — you owe it nothing. | `sections/faq-band`, `sections/trust-panel` |
+| `applies-both` | Has both forms and applies one of them. Which one is a call-site decision — read the module page before you place it on a ground that flips. | `sections/bridge` |
+| `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. | `sections/value-cards` |
 
 ## Band grammar
 

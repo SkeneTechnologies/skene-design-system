@@ -23,21 +23,21 @@ The page furniture the marketing surface repeats: the nav bar over the hero, the
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
 | `Eyebrow` | `onLight` | `boolean` |  | `false` |
-| `Eyebrow` | `children` | `React.ReactNode` | yes |  |
+| `Eyebrow` | `children` | `React.ReactNode` | **yes** |  |
 | `DisplayHeading` | `size` | `'hero' \| 'page' \| 'section'` |  | `'page'` |
 | `DisplayHeading` | `as` | `'h1' \| 'h2' \| 'h3'` |  |  |
-| `DisplayHeading` | `children` | `React.ReactNode` | yes |  |
-| `NumberedStep` | `n` | `string` | yes |  |
-| `NumberedStep` | `title` | `React.ReactNode` | yes |  |
+| `DisplayHeading` | `children` | `React.ReactNode` | **yes** |  |
+| `NumberedStep` | `n` | `string` | **yes** |  |
+| `NumberedStep` | `title` | `React.ReactNode` | **yes** |  |
 | `NumberedStep` | `onLight` | `boolean` |  | `false` |
 | `NumberedStep` | `bodyTone` | `'muted' \| 'primary'` |  | `'muted'` |
 | `NumberedStep` | `titleAs` | `'h2' \| 'h3'` |  | `'h3'` |
 | `NumberedStep` | `children` | `React.ReactNode` |  |  |
-| `SplitAuthLayout` | `form` | `React.ReactNode` | yes |  |
-| `SplitAuthLayout` | `showcase` | `React.ReactNode` | yes |  |
+| `SplitAuthLayout` | `form` | `React.ReactNode` | **yes** |  |
+| `SplitAuthLayout` | `showcase` | `React.ReactNode` | **yes** |  |
 | `SplitAuthLayout` | `meta` | `React.ReactNode` |  |  |
 
 ## Also for

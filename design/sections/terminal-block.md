@@ -23,16 +23,18 @@ The install block: a terminal frame holding one or more shell lines, each with i
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
-| `TerminalBlock` | `lines` | `TerminalBlockLine[]` | yes |  |
+| `TerminalBlock` | `lines` | `TerminalBlockLine[]` | **yes** |  |
 | `TerminalBlock` | `title` | `React.ReactNode` |  |  |
 | `TerminalBlock` | `note` | `React.ReactNode` |  |  |
 | `TerminalBlock` | `copyLabel` | `React.ReactNode` |  | `'copy'` |
 | `TerminalBlock` | `copiedLabel` | `React.ReactNode` |  | `'copied'` |
 | `TerminalBlock` | `onCopy` | `(result: { command: string; index: number; ok: boolean }) => void` |  |  |
 
-## Types
+## Types — not components
+
+These are TypeScript types, not exports you can render. `<TerminalBlockLine />` is not a component; the type describes the shape of a value you pass to one of the exports above. The name usually reads like a component, which is why this heading says so.
 
 | type | shape |
 | --- | --- |

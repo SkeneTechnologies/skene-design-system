@@ -23,10 +23,10 @@ The inverted band: one cream card carrying a whole section's worth of copy — h
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
 | `LightSectionCard` | `eyebrow` | `React.ReactNode` |  |  |
-| `LightSectionCard` | `title` | `React.ReactNode` | yes |  |
+| `LightSectionCard` | `title` | `React.ReactNode` | **yes** |  |
 | `LightSectionCard` | `titleScale` | `'display' \| 'section'` |  | `'display'` |
 | `LightSectionCard` | `lede` | `React.ReactNode` |  |  |
 | `LightSectionCard` | `children` | `React.ReactNode` |  |  |
@@ -60,7 +60,7 @@ Every claim cites the prop, default or export that makes it true. A claim that c
 | --- | --- |
 | `light` on the root is unconditional and first in the class list. Anything dark you nest has to re-assert `dark` itself: the gallery writes `<ProductWindow tone="dark" className="dark">`, because ProductWindow's dark branch sets `chrome.*` fills but adds no `dark` class of its own. | `className` |
 | `brand.peach` inverts inside this card — #89684a, not #fec089 — so a default peach `<Button>` lands noticeably darker than the same button on the page around it. That is precisely why `actions` is a slot; pass the variant you actually want (the live section uses near-black buttons). | `prop LightSectionCard.actions` |
-| The horizontal rule and the whole lower block are gated on `hasProof = Boolean(children \\|\\| actions)`. `title` + `lede` alone render a bare panel with no divider — that is deliberate (the rule can never appear with nothing under it), not a bug to patch. | `prop LightSectionCard.title` |
+| The horizontal rule and the whole lower block are gated on `hasProof = Boolean(children \|\| actions)`. `title` + `lede` alone render a bare panel with no divider — that is deliberate (the rule can never appear with nothing under it), not a bug to patch. | `prop LightSectionCard.title` |
 | The column ratios are hardcoded (`md:grid-cols-[1.1fr_0.9fr]`, mirrored to `[0.9fr_1.1fr]` when `reverse`), apply only at `md`+, and only when `visual` is passed. Below `md` it is one column, copy first, regardless of `reverse`. | `prop LightSectionCard.reverse` |
 
 ## Reachable from outside

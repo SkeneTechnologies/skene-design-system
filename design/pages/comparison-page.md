@@ -25,13 +25,13 @@ In **every** route of this archetype. Leave one out and the page is a different 
 
 ## Optional
 
-`in N of M` is a count of what was built, not a recommendation. Pick for the claim you are making.
+`in N of M` is a count of what was built, not a recommendation. Pick for the claim you are making, then open that module for the rest.
 
-| module | in | use for |
+| module | in | for |
 | --- | --- | --- |
-| [sections/finding-card](../sections/finding-card.md) | 1 of 2 | Three small pieces that together fill a product window with Skene's actual argument: `Finding` (a status-tagged row — tag, title, consequence), `MetricCard` (the headline number with a coloured delta), and `Sparkline` (an authored bar shape). The point of the set is the contradiction — a metric that looks fine above a list of steps that are unmeasured or renamed — so the status vocabulary is fixed at `good \\| warn \\| danger` bound to `semantic.matcha / warningAmber / errorRed`, the same three the dashboard uses. All content is props; nothing here knows what a Skene finding says. |
+| [sections/finding-card](../sections/finding-card.md) | 1 of 2 | Three small pieces that together fill a product window with Skene's actual argument: `Finding` (a status-tagged row — tag, title, consequence), `Me… |
 | [sections/mcp-block](../sections/mcp-block.md) | 1 of 2 | A panel inside the MCP artifact: a config snippet to paste, or the list of tools the server answers with. |
-| [sections/comparison-table](../sections/comparison-table.md) | 1 of 2 | A real semantic `<table>` for capability comparison — one row per claim, one column per approach, with your column picked out. The featured column is washed in the head *and* every body cell so it reads as one continuous object top to bottom, and the header additionally turns peach so its identity is stated once in words rather than only in colour. The whole component is really the pairing of `min-width: 820px` on the table with `overflow-x: auto` + `tabIndex={0}` on the wrapper: a comparison that reflows into stacked cards stops being a comparison, so on narrow screens it keeps its shape and scrolls sideways instead. |
+| [sections/comparison-table](../sections/comparison-table.md) | 1 of 2 | A real semantic `<table>` for capability comparison — one row per claim, one column per approach, with your column picked out. |
 | [sections/integration-rows](../sections/integration-rows.md) | 1 of 2 | The integrations artifact: what Skene is attached to, and whether each connection is live. |
 | [sections/key-value-table](../sections/key-value-table.md) | 1 of 2 | The reference table: keys and values at two densities, with a masked value, a note and the 11px tag chip. |
 
@@ -41,14 +41,10 @@ Thin. Two routes sharing one module is not a recipe — and note that only one o
 
 ## Polarity obligations
 
-| module | polarity | what you owe it |
+| polarity | what you owe it | modules in this template |
 | --- | --- | --- |
-| `sections/artifact-shell` | `applies-light` | Puts `light` on its own root. It brings its own ground — you owe it nothing. |
-| `sections/finding-card` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
-| `sections/mcp-block` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
-| `sections/comparison-table` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
-| `sections/integration-rows` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
-| `sections/key-value-table` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
+| `applies-light` | Puts `light` on its own root. It brings its own ground — you owe it nothing. | `sections/artifact-shell` |
+| `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. | `sections/finding-card`, `sections/mcp-block`, `sections/comparison-table`, `sections/integration-rows`, `sections/key-value-table` |
 
 ## Band grammar
 

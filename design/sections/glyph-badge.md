@@ -23,7 +23,7 @@ The round disc a glyph sits in at the head of a row: a circle, a hairline, a pea
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
 | `GlyphBadge` | `tone` | `GlyphBadgeTone` |  | `'tint'` |
 | `GlyphBadge` | `size` | `number` |  | `38` |

@@ -23,7 +23,7 @@ The brand artwork as elements: the square symbol, and the horizontal lockup with
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
 | `SkeneMark` | `tone` | `SkeneMarkTone` |  | `'block'` |
 | `SkeneMark` | `size` | `number` |  | `28` |

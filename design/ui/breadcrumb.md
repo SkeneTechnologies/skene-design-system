@@ -23,7 +23,7 @@ The path back up a product hierarchy.
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
 | `BreadcrumbLink` | `asChild` | `boolean` |  |  |
 

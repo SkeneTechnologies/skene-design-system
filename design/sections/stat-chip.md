@@ -23,13 +23,13 @@ Two small pills that sit beside headings: `StatChip` asserts something true righ
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
 | `StatChip` | `icon` | `React.ReactNode` |  |  |
-| `StatChip` | `children` | `React.ReactNode` | yes |  |
+| `StatChip` | `children` | `React.ReactNode` | **yes** |  |
 | `MetaChip` | `icon` | `React.ReactNode` |  |  |
-| `MetaChip` | `children` | `React.ReactNode` | yes |  |
-| `MetaChip` | `status` | `React.ReactNode` | yes |  |
+| `MetaChip` | `children` | `React.ReactNode` | **yes** |  |
+| `MetaChip` | `status` | `React.ReactNode` | **yes** |  |
 
 ## Also for
 

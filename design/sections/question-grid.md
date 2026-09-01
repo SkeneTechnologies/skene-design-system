@@ -23,12 +23,12 @@ A 1–4 column grid of near-empty cards, each one a mono category `tag` sitting 
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
 | `QuestionGrid` | `columns` | `keyof typeof COLUMN_CLASS` |  | `3` |
-| `QuestionGrid` | `children` | `React.ReactNode` | yes |  |
+| `QuestionGrid` | `children` | `React.ReactNode` | **yes** |  |
 | `QuestionCard` | `tag` | `React.ReactNode` |  |  |
-| `QuestionCard` | `title` | `React.ReactNode` | yes |  |
+| `QuestionCard` | `title` | `React.ReactNode` | **yes** |  |
 | `QuestionCard` | `children` | `React.ReactNode` |  |  |
 
 ## Also for
@@ -63,7 +63,7 @@ These edges are symmetric — the same pairing is recorded from the other side.
 | The `mb-[58px]` under the tag is a fixed margin, not `mt-auto`, and it is load-bearing: it is what makes the tag read as a label on the card rather than a kicker on the sentence, and what keeps every tag on one baseline across the row. It only works because the grid's default `items-stretch` gives the cards a shared row height — drop these into a flex row, or pass `items-start`, and the alignment goes. | `prop QuestionCard.tag` |
 | Omitting `tag` removes the 58px with it, so the question floats at the top of a card still held open by `min-h-[230px] md:min-h-[270px]` — a visible void underneath. The card is designed to be tagged. | `prop QuestionCard.tag` |
 | The tag colour is hardcoded `text-brand-peach`; there is no per-card accent. Colour-coding categories would need a small prop addition — a `tone`/`accent` prop feeding the tag's colour, mirroring `ValueCard`'s `TONE_ACCENT` map. | `prop QuestionCard.tag` |
-| `COLUMN_CLASS` is a static 1\\|2\\|3\\|4 map because Tailwind cannot see an interpolated class name. Five or six columns is a compile error, not a runtime surprise — and fixing it means adding a map entry, not passing a number through. | `prop QuestionGrid.columns` |
+| `COLUMN_CLASS` is a static 1\|2\|3\|4 map because Tailwind cannot see an interpolated class name. Five or six columns is a compile error, not a runtime surprise — and fixing it means adding a map entry, not passing a number through. | `prop QuestionGrid.columns` |
 | Adding a background fill via `className` works (the corner glow is `backgroundImage`, a different property) but it is exactly the change the file header warns against: a filled card acquires its own ground, at which point it needs a `light`/`dark` class and every token inside it needs re-checking. | `className` |
 
 ## Reachable from outside

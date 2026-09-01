@@ -23,12 +23,12 @@ A terminal frame: traffic lights, a title, and monospace lines with an optional 
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
 | `Terminal` | `title` | `string` |  |  |
-| `Terminal` | `children` | `React.ReactNode` | yes |  |
+| `Terminal` | `children` | `React.ReactNode` | **yes** |  |
 | `TerminalLine` | `prompt` | `boolean` |  |  |
-| `TerminalLine` | `children` | `React.ReactNode` | yes |  |
+| `TerminalLine` | `children` | `React.ReactNode` | **yes** |  |
 
 ## Also for
 

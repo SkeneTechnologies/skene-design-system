@@ -23,17 +23,19 @@ The evaluator index: every evaluation in a workspace, and whether the signals it
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
 | `EvaluatorList` | `crumb` | `React.ReactNode` |  |  |
 | `EvaluatorList` | `summary` | `{ status: StatPillStatus; label: React.ReactNode }` |  |  |
-| `EvaluatorList` | `columns` | `EvaluatorListColumns` | yes |  |
-| `EvaluatorList` | `evaluations` | `EvaluationEntry[]` | yes |  |
+| `EvaluatorList` | `columns` | `EvaluatorListColumns` | **yes** |  |
+| `EvaluatorList` | `evaluations` | `EvaluationEntry[]` | **yes** |  |
 | `EvaluatorList` | `note` | `React.ReactNode` |  |  |
 | `EvaluatorList` | `frame` | `ArtFrameKind \| false` |  | `'jr'` |
-| `EvaluatorNote` | `children` | `React.ReactNode` | yes |  |
+| `EvaluatorNote` | `children` | `React.ReactNode` | **yes** |  |
 
-## Types
+## Types — not components
+
+These are TypeScript types, not exports you can render. `<EvaluatorListColumns />` is not a component; the type describes the shape of a value you pass to one of the exports above. The name usually reads like a component, which is why this heading says so.
 
 | type | shape |
 | --- | --- |

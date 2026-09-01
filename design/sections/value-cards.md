@@ -23,11 +23,11 @@ A responsive card band whose argument is carried by tone rather than by copy: N 
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
-| `ValueCards` | `children` | `React.ReactNode` | yes |  |
+| `ValueCards` | `children` | `React.ReactNode` | **yes** |  |
 | `ValueCard` | `label` | `React.ReactNode` |  |  |
-| `ValueCard` | `title` | `React.ReactNode` | yes |  |
+| `ValueCard` | `title` | `React.ReactNode` | **yes** |  |
 | `ValueCard` | `tone` | `ValueTone` |  | `'cost'` |
 | `ValueCard` | `children` | `React.ReactNode` |  |  |
 
@@ -49,7 +49,7 @@ Every claim cites the prop, default or export that makes it true. A claim that c
 | instead | why |
 | --- | --- |
 | `QuestionGrid` | A row of equal-weight peers (a feature list, a set of capabilities). The whole point of the component is the tonal turn; used flat it is a worse plain card grid than `QuestionGrid` or `FeatureRow`. |
-| `Finding` | Signalling a measured state. The `good \\| warn \\| danger` vocabulary bound to `semantic.matcha / warningAmber / errorRed` means an observed fact — that is `Finding` (or `ui/badge` on a product surface). `ValueCard`'s `cost` borrows `errorRed` for a marketing claim, and using it for real status teaches the reader that red means two different things. |
+| `Finding` | Signalling a measured state. The `good \| warn \| danger` vocabulary bound to `semantic.matcha / warningAmber / errorRed` means an observed fact — that is `Finding` (or `ui/badge` on a product surface). `ValueCard`'s `cost` borrows `errorRed` for a marketing claim, and using it for real status teaches the reader that red means two different things. |
 
 ## Easy to confuse with
 

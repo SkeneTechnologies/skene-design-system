@@ -23,18 +23,20 @@ The drawer layers behind PillNav's mobile navigation: the Menu and Close toggle,
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
-| `PillNavMobileMenuToggle` | `isOpen` | `boolean` | yes |  |
-| `PillNavMobileMenuToggle` | `onOpenChange` | `(open: boolean) => void` | yes |  |
-| `PillNavMobileMenuToggle` | `panelId` | `string` | yes |  |
-| `PillNavMobileMenuLayers` | `links` | `PillNavMobileLink[]` | yes |  |
+| `PillNavMobileMenuToggle` | `isOpen` | `boolean` | **yes** |  |
+| `PillNavMobileMenuToggle` | `onOpenChange` | `(open: boolean) => void` | **yes** |  |
+| `PillNavMobileMenuToggle` | `panelId` | `string` | **yes** |  |
+| `PillNavMobileMenuLayers` | `links` | `PillNavMobileLink[]` | **yes** |  |
 | `PillNavMobileMenuLayers` | `actions` | `React.ReactNode` |  |  |
-| `PillNavMobileMenuLayers` | `isOpen` | `boolean` | yes |  |
-| `PillNavMobileMenuLayers` | `onOpenChange` | `(open: boolean) => void` | yes |  |
-| `PillNavMobileMenuLayers` | `panelId` | `string` | yes |  |
+| `PillNavMobileMenuLayers` | `isOpen` | `boolean` | **yes** |  |
+| `PillNavMobileMenuLayers` | `onOpenChange` | `(open: boolean) => void` | **yes** |  |
+| `PillNavMobileMenuLayers` | `panelId` | `string` | **yes** |  |
 
-## Types
+## Types — not components
+
+These are TypeScript types, not exports you can render. `<PillNavMobileLink />` is not a component; the type describes the shape of a value you pass to one of the exports above. The name usually reads like a component, which is why this heading says so.
 
 | type | shape |
 | --- | --- |

@@ -23,9 +23,9 @@ The inline identifier chip inside a sentence: an event name, a column, a flag, a
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
-| `Code` | `children` | `React.ReactNode` | yes |  |
+| `Code` | `children` | `React.ReactNode` | **yes** |  |
 | `Code` | `onLight` | `boolean` |  |  |
 
 ## Also for

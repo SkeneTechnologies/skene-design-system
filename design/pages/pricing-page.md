@@ -23,15 +23,15 @@ Nothing appears in every route of this archetype.
 
 Too few routes to intersect, so this is what was **there**, not what is required — the file records it rather than generalising it. Read it as evidence of how these modules have been composed together, and pick for the claim you are making.
 
-| module | use for |
+| module | for |
 | --- | --- |
-| [patterns/marketing](../patterns/marketing.md) | The page furniture the marketing surface repeats: the nav bar over the hero, the display heading and its peach accent, the eyebrow kicker, the numbered step, and the split auth layout. |
-| [sections/trust-panel](../sections/trust-panel.md) | A cream panel split into a claim and its evidence: heading, lede and a row of links on the left, a stack of `TrustFact` items on a deeper cream to the right. The split is the argument — the reassurance is not a paragraph asserting itself but a paragraph standing next to checkable facts, which is why the evidence track is the wider of the two (`0.9fr 1.1fr`). It is a fixed-polarity object: the root carries `light` unconditionally, so it is a cream card on a dark page, with a peach bloom rising from the bottom-left corner that the token system gets right on cream for free. |
-| [sections/comparison-table](../sections/comparison-table.md) | A real semantic `<table>` for capability comparison — one row per claim, one column per approach, with your column picked out. The featured column is washed in the head *and* every body cell so it reads as one continuous object top to bottom, and the header additionally turns peach so its identity is stated once in words rather than only in colour. The whole component is really the pairing of `min-width: 820px` on the table with `overflow-x: auto` + `tabIndex={0}` on the wrapper: a comparison that reflows into stacked cards stops being a comparison, so on narrow screens it keeps its shape and scrolls sideways instead. |
+| [patterns/marketing](../patterns/marketing.md) | The page furniture the marketing surface repeats: the nav bar over the hero, the display heading and its peach accent, the eyebrow kicker, the numb… |
+| [sections/trust-panel](../sections/trust-panel.md) | A cream panel split into a claim and its evidence: heading, lede and a row of links on the left, a stack of `TrustFact` items on a deeper cream to… |
+| [sections/comparison-table](../sections/comparison-table.md) | A real semantic `<table>` for capability comparison — one row per claim, one column per approach, with your column picked out. |
 | [sections/faq-band](../sections/faq-band.md) | The FAQ band: a heading column that stays put, and the questions beside it on a cream ground with a hairline per row and a round toggle. |
-| [sections/finding-card](../sections/finding-card.md) | Three small pieces that together fill a product window with Skene's actual argument: `Finding` (a status-tagged row — tag, title, consequence), `MetricCard` (the headline number with a coloured delta), and `Sparkline` (an authored bar shape). The point of the set is the contradiction — a metric that looks fine above a list of steps that are unmeasured or renamed — so the status vocabulary is fixed at `good \\| warn \\| danger` bound to `semantic.matcha / warningAmber / errorRed`, the same three the dashboard uses. All content is props; nothing here knows what a Skene finding says. |
-| [sections/check-list](../sections/check-list.md) | The rule-separated feature list with a peach check — the single highest-frequency element on a Skene marketing page, previously hand-written at every call site. `CheckList` is a bare `<ul>` that sets one CSS variable (`--check-rule`); `CheckItem` is an `<li>` whose separator is a *top border on each row* rather than a divider element, so a list of one still reads as part of its card instead of floating. The check is a real `aria-hidden` `<span>`, not a `::before`, precisely so a screen reader does not announce "tick" before every line. |
-| [sections/plan-card](../sections/plan-card.md) | A pricing tier card plus the grid that holds a row of them (`PlanGrid` + `PlanCard`). It is pure markup — no state, no client directive — because the only interactive part of a pricing section, the billing switch, was deliberately split into `billing-toggle.tsx` so this file stays server-renderable. The shape's real argument is comparison-by-inversion: `featured` flips one card to cream-on-dark, lifts it `md:-translate-y-3`, and drops a `--shadow-modal` on it, so a row of peers stops reading as peers and one of them becomes the recommendation. |
+| [sections/finding-card](../sections/finding-card.md) | Three small pieces that together fill a product window with Skene's actual argument: `Finding` (a status-tagged row — tag, title, consequence), `Me… |
+| [sections/check-list](../sections/check-list.md) | The rule-separated feature list with a peach check — the single highest-frequency element on a Skene marketing page, previously hand-written at eve… |
+| [sections/plan-card](../sections/plan-card.md) | A pricing tier card plus the grid that holds a row of them (`PlanGrid` + `PlanCard`). |
 | [sections/artifact-shell](../sections/artifact-shell.md) | The shell every drawn Skene Cloud artifact is built from: the textured field, the light app window, its panels, the status pill and the data table. |
 | [sections/key-value-table](../sections/key-value-table.md) | The reference table: keys and values at two densities, with a masked value, a note and the 11px tag chip. |
 
@@ -41,17 +41,11 @@ One route, and the corpus's only pairing of `sections/plan-card` with `sections/
 
 ## Polarity obligations
 
-| module | polarity | what you owe it |
+| polarity | what you owe it | modules in this template |
 | --- | --- | --- |
-| `patterns/marketing` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
-| `sections/trust-panel` | `applies-light` | Puts `light` on its own root. It brings its own ground — you owe it nothing. |
-| `sections/comparison-table` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
-| `sections/faq-band` | `applies-light` | Puts `light` on its own root. It brings its own ground — you owe it nothing. |
-| `sections/finding-card` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
-| `sections/check-list` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
-| `sections/plan-card` | `applies-both` | Has both forms and applies one of them. Which one is a call-site decision — read the module page before you place it on a ground that flips. |
-| `sections/artifact-shell` | `applies-light` | Puts `light` on its own root. It brings its own ground — you owe it nothing. |
-| `sections/key-value-table` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
+| `applies-light` | Puts `light` on its own root. It brings its own ground — you owe it nothing. | `sections/trust-panel`, `sections/faq-band`, `sections/artifact-shell` |
+| `applies-both` | Has both forms and applies one of them. Which one is a call-site decision — read the module page before you place it on a ground that flips. | `sections/plan-card` |
+| `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. | `patterns/marketing`, `sections/comparison-table`, `sections/finding-card`, `sections/check-list`, `sections/key-value-table` |
 
 ## Band grammar
 

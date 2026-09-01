@@ -23,9 +23,9 @@ The Skene surface treatment: a halftone texture blended over photographic or vid
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
-| `DitherOverlay` | `src` | `string` | yes |  |
+| `DitherOverlay` | `src` | `string` | **yes** |  |
 | `DitherOverlay` | `opacity` | `number` |  | `0.8` |
 | `DitherOverlay` | `blend` | `'soft-light' \| 'overlay' \| 'multiply' \| 'screen'` |  | `'soft-light'` |
 | `DitheredMedia` | `video` | `string` |  |  |

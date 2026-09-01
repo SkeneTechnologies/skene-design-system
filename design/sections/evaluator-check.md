@@ -23,23 +23,23 @@ The evaluator's Check tab: a metric, the formula under it, one row per operand, 
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
 | `CheckChip` | `role` | `boolean` |  | `false` |
-| `CheckChip` | `children` | `React.ReactNode` | yes |  |
-| `CheckFigure` | `label` | `React.ReactNode` | yes |  |
-| `CheckFigure` | `value` | `React.ReactNode` | yes |  |
-| `CheckOperand` | `name` | `React.ReactNode` | yes |  |
+| `CheckChip` | `children` | `React.ReactNode` | **yes** |  |
+| `CheckFigure` | `label` | `React.ReactNode` | **yes** |  |
+| `CheckFigure` | `value` | `React.ReactNode` | **yes** |  |
+| `CheckOperand` | `name` | `React.ReactNode` | **yes** |  |
 | `CheckOperand` | `chips` | `React.ReactNode` |  |  |
 | `CheckOperand` | `tone` | `StatPillStatus` |  | `'warn'` |
 | `CheckOperand` | `figures` | `React.ReactNode` |  |  |
-| `CheckResult` | `label` | `React.ReactNode` | yes |  |
-| `CheckResult` | `value` | `React.ReactNode` | yes |  |
+| `CheckResult` | `label` | `React.ReactNode` | **yes** |  |
+| `CheckResult` | `value` | `React.ReactNode` | **yes** |  |
 | `EvaluatorCheck` | `crumb` | `React.ReactNode` |  |  |
 | `EvaluatorCheck` | `actions` | `React.ReactNode` |  |  |
-| `EvaluatorCheck` | `heading` | `React.ReactNode` | yes |  |
+| `EvaluatorCheck` | `heading` | `React.ReactNode` | **yes** |  |
 | `EvaluatorCheck` | `headingNote` | `React.ReactNode` |  |  |
-| `EvaluatorCheck` | `metric` | `React.ReactNode` | yes |  |
+| `EvaluatorCheck` | `metric` | `React.ReactNode` | **yes** |  |
 | `EvaluatorCheck` | `formula` | `React.ReactNode` |  |  |
 | `EvaluatorCheck` | `qualifiers` | `React.ReactNode` |  |  |
 | `EvaluatorCheck` | `children` | `React.ReactNode` |  |  |

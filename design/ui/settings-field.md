@@ -23,7 +23,7 @@ The workspace form row: label, control, description, in one component.
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
 | `SettingsInput` | `tone` | `SettingsFieldVariantProps["tone"]` |  |  |
 | `SettingsSelect` | `size` | `"default" \| "sm"` |  | `"default"` |

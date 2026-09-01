@@ -23,15 +23,15 @@ A real semantic `<table>` for capability comparison — one row per claim, one c
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
-| `ComparisonRow` | `header` | `React.ReactNode` | yes |  |
-| `ComparisonRow` | `cells` | `React.ReactNode[]` | yes |  |
+| `ComparisonRow` | `header` | `React.ReactNode` | **yes** |  |
+| `ComparisonRow` | `cells` | `React.ReactNode[]` | **yes** |  |
 | `ComparisonRow` | `featuredIndex` | `number` |  |  |
-| `ComparisonTable` | `columns` | `React.ReactNode[]` | yes |  |
+| `ComparisonTable` | `columns` | `React.ReactNode[]` | **yes** |  |
 | `ComparisonTable` | `featuredIndex` | `number` |  |  |
 | `ComparisonTable` | `caption` | `React.ReactNode` |  |  |
-| `ComparisonTable` | `children` | `React.ReactNode` | yes |  |
+| `ComparisonTable` | `children` | `React.ReactNode` | **yes** |  |
 | `ComparisonTable` | `onLight` | `boolean` |  | `false` |
 | `TableMarker` | `label` | `React.ReactNode` |  |  |
 

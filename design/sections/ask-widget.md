@@ -23,16 +23,16 @@ The "ask us anything" prompt block: an attributed question rendered as the loud 
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
 | `AskWidget` | `avatar` | `React.ReactNode` |  |  |
 | `AskWidget` | `name` | `React.ReactNode` |  |  |
-| `AskWidget` | `question` | `React.ReactNode` | yes |  |
+| `AskWidget` | `question` | `React.ReactNode` | **yes** |  |
 | `AskWidget` | `lede` | `React.ReactNode` |  |  |
 | `AskWidget` | `placeholder` | `string` |  |  |
-| `AskWidget` | `submitLabel` | `React.ReactNode` | yes |  |
-| `AskWidget` | `value` | `string` | yes |  |
-| `AskWidget` | `onValueChange` | `(value: string) => void` | yes |  |
+| `AskWidget` | `submitLabel` | `React.ReactNode` | **yes** |  |
+| `AskWidget` | `value` | `string` | **yes** |  |
+| `AskWidget` | `onValueChange` | `(value: string) => void` | **yes** |  |
 | `AskWidget` | `onSubmit` | `(value: string) => void` |  |  |
 | `AskWidget` | `showAiBadge` | `boolean` |  | `true` |
 | `AskWidget` | `aiBadgeLabel` | `React.ReactNode` |  | `'AI'` |

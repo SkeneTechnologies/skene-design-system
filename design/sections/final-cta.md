@@ -23,13 +23,13 @@ The closing band: full-bleed, centred, one large heading, an optional lede and a
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
 | `FinalCta` | `backdrop` | `string \| false` |  |  |
 | `FinalCta` | `actions` | `React.ReactNode` |  |  |
 | `FinalCta` | `lede` | `React.ReactNode` |  |  |
 | `FinalCta` | `eyebrow` | `React.ReactNode` |  |  |
-| `FinalCta` | `children` | `React.ReactNode` | yes |  |
+| `FinalCta` | `children` | `React.ReactNode` | **yes** |  |
 
 ## Also for
 

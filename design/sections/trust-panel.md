@@ -23,14 +23,14 @@ A cream panel split into a claim and its evidence: heading, lede and a row of li
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
 | `TrustFact` | `icon` | `React.ReactNode` |  |  |
-| `TrustFact` | `title` | `React.ReactNode` | yes |  |
+| `TrustFact` | `title` | `React.ReactNode` | **yes** |  |
 | `TrustFact` | `children` | `React.ReactNode` |  |  |
 | `TrustFact` | `tone` | `'tint' \| 'muted'` |  | `'tint'` |
 | `TrustPanel` | `eyebrow` | `React.ReactNode` |  |  |
-| `TrustPanel` | `title` | `React.ReactNode` | yes |  |
+| `TrustPanel` | `title` | `React.ReactNode` | **yes** |  |
 | `TrustPanel` | `lede` | `React.ReactNode` |  |  |
 | `TrustPanel` | `links` | `React.ReactNode` |  |  |
 | `TrustPanel` | `children` | `React.ReactNode` |  |  |

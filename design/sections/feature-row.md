@@ -23,10 +23,10 @@ A whole dark band of a page: a copy column (corner marker, ringed icon, title, i
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
 | `FeatureIcon` | `accent` | `FeatureAccent` |  | `'peach'` |
-| `FeatureIcon` | `children` | `React.ReactNode` | yes |  |
+| `FeatureIcon` | `children` | `React.ReactNode` | **yes** |  |
 | `FeatureRow` | `reverse` | `boolean` |  | `false` |
 | `FeatureRow` | `n` | `React.ReactNode` |  |  |
 | `FeatureRow` | `eyebrow` | `React.ReactNode` |  |  |

@@ -23,7 +23,7 @@ The generic product container: header, content, footer. `variant="surface"` is t
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
 | `Card` | `variant` | `CardVariant` |  | `"default"` |
 | `Card` | `asChild` | `boolean` |  | `false` |

@@ -23,17 +23,19 @@ The requirements an evaluation depends on: one row per event, its verdict, and t
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
 | `EvaluatorVerify` | `crumb` | `React.ReactNode` |  |  |
 | `EvaluatorVerify` | `summary` | `{ status: StatPillStatus; label: React.ReactNode }` |  |  |
-| `EvaluatorVerify` | `title` | `React.ReactNode` | yes |  |
+| `EvaluatorVerify` | `title` | `React.ReactNode` | **yes** |  |
 | `EvaluatorVerify` | `subtitle` | `React.ReactNode` |  |  |
-| `EvaluatorVerify` | `requirements` | `VerifyRequirement[]` | yes |  |
+| `EvaluatorVerify` | `requirements` | `VerifyRequirement[]` | **yes** |  |
 | `EvaluatorVerify` | `note` | `React.ReactNode` |  |  |
 | `EvaluatorVerify` | `frame` | `ArtFrameKind \| false` |  | `'jr'` |
 
-## Types
+## Types — not components
+
+These are TypeScript types, not exports you can render. `<VerifyField />` is not a component; the type describes the shape of a value you pass to one of the exports above. The name usually reads like a component, which is why this heading says so.
 
 | type | shape |
 | --- | --- |

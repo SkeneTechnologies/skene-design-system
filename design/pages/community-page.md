@@ -25,15 +25,15 @@ In **every** route of this archetype. Leave one out and the page is a different 
 
 ## Optional
 
-`in N of M` is a count of what was built, not a recommendation. Pick for the claim you are making.
+`in N of M` is a count of what was built, not a recommendation. Pick for the claim you are making, then open that module for the rest.
 
-| module | in | use for |
+| module | in | for |
 | --- | --- | --- |
-| [patterns/marketing](../patterns/marketing.md) | 1 of 2 | The page furniture the marketing surface repeats: the nav bar over the hero, the display heading and its peach accent, the eyebrow kicker, the numbered step, and the split auth layout. |
-| [sections/pipeline-stepper](../sections/pipeline-stepper.md) | 1 of 2 | A labelled progress track: N steps with state rings, joined by connectors the STEPPER owns and fills from the state of the step on their left, above an optional title/subtitle. It was built for a long job running inside a light `ProductWindow`, and two decisions carry that job — connectors are derived rather than drawn per-step, so N dots read as one track filling left to right; and emphasis runs backwards from instinct, with the ACTIVE step taking the label weight and a peach halo while done steps recede to matcha, because a running job's question is "what is it doing now", not "what has it finished". |
-| [sections/check-list](../sections/check-list.md) | 1 of 2 | The rule-separated feature list with a peach check — the single highest-frequency element on a Skene marketing page, previously hand-written at every call site. `CheckList` is a bare `<ul>` that sets one CSS variable (`--check-rule`); `CheckItem` is an `<li>` whose separator is a *top border on each row* rather than a divider element, so a list of one still reads as part of its card instead of floating. The check is a real `aria-hidden` `<span>`, not a `::before`, precisely so a screen reader does not announce "tick" before every line. |
-| [sections/code](../sections/code.md) | 1 of 2 | The inline identifier chip inside a sentence: an event name, a column, a flag, a path. Extracted from SEVEN copies — six byte-identical component declarations across skene-site route files, verified by comparing the emitted class string, plus a seventh spelling as `PROSE_CODE`, the same recipe as a descendant selector for prose the author cannot reach element by element. The oldest open entry on that repository's gap list, on a site where an event name appears in nearly every paragraph of body copy. |
-| [sections/traffic-lights](../sections/traffic-lights.md) | 1 of 2 | The three window-chrome dots — red, yellow, green, 10px each — as one `aria-hidden` group at an 8px gap. It exists so a shell bar, an editor header or a GitHub file header can carry window furniture without hand-rolling three spans, which is what five files were doing: `TerminalBlock` and `PrReview` in this package, and two skene-site routes that each declared a local copy plus a comment saying the fix belonged upstream. |
+| [patterns/marketing](../patterns/marketing.md) | 1 of 2 | The page furniture the marketing surface repeats: the nav bar over the hero, the display heading and its peach accent, the eyebrow kicker, the numb… |
+| [sections/pipeline-stepper](../sections/pipeline-stepper.md) | 1 of 2 | A labelled progress track: N steps with state rings, joined by connectors the STEPPER owns and fills from the state of the step on their left, abov… |
+| [sections/check-list](../sections/check-list.md) | 1 of 2 | The rule-separated feature list with a peach check — the single highest-frequency element on a Skene marketing page, previously hand-written at eve… |
+| [sections/code](../sections/code.md) | 1 of 2 | The inline identifier chip inside a sentence: an event name, a column, a flag, a path. |
+| [sections/traffic-lights](../sections/traffic-lights.md) | 1 of 2 | The three window-chrome dots — red, yellow, green, 10px each — as one `aria-hidden` group at an 8px gap. |
 | [sections/artifact-shell](../sections/artifact-shell.md) | 1 of 2 | The shell every drawn Skene Cloud artifact is built from: the textured field, the light app window, its panels, the status pill and the data table. |
 | [sections/key-value-table](../sections/key-value-table.md) | 1 of 2 | The reference table: keys and values at two densities, with a masked value, a note and the 11px tag chip. |
 
@@ -43,16 +43,11 @@ Grouped by site role, not by shape — the two routes share one module. The even
 
 ## Polarity obligations
 
-| module | polarity | what you owe it |
+| polarity | what you owe it | modules in this template |
 | --- | --- | --- |
-| `sections/trust-panel` | `applies-light` | Puts `light` on its own root. It brings its own ground — you owe it nothing. |
-| `patterns/marketing` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
-| `sections/pipeline-stepper` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
-| `sections/check-list` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
-| `sections/code` | `applies-both` | Has both forms and applies one of them. Which one is a call-site decision — read the module page before you place it on a ground that flips. |
-| `sections/traffic-lights` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
-| `sections/artifact-shell` | `applies-light` | Puts `light` on its own root. It brings its own ground — you owe it nothing. |
-| `sections/key-value-table` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
+| `applies-light` | Puts `light` on its own root. It brings its own ground — you owe it nothing. | `sections/trust-panel`, `sections/artifact-shell` |
+| `applies-both` | Has both forms and applies one of them. Which one is a call-site decision — read the module page before you place it on a ground that flips. | `sections/code` |
+| `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. | `patterns/marketing`, `sections/pipeline-stepper`, `sections/check-list`, `sections/traffic-lights`, `sections/key-value-table` |
 
 ## Band grammar
 

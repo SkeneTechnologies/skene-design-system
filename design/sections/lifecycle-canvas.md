@@ -23,9 +23,9 @@ The lifecycle artifact: stages across the canvas, each holding milestones and th
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
-| `LifecycleCanvas` | `stages` | `LifecycleStageItem[]` | yes |  |
+| `LifecycleCanvas` | `stages` | `LifecycleStageItem[]` | **yes** |  |
 | `LifecycleCanvas` | `title` | `React.ReactNode` |  |  |
 | `LifecycleCanvas` | `source` | `React.ReactNode` |  |  |
 | `LifecycleCanvas` | `separator` | `React.ReactNode` |  | `'/'` |
@@ -33,7 +33,9 @@ The lifecycle artifact: stages across the canvas, each holding milestones and th
 | `LifecycleCanvas` | `summaryStatus` | `StatPillStatus` |  | `'ok'` |
 | `LifecycleCanvas` | `actions` | `React.ReactNode` |  |  |
 
-## Types
+## Types — not components
+
+These are TypeScript types, not exports you can render. `<LifecycleMilestoneItem />` is not a component; the type describes the shape of a value you pass to one of the exports above. The name usually reads like a component, which is why this heading says so.
 
 | type | shape |
 | --- | --- |

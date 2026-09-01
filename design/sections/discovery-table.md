@@ -23,10 +23,10 @@ The discovery artifact: the events Skene found, where it found them, and whether
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
-| `DiscoveryTable` | `columns` | `DiscoveryColumns` | yes |  |
-| `DiscoveryTable` | `rows` | `DiscoveryEvent[]` | yes |  |
+| `DiscoveryTable` | `columns` | `DiscoveryColumns` | **yes** |  |
+| `DiscoveryTable` | `rows` | `DiscoveryEvent[]` | **yes** |  |
 | `DiscoveryTable` | `title` | `React.ReactNode` |  |  |
 | `DiscoveryTable` | `source` | `React.ReactNode` |  |  |
 | `DiscoveryTable` | `separator` | `React.ReactNode` |  | `'/'` |
@@ -34,7 +34,9 @@ The discovery artifact: the events Skene found, where it found them, and whether
 | `DiscoveryTable` | `summaryStatus` | `StatPillStatus` |  | `'bad'` |
 | `DiscoveryTable` | `actions` | `React.ReactNode` |  |  |
 
-## Types
+## Types — not components
+
+These are TypeScript types, not exports you can render. `<DiscoveryColumns />` is not a component; the type describes the shape of a value you pass to one of the exports above. The name usually reads like a component, which is why this heading says so.
 
 | type | shape |
 | --- | --- |

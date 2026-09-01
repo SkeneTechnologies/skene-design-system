@@ -23,19 +23,19 @@ Three small pieces that together fill a product window with Skene's actual argum
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
-| `Finding` | `status` | `FindingStatus` | yes |  |
-| `Finding` | `tag` | `React.ReactNode` | yes |  |
-| `Finding` | `title` | `React.ReactNode` | yes |  |
+| `Finding` | `status` | `FindingStatus` | **yes** |  |
+| `Finding` | `tag` | `React.ReactNode` | **yes** |  |
+| `Finding` | `title` | `React.ReactNode` | **yes** |  |
 | `Finding` | `note` | `React.ReactNode` |  |  |
 | `Finding` | `onLight` | `boolean` |  | `true` |
-| `MetricCard` | `label` | `React.ReactNode` | yes |  |
-| `MetricCard` | `value` | `React.ReactNode` | yes |  |
+| `MetricCard` | `label` | `React.ReactNode` | **yes** |  |
+| `MetricCard` | `value` | `React.ReactNode` | **yes** |  |
 | `MetricCard` | `delta` | `React.ReactNode` |  |  |
 | `MetricCard` | `trend` | `FindingStatus` |  | `'danger'` |
 | `MetricCard` | `children` | `React.ReactNode` |  |  |
-| `Sparkline` | `bars` | `number[]` | yes |  |
+| `Sparkline` | `bars` | `number[]` | **yes** |  |
 | `Sparkline` | `highlight` | `number` |  |  |
 
 ## Also for

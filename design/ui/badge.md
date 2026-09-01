@@ -23,7 +23,7 @@ The product surface's status marker: a small rounded label with four variants.
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
 | `Badge` | `variant` | `"default" \| "destructive" \| "outline" \| "secondary"` |  |  |
 

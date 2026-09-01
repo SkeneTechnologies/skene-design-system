@@ -23,16 +23,16 @@ The surfaces a product runs on, as a row of tiles with one picked out, and the p
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
-| `SurfaceTiles` | `children` | `React.ReactNode` | yes |  |
+| `SurfaceTiles` | `children` | `React.ReactNode` | **yes** |  |
 | `SurfaceTile` | `icon` | `React.ReactNode` |  |  |
 | `SurfaceTile` | `accent` | `SurfaceAccent` |  | `'neutral'` |
-| `SurfaceTile` | `name` | `React.ReactNode` | yes |  |
+| `SurfaceTile` | `name` | `React.ReactNode` | **yes** |  |
 | `SurfaceTile` | `note` | `React.ReactNode` |  |  |
 | `SurfaceTile` | `selected` | `boolean` |  |  |
 | `SurfaceDetail` | `tag` | `React.ReactNode` |  |  |
-| `SurfaceDetail` | `children` | `React.ReactNode` | yes |  |
+| `SurfaceDetail` | `children` | `React.ReactNode` | **yes** |  |
 | `SurfaceDetail` | `code` | `React.ReactNode` |  |  |
 
 ## Also for

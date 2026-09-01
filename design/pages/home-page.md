@@ -23,25 +23,25 @@ Nothing appears in every route of this archetype.
 
 Too few routes to intersect, so this is what was **there**, not what is required — the file records it rather than generalising it. Read it as evidence of how these modules have been composed together, and pick for the claim you are making.
 
-| module | use for |
+| module | for |
 | --- | --- |
-| [patterns/dither](../patterns/dither.md) | The Skene surface treatment: a halftone texture blended over photographic or video media, and the full hero composition built from it. DitherOverlay is the raw layer; DitheredMedia is media, dither, scrim, gradient and content in one. |
-| [patterns/marketing](../patterns/marketing.md) | The page furniture the marketing surface repeats: the nav bar over the hero, the display heading and its peach accent, the eyebrow kicker, the numbered step, and the split auth layout. |
-| [sections/agent-callout](../sections/agent-callout.md) | The verdict block: an avatar, a claim in bold, and the evidence under it, in a peach-bordered frame on its own tinted ground. It is the moment Skene speaks on the page. |
+| [patterns/dither](../patterns/dither.md) | The Skene surface treatment: a halftone texture blended over photographic or video media, and the full hero composition built from it. |
+| [patterns/marketing](../patterns/marketing.md) | The page furniture the marketing surface repeats: the nav bar over the hero, the display heading and its peach accent, the eyebrow kicker, the numb… |
+| [sections/agent-callout](../sections/agent-callout.md) | The verdict block: an avatar, a claim in bold, and the evidence under it, in a peach-bordered frame on its own tinted ground. |
 | [sections/artifact-shell](../sections/artifact-shell.md) | The shell every drawn Skene Cloud artifact is built from: the textured field, the light app window, its panels, the status pill and the data table. |
-| [sections/bridge](../sections/bridge.md) | A whole cream band (a `<section>`, not a card) that lays N `BridgeNode` cards in a row, interleaves arrows between them, and inverts one of them to dark and lifts it. It exists to argue POSITION — that the featured thing sits between the others — and the tone difference is the argument, not styling: three cards in one tone read as three peers and the band says nothing. Structurally it is also the package's one doubly-nested inversion (`light` band, `dark` card inside it), so it doubles as the worked example of how the two subtree switches nest. |
-| [sections/check-list](../sections/check-list.md) | The rule-separated feature list with a peach check — the single highest-frequency element on a Skene marketing page, previously hand-written at every call site. `CheckList` is a bare `<ul>` that sets one CSS variable (`--check-rule`); `CheckItem` is an `<li>` whose separator is a *top border on each row* rather than a divider element, so a list of one still reads as part of its card instead of floating. The check is a real `aria-hidden` `<span>`, not a `::before`, precisely so a screen reader does not announce "tick" before every line. |
+| [sections/bridge](../sections/bridge.md) | A whole cream band (a `<section>`, not a card) that lays N `BridgeNode` cards in a row, interleaves arrows between them, and inverts one of them to… |
+| [sections/check-list](../sections/check-list.md) | The rule-separated feature list with a peach check — the single highest-frequency element on a Skene marketing page, previously hand-written at eve… |
 | [sections/discovery-table](../sections/discovery-table.md) | The discovery artifact: the events Skene found, where it found them, and whether each one verified. |
 | [sections/evaluator-list](../sections/evaluator-list.md) | The evaluator index: every evaluation in a workspace, and whether the signals it depends on were found. |
-| [sections/feature-row](../sections/feature-row.md) | A whole dark band of a page: a copy column (corner marker, ringed icon, title, italic lede, proof list, pinned actions) beside a visual panel, mirrored per row by `reverse`. The shape is an argument, not a layout — `title` + `lede` are the promise and `children` (usually a `CheckList`) is the proof, which is why the lede is its own slot rather than the first paragraph of the body. Ships with `FeatureStack` (the `grid gap-6` rhythm wrapper) and `FeatureIcon` (a ringed accent glyph in peach/violet/blue) so a three-row feature section is three prop sets rather than a re-derived grid. |
-| [sections/final-cta](../sections/final-cta.md) | The closing band: full-bleed, centred, one large heading, an optional lede and an actions row, over a textured dark backdrop. It appears twice on the live homepage and once per subpage, and every instance had previously been rebuilt by hand. The default backdrop (`pixel-bg.webp`, 143 KB) ships with the package and is resolved from the module itself, on the principle that the default should produce the section the site actually has rather than a stripped-down gradient the caller has to re-dress. |
-| [sections/glyph-badge](../sections/glyph-badge.md) | The round disc a glyph sits in at the head of a row: a circle, a hairline, a peach mark centred in it, `aria-hidden` always. It is the disc `TrustFact` draws, lifted out so it is reachable without the `<li>`, the separating rule and the qualifier slot that come with a fact row. `tone` picks the ground — `tint` is the cream-panel pair (`chrome.line.onLight` over a 12% peach wash), `muted` is the themed pair that follows the page — and `size` is one number, written to `style` so the glyph inside keeps whatever type size it inherits. |
+| [sections/feature-row](../sections/feature-row.md) | A whole dark band of a page: a copy column (corner marker, ringed icon, title, italic lede, proof list, pinned actions) beside a visual panel, mirr… |
+| [sections/final-cta](../sections/final-cta.md) | The closing band: full-bleed, centred, one large heading, an optional lede and an actions row, over a textured dark backdrop. |
+| [sections/glyph-badge](../sections/glyph-badge.md) | The round disc a glyph sits in at the head of a row: a circle, a hairline, a peach mark centred in it, `aria-hidden` always. |
 | [sections/funnel](../sections/funnel.md) | The activation funnel as the reader's own dashboard would draw it: one bar per step, and three states because a broken number is not a low number. |
-| [sections/plan-card](../sections/plan-card.md) | A pricing tier card plus the grid that holds a row of them (`PlanGrid` + `PlanCard`). It is pure markup — no state, no client directive — because the only interactive part of a pricing section, the billing switch, was deliberately split into `billing-toggle.tsx` so this file stays server-renderable. The shape's real argument is comparison-by-inversion: `featured` flips one card to cream-on-dark, lifts it `md:-translate-y-3`, and drops a `--shadow-modal` on it, so a row of peers stops reading as peers and one of them becomes the recommendation. |
+| [sections/plan-card](../sections/plan-card.md) | A pricing tier card plus the grid that holds a row of them (`PlanGrid` + `PlanCard`). |
 | [sections/pr-review](../sections/pr-review.md) | The pull-request artifact: Skene's review on a PR, with findings by severity, a suggested fix and the file it lands in. |
-| [sections/question-grid](../sections/question-grid.md) | A 1–4 column grid of near-empty cards, each one a mono category `tag` sitting at the top of the card with a question (or claim) below it and an optional answer. The card is deliberately a border, a 14px radius and a peach corner glow with no opaque fill — that is what lets it sit on a dark band or a cream one without needing a polarity class or a token audit. It exists for the "here is what you'll actually be able to answer" band, where the copy does all the work and the container must not compete with it. |
-| [sections/surface-cards](../sections/surface-cards.md) | A compact grid of peer cards on a textured field, one of them drawn cream, where every card carries its own detail: the “ways in” band, four surfaces two across. |
-| [sections/trust-panel](../sections/trust-panel.md) | A cream panel split into a claim and its evidence: heading, lede and a row of links on the left, a stack of `TrustFact` items on a deeper cream to the right. The split is the argument — the reassurance is not a paragraph asserting itself but a paragraph standing next to checkable facts, which is why the evidence track is the wider of the two (`0.9fr 1.1fr`). It is a fixed-polarity object: the root carries `light` unconditionally, so it is a cream card on a dark page, with a peach bloom rising from the bottom-left corner that the token system gets right on cream for free. |
+| [sections/question-grid](../sections/question-grid.md) | A 1–4 column grid of near-empty cards, each one a mono category `tag` sitting at the top of the card with a question (or claim) below it and an opt… |
+| [sections/surface-cards](../sections/surface-cards.md) | A compact grid of peer cards on a textured field, one of them drawn cream, where every card carries its own detail: the “ways in” band, four surfac… |
+| [sections/trust-panel](../sections/trust-panel.md) | A cream panel split into a claim and its evidence: heading, lede and a row of links on the left, a stack of `TrustFact` items on a deeper cream to… |
 
 ## Watch for
 
@@ -49,25 +49,11 @@ One route, so `load_bearing` is empty and the list above is `observed`. Do NOT r
 
 ## Polarity obligations
 
-| module | polarity | what you owe it |
+| polarity | what you owe it | modules in this template |
 | --- | --- | --- |
-| `patterns/dither` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
-| `patterns/marketing` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
-| `sections/agent-callout` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
-| `sections/artifact-shell` | `applies-light` | Puts `light` on its own root. It brings its own ground — you owe it nothing. |
-| `sections/bridge` | `applies-both` | Has both forms and applies one of them. Which one is a call-site decision — read the module page before you place it on a ground that flips. |
-| `sections/check-list` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
-| `sections/discovery-table` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
-| `sections/evaluator-list` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
-| `sections/feature-row` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
-| `sections/final-cta` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
-| `sections/glyph-badge` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
-| `sections/funnel` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
-| `sections/plan-card` | `applies-both` | Has both forms and applies one of them. Which one is a call-site decision — read the module page before you place it on a ground that flips. |
-| `sections/pr-review` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
-| `sections/question-grid` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
-| `sections/surface-cards` | `applies-both` | Has both forms and applies one of them. Which one is a call-site decision — read the module page before you place it on a ground that flips. |
-| `sections/trust-panel` | `applies-light` | Puts `light` on its own root. It brings its own ground — you owe it nothing. |
+| `applies-light` | Puts `light` on its own root. It brings its own ground — you owe it nothing. | `sections/artifact-shell`, `sections/trust-panel` |
+| `applies-both` | Has both forms and applies one of them. Which one is a call-site decision — read the module page before you place it on a ground that flips. | `sections/bridge`, `sections/plan-card`, `sections/surface-cards` |
+| `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. | `patterns/dither`, `patterns/marketing`, `sections/agent-callout`, `sections/check-list`, `sections/discovery-table`, `sections/evaluator-list`, `sections/feature-row`, `sections/final-cta`, `sections/glyph-badge`, `sections/funnel`, `sections/pr-review`, `sections/question-grid` |
 
 ## Band grammar
 

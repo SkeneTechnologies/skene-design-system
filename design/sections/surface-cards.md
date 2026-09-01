@@ -23,13 +23,15 @@ A compact grid of peer cards on a textured field, one of them drawn cream, where
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
-| `SurfaceCards` | `surfaces` | `SurfaceCardItem[]` | yes |  |
+| `SurfaceCards` | `surfaces` | `SurfaceCardItem[]` | **yes** |  |
 | `SurfaceCards` | `featured` | `number` |  | `0` |
 | `SurfaceCards` | `texture` | `string` |  |  |
 
-## Types
+## Types — not components
+
+These are TypeScript types, not exports you can render. `<SurfaceCardItem />` is not a component; the type describes the shape of a value you pass to one of the exports above. The name usually reads like a component, which is why this heading says so.
 
 | type | shape |
 | --- | --- |

@@ -23,20 +23,22 @@ Two columns of code with added and removed lines marked — what was written bes
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
 | `DiffLine` | `kind` | `DiffLineKind` |  | `'ctx'` |
 | `DiffLine` | `addedLabel` | `React.ReactNode` |  | `'Added'` |
 | `DiffLine` | `removedLabel` | `React.ReactNode` |  | `'Removed'` |
 | `DiffLine` | `children` | `React.ReactNode` |  |  |
-| `DiffColumn` | `side` | `DiffSide` | yes |  |
-| `DiffColumn` | `label` | `React.ReactNode` | yes |  |
-| `DiffColumn` | `lines` | `DiffLineSpec[]` | yes |  |
+| `DiffColumn` | `side` | `DiffSide` | **yes** |  |
+| `DiffColumn` | `label` | `React.ReactNode` | **yes** |  |
+| `DiffColumn` | `lines` | `DiffLineSpec[]` | **yes** |  |
 | `DiffColumn` | `addedLabel` | `React.ReactNode` |  |  |
 | `DiffColumn` | `removedLabel` | `React.ReactNode` |  |  |
-| `SideBySideDiff` | `children` | `React.ReactNode` | yes |  |
+| `SideBySideDiff` | `children` | `React.ReactNode` | **yes** |  |
 
-## Types
+## Types — not components
+
+These are TypeScript types, not exports you can render. `<DiffLineSpec />` is not a component; the type describes the shape of a value you pass to one of the exports above. The name usually reads like a component, which is why this heading says so.
 
 | type | shape |
 | --- | --- |

@@ -23,13 +23,13 @@ A panel inside the MCP artifact: a config snippet to paste, or the list of tools
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
 | `McpBlock` | `title` | `React.ReactNode` |  |  |
 | `McpBlock` | `meta` | `React.ReactNode` |  |  |
 | `McpBlock` | `children` | `React.ReactNode` |  |  |
-| `McpCode` | `children` | `React.ReactNode` | yes |  |
-| `McpTool` | `name` | `React.ReactNode` | yes |  |
+| `McpCode` | `children` | `React.ReactNode` | **yes** |  |
+| `McpTool` | `name` | `React.ReactNode` | **yes** |  |
 | `McpTool` | `description` | `React.ReactNode` |  |  |
 
 ## Also for

@@ -23,14 +23,14 @@ The activation funnel as the reader's own dashboard would draw it: one bar per s
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
-| `FunnelRow` | `label` | `React.ReactNode` | yes |  |
+| `FunnelRow` | `label` | `React.ReactNode` | **yes** |  |
 | `FunnelRow` | `note` | `React.ReactNode` |  |  |
 | `FunnelRow` | `value` | `React.ReactNode` |  |  |
-| `FunnelRow` | `state` | `FunnelStepState` | yes |  |
+| `FunnelRow` | `state` | `FunnelStepState` | **yes** |  |
 | `FunnelRow` | `fill` | `number` |  |  |
-| `Funnel` | `title` | `React.ReactNode` | yes |  |
+| `Funnel` | `title` | `React.ReactNode` | **yes** |  |
 | `Funnel` | `badge` | `React.ReactNode` |  |  |
 | `Funnel` | `meta` | `React.ReactNode` |  |  |
 | `Funnel` | `status` | `FunnelStepState` |  | `'ok'` |

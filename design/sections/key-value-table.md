@@ -23,19 +23,21 @@ The reference table: keys and values at two densities, with a masked value, a no
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
-| `KeyValueTable` | `columns` | `KeyValueColumn[]` | yes |  |
-| `KeyValueTable` | `rows` | `KeyValueRow[]` | yes |  |
+| `KeyValueTable` | `columns` | `KeyValueColumn[]` | **yes** |  |
+| `KeyValueTable` | `rows` | `KeyValueRow[]` | **yes** |  |
 | `KeyValueTable` | `density` | `KeyValueDensity` |  | `'reference'` |
 | `KeyValueTable` | `headerless` | `boolean` |  | `false` |
 | `MaskedValue` | `prefix` | `React.ReactNode` |  |  |
 | `MaskedValue` | `length` | `number` |  | `16` |
-| `TableNote` | `children` | `React.ReactNode` | yes |  |
-| `TagChip` | `variant` | `TagChipVariant` |  | `'outline'` |
-| `TagChip` | `children` | `React.ReactNode` | yes |  |
+| `TableNote` | `children` | `React.ReactNode` | **yes** |  |
+| `TagChip` | `variant` | 'outline' \| 'solid' |  | `'outline'` |
+| `TagChip` | `children` | `React.ReactNode` | **yes** |  |
 
-## Types
+## Types — not components
+
+These are TypeScript types, not exports you can render. `<KeyValueColumn />` is not a component; the type describes the shape of a value you pass to one of the exports above. The name usually reads like a component, which is why this heading says so.
 
 | type | shape |
 | --- | --- |

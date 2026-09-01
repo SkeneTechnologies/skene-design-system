@@ -23,13 +23,13 @@ The rule-separated feature list with a peach check — the single highest-freque
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
 | `CheckList` | `onLight` | `boolean` |  | `false` |
 | `CheckList` | `dense` | `boolean` |  | `false` |
-| `CheckList` | `children` | `React.ReactNode` | yes |  |
+| `CheckList` | `children` | `React.ReactNode` | **yes** |  |
 | `CheckItem` | `dense` | `boolean` |  | `false` |
-| `CheckItem` | `children` | `React.ReactNode` | yes |  |
+| `CheckItem` | `children` | `React.ReactNode` | **yes** |  |
 
 ## Also for
 

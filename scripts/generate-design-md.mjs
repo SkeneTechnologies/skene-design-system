@@ -93,11 +93,28 @@ const prose = (s) => {
 }
 
 /** As `prose`, plus the pipe escape a table cell needs and prose does not. */
-const cell = (s) => prose(s).replace(/\|/g, '\\|')
+const cell = (s) =>
+  prose(s)
+    // Some contract prose pre-escapes its pipes (`Dimension \| Skene`), so
+    // normalise before escaping or the doc renders a literal backslash.
+    .replace(/\\\|/g, '|')
+    .replace(/\|/g, '\\|')
 
 const code = (s) => '`' + String(s) + '`'
 const list = (xs) => xs.map((x) => `- ${x}`).join('\n')
 const codeList = (xs) => xs.map(code).join(', ')
+
+/**
+ * The lead sentence of a `useFor`, for index tables. The whole paragraph is the
+ * module page's job; repeating it in a list of thirteen candidates the file
+ * explicitly says are "not a recommendation" was a third of a page template.
+ */
+const firstSentence = (s) => {
+  const t = cell(s ?? '—')
+  const cut = t.search(/\.(\s|$)/)
+  const one = cut === -1 ? t : t.slice(0, cut + 1)
+  return one.length > 150 ? one.slice(0, 147).trimEnd() + '…' : one
+}
 
 /** A section only when it has something in it — no empty headings. */
 function section(heading, body) {
@@ -232,21 +249,42 @@ Ask first when: ${rules.ask_first_when.map((r) => code(r)).join(', ')}.`
 
 // ------------------------------------------------------------ module pages
 
-function propsTable(props) {
+/**
+ * `ArtFrame.kind` is typed `ArtFrameKind`, which is required, and whose three
+ * legal values used to appear only under Constraints eighty lines below — the
+ * Props table named a type it never defined. An agent reading top-down met a
+ * required prop with an opaque type and no values, on the one prop whose own
+ * documentation says picking wrong "is not a styling slip, it is a miscue".
+ * components.yaml has the values; this puts them where the prop is read.
+ */
+function allowedValuesFor(id) {
+  const entry = constraintsByModule.get(id)?.entry
+  const out = new Map()
+  for (const [key, allowed] of Object.entries(entry?.props ?? {})) {
+    if (Array.isArray(allowed)) out.set(key, allowed)
+  }
+  return out
+}
+
+function propsTable(props, id) {
+  const allowed = allowedValuesFor(id)
   const rows = []
   for (const [exportName, fields] of Object.entries(props ?? {})) {
     for (const [prop, spec] of Object.entries(fields ?? {})) {
       const s = typeof spec === 'object' && spec !== null ? spec : { type: spec }
+      const values = allowed.get(`${exportName}.${prop}`)
       rows.push([
         code(exportName),
         code(prop),
-        code(s.type ?? '—'),
-        s.required ? 'yes' : '',
+        // Raw pipe: `cell` escapes it for the table, and escaping here too
+        // emitted `\\|` into the rendered doc.
+        values ? values.map((v) => `'${v}'`).join(' | ') : code(s.type ?? '—'),
+        s.required ? '**yes**' : '',
         s.default !== undefined ? code(s.default) : '',
       ])
     }
   }
-  return table(['export', 'prop', 'type', 'required', 'default'], rows)
+  return table(['export', 'prop', 'type / allowed', 'required', 'default'], rows)
 }
 
 function constraintBlock(id) {
@@ -301,21 +339,22 @@ Treat the props and the polarity as documentation of intent, not of behaviour.`,
     table(['', ''], facts),
     section('Use for', m.useFor),
     section('Exports', codeList(m.exports ?? [])),
-    section('Props', propsTable(m.props)),
+    section('Props', propsTable(m.props, id)),
     m.types
       ? section(
-          'Types',
-          table(
-            ['type', 'shape'],
-            Object.entries(m.types).map(([t, shape]) => [
-              code(t),
-              typeof shape === 'object'
-                ? Object.keys(shape)
-                    .map(code)
-                    .join(', ')
-                : cell(shape),
-            ]),
-          ),
+          'Types — not components',
+          [
+            `These are TypeScript types, not exports you can render. \`<${
+              Object.keys(m.types)[0]
+            } />\` is not a component; the type describes the shape of a value you pass to one of the exports above. The name usually reads like a component, which is why this heading says so.`,
+            table(
+              ['type', 'shape'],
+              Object.entries(m.types).map(([t, shape]) => [
+                code(t),
+                typeof shape === 'object' ? Object.keys(shape).map(code).join(', ') : cell(shape),
+              ]),
+            ),
+          ].join('\n\n'),
         )
       : null,
     m.accepts
@@ -459,12 +498,25 @@ const POLARITY_MEANS = {
     'Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground.',
 }
 
+/**
+ * Grouped, not one row per module. The per-module table restated the identical
+ * `inherits` sentence for thirteen of fifteen rows — 723 tokens, a fifth of the
+ * page template, to say one thing thirteen times. The rule is stated once and
+ * the modules are listed against it.
+ */
 function polarityObligations(ids) {
-  const rows = ids
-    .map((id) => [id, modules[id]?.polarity])
-    .filter(([, p]) => p)
-    .map(([id, p]) => [code(id), code(p), POLARITY_MEANS[p] ?? ''])
-  return table(['module', 'polarity', 'what you owe it'], rows)
+  const byPolarity = new Map()
+  for (const id of ids) {
+    const p = modules[id]?.polarity
+    if (!p) continue
+    if (!byPolarity.has(p)) byPolarity.set(p, [])
+    byPolarity.get(p).push(id)
+  }
+  const order = ['applies-light', 'applies-dark', 'applies-both', 'inherits']
+  const rows = [...byPolarity.entries()]
+    .sort(([a], [b]) => order.indexOf(a) - order.indexOf(b))
+    .map(([p, list]) => [code(p), POLARITY_MEANS[p] ?? '', list.map(code).join(', ')])
+  return table(['polarity', 'what you owe it', 'modules in this template'], rows)
 }
 
 function pageDoc(archetype) {
@@ -515,13 +567,13 @@ function pageDoc(archetype) {
       ? section(
           'Optional',
           [
-            '`in N of M` is a count of what was built, not a recommendation. Pick for the claim you are making.',
+            '`in N of M` is a count of what was built, not a recommendation. Pick for the claim you are making, then open that module for the rest.',
             table(
-              ['module', 'in', 'use for'],
+              ['module', 'in', 'for'],
               spec.optional.map((o) => [
                 `[${o.module}](../${o.module}.md)`,
                 `${o.in} of ${o.of}`,
-                cell(modules[o.module]?.useFor ?? '—'),
+                firstSentence(modules[o.module]?.useFor),
               ]),
             ),
           ].join('\n\n'),
@@ -533,11 +585,8 @@ function pageDoc(archetype) {
           [
             `Too few routes to intersect, so this is what was **there**, not what is required — the file records it rather than generalising it. Read it as evidence of how these modules have been composed together, and pick for the claim you are making.`,
             table(
-              ['module', 'use for'],
-              observed.map((id) => [
-                `[${id}](../${id}.md)`,
-                cell(modules[id]?.useFor ?? '—'),
-              ]),
+              ['module', 'for'],
+              observed.map((id) => [`[${id}](../${id}.md)`, firstSentence(modules[id]?.useFor)]),
             ),
           ].join('\n\n'),
         )

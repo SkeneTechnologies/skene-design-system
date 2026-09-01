@@ -23,7 +23,7 @@ Radix menu hung off a trigger.
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
 | `DropdownMenuSubTrigger` | `inset` | `boolean` |  |  |
 | `DropdownMenuItem` | `inset` | `boolean` |  |  |

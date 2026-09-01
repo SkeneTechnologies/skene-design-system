@@ -23,14 +23,14 @@ The shell every drawn Skene Cloud artifact is built from: the textured field, th
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
-| `ArtFrame` | `kind` | `ArtFrameKind` | yes |  |
+| `ArtFrame` | `kind` | 'gh' \| 'db' \| 'jr' | **yes** |  |
 | `ArtFrame` | `row` | `boolean` |  | `false` |
 | `ArtFrame` | `children` | `React.ReactNode` |  |  |
 | `ArtPanel` | `bar` | `React.ReactNode` |  |  |
 | `ArtPanel` | `children` | `React.ReactNode` |  |  |
-| `ArtTitle` | `children` | `React.ReactNode` | yes |  |
+| `ArtTitle` | `children` | `React.ReactNode` | **yes** |  |
 | `AppWindow` | `crumb` | `React.ReactNode` |  |  |
 | `AppWindow` | `actions` | `React.ReactNode` |  |  |
 | `AppWindow` | `children` | `React.ReactNode` |  |  |
@@ -40,13 +40,13 @@ The shell every drawn Skene Cloud artifact is built from: the textured field, th
 | `ArtifactHeader` | `summary` | `React.ReactNode` |  |  |
 | `ArtifactHeader` | `summaryStatus` | `StatPillStatus` |  |  |
 | `ArtifactHeader` | `actions` | `React.ReactNode` |  |  |
-| `PanelCaption` | `children` | `React.ReactNode` | yes |  |
+| `PanelCaption` | `children` | `React.ReactNode` | **yes** |  |
 | `AppPanel` | `children` | `React.ReactNode` |  |  |
-| `StatPill` | `status` | `StatPillStatus` | yes |  |
-| `StatPill` | `children` | `React.ReactNode` | yes |  |
-| `DataTable` | `columns` | `React.ReactNode[]` | yes |  |
-| `DataTable` | `children` | `React.ReactNode` | yes |  |
-| `DataRow` | `children` | `React.ReactNode` | yes |  |
+| `StatPill` | `status` | 'good' \| 'warn' \| 'bad' \| 'neutral' | **yes** |  |
+| `StatPill` | `children` | `React.ReactNode` | **yes** |  |
+| `DataTable` | `columns` | `React.ReactNode[]` | **yes** |  |
+| `DataTable` | `children` | `React.ReactNode` | **yes** |  |
+| `DataRow` | `children` | `React.ReactNode` | **yes** |  |
 | `DataCell` | `mono` | `boolean` |  |  |
 | `DataCell` | `muted` | `boolean` |  |  |
 | `DataCell` | `children` | `React.ReactNode` |  |  |
@@ -80,7 +80,7 @@ These edges are symmetric — the same pairing is recorded from the other side.
 | --- | --- |
 | AppWindow drops its whole bar when neither crumb nor actions is given. Passing an empty element instead of undefined leaves a stray flex row that reads as a rendering fault. | `prop AppWindow.crumb` |
 | AppWindow forces `light` on itself. That is load-bearing: the artifact is a light product screen on a dark marketing page, and without it every mode-aware token inside resolves for the wrong ground. | `export AppWindow` |
-| StatPill's vocabulary is bad \\| warn \\| ok, which is the same three semantic colours as Finding's good \\| warn \\| danger under different names. | `prop StatPill.status` |
+| StatPill's vocabulary is bad \| warn \| ok, which is the same three semantic colours as Finding's good \| warn \| danger under different names. | `prop StatPill.status` |
 
 ## Reachable from outside
 

@@ -23,7 +23,7 @@ An input with addons welded to it — prefix, suffix, inline button.
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
 | `InputGroupAddon` | `align` | `"inline-start" \| "inline-end" \| "block-start" \| "block-end"` |  | `"inline-start"` |
 | `InputGroupButton` | `size` | `"sm" \| "xs" \| "icon-xs" \| "icon-sm"` |  | `"xs"` |

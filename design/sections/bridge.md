@@ -23,7 +23,7 @@ A whole cream band (a `<section>`, not a card) that lays N `BridgeNode` cards in
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
 | `BridgeNode` | `label` | `React.ReactNode` |  |  |
 | `BridgeNode` | `title` | `React.ReactNode` |  |  |
@@ -35,7 +35,7 @@ A whole cream band (a `<section>`, not a card) that lays N `BridgeNode` cards in
 | `Bridge` | `titleAs` | `'h2' \| 'h3'` |  | `'h2'` |
 | `Bridge` | `lede` | `React.ReactNode` |  |  |
 | `Bridge` | `caption` | `React.ReactNode` |  |  |
-| `Bridge` | `children` | `React.ReactNode` | yes |  |
+| `Bridge` | `children` | `React.ReactNode` | **yes** |  |
 
 ## Also for
 

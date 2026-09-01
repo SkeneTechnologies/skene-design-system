@@ -23,10 +23,10 @@ The 10px monospace uppercase rectangle, extracted from two copies that were writ
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
 | `Chip` | `tone` | `ChipTone` |  | `'neutral'` |
-| `Chip` | `children` | `React.ReactNode` | yes |  |
+| `Chip` | `children` | `React.ReactNode` | **yes** |  |
 
 ## Also for
 
@@ -36,7 +36,7 @@ Every claim cites the prop, default or export that makes it true. A claim that c
 | --- | --- |
 | An identity marker on either ground with `tone="neutral"`. This is the one tone allowed to use invariant `chrome.surface-darker` / `brand.light`, because its fill is near-black on both the dark page AND the featured cream `PlanCard` — there is no inversion for an invariant token to get wrong. | `prop Chip.tone` |
 | A state marker inside a light surface with `tone="healthy"` (matcha) or `tone="live"` (violet). Both derive their fill through `color-mix` from mode-aware tokens, so they follow a `light` ancestor down to the light value rather than laying a dark-mode tint on cream — safe inside a light `ProductWindow` body or a cream card. | `prop Chip.tone` |
-| Wrapping in a narrower-vocabulary named component. `WindowStatus` (product-window.tsx:97) is the sanctioned template: it restricts `tone` to `'healthy' \\| 'live'`, pins its tracking override, and keeps the name callers actually look for. Do that again rather than adding an inline chip. | `prop Chip.tone` |
+| Wrapping in a narrower-vocabulary named component. `WindowStatus` (product-window.tsx:97) is the sanctioned template: it restricts `tone` to `'healthy' \| 'live'`, pins its tracking override, and keeps the name callers actually look for. Do that again rather than adding an inline chip. | `prop Chip.tone` |
 | Matching an already-shipped rendering. `className` merges last via `cn`, so a `tracking-*` utility beats the base 0.08em — the documented, and only documented, override. | `className` |
 | Non-string content: `children` is a `ReactNode`, so a glyph plus a word, or a count, works. `shrink-0` is in the base, so the chip is safe as the fixed item in a flex row opposite a title that wraps. | `prop Chip.children` |
 | A breakage or defect marker with `tone="danger"`. Its recipe deviates from `healthy`/`live` on purpose: the ink is the on-tint token (`--color-semantic-error-red-on-tint`), the split `StatPill` and `Finding` both shipped without and measured below the floor for, and the tint is 12% — inside the band those tokens were measured for. Both halves are mode-aware, so it holds inside a light `ProductWindow` as well as on the page. | `prop Chip.tone` |

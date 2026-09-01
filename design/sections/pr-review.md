@@ -23,9 +23,9 @@ The pull-request artifact: Skene's review on a PR, with findings by severity, a 
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
-| `PrReview` | `status` | `PrReviewStatus` | yes |  |
+| `PrReview` | `status` | `PrReviewStatus` | **yes** |  |
 | `PrReview` | `repo` | `React.ReactNode` |  |  |
 | `PrReview` | `statusLabel` | `React.ReactNode` |  |  |
 | `PrReview` | `avatar` | `React.ReactNode` |  |  |
@@ -41,7 +41,9 @@ The pull-request artifact: Skene's review on a PR, with findings by severity, a 
 | `PrReview` | `file` | `React.ReactNode` |  |  |
 | `PrReview` | `fileNote` | `React.ReactNode` |  |  |
 
-## Types
+## Types — not components
+
+These are TypeScript types, not exports you can render. `<PrReviewIssue />` is not a component; the type describes the shape of a value you pass to one of the exports above. The name usually reads like a component, which is why this heading says so.
 
 | type | shape |
 | --- | --- |

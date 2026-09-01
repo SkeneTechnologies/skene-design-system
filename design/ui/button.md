@@ -23,7 +23,7 @@ The action primitive. Six variants, four sizes.
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
 | `Button` | `asChild` | `boolean` |  | `false` |
 | `Button` | `variant` | `"link" \| "default" \| "destructive" \| "outline" \| "secondary" \| "ghost"` |  |  |

@@ -23,16 +23,16 @@ The FAQ band: a heading column that stays put, and the questions beside it on a 
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
 | `FaqBand` | `eyebrow` | `React.ReactNode` |  |  |
-| `FaqBand` | `title` | `React.ReactNode` | yes |  |
+| `FaqBand` | `title` | `React.ReactNode` | **yes** |  |
 | `FaqBand` | `note` | `React.ReactNode` |  |  |
 | `FaqBand` | `actions` | `React.ReactNode` |  |  |
-| `FaqBand` | `children` | `React.ReactNode` | yes |  |
+| `FaqBand` | `children` | `React.ReactNode` | **yes** |  |
 | `FaqBand` | `multiple` | `boolean` |  |  |
-| `FaqRow` | `question` | `React.ReactNode` | yes |  |
-| `FaqRow` | `children` | `React.ReactNode` | yes |  |
+| `FaqRow` | `question` | `React.ReactNode` | **yes** |  |
+| `FaqRow` | `children` | `React.ReactNode` | **yes** |  |
 
 ## Also for
 

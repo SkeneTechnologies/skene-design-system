@@ -26,23 +26,23 @@ In **every** route of this archetype. Leave one out and the page is a different 
 
 ## Optional
 
-`in N of M` is a count of what was built, not a recommendation. Pick for the claim you are making.
+`in N of M` is a count of what was built, not a recommendation. Pick for the claim you are making, then open that module for the rest.
 
-| module | in | use for |
+| module | in | for |
 | --- | --- | --- |
-| [sections/code](../sections/code.md) | 2 of 3 | The inline identifier chip inside a sentence: an event name, a column, a flag, a path. Extracted from SEVEN copies — six byte-identical component declarations across skene-site route files, verified by comparing the emitted class string, plus a seventh spelling as `PROSE_CODE`, the same recipe as a descendant selector for prose the author cannot reach element by element. The oldest open entry on that repository's gap list, on a site where an event name appears in nearly every paragraph of body copy. |
+| [sections/code](../sections/code.md) | 2 of 3 | The inline identifier chip inside a sentence: an event name, a column, a flag, a path. |
 | [sections/evaluator-verify](../sections/evaluator-verify.md) | 2 of 3 | The requirements an evaluation depends on: one row per event, its verdict, and the fields it must carry. |
 | [sections/flow-diagram](../sections/flow-diagram.md) | 2 of 3 | Nodes in a row joined by arrows, with a value and a note on each edge. |
 | [sections/lifecycle-canvas](../sections/lifecycle-canvas.md) | 2 of 3 | The lifecycle artifact: stages across the canvas, each holding milestones and the signals bound to them. |
-| [sections/finding-card](../sections/finding-card.md) | 1 of 3 | Three small pieces that together fill a product window with Skene's actual argument: `Finding` (a status-tagged row — tag, title, consequence), `MetricCard` (the headline number with a coloured delta), and `Sparkline` (an authored bar shape). The point of the set is the contradiction — a metric that looks fine above a list of steps that are unmeasured or renamed — so the status vocabulary is fixed at `good \\| warn \\| danger` bound to `semantic.matcha / warningAmber / errorRed`, the same three the dashboard uses. All content is props; nothing here knows what a Skene finding says. |
-| [sections/recommendation-card](../sections/recommendation-card.md) | 1 of 3 | The proposal: what to do next, and what makes it worth doing. Deliberately without a status colour. |
+| [sections/finding-card](../sections/finding-card.md) | 1 of 3 | Three small pieces that together fill a product window with Skene's actual argument: `Finding` (a status-tagged row — tag, title, consequence), `Me… |
+| [sections/recommendation-card](../sections/recommendation-card.md) | 1 of 3 | The proposal: what to do next, and what makes it worth doing. |
 | [sections/evaluator-check](../sections/evaluator-check.md) | 1 of 3 | The evaluator's Check tab: a metric, the formula under it, one row per operand, and the results it produced. |
 | [sections/funnel](../sections/funnel.md) | 1 of 3 | The activation funnel as the reader's own dashboard would draw it: one bar per step, and three states because a broken number is not a low number. |
-| [sections/annotated-curve](../sections/annotated-curve.md) | 1 of 3 | A narrative plotting frame: a Catmull-Rom spline drawn through hand-authored 0-100 percentage points, with HTML callout boxes pinned to the points that carry labels. The split is the whole design — the SVG is `aria-hidden` decoration and the callouts are an ordered list of real HTML, so the copy wraps, selects, finds, and is read in array order. It is for making an argument that has a *shape* (a rise, a dip, a recovery) where the copy is the payload and the curve is the frame the copy hangs on, not for showing measured values. |
+| [sections/annotated-curve](../sections/annotated-curve.md) | 1 of 3 | A narrative plotting frame: a Catmull-Rom spline drawn through hand-authored 0-100 percentage points, with HTML callout boxes pinned to the points… |
 | [sections/pr-review](../sections/pr-review.md) | 1 of 3 | The pull-request artifact: Skene's review on a PR, with findings by severity, a suggested fix and the file it lands in. |
-| [sections/trust-panel](../sections/trust-panel.md) | 1 of 3 | A cream panel split into a claim and its evidence: heading, lede and a row of links on the left, a stack of `TrustFact` items on a deeper cream to the right. The split is the argument — the reassurance is not a paragraph asserting itself but a paragraph standing next to checkable facts, which is why the evidence track is the wider of the two (`0.9fr 1.1fr`). It is a fixed-polarity object: the root carries `light` unconditionally, so it is a cream card on a dark page, with a peach bloom rising from the bottom-left corner that the token system gets right on cream for free. |
+| [sections/trust-panel](../sections/trust-panel.md) | 1 of 3 | A cream panel split into a claim and its evidence: heading, lede and a row of links on the left, a stack of `TrustFact` items on a deeper cream to… |
 | [sections/faq-band](../sections/faq-band.md) | 1 of 3 | The FAQ band: a heading column that stays put, and the questions beside it on a cream ground with a hairline per row and a round toggle. |
-| [sections/journey-track](../sections/journey-track.md) | 1 of 3 | The numbered steps of a funnel on one line, where the connector between two steps is a gradient running from one step's status colour to the next's — the seam carries the state, not just the nodes. That is the section's argument, not a flourish: breakage happens *in the link* (an event that stops firing between checkout and confirmation), and the eye should find it before reading a label. The module also exports `MiniFunnel`, the small authored label/value/bar readout that usually sits beside the track. |
+| [sections/journey-track](../sections/journey-track.md) | 1 of 3 | The numbered steps of a funnel on one line, where the connector between two steps is a gradient running from one step's status colour to the next's… |
 
 ## Watch for
 
@@ -50,23 +50,11 @@ key-value-table lands last or near-last in all three. It is the page's closing r
 
 ## Polarity obligations
 
-| module | polarity | what you owe it |
+| polarity | what you owe it | modules in this template |
 | --- | --- | --- |
-| `sections/artifact-shell` | `applies-light` | Puts `light` on its own root. It brings its own ground — you owe it nothing. |
-| `sections/key-value-table` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
-| `sections/code` | `applies-both` | Has both forms and applies one of them. Which one is a call-site decision — read the module page before you place it on a ground that flips. |
-| `sections/evaluator-verify` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
-| `sections/flow-diagram` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
-| `sections/lifecycle-canvas` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
-| `sections/finding-card` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
-| `sections/recommendation-card` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
-| `sections/evaluator-check` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
-| `sections/funnel` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
-| `sections/annotated-curve` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
-| `sections/pr-review` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
-| `sections/trust-panel` | `applies-light` | Puts `light` on its own root. It brings its own ground — you owe it nothing. |
-| `sections/faq-band` | `applies-light` | Puts `light` on its own root. It brings its own ground — you owe it nothing. |
-| `sections/journey-track` | `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. |
+| `applies-light` | Puts `light` on its own root. It brings its own ground — you owe it nothing. | `sections/artifact-shell`, `sections/trust-panel`, `sections/faq-band` |
+| `applies-both` | Has both forms and applies one of them. Which one is a call-site decision — read the module page before you place it on a ground that flips. | `sections/code` |
+| `inherits` | Puts no theme class on its root; it takes the page. Place it on a light fill and the `light` class is yours to add, or it renders dark tokens on a light ground. | `sections/key-value-table`, `sections/evaluator-verify`, `sections/flow-diagram`, `sections/lifecycle-canvas`, `sections/finding-card`, `sections/recommendation-card`, `sections/evaluator-check`, `sections/funnel`, `sections/annotated-curve`, `sections/pr-review`, `sections/journey-track` |
 
 ## Band grammar
 

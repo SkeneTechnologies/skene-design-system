@@ -23,10 +23,10 @@ The monthly/yearly switch, and the only `'use client'` file in the pricing secti
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
-| `BillingToggle` | `yearly` | `boolean` | yes |  |
-| `BillingToggle` | `onChange` | `(yearly: boolean) => void` | yes |  |
+| `BillingToggle` | `yearly` | `boolean` | **yes** |  |
+| `BillingToggle` | `onChange` | `(yearly: boolean) => void` | **yes** |  |
 | `BillingToggle` | `monthlyLabel` | `React.ReactNode` |  | `'Billed monthly'` |
 | `BillingToggle` | `yearlyLabel` | `React.ReactNode` |  | `'Billed yearly'` |
 

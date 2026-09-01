@@ -23,14 +23,16 @@ A labelled progress track: N steps with state rings, joined by connectors the ST
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
-| `PipelineStepper` | `steps` | `PipelineStepItem[]` | yes |  |
+| `PipelineStepper` | `steps` | `PipelineStepItem[]` | **yes** |  |
 | `PipelineStepper` | `title` | `React.ReactNode` |  |  |
 | `PipelineStepper` | `subtitle` | `React.ReactNode` |  |  |
 | `PipelineStepper` | `onLight` | `boolean` |  | `true` |
 
-## Types
+## Types — not components
+
+These are TypeScript types, not exports you can render. `<PipelineStepItem />` is not a component; the type describes the shape of a value you pass to one of the exports above. The name usually reads like a component, which is why this heading says so.
 
 | type | shape |
 | --- | --- |

@@ -23,10 +23,10 @@ The proposal: what to do next, and what makes it worth doing. Deliberately witho
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
 | `RecommendationCard` | `eyebrow` | `React.ReactNode` |  |  |
-| `RecommendationCard` | `title` | `React.ReactNode` | yes |  |
+| `RecommendationCard` | `title` | `React.ReactNode` | **yes** |  |
 | `RecommendationCard` | `children` | `React.ReactNode` |  |  |
 | `RecommendationCard` | `meta` | `React.ReactNode` |  |  |
 

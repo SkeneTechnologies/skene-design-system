@@ -23,7 +23,7 @@ The halftone field a panel floats on: a container that paints one of the three r
 
 ## Props
 
-| export | prop | type | required | default |
+| export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
 | `SectionBackdrop` | `texture` | `BackdropTexture` |  | `'journey'` |
 | `SectionBackdrop` | `src` | `string` |  |  |
@@ -39,7 +39,7 @@ Every claim cites the prop, default or export that makes it true. A claim that c
 | Standalone use outside a feature row — the gallery's `section-backdrop` case renders three of them in a plain grid wrapping an arbitrary card, so any node can be the floating panel. | `prop SectionBackdrop.children` |
 | Consumer artwork: `src` takes any URL and overrides `texture`, which is the supported path for a page-specific image or for a consumer that does not have Skene's assets. | `prop SectionBackdrop.src` |
 | Retuning the float: `inset` is a plain number in percent (default 6) — raise it to make a small panel sit deeper in the field, lower it toward 0 for a near-full-bleed texture edge. | `default inset=6` |
-| Choosing a field by subject: `texture` is `journey \\| github \\| schema` and the pairing is semantic, not a tint picker (journeys/funnels/measurement, GitHub/PRs/editor chrome, schema/connections/keys), so a reader who knows the live site meets the same backdrop behind the same kind of thing. | `prop SectionBackdrop.texture` |
+| Choosing a field by subject: `texture` is `journey \| github \| schema` and the pairing is semantic, not a tint picker (journeys/funnels/measurement, GitHub/PRs/editor chrome, schema/connections/keys), so a reader who knows the live site meets the same backdrop behind the same kind of thing. | `prop SectionBackdrop.texture` |
 | Shape and fill control via `className`, which merges onto the root — `rounded-xl` in the gallery, `h-full w-full` in how `FeatureRow` embeds it. | `className` |
 
 ## Not for — reach for this instead
