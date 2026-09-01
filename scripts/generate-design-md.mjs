@@ -748,11 +748,16 @@ const idsIn = (ns) => moduleIds.filter((id) => id.startsWith(`${ns}/`))
 function moduleIndexes(from) {
   const path = (id) => (from === 'design' ? `${id.split('/')[0]}/${id.split('/')[1]}.md` : modulePath(id))
 
+  // Lead sentence, not the whole paragraph. Inlined in full this was 6,371 of
+  // the index's 8,895 tokens — 89 paragraphs, the second listing of a set the
+  // intent index above already covers, on the one route that has to be cheap
+  // because it is what you open when you do NOT know what you are looking for.
+  // The full prose is one fetch away in the module's own page.
   const catalogue = NAMESPACES.map((ns) => {
     const ids = idsIn(ns)
     const t = table(
-      ['module', 'use for'],
-      ids.map((id) => [`[${id}](${path(id)})`, cell(modules[id].useFor)]),
+      ['module', 'for'],
+      ids.map((id) => [`[${id}](${path(id)})`, firstSentence(modules[id].useFor)]),
     )
     return t ? `### ${ns}/ — ${ids.length} modules\n\n${t}` : null
   })
