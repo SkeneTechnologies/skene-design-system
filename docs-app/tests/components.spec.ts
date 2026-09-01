@@ -32,7 +32,8 @@ import { expect, test, type Locator, type Page } from '@playwright/test'
  *          VISUAL_MODE=verify bash ../scripts/visual.sh
  */
 
-const ROUTE = '/components'
+/* Relative: `baseURL` carries the app's basePath. See playwright.config.ts. */
+const ROUTE = 'components'
 const MODES = ['dark', 'light'] as const
 
 /**
