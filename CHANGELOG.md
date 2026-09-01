@@ -1,5 +1,424 @@
 # @skene/design-system
 
+## 0.16.0
+
+### Minor Changes
+
+- fcc748e: feat: per-module rules instead of a copied block; the design tree is served as well as shipped
+
+  **The boilerplate was copied, not generic.** Every leaf carried the same 228
+  tokens of non-negotiables — 38% of the smallest module pages. Measured across
+  the 89 modules the rules do not apply evenly: the light-class warning binds on
+  76 and on the other 13 it told the reader to worry about a class the module
+  already applies; `content is props` is a sections/patterns concern and was noise
+  on 30 primitives; `chrome.*` invariance touches about a third. Every input
+  needed to say which bind was already in `context.yaml`.
+
+  Module pages now carry **What binds this module**, computed from the module's own
+  polarity, namespace and prose. 28 carry one rule, 31 carry two, 30 carry three —
+  and `sections/trust-panel` now reads "you do NOT owe it the light class" instead
+  of being warned about one it applies itself. Median module page 1,069 → 959
+  tokens; the smallest 596 → 467; the tree 144,320 → 136,397. Page templates, the
+  index, the token values and `DESIGN.md` keep the full set: those are the files
+  where composition is decided and all three bind.
+
+  **The tree is now served as well as shipped.** Three route handlers in the docs
+  app expose `design/**`, `DESIGN.md` and `styles.css` as `text/markdown` and
+  `text/css` with CORS open, so an agent with a URL and no checkout can fetch the
+  same paths a consumer reads from `node_modules`. Serving the stylesheet is the
+  half that matters most for context: the CSS loads in the reader's browser, and
+  only the class names need documenting.
+
+  An earlier draft of this change also REMOVED `design/` from the tarball, on the
+  argument that it cost every install ~136k tokens. That was wrong and is
+  reverted. Tokens are spent when something reads them; on disk the tree is 708KB
+  beside 13MB of assets. Removing it saved nothing measurable and broke the one
+  consumer that would publish it — which installs the package and serves the files
+  straight out of `node_modules`. Shipping never prevented serving.
+
+- b0a66d7: docs: split the module indexes into `design/index.md`, leaving DESIGN.md at ~3.7k tokens
+
+  Measured after the token split: 8.9k of DESIGN.md's remaining 12.3k tokens were
+  two overlapping answers to "which module?" — the intent index and the module
+  catalogue. Every agent that opened the file to check a contrast floor, a spacing
+  step or the `chrome.*` rule paid for both.
+
+  They are now one fetch. `DESIGN.md` is **3.7k** and carries only what does not
+  belong anywhere else: the three non-negotiable rules, surface roles, the reach
+  ladder, `must`/`must_not`, the page archetypes, the spine, the scales, contrast,
+  and known gaps. It opens with a routing table that prices each next fetch, so an
+  agent can decide what to spend before spending it:
+
+  | you are                                | open                          | roughly |
+  | -------------------------------------- | ----------------------------- | ------- |
+  | finding a module, by intent or by name | `design/index.md`             | 9k      |
+  | reaching for one module you can name   | `design/<module>.md`          | 2k      |
+  | building a whole page                  | `design/pages/<archetype>.md` | 3k      |
+  | picking a colour or a value            | `design/tokens.md`            | 7k      |
+
+  That table also says the thing the split makes easy to forget: there are 102
+  files here and together they are larger than the YAML they were generated from.
+  The split buys a cheap answer to one question, not a cheap corpus.
+
+  Also fixes a real bug in the generator's `prose()` helper. It wrapped bare HTML
+  tags in backticks with a lookaround, which fired _inside_ existing code spans —
+  `` `design/<module>.md` `` came out as `` `design/`<module>`.md` ``, broken code
+  with a stray tag. It now splits on code spans and rewrites only what is outside
+  them. A check across all 102 emitted files finds zero lines with unbalanced
+  backticks.
+
+- 355196b: docs: emit `DESIGN.md` and one Markdown file per module and per page template
+
+  The seven `machine/*.yaml` contracts are the authority and stay the authority.
+  But they assume a reader with the package on disk and a budget to open seven
+  files, and the package is published restricted, so an agent outside a consumer
+  repo can reach none of them. `llms.txt` has been linking `/AGENTS.md` and
+  `/machine/context.yaml` — root-relative paths that resolve to nothing an
+  unauthenticated agent can fetch.
+
+  `scripts/generate-design-md.mjs` emits the same facts as Markdown, split so that
+  ONE fetch answers one question: `DESIGN.md` for the system — tokens, scales,
+  rules, contrast floors and the index — then `design/pages/<archetype>.md` for a
+  whole page, or `design/<module>.md` for one module, at the module's own path.
+  100 files, none of them authored.
+
+  Each file restates the non-negotiables and the module's polarity rather than
+  linking to them. The duplication is the point: the two defects this package
+  keeps shipping are a light surface without the `light` class (text at 1.08:1)
+  and a `chrome.*` token on a surface that flips, and both are made by an agent
+  that read one file and followed no link out of it. A page template also carries
+  the band grammar from `machine/layouts.yaml` — ground alternation, mirroring,
+  rhythm — so the page lands in the same grammar as the pages that ship.
+
+  `npm run design:check` runs inside `npm run verify` and fails the build when a
+  contract was edited and the Markdown was not, the same gate `tokens:check`
+  already applies to `docs/brand.md`. `__tests__/design-md.test.ts` is the
+  coverage half: the byte-diff compares the generator's output to the generator's
+  output, so it would stay green if the generator started dropping modules — which
+  it did, in the first cut. Four archetypes record `observed` rather than
+  `optional`, and dropping that key emptied `home-page`, the densest route in the
+  corpus and the only recorded evidence for five modules.
+
+  `DESIGN.md` and `design/` are in `files` and `exports`, so a consuming agent
+  told to open one can actually open it.
+
+- 1a282ec: feat(evals): generate candidates by handing an agent DESIGN.md and nothing else
+
+  `npm run eval` scored candidates; every one was hand-written, so the loop
+  measured the scorer rather than a model. `npm run eval:generate` closes it.
+
+  **The agent gets `DESIGN.md` and one tool, not a context dump.** Pasting the
+  tree into the prompt would measure whether a big pile of docs works and prove
+  nothing about the split the tree exists for. `read_design_file` resolves nothing
+  outside `DESIGN.md` and `design/` — no `machine/*.yaml`, no source, no gallery.
+  That restriction is the experiment: it puts the model in the position of an
+  agent in someone else's editor with a URL and no checkout, which is the reader
+  `DESIGN.md` was built for and the one nothing had ever tested.
+
+  **The retrieval trace is the finding.** Every path opened is recorded, so a run
+  answers what no other gate here can: which files an agent reaches for and in
+  what order, how many it needs before it can build a page (the routing table in
+  `DESIGN.md` claims one or two), and which paths it tries that do not exist — a
+  miss being the docs implying a file that was never generated. Each candidate
+  lands beside a sidecar carrying model, effort, turns, token usage, a dollar
+  estimate and the trace.
+
+  Claude Opus 5 with adaptive thinking, streamed, with the stable prefix
+  (`DESIGN.md` plus the tree listing) cached across cases and repeats. `--dry-run`
+  prints the plan and the full prompt without calling anything; credentials come
+  from the environment or an `ant auth login` profile and are never prompted for.
+
+  Runs write to `evals/runs/<stamp>/`, which git ignores — never to
+  `candidates/`, where a generated file would turn a finding about the model into
+  a red build. Scoring a run takes `--measure`, which reports without enforcing
+  the `bad-*` fixture convention a generated candidate makes no claim about.
+
+  **Not yet run against a model.** This environment has no API key, so no
+  candidate has been generated and no trace collected. What is tested is the part
+  that can be: the path sandbox against traversal, symlinks and contract-file
+  escapes; the fence stripper, because a fence in the output would hide every
+  import from the scorer and read as a page that imported nothing; and the tool
+  schema. The first real run is the first real measurement, and may well find the
+  harness needs adjusting before the design system does.
+
+- afa33f6: feat(evals): score a page an agent built against the contracts it was given
+
+  Every gate in this repository checked the documents against each other.
+  `tokens:check` proves `docs/brand.md` matches the JSON, `design:check` proves
+  `DESIGN.md` matches the YAML, `agent-entry-point.test.ts` proves the counts in
+  the prose are real. All internal consistency, and none of it had ever measured
+  the thing the contracts exist for.
+
+  `npm run eval` does. A case (`evals/cases/*.yaml`) is a brief — an archetype, a
+  reader, what the page must argue — and deliberately does not name the modules,
+  because that is the decision under test. A candidate is the `.tsx` written from
+  it. The scorer reads it the way `machine/compositions.yaml` was derived, imports
+  in source order, and applies ten checks, each citing the contract it comes from:
+
+  `load_bearing`, `module_exists`, `polarity` (the 1.08:1 defect, finally
+  machine-checkable), `arbitrary_hex`, `chrome_role`, `page_declares_ground`,
+  `rhythm_tall_once`, `marketing_card`, `local_copy`, and `not_for` as advisory.
+
+  Candidates are files on disk, so this runs in CI with no API key, no cost and no
+  flake. `--candidates <dir>` points elsewhere, so a harness that generates them
+  from a brief can drop output in without the scorer changing.
+
+  Two things are deliberately not checked, and `evals/README.md` says so rather
+  than leaving it to be discovered: `content_is_props` is not decidable from one
+  file, since a page supplying copy and a section hardcoding it look identical
+  from outside; and nothing renders, because contrast on real pixels needs the
+  pinned container `npm run visual` already has.
+
+  **The fixtures are the assertion.** Each `bad-*` candidate breaks exactly one
+  rule and `__tests__/eval.test.ts` pins which check must catch it — a check with
+  no failing fixture fails the suite. That gate earned itself immediately: two
+  checks shipped broken on first write and both failed OPEN, reporting a clean
+  page. `rhythm_tall_once` counted `py-[128px]`, which is also the `md:` step of
+  the default rhythm, so it saw two tall bands on pages with none. `polarity`
+  tested `/\blight\b/`, which matches inside `bg-brand-light` — the very utility
+  that paints the light ground — so the check read the defect as its own fix and
+  passed the fixture written to fail it.
+
+  Still missing, and named in the README: nothing yet generates a candidate by
+  handing an agent `DESIGN.md` and nothing else. This measures that the scorer
+  works and that the contracts are expressible as checks. It does not yet measure
+  a model.
+
+- 06d7c8b: feat(evals): a `props_exist` check; enum values where the prop is read; leaner page templates
+
+  Three fixes from running the loop by hand — reading `DESIGN.md`, following its
+  routing, building a page, then probing the scorer with a deliberately broken one.
+
+  **`props_exist`.** A candidate with `kind="purple"` on a required enum, invented
+  `spin`/`elevation` props and a TYPE rendered as a component scored 6/6 —
+  identical to a correct page — because every other check reads imports and class
+  strings. All ten committed fixtures turned out to call APIs that do not exist.
+  The check validates component names, required props, unknown props and enum
+  values against `context.yaml` and `components.yaml`, and reports each precisely.
+  It needed a real JSX scanner: `columns={[{ header: 'Field' }]}` nests braces and
+  quotes inside one attribute, so a regex to the next `>` truncates the tag
+  mid-value and invents attributes from the remainder.
+
+  **Enum values in the Props table.** `ArtFrame.kind` was typed `ArtFrameKind`,
+  required, with the Types table for that module empty and the three legal values
+  eighty lines below under Constraints. The Props table named a type it never
+  defined, on the one prop whose own docs say picking wrong "is not a styling
+  slip, it is a miscue". Values now render where the prop is read, and the Types
+  section is headed **not components** — `KeyValueRow` reads like a row component,
+  is a type, and was rendered as one in four fixtures.
+
+  **Leaner page templates, 3,528 → 2,546 tokens for use-case-page.** `Optional`
+  carried full `useFor` paragraphs for thirteen modules the file itself calls "not
+  a recommendation" — a third of the page. It now carries the lead sentence and a
+  link. `Polarity obligations` restated one identical sentence for thirteen of
+  fifteen rows; it is grouped, so each rule is stated once against the modules it
+  covers.
+
+  Also fixes a rendering bug: some contract prose pre-escapes its pipes
+  (`Dimension \| Skene`), which the cell escaper escaped again and rendered as a
+  literal backslash.
+
+- ed69537: feat(evals): render candidates and measure contrast on real pixels; add an advisory judge
+
+  **`npm run eval:render`.** Source checks read the file, and the defect this
+  package keeps shipping is not in the file — text at 1.08:1 happens when a token
+  resolves wrong against a ground three ancestors up. The candidate is now bundled
+  against the real `dist/`, server-rendered, given a stylesheet Tailwind generates
+  by scanning `dist/`, and loaded in Chromium. Every run of visible text is
+  measured against the floors in `machine/accessibility.yaml`, in both themes,
+  because `chrome.*` and `themed` share their dark values and diverge only in
+  light.
+
+  It found the defect on its first full run: `bad-light-without-class`, written to
+  trip the _source_ check, measures **1.07:1**. A source check and a pixel check
+  agreeing from opposite directions is the point of having both.
+
+  Two things it refuses to do. Text on a background image has no computable ground
+  — the textured fields are exactly that — so it reports unscorable rather than
+  passing. And a colour it cannot read throws instead of being skipped: the first
+  cut parsed `rgb()` only, and Chromium returns these components' colours as
+  `oklch()`, so **eleven of twelve text runs on the first page were dropped
+  silently and it reported a clean page**. Colours now go through a canvas, which
+  normalises every CSS colour space.
+
+  Not in `npm run verify` — it needs a browser, like `npm run visual`. The suite
+  skips those tests when Chromium is absent rather than failing.
+
+  **`npm run eval:judge`.** Neither the scorer nor the renderer answers what the
+  brief asks: does the page argue what it was commissioned to argue, in an order
+  that carries it? A page can satisfy `load_bearing` and still put the evidence
+  before the thing the evidence is about. The judge scores the brief — the case's
+  `must_argue` plus the archetype's `argues` line — never the taste; every verdict
+  must cite a module, section or ordering, and `dropUncited` discards the ones
+  that do not, enforced in code rather than asked for in the prompt; and it is
+  advisory, so it never fails a build.
+
+  Still unrun against a model: this environment has no credential. `--dry-run`
+  prints exactly what would be sent, for both the generator and the judge.
+
+- dda6c34: assets: ship `skene-tui.gif`, the one design asset that lived in neither repository
+
+  571 KB, the terminal UI running. It was under the marketing repo's
+  `.webanatomy/build-page/_shared/assets/` — wireframe scaffolding, not a served
+  directory — so the page drawn around it could not reach it. `/developers`'
+  cream band shipped a `TerminalBlock` of static text instead, with a comment
+  recording that the asset "lives only under `.webanatomy/_shared` and is not in
+  `public/`".
+
+  That is the cost of an asset stranded outside both repositories: not untidiness,
+  a visible downgrade on a live page that nobody could fix from either side. The
+  same consumer also carries eleven files under that directory which are
+  byte-identical to `assets/` here, kept because the wireframes are static HTML
+  served by `python -m http.server` and cannot resolve `node_modules`. Shipping
+  this one closes the gap that had no workaround; the other eleven have one.
+
+### Patch Changes
+
+- 5cfae68: docs: the cluster count was twenty in seven places and ten in the registry
+
+  "Twenty measured clusters where the same visual object was drawn twice" was
+  quoted in `README.md`, `AGENTS.md`, both halves of the component skill, a test
+  comment, `machine/compositions.yaml` and `scripts/build-context.mjs`. Nothing
+  backed it. `inventory.json` holds **ten** adjudicated decisions, and `README.md`
+  called them "the ten resolved design decisions" two rows above saying twenty.
+  `docs/sections.md` — the file `AGENTS.md` says carries "every measured overlap
+  with a verdict" — documents three.
+
+  All seven now say ten and point at the registry. `compositions.yaml`'s
+  "twenty-first duplicate cluster" becomes "an eleventh", which is the claim it
+  was making: this is the next one, not one of the documented set.
+
+  Gated in `__tests__/agent-entry-point.test.ts`, which reads the count out of
+  `inventory.json` and refuses any of the six surfaces quoting another. The gate's
+  own first cut failed open twice, and both were found by mutating each file in
+  turn rather than trusting it:
+
+  - it matched a single line, so it was blind to `ten adjudicated\n * clusters` —
+    two of the six files wrap the claim mid-phrase behind a comment prefix. It now
+    flattens comment markers and whitespace before matching.
+  - it dropped ordinals as unparseable, so `the twenty-first duplicate cluster`
+    passed silently. An ordinal is a different claim — it must equal the registry
+    count plus one — and is now checked as one.
+
+  Left alone: every other "twenty" in the repository is a real route or page
+  count — the twenty competitor-comparison pages, the twenty routes of the
+  largest archetype, the twenty pages the band grammar was measured on.
+
+- 6c0097a: fix(inventory): `client` missed 21 of 28 client modules, and four quoted counts were wrong
+
+  `build-inventory.mjs` tested `src.trimStart().startsWith("'use client'")` —
+  single quotes only. 21 of the 29 directives in `src` are written
+  `"use client";`, so `inventory.json` reported **7** client modules where
+  `machine/context.yaml` reported 28. That file ships as
+  `@skene/design-system/inventory.json` and is what `seen:` points at, so an agent
+  reading it to decide whether a deep import keeps its server boundary got the
+  wrong answer for 21 of 89 modules, silently. `package-contract.test.ts` matched
+  the double-quoted form all along and never compared the two.
+
+  Three documents had drifted off the same fact or off their own sources:
+
+  - `AGENTS.md` said "only the 8 modules that need it carry the directive". 28 do.
+    The 8 traces back to the inventory bug above.
+  - `llms.txt` said 331 token values; `design-tokens.json` has 241. It also said
+    the pages skill tabulates "eight archetypes" when the skill says ten and
+    `compositions.yaml` carries ten — the index was wrong about the file it
+    indexes.
+  - `README.md`'s gallery paragraph said "79 of the 89 modules as 85 cases" and
+    "the ten that gained no case"; the real figures are 88, 97 and one. That
+    paragraph was itself written to correct an earlier staleness, and explains at
+    length how the previous number rotted.
+
+  All four are now gated in `__tests__/agent-entry-point.test.ts`, which reads
+  each figure out of the generated source rather than trusting the prose. Before
+  this the only gated count was "89 modules", in two of the three entry points —
+  and its comment cited "the 8 modules that need `use client`" as its example of
+  another count that was true.
+
+  Reported, then fixed in a follow-up: "twenty measured clusters" was quoted in
+  seven places — `README.md`, `AGENTS.md`, both halves of the component skill, a
+  test comment, `machine/compositions.yaml` and `scripts/build-context.mjs` —
+  with nothing behind it, while `README.md` said "the ten resolved design
+  decisions" two rows above saying twenty. The registry holds ten.
+
+- 682d8fa: docs: name the origin the design tree is served from
+
+  `design/` stopped shipping in the tarball last change, which left every document
+  routing an agent to a tree without saying where it is. The origin is now
+  recorded once, as `designDocs` in the manifest —
+  `https://www.skene.ai/resources/docs` — and read from there by everything that
+  names it: `DESIGN.md`'s routing table now gives absolute URLs, `docs-app` derives
+  its `basePath` from the same field rather than a retyped copy, and `AGENTS.md`
+  and `llms.txt` name it in full.
+
+  Gated two ways. Every entry point must contain the origin, and none may contain
+  a _different_ skene.ai docs path — two documents naming two addresses for one
+  tree is the same defect as a count quoted twice, except a wrong origin fails as
+  a 404 in someone else's editor where nobody here will see it. Moving the origin
+  without regenerating fails both tests.
+
+  `DESIGN.md` also now points at the served stylesheet, `styles.css`, with the
+  reason: load it in the page, do not read it — the class names are documented and
+  the CSS never needs to enter a model's context.
+
+  **Not yet true, and stated here rather than discovered later.** `docs-app` has no
+  deploy step in this repository — CI builds and tests it and nothing publishes it
+  — and `www.skene.ai` is, by this repo's own source comments, the live marketing
+  site, which is a different repository. The routes and the `basePath` are correct
+  for `docs-app` being deployed behind that path. If the marketing site is to serve
+  these files instead, the three route handlers need to move there and only the
+  manifest field stays.
+
+- bc8f164: docs: name the address that already works — the repository is public
+
+  `design/` was being routed to `https://www.skene.ai/resources/docs/`, which is
+  not deployed yet, so every document pointed an agent at a URL that 404s. A
+  document naming an address that does not answer is worse than one naming none.
+
+  The repository is public, and GitHub already serves every file in the tree over
+  HTTPS with `access-control-allow-origin: *`. Verified, not assumed:
+
+  ```
+  200   15,512 bytes  DESIGN.md
+  200   23,236 bytes  design/index.md
+  200    8,768 bytes  design/sections/artifact-shell.md
+  200   10,161 bytes  design/pages/product-page.md
+  ```
+
+  That is the whole of "reachable by an agent with no checkout" — no deploy, no
+  routes, no infrastructure. `DESIGN.md` now names that base beside the canonical
+  origin and says the paths are identical: swap the base, keep the path.
+
+  Derived from `repository.url`, not typed, so it cannot drift from the repo it
+  points at; a test asserts the emitted base matches the manifest. The three route
+  handlers and the canonical origin stay — that is where this moves when the docs
+  app is deployed, and nothing about it needs to change when it is.
+
+- bfa60a6: docs: the module index carried 89 full paragraphs on the route that must be cheapest
+
+  `design/index.md` was 8,895 tokens, of which **6,371 was one section**: "By
+  namespace", listing all 89 modules with the whole of each `useFor`. The intent
+  index above it already covers the same 89 modules in 2,126 tokens, so the file
+  paid for a second and longer listing of one set — on the one route you take when
+  you do _not_ know what you are looking for, which is exactly the route that has
+  to be cheap.
+
+  It now carries the lead sentence, capped, the way the page templates already do.
+  The full prose is one fetch away in the module's own page, which is where an
+  agent goes next anyway.
+
+  - `design/index.md`: 8,895 → **5,809** tokens
+  - finding a module (DESIGN.md + index): 12,645 → **9,560**
+  - the tree: 147,406 → 144,320
+
+  Nothing was lost that the index needed: the nine rows that came out under 28
+  characters are terse because the module is (`ui/button` — "The action
+  primitive."), and 23 rows hit the cap and end in an ellipsis that points at the
+  module page.
+
+  Left at full length deliberately: a page template's `load_bearing` table, which
+  names one or two modules a page of that archetype must carry. Two paragraphs
+  there is not a listing, it is the answer.
+
 ## 0.15.0
 
 ### Minor Changes
