@@ -7,12 +7,13 @@ new one. Published restricted; public to read, not open source.
 ## Start here
 
 - [AGENTS.md](/AGENTS.md): install, configure, use, and the read order for the contracts below.
-- [DESIGN.md](/DESIGN.md): the same contracts as Markdown, for an agent with a context budget rather than a checkout. Tokens, scales, rules, contrast floors, and the index of the two file sets below. Generated — the YAML is still the authority.
+- [DESIGN.md](/DESIGN.md): the same contracts as Markdown, for an agent with a context budget rather than a checkout. Scales, rules, contrast floors, and the index of the files below. Generated — the YAML is still the authority.
 
 ## One file per question (generated from the contracts)
 
 - `design/pages/` — one file per page template: section order, what is load-bearing, the band grammar, and the routes it was derived from. Ten of them, e.g. `design/pages/product-page.md`. The index is in DESIGN.md.
 - `design/` — one file per module, at the module's own path, e.g. `design/sections/artifact-shell.md`: what it is for, props, what it is NOT for, and what you must not do.
+- `design/tokens.md` — the 241 token values with the derivation rationale in each note. Split out of DESIGN.md so that orienting does not cost you the whole palette.
 
 ## Contracts (YAML, shipped inside the package)
 

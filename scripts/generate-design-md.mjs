@@ -10,8 +10,14 @@
  * emits the same facts as Markdown, split so that ONE fetch answers one
  * question:
  *
- *   DESIGN.md                    the system: tokens, scales, rules, floors,
- *                                the spine, and the index of everything below.
+ *   DESIGN.md                    the system: scales, rules, floors, the spine,
+ *                                and the index of everything below.
+ *   design/tokens.md             every token value, with the note recording
+ *                                which light values were computed rather than
+ *                                drawn. Split out because inlined it was the
+ *                                largest thing in DESIGN.md, and it is wanted
+ *                                only when picking a value — not when working
+ *                                out which module to reach for.
  *   design/pages/<archetype>.md  a page template: section order, what is
  *                                load-bearing, the band grammar, the evidence.
  *   design/<ns>/<slug>.md        one module: what it is for, its props, what
@@ -550,11 +556,20 @@ function* walkTokens(node, path = []) {
   }
 }
 
+const tokenGroups = Object.keys(tokens).filter((k) => !skipKey(k))
+const groupLeaves = (group) => [...walkTokens(tokens[group], [])]
+const allLeaves = tokenGroups.flatMap(groupLeaves)
+
+/** Values whose note says the light value was computed, not designed. */
+const derivedCount = allLeaves.filter(([, leaf]) =>
+  String(leaf.$description ?? '').includes('DERIVED'),
+).length
+
 function tokenTables() {
   const out = []
-  for (const group of Object.keys(tokens).filter((k) => !skipKey(k))) {
+  for (const group of tokenGroups) {
     const rows = []
-    for (const [path, leaf] of walkTokens(tokens[group], [])) {
+    for (const [path, leaf] of groupLeaves(group)) {
       const value = leaf.$modes
         ? Object.entries(leaf.$modes)
             .map(([mode, v]) => `${mode} \`${v}\``)
@@ -566,6 +581,67 @@ function tokenTables() {
     if (t) out.push(`### ${group}\n\n${t}`)
   }
   return out.join('\n\n')
+}
+
+/**
+ * The values live in their own leaf. Inlined they were two thirds of DESIGN.md
+ * — 241 rows carrying the derivation rationale, which is the fact you need when
+ * you are picking a colour and dead weight in the file you opened to find out
+ * which module to reach for. DESIGN.md keeps the summary below, so the index
+ * still says what exists and what it costs to open.
+ */
+function tokensDoc() {
+  const modeAware = allLeaves.filter(([, leaf]) => leaf.$modes).length
+  return doc([
+    '# Tokens',
+    banner(['design-tokens.json', 'machine/accessibility.yaml']),
+    `${allLeaves.length} values, ${modeAware} of them mode-aware and shown here in every mode they declare. Source version ${
+      tokens.version ?? '—'
+    }.`,
+    section(
+      'How to read a value',
+      `A single value is **invariant**: the same colour in light and dark. A value
+shown as \`light … · dark …\` resolves against whichever theme class is in scope,
+which is why the \`light\` class on a light surface is not optional.
+
+The \`note\` column is not commentary. ${derivedCount} of these values are marked
+DERIVED — a light-mode value computed as the least-darkened hue-preserving
+colour that cleared the ${a11y.contrast.floors.body_text}:1 floor, rather than a
+colour anyone drew. The note is where that is recorded, and it is the fact you
+need before substituting one. Several notes also record a token whose name reads
+like a sibling of another and is not; those are the traps, and they are written
+down because each one has already shipped.`,
+    ),
+    section(
+      'Prefer the token over the literal',
+      table(
+        ['use', 'not'],
+        (a11y.prefer_tokens_over_hex ?? []).map((p) => [code(p.use), code(p.not)]),
+      ),
+    ),
+    section('Values', tokenTables()),
+    NON_NEGOTIABLES,
+    `---\n\nScales, contrast pairs, the module index and the page templates: [DESIGN.md](../DESIGN.md).`,
+  ])
+}
+
+/** Group, count, and how many invert — the index row, not the values. */
+function tokenSummary() {
+  const rows = tokenGroups.map((group) => {
+    const leaves = groupLeaves(group)
+    const modeAware = leaves.filter(([, leaf]) => leaf.$modes).length
+    return [
+      code(group),
+      String(leaves.length),
+      modeAware ? `${modeAware} mode-aware` : 'all invariant',
+    ]
+  })
+  const modeAware = allLeaves.filter(([, leaf]) => leaf.$modes).length
+  return [
+    `The ${allLeaves.length} values are in **[design/tokens.md](design/tokens.md)** — their own fetch, because you need them only when picking a value, and their notes carry the derivation rationale that makes them long.`,
+    table(['group', 'tokens', 'inverts?'], rows),
+    `${modeAware} values are mode-aware and resolve against whichever theme class is in scope; the rest are the same in both modes. \`color.chrome.*\` is the sub-tree that must NEVER be used where the surface flips — see the rules above.`,
+  ].join('\n\n')
 }
 
 function scaleBlock() {
@@ -697,16 +773,11 @@ table, a framed window or a textured field, it exists.`,
     ),
     section('Module index', catalogue),
     section('Scales', scaleBlock()),
-    section('Tokens', tokenTables()),
+    section('Tokens', tokenSummary()),
     section(
       'Contrast',
       [
         `${a11y.contrast.standard}. Body text ${a11y.contrast.floors.body_text}:1, large text ${a11y.contrast.floors.large_text}:1.`,
-        'Prefer the token over the literal:',
-        table(
-          ['use', 'not'],
-          (a11y.prefer_tokens_over_hex ?? []).map((p) => [code(p.use), code(p.not)]),
-        ),
         'Pairs the build checks on every commit:',
         table(
           ['foreground', 'background', 'size', 'context'],
@@ -757,6 +828,7 @@ table, a framed window or a textured field, it exists.`,
 
 const emissions = new Map()
 emissions.set('DESIGN.md', designMd())
+emissions.set('design/tokens.md', tokensDoc())
 for (const id of moduleIds) emissions.set(modulePath(id), moduleDoc(id))
 for (const archetype of Object.keys(compositions.archetypes)) {
   emissions.set(`design/pages/${archetype}.md`, pageDoc(archetype))
@@ -804,7 +876,7 @@ if (check) {
     writeFileSync(abs, content)
   }
   console.log(
-    `wrote ${emissions.size} files: DESIGN.md, ${moduleIds.length} modules, ${
+    `wrote ${emissions.size} files: DESIGN.md, design/tokens.md, ${moduleIds.length} modules, ${
       Object.keys(compositions.archetypes).length
     } page templates.`,
   )

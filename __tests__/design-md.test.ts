@@ -56,13 +56,45 @@ describe('DESIGN.md', () => {
     expect(existsSync(resolve(ROOT, `design/pages/${name}.md`))).toBe(true)
   })
 
-  it('emits nothing that is not a module or an archetype', () => {
+  it('emits nothing that is not a module, an archetype or a named leaf', () => {
     const expected = new Set([
       'DESIGN.md',
+      // The one leaf that is neither: the token values, split out of DESIGN.md
+      // because they are the largest thing in it and are wanted only when
+      // picking a value. Any OTHER unexpected file is an orphan — a module
+      // renamed without regenerating leaves its old page behind.
+      'design/tokens.md',
       ...moduleIds.map((id) => `design/${id}.md`),
       ...archetypes.map((a) => `design/pages/${a}.md`),
     ])
     expect(emitted().filter((f) => !expected.has(f))).toEqual([])
+  })
+
+  // The split is only a win if DESIGN.md actually got lighter and the values
+  // all survived the move. A summary table that quietly dropped a group would
+  // read as a deliberate abridgement rather than a bug.
+  it('design/tokens.md carries every token value, and DESIGN.md carries none', () => {
+    const tokensMd = read('design/tokens.md')
+    const designMd = read('DESIGN.md')
+    const json = JSON.parse(read('design-tokens.json')) as Record<string, unknown>
+    const isLeaf = (x: unknown) =>
+      typeof x === 'object' && x !== null && ('$value' in x || '$modes' in x)
+    const paths: string[] = []
+    const walk = (node: Record<string, unknown>, trail: string[] = []) => {
+      for (const [k, v] of Object.entries(node)) {
+        if (trail.length === 0 && (k.startsWith('$') || k === 'version' || k === 'lastUpdated'))
+          continue
+        if (isLeaf(v)) paths.push([...trail, k].join('.'))
+        else if (typeof v === 'object' && v !== null) walk(v as Record<string, unknown>, [...trail, k])
+      }
+    }
+    walk(json)
+    expect(paths.length).toBeGreaterThan(200)
+    expect(paths.filter((t) => !tokensMd.includes(`\`${t}\``))).toEqual([])
+    expect(
+      designMd.length,
+      'DESIGN.md is no smaller than the values it delegates — the split did not happen',
+    ).toBeLessThan(tokensMd.length * 2)
   })
 
   // The whole design of this surface is one fetch per question, which is worth
