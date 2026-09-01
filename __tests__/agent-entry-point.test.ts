@@ -269,6 +269,48 @@ describe('the counts quoted to agents are true', () => {
     }
   })
 
+  /**
+   * One origin, in the manifest, and nothing may name another.
+   *
+   * `design/` is served rather than shipped, so every document that routes an
+   * agent to it is naming a URL rather than a path on disk. Two documents
+   * naming two origins is the same defect as a count quoted in two places —
+   * except a wrong origin fails as a 404 in someone else's editor, where
+   * nobody here will see it.
+   */
+  it('every document names the one origin the manifest records', () => {
+    const pkg = JSON.parse(read('package.json')) as { designDocs?: string }
+    const docs = pkg.designDocs
+    expect(docs, 'package.json has no designDocs origin').toBeTruthy()
+    const origin = String(docs).replace(/\/$/, '')
+    for (const file of ['DESIGN.md', 'AGENTS.md', 'llms.txt']) {
+      expect(read(file), `${file} does not name ${origin}`).toContain(origin)
+    }
+    // Any OTHER skene.ai docs path is a second address for one tree.
+    for (const file of ['DESIGN.md', 'AGENTS.md', 'llms.txt', 'README.md']) {
+      const others = [...read(file).matchAll(/https:\/\/[\w.]*skene\.ai\/[\w/-]*docs?[\w/-]*/g)]
+        .map((m) => m[0])
+        .filter((u) => !u.startsWith(origin))
+      expect(others, `${file} names a docs origin other than ${origin}`).toEqual([])
+    }
+  })
+
+  /**
+   * The routes that make the origin real, and the basePath that puts them under
+   * it. A tree announced at a URL and served at the root of a different one is
+   * a dead pointer with extra steps.
+   */
+  it('the docs app is mounted under the path the origin names', () => {
+    const pkg = JSON.parse(read('package.json')) as { designDocs: string }
+    const expected = new URL(pkg.designDocs).pathname.replace(/\/$/, '')
+    const config = read('docs-app/next.config.ts')
+    expect(config, 'next.config.ts does not set basePath').toContain('basePath')
+    // Derived from the manifest, not retyped — a hardcoded copy is a second
+    // place the origin lives.
+    expect(config).toContain('designDocs')
+    expect(expected).toBe('/resources/docs')
+  })
+
   it('the README gallery paragraph quotes the real case coverage', () => {
     const withCases = inventory.modules.filter((m) => (m.cases ?? []).length > 0)
     const cases = inventory.modules.reduce((n, m) => n + (m.cases ?? []).length, 0)

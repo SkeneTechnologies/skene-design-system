@@ -165,10 +165,10 @@ question — the shape Vercel's `design.md` is built around, over contracts that
 were already here.
 
 `DESIGN.md` ships in the package. **The tree under `design/` does not** — it is
-SERVED, from the docs app, because `machine/` and `design/` are the same facts
-for two different readers and no consumer needs both. An agent with the checkout
-greps the YAML; an agent with a URL fetches the tree. Paths below are relative
-to that origin, and `DESIGN.md` names it.
+SERVED, at `https://www.skene.ai/resources/docs/`, because `machine/` and `design/` are the same facts for two
+different readers and no consumer needs both. An agent with the checkout greps
+the YAML; an agent with a URL fetches the tree. Paths below are relative to that
+origin, and `DESIGN.md` names it in full.
 
 | you are | open |
 |---|---|

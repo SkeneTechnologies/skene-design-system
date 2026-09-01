@@ -17,12 +17,16 @@ everything else is. Nothing below needs you to have read anything above it.
 Then open **one** more file. Each is self-contained — it restates the rules
 rather than linking back here, so you never need two open at once.
 
-| you are | open | roughly |
+Everything below is at **https://www.skene.ai/resources/docs/**. Fetch a path, do not guess a file — the listing under each row is the whole of it.
+
+| you are | fetch | roughly |
 | --- | --- | --- |
-| finding a module, by intent or by name | `design/index.md` | 9k tokens |
-| reaching for one module you can name | `design/<module>.md` | 2k |
-| building a whole page | `design/pages/<archetype>.md` | 3k |
-| picking a colour or a value | `design/tokens.md` | 7k |
+| finding a module, by intent or by name | `https://www.skene.ai/resources/docs/design/index.md` | 6k tokens |
+| reaching for one module you can name | `https://www.skene.ai/resources/docs/design/<module>.md` | 1k |
+| building a whole page | `https://www.skene.ai/resources/docs/design/pages/<archetype>.md` | 2.3k |
+| picking a colour or a value | `https://www.skene.ai/resources/docs/design/tokens.md` | 7k |
+
+The stylesheet is at **https://www.skene.ai/resources/docs/styles.css**. Load it in the page rather than reading it: the class names are documented here, and the CSS itself never needs to enter your context.
 
 Do not read the tree. There are 102 files here and together they are
 larger than the YAML they were generated from — the split buys you a cheap

@@ -64,6 +64,13 @@ const a11y = readYaml('machine/accessibility.yaml')
 
 const pkg = JSON.parse(readFileSync(resolve(root, 'package.json'), 'utf8'))
 
+/**
+ * Where the tree is served. One constant, in the manifest, because a document
+ * that names an origin the tree is not at is worse than one that names none —
+ * and this repository has shipped a dead pointer before.
+ */
+const DOCS = String(pkg.designDocs ?? '').replace(/\/$/, '')
+
 // ---------------------------------------------------------------- formatting
 
 /**
@@ -890,15 +897,17 @@ everything else is. Nothing below needs you to have read anything above it.
 
 Then open **one** more file. Each is self-contained — it restates the rules
 rather than linking back here, so you never need two open at once.`,
+        `Everything below is at **${DOCS}/**. Fetch a path, do not guess a file — the listing under each row is the whole of it.`,
         table(
-          ['you are', 'open', 'roughly'],
+          ['you are', 'fetch', 'roughly'],
           [
-            ['finding a module, by intent or by name', '`design/index.md`', '9k tokens'],
-            ['reaching for one module you can name', '`design/<module>.md`', '2k'],
-            ['building a whole page', '`design/pages/<archetype>.md`', '3k'],
-            ['picking a colour or a value', '`design/tokens.md`', '7k'],
+            ['finding a module, by intent or by name', code(`${DOCS}/design/index.md`), '6k tokens'],
+            ['reaching for one module you can name', code(`${DOCS}/design/<module>.md`), '1k'],
+            ['building a whole page', code(`${DOCS}/design/pages/<archetype>.md`), '2.3k'],
+            ['picking a colour or a value', code(`${DOCS}/design/tokens.md`), '7k'],
           ],
         ),
+        `The stylesheet is at **${DOCS}/styles.css**. Load it in the page rather than reading it: the class names are documented here, and the CSS itself never needs to enter your context.`,
         `Do not read the tree. There are ${
           moduleIds.length + Object.keys(compositions.archetypes).length + 3
         } files here and together they are

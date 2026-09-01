@@ -11,9 +11,10 @@ new one. Published restricted; public to read, not open source.
 
 ## One file per question (generated from the contracts, SERVED not shipped)
 
-These are not in the npm tarball. `machine/` and `design/` are the same facts for
-two different readers, so the YAML ships and the tree is served — no consumer
-carries both. `DESIGN.md` ships as well, and names the origin the rest is on.
+Served at **https://www.skene.ai/resources/docs/**, not in the npm tarball. `machine/` and `design/` are the
+same facts for two different readers, so the YAML ships and the tree is served —
+no consumer carries both. `DESIGN.md` ships as well, and names this origin.
+The stylesheet is at `https://www.skene.ai/resources/docs/styles.css`.
 
 - `design/pages/` — one file per page template: section order, what is load-bearing, the band grammar, and the routes it was derived from. Ten of them, e.g. `design/pages/product-page.md`. The index is in DESIGN.md.
 - `design/` — one file per module, at the module's own path, e.g. `design/sections/artifact-shell.md`: what it is for, props, what it is NOT for, and what you must not do.
