@@ -272,7 +272,7 @@ modules:
     props:
       Button:
         asChild: { type: boolean, default: "false" }
-        variant: { type: "\"default\" | \"destructive\" | \"outline\" | \"secondary\" | \"ghost\" | \"link\" | \"glass\" | \"glass-dark\"" }
+        variant: { type: "\"link\" | \"default\" | \"destructive\" | \"outline\" | \"secondary\" | \"ghost\" | \"glass\" | \"glass-dark\"" }
         size: { type: "\"default\" | \"sm\" | \"lg\" | \"icon\"" }
     accepts:
       Button: React.ButtonHTMLAttributes<HTMLButtonElement>
