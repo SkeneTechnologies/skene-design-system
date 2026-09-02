@@ -1,29 +1,26 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
-import type gsapLib from 'gsap'
+import { useEffect, useState } from 'react'
 import { ClipboardCheck, Cloud, GitPullRequest, Terminal, type LucideIcon } from 'lucide-react'
 
 import { cn } from '../lib/utils.js'
 import { useContainerScale } from '../lib/use-container-scale.js'
 
 /*
- * gsap is imported inside the effect below, not at module scope.
+ * No animation library. This ran on a gsap timeline until 2026-09-02, and the
+ * history is worth one paragraph because it is the measurement behind the
+ * change: a static `import gsap from 'gsap'` put a 45 KB gzipped chunk in the
+ * initial `<script>` list of the two product routes that render this, for an
+ * animation below the fold. Moving the import into the effect (0.18.0) took it
+ * out of the critical path and left it on the page. Removing the library
+ * (issue #24) takes it off the page: what the timeline did is a sequence of
+ * `setTimeout`s driving four booleans, and the fades are CSS transitions on
+ * the elements they move, at the same durations and curves.
  *
- * A static `import gsap from 'gsap'` here put gsap in this component's client
- * chunk and that chunk in the initial `<script>` list of every page importing
- * it. Measured on www.skene.ai: 45 KB gzipped on the two product routes that
- * render this, for an animation that sits below the fold behind a ScrollTrigger
- * which does not fire until the scene reaches 80% of the viewport.
- *
- * The `import type` above is erased at build, so it costs nothing at runtime.
- *
- * The same change was made to `JourneySignalScene` in the consuming app on
- * 2026-09-01 and took its homepage initial JavaScript from 310,100 to 265,801
- * gzipped bytes. `next/dynamic` around the component does NOT achieve this and
- * was measured not to: without `ssr: false` the chunk stays in the initial
- * list, and `ssr: false` removes the server-rendered markup, which is not
- * acceptable for a component carrying copy.
+ * `next/dynamic` around the component was measured NOT to achieve either:
+ * without `ssr: false` the chunk stays in the initial list, and `ssr: false`
+ * removes the server-rendered markup, which is not acceptable for a component
+ * carrying copy.
  */
 
 /** Resolved from this module so Vite emits a browser URL, not a file:// path. */
@@ -115,10 +112,49 @@ export const INTEGRATION_ANIMATION_DETAILS: IntegrationAnimationDetail[] = [
 ]
 
 const DESIGN_WIDTH = 700
+/* The timeline's own clock, in seconds, kept to the tenth the gsap version ran:
+   a 0.3s lead, cards in over 0.45s with a 0.12s stagger, a 0.35s pause before
+   the first card lights, the detail panel in over 0.4s, a 2.2s hold per detail,
+   0.15s out and 0.3s in on each swap, then everything out over 0.4s after a 2s
+   pause, and 0.5s before the next cycle. */
+const LEAD = 0.3
+const CARD_IN = 0.45
+const CARD_STAGGER = 0.12
+const DETAIL_IN = 0.4
 const CYCLE_HOLD = 2.2
 const SWAP_OUT = 0.15
 const SWAP_IN = 0.3
 const FIRST_ACTIVE_DELAY = 0.35
+const EXIT_PAUSE = 2
+const EXIT = 0.4
+const REPEAT_DELAY = 0.5
+/* gsap's `power2.out` and `power2.in`, as the cubic-beziers they are. */
+const EASE_OUT = 'cubic-bezier(0.33, 1, 0.68, 1)'
+const EASE_IN = 'cubic-bezier(0.32, 0, 0.67, 0)'
+
+/**
+ * One resting state of the scene: which elements are shown and which detail is
+ * up. `instant` is the reset at the top of a cycle, which the timeline did with
+ * `gsap.set` rather than a tween, so it turns the transitions off for a frame.
+ */
+type Phase = {
+  cards: boolean
+  detail: boolean
+  inner: boolean
+  activeIdx: number | null
+  instant: boolean
+}
+
+const HIDDEN: Phase = { cards: false, detail: false, inner: true, activeIdx: null, instant: true }
+
+/** The frame `frame={n}` pins: everything in, detail `n` up, nothing moving. */
+const framePhase = (idx: number): Phase => ({
+  cards: true,
+  detail: true,
+  inner: true,
+  activeIdx: idx,
+  instant: true,
+})
 
 const ICON_STYLES: Record<
   CardVariant,
@@ -149,19 +185,33 @@ const BADGE_STYLES: Record<BadgeVariant, { background: string; color: string }> 
   amber: { background: '#faeeda', color: '#633806' },
 }
 
-/* Takes the gsap instance rather than closing over a module import, because
-   there is no longer a module import to close over. */
-function resetElements(
-  gsap: typeof gsapLib,
-  cards: HTMLDivElement[],
-  detailPanel: HTMLDivElement | null,
-  detailInner: HTMLDivElement | null,
-  setActiveIdx: (idx: number | null) => void,
-) {
-  gsap.set(cards, { autoAlpha: 0, y: 12 })
-  gsap.set(detailPanel, { autoAlpha: 0, y: 8 })
-  gsap.set(detailInner, { autoAlpha: 1, y: 0 })
-  setActiveIdx(null)
+/**
+ * `autoAlpha`, as gsap called it: opacity plus visibility, with visibility
+ * flipping at the START of a fade-in and at the END of a fade-out so a hidden
+ * element is out of the accessibility tree and hit-testing while invisible.
+ */
+function fade(
+  shown: boolean,
+  duration: number,
+  ease: string,
+  offsetY: number,
+  delay = 0,
+  instant = false,
+): React.CSSProperties {
+  const d = instant ? 0 : duration
+  const wait = instant ? 0 : delay
+  return {
+    opacity: shown ? 1 : 0,
+    visibility: shown ? 'visible' : 'hidden',
+    transform: shown ? 'none' : `translateY(${offsetY}px)`,
+    transition: instant
+      ? 'none'
+      : [
+          `opacity ${d}s ${ease} ${wait}s`,
+          `transform ${d}s ${ease} ${wait}s`,
+          `visibility 0s linear ${shown ? wait : wait + d}s`,
+        ].join(', '),
+  }
 }
 
 function getDisplayDetail(
@@ -180,10 +230,18 @@ export interface CardAnimationIntegrationsProps {
   cards?: IntegrationAnimationCard[]
   details?: IntegrationAnimationDetail[]
   className?: string
+  /**
+   * Hold one frame instead of cycling: every card in, detail `frame` up, and
+   * nothing moving. For a gallery, a screenshot baseline or a print surface,
+   * where a cycling scene is either a timeout or a lottery. The docs-app's two
+   * cases use `0` and `3`, which are the frames its baselines held when the
+   * playhead was gsap's.
+   */
+  frame?: number
 }
 
 /**
- * Four integration cards on a textured field, cycling detail copy with GSAP.
+ * Four integration cards on a textured field, cycling detail copy.
  * Ported from skene-marketing-website's `CardAnimationIntegrations`.
  */
 export function CardAnimationIntegrations({
@@ -191,119 +249,90 @@ export function CardAnimationIntegrations({
   cards = INTEGRATION_ANIMATION_CARDS,
   details = INTEGRATION_ANIMATION_DETAILS,
   className,
+  frame,
 }: CardAnimationIntegrationsProps) {
   const { containerRef, scale } = useContainerScale(DESIGN_WIDTH)
-  const cardRefs = useRef<(HTMLDivElement | null)[]>([])
-  const detailPanelRef = useRef<HTMLDivElement>(null)
-  const detailInnerRef = useRef<HTMLDivElement>(null)
-  const [activeIdx, setActiveIdx] = useState<number | null>(null)
+  const [phase, setPhase] = useState<Phase>(frame === undefined ? HIDDEN : framePhase(frame))
+  const cardCount = cards.length
+  const detailCount = details.length
 
+  /* The cycle, as a sequence of waits. Two things the gsap ScrollTrigger did are
+     kept: it started when the scene reached 80% of the viewport, and it paused
+     while the scene was off screen and resumed where it left off. Here every
+     wait first waits for the scene to be on screen, so a cycle pauses at the
+     next step boundary rather than mid-fade, which nobody can see. */
   useEffect(() => {
-    const cardElements = cardRefs.current.filter(Boolean) as HTMLDivElement[]
-    const detailPanel = detailPanelRef.current
-    const detailInner = detailInnerRef.current
-    const visibleElements = [...cardElements, detailPanel].filter(Boolean)
+    if (frame !== undefined) return
+    const el = containerRef.current
+    if (!el) return
 
-    /* The cards start hidden and the timeline is what reveals them, so a failed
-       import would leave the scene permanently blank where a static import
-       could not. This is the floor: on failure, show them. */
     let cancelled = false
-    let revert: (() => void) | undefined
-    const reveal = () => {
-      for (const el of visibleElements) {
-        if (!el) continue
-        el.style.opacity = '1'
-        el.style.visibility = 'visible'
-        el.style.transform = 'none'
-      }
+    let visible = false
+    let wake: (() => void) | null = null
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        visible = entry.isIntersecting
+        if (visible && wake) {
+          wake()
+          wake = null
+        }
+      },
+      { rootMargin: '0px 0px -20% 0px' },
+    )
+    io.observe(el)
+
+    const onScreen = () =>
+      visible
+        ? Promise.resolve()
+        : new Promise<void>((resolve) => {
+            wake = resolve
+          })
+    const wait = async (seconds: number) => {
+      await onScreen()
+      if (cancelled) return
+      await new Promise<void>((resolve) => setTimeout(resolve, seconds * 1000))
+    }
+    const set = (next: Phase | ((p: Phase) => Phase)) => {
+      if (!cancelled) setPhase(next)
     }
 
     void (async () => {
-      const [{ default: gsap }, { ScrollTrigger }] = await Promise.all([
-        import('gsap'),
-        import('gsap/ScrollTrigger'),
-      ]).catch((error) => {
-        reveal()
-        throw error
-      })
-      if (cancelled) return
-      gsap.registerPlugin(ScrollTrigger)
-
-      const ctx = gsap.context(() => {
-        resetElements(gsap, cardElements, detailPanel, detailInner, setActiveIdx)
-
-        const tl = gsap.timeline({
-          repeat: -1,
-          repeatDelay: 0.5,
-          delay: 0.3,
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: 'top 80%',
-            toggleActions: 'play pause resume pause',
-          },
-        })
-
-        tl.call(() => {
-          resetElements(gsap, cardElements, detailPanel, detailInner, setActiveIdx)
-        })
-          .to(cardElements, {
-            autoAlpha: 1,
-            y: 0,
-            duration: 0.45,
-            ease: 'power2.out',
-            stagger: 0.12,
-          })
-          .to({}, { duration: FIRST_ACTIVE_DELAY })
-          .call(() => setActiveIdx(0))
-          .to(
-            detailPanel,
-            { autoAlpha: 1, y: 0, duration: 0.4, ease: 'power2.out' },
-            '<',
+      await wait(LEAD)
+      while (!cancelled) {
+        set(HIDDEN)
+        // One frame with transitions off, then the reveal can run.
+        await wait(0.02)
+        set({ cards: true, detail: false, inner: true, activeIdx: null, instant: false })
+        await wait(CARD_IN + CARD_STAGGER * (cardCount - 1) + FIRST_ACTIVE_DELAY)
+        set((p) => ({ ...p, detail: true, activeIdx: 0 }))
+        await wait(DETAIL_IN + CYCLE_HOLD)
+        for (let idx = 1; idx < detailCount && !cancelled; idx++) {
+          set((p) => ({ ...p, inner: false }))
+          await wait(SWAP_OUT)
+          set((p) => ({ ...p, inner: true, activeIdx: idx }))
+          await wait(
+            idx < detailCount - 1
+              ? SWAP_IN + (CYCLE_HOLD - SWAP_OUT - SWAP_IN)
+              : SWAP_IN + (CYCLE_HOLD - SWAP_IN),
           )
-          .to({}, { duration: CYCLE_HOLD })
-          .to(detailInner, {
-            autoAlpha: 0,
-            y: 4,
-            duration: SWAP_OUT,
-            ease: 'power2.in',
-          })
-
-        for (let idx = 1; idx < details.length; idx++) {
-          tl.call(() => setActiveIdx(idx)).to(detailInner, {
-            autoAlpha: 1,
-            y: 0,
-            duration: SWAP_IN,
-            ease: 'power2.out',
-          })
-
-          if (idx < details.length - 1) {
-            tl.to({}, { duration: CYCLE_HOLD - SWAP_OUT - SWAP_IN }).to(detailInner, {
-              autoAlpha: 0,
-              y: 4,
-              duration: SWAP_OUT,
-              ease: 'power2.in',
-            })
-          } else {
-            tl.to({}, { duration: CYCLE_HOLD - SWAP_IN })
-          }
         }
-
-        tl.to(visibleElements, {
-          autoAlpha: 0,
-          duration: 0.4,
-          delay: 2,
-        })
-      }, containerRef)
-      if (cancelled) ctx.revert()
-      else revert = () => ctx.revert()
+        await wait(EXIT_PAUSE)
+        set((p) => ({ ...p, cards: false, detail: false }))
+        await wait(EXIT + REPEAT_DELAY)
+      }
     })()
 
     return () => {
       cancelled = true
-      revert?.()
+      io.disconnect()
+      wake?.()
     }
-  }, [])
+    // `cards`/`details` are content and stable per call site; the cycle reads
+    // their lengths once.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [frame, cardCount, detailCount])
 
+  const { activeIdx } = phase
   const detail = getDisplayDetail(details, activeIdx)
 
   return (
@@ -336,16 +365,38 @@ export function CardAnimationIntegrations({
               return (
                 <div
                   key={card.title}
-                  ref={(el) => {
-                    cardRefs.current[i] = el
-                  }}
                   className={cn(
-                    'rounded-xl border-[0.5px] p-4 transition-[background,border-color] duration-200',
+                    'rounded-xl border-[0.5px] p-4',
                     isActive
                       ? 'border-black/20 bg-[#faf1e9]'
                       : 'border-white/10 bg-surface-1',
                   )}
-                  style={{ visibility: 'hidden' }}
+                  /* The card's own 200ms background and border-color transition
+                     rides along with the fade, since one `transition` list is
+                     all an element gets. Cards come in staggered and go out
+                     together, which is why the delay only applies on the way
+                     in. */
+                  style={{
+                    ...fade(
+                      phase.cards,
+                      phase.cards ? CARD_IN : EXIT,
+                      EASE_OUT,
+                      12,
+                      phase.cards ? i * CARD_STAGGER : 0,
+                      phase.instant,
+                    ),
+                    transition: phase.instant
+                      ? 'none'
+                      : `background 0.2s, border-color 0.2s, ${
+                          fade(
+                            phase.cards,
+                            phase.cards ? CARD_IN : EXIT,
+                            EASE_OUT,
+                            12,
+                            phase.cards ? i * CARD_STAGGER : 0,
+                          ).transition
+                        }`,
+                  }}
                 >
                   <div
                     className="mb-2.5 flex size-9 items-center justify-center rounded-lg text-lg"
@@ -375,11 +426,27 @@ export function CardAnimationIntegrations({
           </div>
 
           <div
-            ref={detailPanelRef}
             className="min-h-[72px] rounded-xl border-[0.5px] border-black/12 bg-[#f0e8df] px-5 py-4"
-            style={{ visibility: 'hidden' }}
+            style={fade(
+              phase.detail,
+              phase.detail ? DETAIL_IN : EXIT,
+              EASE_OUT,
+              8,
+              0,
+              phase.instant,
+            )}
           >
-            <div ref={detailInnerRef} className="flex items-start gap-3">
+            <div
+              className="flex items-start gap-3"
+              style={fade(
+                phase.inner,
+                phase.inner ? SWAP_IN : SWAP_OUT,
+                phase.inner ? EASE_OUT : EASE_IN,
+                4,
+                0,
+                phase.instant,
+              )}
+            >
               <span
                 className="mt-0.5 shrink-0 whitespace-nowrap rounded-full px-2 py-0.5 text-[11px] font-medium"
                 style={BADGE_STYLES[detail.badgeVariant]}

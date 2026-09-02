@@ -1,0 +1,706 @@
+/* `sections/journey-signal-scene`: the stylesheet.
+ *
+ * Ported 1:1 from the component's styled-components definitions on 2026-09-02,
+ * when the package dropped that dependency (issue #24). Every declaration is
+ * the one the styled block carried; what changed is the address. Props that
+ * drove a style (`$dark`, `$active`, `$tone`, `$source`, `$removed`, `$added`,
+ * `$inviting`, `$animate`) are `data-*` attributes now, and the numbers a prop
+ * computed (a panel's box, the stage scale, a flow bar's width, a connector's
+ * length) are inline styles or custom properties set from the component.
+ *
+ * `$dark` was the Engineering view on every element that took it, so it is one
+ * attribute on the stage, `data-view="eng"`, and the selectors below read it.
+ *
+ * Ships through `styles/index.css` like `effects.css`, so a consumer that has
+ * wired the package stylesheet already has this. The `jss-` prefix is the
+ * scene's own; nothing else in the package or its consumers uses it.
+ */
+
+/* A long settle on the way in. Everything here eases the same way so the
+   entry and the view switch feel like one motion system. */
+:root {
+  --jss-ease-in: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes jss-fade-in-up {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Peach again. The ink ring below it was the cream-stage reading; the stage is
+   back on near-black per the approved alt wireframe, which is the ground this
+   pulse was drawn for in the first place. */
+@keyframes jss-soft-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(254, 192, 137, 0.38); }
+  50%      { box-shadow: 0 0 0 6px rgba(254, 192, 137, 0); }
+}
+
+/* ---------------------------------------------------------------- section */
+
+/*
+ * THE SCENE IS DARK-THEMED AGAIN, restored 2026-08-26 to the approved alt
+ * wireframe (.webanatomy/build-page/home-calcom-style-alt/wireframe.html):
+ * near-black stage, dark translucent side panels with light ink, cream centre
+ * card in the GTM view, faint light ambient text, light dashed connectors.
+ *
+ * Why the token block exists at all: the scene was authored against a
+ * stylesheet the consuming routes do not load, which leaves most of these
+ * names undefined while aliasing three of them (--color-accent,
+ * --color-primary, --color-secondary) to the design-system palette. Declaring
+ * the set on this section keeps the scene's own vocabulary intact without
+ * overriding those three for the package components that share the page.
+ *
+ * The values are the DARK reading of the same names, transcribed from the
+ * wireframe's `.scene` styles. Literals rather than theme-aware `text.*`
+ * aliases on purpose: outside a `light` subtree those aliases resolve to light
+ * ink, but the centre card is CREAM in the GTM view, so its internal roles
+ * (--color-text-light / --color-text-dark) must stay ink-dark no matter what
+ * ancestor the section gains. The stage-side roles are light literals for the
+ * same reason in reverse.
+ *
+ * What never flipped in either direction: everything the engineering view
+ * draws. `--color-terminalChrome-*` is invariant, which is
+ * `machine/rules.yaml:115-131` working as designed. A code block and a GitHub
+ * review are the exact case that role exists for.
+ */
+.jss {
+  --color-primary: #000000;
+  /* The GTM centre card's ground: cream, the wireframe's .scene__center
+     background (--cream = brand.light). */
+  --color-secondary: var(--color-brand-light);
+  /* Outside a 'light' subtree this is the bright reading, #fec089, the value
+     drawn for near-black. */
+  --color-accent: var(--color-brand-peach);
+  /* The active flow row's tint, a peach wash on dark. */
+  --color-accent-muted: rgba(254, 192, 137, 0.14);
+  /* Stage-side ink: the toggle and the active flow row, both on dark. */
+  --color-text: #faf1e9;
+  /* CARD-side muted ink: the GTM card label and feeds value, on cream. */
+  --color-text-light: #525252;
+  /* CARD-side primary ink on cream, wireframe's #1a1a1a. */
+  --color-text-dark: #1a1a1a;
+  /* The three "on dark" roles: ev-path warm-strong, muted rows, and the
+     .3-alpha subtle tier shared by panel labels, connectors and footnotes. */
+  --color-text-on-dark: rgba(250, 241, 233, 0.82);
+  --color-text-on-dark-muted: rgba(250, 241, 233, 0.64);
+  --color-text-on-dark-subtle: rgba(250, 241, 233, 0.55);
+  /* The quiet role inside the two GitHub-dark engineering panels. */
+  --color-chrome-muted: rgba(201, 209, 217, 0.62);
+  /* Brand for those same GitHub-dark panels: warmTan is the invariant
+     chrome-side warm the rest of the review already uses. */
+  --color-chrome-accent: var(--color-terminalChrome-warmTan);
+  --color-background-dark: transparent;
+  --color-background-darker: #0d1117;
+  /* Wireframe panel border: rgba(255,255,255,.10); one notch up so the frame
+     edge survives the wash. */
+  --color-border-on-dark: rgba(255, 255, 255, 0.12);
+  --font-primary:
+    var(--font-geist-sans, ui-sans-serif, system-ui, sans-serif), sans-serif;
+  --font-mono: var(--font-geist-mono, ui-monospace, monospace), monospace;
+  --font-size-xs: 12px;
+  --font-size-base: 16px;
+  --line-height-relaxed: 1.75;
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-xxl: 48px;
+  --transition-fast: 150ms ease;
+
+  position: relative;
+  /* A flex ITEM in the band that hosts it, so it would otherwise size to its
+     content. */
+  width: 100%;
+  min-width: 0;
+}
+
+.jss-inner {
+  width: 100%;
+}
+
+/* ------------------------------------------------------------ scale stage */
+
+/* The frame follows whichever layout is in play, so the stage never leaves a
+   band of empty floor underneath it. `aspect-ratio` is set inline. */
+.jss-frame {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  /* No ground and no border, founder direction 2026-08-26. The stage used to
+     paint its own near-black plus a top-lit white wash, and ring itself in the
+     on-dark border token. That reads as a framed picture of the product sitting
+     in the hero. Transparent, the hero's halftone field runs under the panels
+     and they read as floating on it instead. overflow: hidden stays: it clips
+     the scaled wrapper, which is layout, not decoration. */
+  background: transparent;
+  border: 0;
+}
+
+/* Width, height and scale are set inline from the layout in play. */
+.jss-scale {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: top left;
+}
+
+.jss-stage {
+  position: absolute;
+  inset: 0;
+}
+
+/* Every panel. Left, top and width are set inline from the layout's box. */
+.jss-panel {
+  position: absolute;
+  box-sizing: border-box;
+  border-radius: var(--radius-sm);
+  /* Sunk and hidden until the stage has entered the viewport, so nothing
+     flashes into place first. Motion off means no reveal, so CSS shows it. */
+  opacity: 0;
+  transform: translateY(16px);
+}
+
+/* Entry: the three panels rise in sequence, then the connectors draw. The
+   timings are the ones the gsap timeline this replaces ran: 0.6s per panel on
+   an expo-out curve, an 0.08s stagger, and the connectors starting 0.35s before
+   the last panel settles, 0.5s each with a 0.1s stagger. */
+.jss-left   { --jss-reveal-delay: 0s; }
+.jss-center { --jss-reveal-delay: 0.08s; }
+.jss-right  { --jss-reveal-delay: 0.16s; }
+
+.jss-stage[data-entered] .jss-panel {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 0.6s var(--jss-ease-in) var(--jss-reveal-delay, 0s),
+    transform 0.6s var(--jss-ease-in) var(--jss-reveal-delay, 0s);
+}
+
+/* Ambient context. Present, never readable, never competing for attention. */
+.jss-connectors {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+  /* The stroke is --color-text-on-dark-subtle (0.55-alpha cream), so 0.55 here
+     lands the drawn line at ~0.30, the wireframe's dashed light reading. */
+  opacity: 0.55;
+}
+
+/* `--jss-len` is each path's measured length, set from the component. Until
+   the stage enters, the dash offset hides the whole stroke. */
+.jss-connectors path {
+  stroke-dasharray: var(--jss-len);
+  stroke-dashoffset: var(--jss-len);
+  --jss-draw-delay: 0.41s;
+}
+.jss-connectors path:nth-of-type(2) {
+  --jss-draw-delay: 0.51s;
+}
+.jss-stage[data-entered] .jss-connectors path {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 0.5s var(--jss-ease-in) var(--jss-draw-delay);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jss-panel,
+  .jss-stage[data-entered] .jss-panel {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  /* No draw: the dashed presentation attribute stands. */
+  .jss-connectors path,
+  .jss-stage[data-entered] .jss-connectors path {
+    stroke-dasharray: 4 4;
+    stroke-dashoffset: 0;
+    transition: none;
+  }
+}
+
+/* ------------------------------------------------------------ panel shell */
+
+/* All three panels carry the view, founder direction 2026-08-26. The centre
+   card was the only one that flipped: cream for GTM, GitHub-dark for
+   Engineering, with Evidence and Flows staying dark in both. That read as one
+   card changing inside a fixed scene rather than as two different rooms. Now
+   the whole stage flips together, so `data-view="eng"` means Engineering
+   everywhere and the GTM view is three cream cards floating on the halftone. */
+.jss-skin {
+  transition:
+    background 0.4s var(--jss-ease-in),
+    border-color 0.4s var(--jss-ease-in);
+  background: var(--color-secondary);
+  border: 1px solid transparent;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.45);
+}
+.jss-stage[data-view="eng"] .jss-skin {
+  background: var(--color-terminalChrome-githubDarkSurface);
+  border-color: var(--color-terminalChrome-githubBorder);
+  box-shadow: none;
+}
+
+.jss-left {
+  padding: 16px;
+}
+
+.jss-panel-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  /* The centre card's own label pairing, reused: chrome text on the
+     GitHub-dark ground, the muted card ink on cream. */
+  color: var(--color-text-light);
+  margin: 0 0 12px 0;
+}
+.jss-stage[data-view="eng"] .jss-panel-label {
+  color: var(--color-terminalChrome-githubText);
+}
+
+.jss-ev-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+}
+.jss-ev-row + .jss-ev-row {
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+.jss-stage[data-view="eng"] .jss-ev-row + .jss-ev-row {
+  border-top-color: var(--color-terminalChrome-githubBorder);
+}
+
+/* Four sources, two per view: `code`/`db` for Engineering and `metric`/`flow`
+   for GTM. The first of each pair is the warm one and the second the green
+   one, so the panel keeps the same two-tone reading whichever view is up. Each
+   tone has a dark-ground and a cream-ground reading: peach on near-black is
+   the wireframe's .ev-chip, and it is unreadable on cream, so the light column
+   uses the centre card's own badge inks. */
+.jss-chip {
+  flex: 0 0 auto;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: var(--radius-xs);
+}
+.jss-chip[data-warm="true"] {
+  color: #8a3a12;
+  background: rgba(249, 115, 22, 0.16);
+}
+.jss-chip[data-warm="false"] {
+  color: #12633a;
+  background: rgba(39, 201, 63, 0.16);
+}
+.jss-stage[data-view="eng"] .jss-chip[data-warm="true"] {
+  color: var(--color-accent);
+  background: rgba(254, 192, 137, 0.16);
+}
+.jss-stage[data-view="eng"] .jss-chip[data-warm="false"] {
+  color: #9db78a;
+  background: rgba(157, 183, 138, 0.18);
+}
+
+.jss-ev-path {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--color-text-dark);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.jss-stage[data-view="eng"] .jss-ev-path {
+  color: #ffffff;
+}
+
+/* ------------------------------------------------------------ centre card */
+
+.jss-center {
+  padding: 18px;
+  transition:
+    background 0.4s var(--jss-ease-in),
+    border-color 0.4s var(--jss-ease-in);
+  background: var(--color-secondary);
+  border: 1px solid transparent;
+  /* The deep lift: on the near-black stage it is what floats the cream card
+     above the ground (the wireframe's .scene__center shadow-modal on dark). */
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.45);
+}
+.jss-stage[data-view="eng"] .jss-center {
+  background: var(--color-terminalChrome-githubDarkBg);
+  border-color: var(--color-terminalChrome-githubBorder);
+}
+
+.jss-card-head {
+  margin-bottom: 14px;
+}
+
+.jss-card-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  margin: 0;
+  color: var(--color-text-light);
+}
+.jss-stage[data-view="eng"] .jss-card-label {
+  color: var(--color-terminalChrome-githubText);
+}
+
+.jss-step-name {
+  font-family: var(--font-primary);
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1.2;
+  margin: 4px 0 0 0;
+  color: var(--color-text-dark);
+}
+.jss-stage[data-view="eng"] .jss-step-name {
+  color: #ffffff;
+}
+
+.jss-path-name {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.2;
+  margin: 4px 0 0 0;
+  color: #ffffff;
+}
+
+/* The view switch, in the frame's top right rather than on a card, because it
+   changes the whole scene and not just the card it would sit in. The menu is
+   the package's `DropdownMenu`; only the trigger is drawn here. */
+.jss-toggle-row {
+  position: absolute;
+  top: 20px;
+  right: 24px;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  z-index: 2;
+}
+
+.jss-view-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: 6px 10px;
+  border-radius: var(--radius-xs);
+  /* The wireframe's .scene__view: a light-hairline pill on the dark stage, no
+     fill, peach on hover. */
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: transparent;
+  font-family: var(--font-primary);
+  font-size: var(--font-size-xs);
+  line-height: 1;
+  color: var(--color-text);
+  cursor: pointer;
+  transition:
+    background var(--transition-fast),
+    border-color var(--transition-fast);
+}
+.jss-view-trigger[data-inviting] {
+  animation: jss-soft-pulse 2.4s ease-in-out infinite;
+}
+.jss-view-trigger:hover {
+  border-color: var(--color-accent);
+}
+/* Light ink, not accent: peach on this near-black clears 3:1, but the cream
+   outline is the higher-contrast ring and matches the stage's ink. */
+.jss-view-trigger:focus-visible {
+  outline: 2px solid var(--color-text);
+  outline-offset: 2px;
+}
+
+.jss-view-caption {
+  color: var(--color-text-on-dark-subtle);
+}
+
+/* Rotates when the menu is open. Radix sets `data-state` on the trigger. */
+.jss-view-chevron {
+  display: inline-block;
+  color: var(--color-text-on-dark-subtle);
+  transition: transform var(--transition-fast);
+}
+.jss-view-trigger[data-state="open"] .jss-view-chevron {
+  transform: rotate(180deg);
+}
+
+/* The Skene mark in the centre card's head. Both connectors terminate on that
+   card, so the middle of the diagram is where the mark belongs. */
+.jss-mark-slot {
+  display: inline-flex;
+  float: right;
+  margin-left: var(--spacing-sm);
+  line-height: 0;
+}
+
+/* Only the card contents cross-fade. The card itself never moves, which is
+   what makes this read as one signal seen twice. */
+.jss-card-body[data-animate] {
+  animation: jss-fade-in-up 0.5s var(--jss-ease-in) both;
+}
+
+.jss-badge-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.jss-badge {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  padding: 3px 8px;
+  border-radius: var(--radius-xs);
+  color: var(--color-text-dark);
+  background: rgba(0, 0, 0, 0.06);
+}
+.jss-badge[data-tone="ok"] {
+  color: #12633a;
+  background: rgba(39, 201, 63, 0.16);
+}
+.jss-badge[data-tone="warn"] {
+  color: #8a3a12;
+  background: rgba(249, 115, 22, 0.16);
+}
+
+.jss-feeds-row {
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  padding-top: 12px;
+  font-family: var(--font-primary);
+  font-size: 13px;
+  color: var(--color-text-dark);
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.jss-feeds-value {
+  font-family: var(--font-mono);
+  color: var(--color-text-light);
+}
+
+.jss-code {
+  margin: 0 0 12px 0;
+  padding: 12px;
+  border-radius: var(--radius-xs);
+  background: var(--color-terminalChrome-githubDarkSurface);
+  border: 1px solid var(--color-terminalChrome-githubBorder);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.7;
+  overflow-x: auto;
+}
+
+.jss-code-line {
+  color: var(--color-terminalChrome-githubText);
+}
+.jss-code-line[data-removed] {
+  color: var(--color-terminalChrome-terminalRed);
+  background: rgba(255, 85, 85, 0.12);
+  text-decoration: line-through;
+  margin: 0 -12px;
+  padding: 0 12px;
+}
+
+.jss-table-line {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--color-terminalChrome-githubText);
+  display: flex;
+  gap: 8px;
+  border-top: 1px solid var(--color-terminalChrome-githubBorder);
+  padding-top: 12px;
+}
+
+.jss-table-cols {
+  color: var(--color-terminalChrome-warmTan);
+}
+
+/* ------------------------------------------------------------ right panel */
+
+.jss-right {
+  padding: 14px;
+}
+
+/* Flows is a GTM-view panel, so it is always on cream. Its inks are the
+   card-side ones; the active row keeps a peach wash, at the heavier alpha
+   cream needs. */
+.jss-flow-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 9px 8px;
+  margin: 0 -8px;
+  border-radius: var(--radius-xs);
+  font-family: var(--font-primary);
+  font-size: 12px;
+  color: var(--color-text-light);
+  background: transparent;
+  transition: background var(--transition-fast);
+}
+.jss-flow-row[data-active] {
+  color: var(--color-text-dark);
+  background: rgba(254, 192, 137, 0.3);
+}
+
+.jss-flow-count {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  /* Ink weight, not accent. Bright peach as TEXT fails contrast on cream, which
+     is what the light-surface rule (machine/rules.yaml:152-156) says. The
+     active row is marked by its wash and its weight instead. */
+  color: var(--color-text-light);
+  font-weight: 400;
+}
+.jss-flow-count[data-active] {
+  color: var(--color-text-dark);
+  font-weight: 500;
+}
+
+/* Width is set inline as the row's share of the top of the funnel. */
+.jss-flow-bar {
+  height: 3px;
+  margin: 0 0 8px 0;
+  border-radius: 2px;
+  /* Peach fill for the active bar (the wireframe's .flow-bar--active i). As a
+     BAR rather than text it carries on cream, so it stays. The inactive fills
+     are ink at low alpha, the cream-ground counterpart of the light wash. */
+  background: rgba(0, 0, 0, 0.16);
+}
+.jss-flow-bar[data-active] {
+  background: var(--color-accent);
+}
+
+.jss-pr-strip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid var(--color-terminalChrome-githubBorder);
+  font-family: var(--font-primary);
+  font-size: 12px;
+  color: var(--color-terminalChrome-githubText);
+}
+
+.jss-pr-number {
+  font-family: var(--font-mono);
+  color: var(--color-chrome-muted);
+}
+
+.jss-review-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.jss-bot-badge {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: var(--radius-xs);
+  color: var(--color-terminalChrome-githubDarkBg);
+  background: var(--color-chrome-accent);
+}
+
+.jss-review-body {
+  font-family: var(--font-primary);
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--color-terminalChrome-githubText);
+  margin: 0 0 12px 0;
+}
+
+/* The one-click suggestion block. GitHub renders the fix inline and the author
+   commits it without leaving the review. */
+.jss-suggestion {
+  border: 1px solid var(--color-terminalChrome-githubBorder);
+  border-radius: var(--radius-xs);
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.jss-suggestion-head {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  padding: 6px 10px;
+  color: var(--color-chrome-muted);
+  background: rgba(255, 255, 255, 0.04);
+  border-bottom: 1px solid var(--color-terminalChrome-githubBorder);
+}
+
+.jss-suggestion-line {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.9;
+  padding: 0 10px;
+  color: var(--color-chrome-muted);
+  background: transparent;
+}
+.jss-suggestion-line::before {
+  content: " ";
+  display: inline-block;
+  width: 12px;
+}
+.jss-suggestion-line[data-added] {
+  color: var(--color-terminalChrome-tailwindEmerald);
+  background: rgba(34, 197, 94, 0.12);
+}
+.jss-suggestion-line[data-added]::before {
+  content: "+";
+}
+
+.jss-commit {
+  font-family: var(--font-primary);
+  font-size: 12px;
+  text-align: center;
+  padding: 8px 12px;
+  border-radius: var(--radius-xs);
+  color: #ffffff;
+  background: rgba(34, 197, 94, 0.18);
+  border: 1px solid rgba(34, 197, 94, 0.4);
+}
+
+.jss-status-badge {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: var(--radius-xs);
+  color: var(--color-terminalChrome-terminalRed);
+  background: rgba(255, 85, 85, 0.14);
+}
+
+/* The one shared caption, on both grounds: cream in the GTM view (Evidence and
+   Flows), GitHub dark in the Engineering one (Evidence and the review). */
+.jss-footnote {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  line-height: 1.6;
+  color: var(--color-text-light);
+  margin: 10px 0 0 0;
+}
+.jss-stage[data-view="eng"] .jss-footnote {
+  color: var(--color-chrome-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jss-view-trigger[data-inviting] {
+    animation: none;
+  }
+  .jss-view-chevron {
+    transition: none;
+  }
+  .jss-card-body[data-animate] {
+    animation: none;
+  }
+}

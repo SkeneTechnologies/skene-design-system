@@ -1,5 +1,13 @@
 # `JourneySignalScene` — porting the marketing site's evidence-to-PR-review demo
 
+> **2026-09-02.** The exception this document argues for is closed. The styled-components
+> definitions were ported 1:1 to `styles/journey-signal-scene.css` and the gsap entry
+> timeline became an `IntersectionObserver` and two CSS transitions, so neither library is a
+> package dependency any more (issue #24). The composition, the three layouts, the connector
+> paths and the reveal choreography are unchanged; that was the part the founder's rejection
+> was about, and it is what the port was measured against. The rest of this document stands
+> as the record of why the scene arrived the way it did.
+
 **Status:** design, pre-implementation
 **Raised by:** skene-marketing-website, which needed the same scene in a second placement
 (a split hero, text left / scene right) and wants to reuse it in other locally-built

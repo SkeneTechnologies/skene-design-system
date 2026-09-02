@@ -26,7 +26,7 @@ The action primitive. Six variants, four sizes.
 | export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
 | `Button` | `asChild` | `boolean` |  | `false` |
-| `Button` | `variant` | `"default" \| "destructive" \| "outline" \| "secondary" \| "ghost" \| "link" \| "glass" \| "glass-dark"` |  |  |
+| `Button` | `variant` | `"link" \| "default" \| "destructive" \| "outline" \| "secondary" \| "ghost" \| "glass" \| "glass-dark"` |  |  |
 | `Button` | `size` | `"default" \| "sm" \| "lg" \| "icon"` |  |  |
 
 ## Accepts

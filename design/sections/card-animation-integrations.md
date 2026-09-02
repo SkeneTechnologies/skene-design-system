@@ -28,6 +28,7 @@ Four integration cards on a textured field, cycling detail copy with GSAP: MCP s
 | `CardAnimationIntegrations` | `backgroundImage` | `string` |  | `INTEGRATIONS_TEXTURE` |
 | `CardAnimationIntegrations` | `cards` | `IntegrationAnimationCard[]` |  | `INTEGRATION_ANIMATION_CARDS` |
 | `CardAnimationIntegrations` | `details` | `IntegrationAnimationDetail[]` |  | `INTEGRATION_ANIMATION_DETAILS` |
+| `CardAnimationIntegrations` | `frame` | `number` |  |  |
 
 ## Types — not components
 

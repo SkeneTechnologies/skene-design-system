@@ -26,11 +26,19 @@ export interface CardAnimationIntegrationsProps {
     cards?: IntegrationAnimationCard[];
     details?: IntegrationAnimationDetail[];
     className?: string;
+    /**
+     * Hold one frame instead of cycling: every card in, detail `frame` up, and
+     * nothing moving. For a gallery, a screenshot baseline or a print surface,
+     * where a cycling scene is either a timeout or a lottery. The docs-app's two
+     * cases use `0` and `3`, which are the frames its baselines held when the
+     * playhead was gsap's.
+     */
+    frame?: number;
 }
 /**
- * Four integration cards on a textured field, cycling detail copy with GSAP.
+ * Four integration cards on a textured field, cycling detail copy.
  * Ported from skene-marketing-website's `CardAnimationIntegrations`.
  */
-export declare function CardAnimationIntegrations({ backgroundImage, cards, details, className, }: CardAnimationIntegrationsProps): import("react").JSX.Element;
+export declare function CardAnimationIntegrations({ backgroundImage, cards, details, className, frame, }: CardAnimationIntegrationsProps): import("react").JSX.Element;
 export {};
 //# sourceMappingURL=card-animation-integrations.d.ts.map

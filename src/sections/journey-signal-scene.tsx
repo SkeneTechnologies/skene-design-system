@@ -1,7 +1,10 @@
 "use client";
 
 /**
- * A documented exception to `machine/rules.yaml`'s `styled_components_for_new_features`.
+ * Evidence, a traced journey step, and the PR review that catches it breaking,
+ * in one composition with a GTM/Engineering toggle.
+ *
+ * ## Plain CSS since 2026-09-02, and why it was styled-components before
  *
  * This scene was ported in from skene-marketing-website, where it predates the
  * package's Tailwind port and carries a real history: it was once rebuilt on
@@ -11,13 +14,21 @@
  * dead band: two panels that swapped wholesale, no ambient context, no
  * connectors, one fade on entry." The entry/reveal choreography, the
  * per-layout absolute positioning, and the connector paths are load-bearing
- * for how it reads, not incidental styling, which is why it stayed on
- * styled-components instead of being re-tried against the rule a second time.
- * See `documentation/20260825_journey_signal_scene_design.md`.
+ * for how it reads, not incidental styling. That is why it arrived on
+ * styled-components as a documented exception to `machine/rules.yaml`'s
+ * `styled_components_for_new_features`, and stayed that way for a week; see
+ * `documentation/20260825_journey_signal_scene_design.md`.
  *
- * Kept as its own island rather than converted: importing this file does not
- * pull styled-components into anything else in the package, since nothing
- * else here uses it.
+ * The exception is closed. The rejection was about the composition changing,
+ * not about the styling library, so the styled definitions were ported 1:1 to
+ * `styles/journey-signal-scene.css` (issue #24): same declarations, same
+ * numbers, with the props that drove a style (`$dark`, `$active`, `$tone`...)
+ * as `data-*` attributes and the numbers a prop computed as inline styles. The
+ * stylesheet ships through `styles/index.css`, so a consumer that has wired
+ * the package stylesheet has it. gsap went in the same change: the entry
+ * reveal is an IntersectionObserver and two CSS transitions now, at the
+ * timings the timeline ran. Nothing in the package depends on either library
+ * any more.
  *
  * One file, not three, unlike its skene-marketing-website source
  * (index.tsx/styles.ts/data.ts). Every other module in `src/sections` is a
@@ -50,9 +61,11 @@
  *   which is a causal claim the consumer's `voice.md:57` bans, and it
  *   contradicted the panel's own "Feeds" label eight lines away.
  *
- *   A `$dark` prop threaded through several styled components, and gsap loaded
+ *   A `$dark` prop threaded through several styled components (the
+ *   `data-view` attribute on the stage, since the CSS port), and gsap loaded
  *   inside the entry effect rather than at module scope, which is the same
- *   change 0.18.0 made to `CardAnimationIntegrations` for the same reason.
+ *   change 0.18.0 made to `CardAnimationIntegrations` for the same reason
+ *   (and which the 2026-09-02 change made moot by removing gsap).
  *
  * The two repository-local dependencies the source file carried did not need
  * porting. Its `useContainerScale` is character-for-character this package's
@@ -62,7 +75,6 @@
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { ChevronDown } from "lucide-react";
-import styled, { css, keyframes } from "styled-components";
 
 import { SkeneMark } from "../patterns/skene-mark.js";
 import {
@@ -215,260 +227,13 @@ const REVIEW = {
 };
 
 
-/* A long settle on the way in. Everything here eases the same way so the
-   entry and the view switch feel like one motion system. */
-const EASE_IN = "cubic-bezier(0.16, 1, 0.3, 1)";
-
-const fadeInUp = keyframes`
-  from { opacity: 0; transform: translateY(14px); }
-  to   { opacity: 1; transform: translateY(0); }
-`;
-
-/* Peach again. The ink ring below it was the cream-stage reading; the stage is
-   back on near-black per the approved alt wireframe, which is the ground this
-   pulse was drawn for in the first place. */
-const softPulse = keyframes`
-  0%, 100% { box-shadow: 0 0 0 0 rgba(254, 192, 137, 0.38); }
-  50%      { box-shadow: 0 0 0 6px rgba(254, 192, 137, 0); }
-`;
-
-/* ---------------------------------------------------------------- section */
-
-/*
- * THE SCENE IS DARK-THEMED AGAIN, restored 2026-08-26 to the approved alt
- * wireframe (.webanatomy/build-page/home-calcom-style-alt/wireframe.html).
- * The block between this restoration and the original dark cut was a
- * deliberate inversion to a white stage for the cream `Bridge` band; the
- * homepage hero is the scene's only remaining home and it sits on
- * `chrome.surface.darker`, which is the ground the wireframe draws: near-black
- * stage, dark translucent side panels with light ink, cream centre card in the
- * GTM view, faint light ambient text, light dashed connectors.
- *
- * Why the block still exists at all: the scene was authored against
- * `(landing)/globals.scss`, which the `(site)` routes do not load; only
- * `globals.css` is there, and it leaves most of these names undefined while
- * aliasing three of them (--color-accent, --color-primary, --color-secondary)
- * to the design-system palette. Declaring the set on this section keeps the
- * scene's own vocabulary intact without overriding those three for the package
- * components that share the page.
- *
- * The values are the DARK reading of the same names, transcribed from the
- * wireframe's `.scene` styles. Literals rather than theme-aware `text.*`
- * aliases on purpose: outside a `light` subtree those aliases resolve to light
- * ink, but the centre card is CREAM in the GTM view, so its internal roles
- * (--color-text-light / --color-text-dark) must stay ink-dark no matter what
- * ancestor the section gains. The stage-side roles are light literals for the
- * same reason in reverse.
- *
- * What never flipped in either direction: everything the engineering view
- * draws. `--color-terminalChrome-*` is invariant in `globals.css`, which is
- * `machine/rules.yaml:115-131` working as designed. A code block and a GitHub
- * review are the exact case that role exists for.
- */
-const sceneTokens = css`
-  --color-primary: #000000;
-  /* The GTM centre card's ground: cream, the wireframe's .scene__center
-     background (--cream = brand.light). Was #ffffff on the white stage. */
-  --color-secondary: var(--color-brand-light);
-  /* Outside a 'light' subtree this is the bright reading, #fec089 — the value
-     drawn for near-black. (Inside the old cream band it resolved to #89684a,
-     which is why the inversion had to route around it.) */
-  --color-accent: var(--color-brand-peach);
-  /* The active flow row's tint, back to a peach wash on dark. Was a
-     brown-alpha tint tuned for white. */
-  --color-accent-muted: rgba(254, 192, 137, 0.14);
-  /* Stage-side ink: the toggle and the active flow row, both on dark. */
-  --color-text: #faf1e9;
-  /* CARD-side muted ink: the GTM card label and feeds value, on cream.
-     Wireframe reads #525252 (.scene__feeds) beside a warm #8a6a4f label;
-     one token serves both here, as it always has. */
-  --color-text-light: #525252;
-  /* CARD-side primary ink on cream, wireframe's #1a1a1a. */
-  --color-text-dark: #1a1a1a;
-  /* The three "on dark" roles mean what their names say again. The wireframe's
-     readings: ev-path warm-strong, muted rows, and the .3-alpha subtle tier
-     shared by panel labels, connectors and footnotes. */
-  --color-text-on-dark: rgba(250, 241, 233, 0.82);
-  --color-text-on-dark-muted: rgba(250, 241, 233, 0.64);
-  --color-text-on-dark-subtle: rgba(250, 241, 233, 0.55);
-  /* The quiet role inside the two GitHub-dark engineering panels. Unchanged by
-     both the inversion and this restoration: those panels never flipped. */
-  --color-chrome-muted: rgba(201, 209, 217, 0.62);
-  /* Brand for those same GitHub-dark panels. warmTan is the invariant
-     chrome-side warm the rest of the review already uses; kept even though
-     --color-accent is bright again, so the review's warm stays the chrome
-     family's rather than the brand's. */
-  --color-chrome-accent: var(--color-terminalChrome-warmTan);
-  --color-background-dark: transparent;
-  /* The stage ground the comments kept naming through the white era: the
-     near-black the dark-only panels were always read against. */
-  --color-background-darker: #0d1117;
-  /* Wireframe panel border: rgba(255,255,255,.10); one notch up so the frame
-     edge survives the wash. Was chrome.line.onLight for the white stage. */
-  --color-border-on-dark: rgba(255, 255, 255, 0.12);
-  --font-primary:
-    var(--font-geist-sans, ui-sans-serif, system-ui, sans-serif), sans-serif;
-  --font-mono: var(--font-geist-mono, ui-monospace, monospace), monospace;
-  --font-size-xs: 12px;
-  --font-size-base: 16px;
-  --line-height-relaxed: 1.75;
-  --radius-xs: 4px;
-  --radius-sm: 8px;
-  --radius-md: 16px;
-  --spacing-sm: 8px;
-  --spacing-md: 16px;
-  --spacing-lg: 24px;
-  --spacing-xl: 32px;
-  --spacing-xxl: 48px;
-  --transition-fast: 150ms ease;
-`;
-
-/* `Bridge` owns the band's ground, padding and max width, so this owns none of
-   them. `media` is still imported for the panels below. */
-const Section = styled.section`
-  ${sceneTokens};
-  position: relative;
-  /* Bridge wraps each child in its own flex track (bridge.tsx:246-260), so this
-     is a flex ITEM and would otherwise size to its content. BridgeNode carries
-     the same width for the same reason (bridge.tsx:99). */
-  width: 100%;
-  min-width: 0;
-`;
-
-const Inner = styled.div`
-  width: 100%;
-`;
-
-/* ------------------------------------------------------------ scale stage */
-
-/* The frame follows whichever layout is in play, so the stage never leaves a
-   band of empty floor underneath it. */
-const Container = styled.div<{ $ratio: number }>`
-  position: relative;
-  width: 100%;
-  aspect-ratio: ${({ $ratio }) => $ratio};
-  overflow: hidden;
-  /* No ground and no border, founder direction 2026-08-26.
-     The stage used to paint its own near-black plus a top-lit white wash, and
-     ring itself in the on-dark border token. That reads as a framed picture of
-     the product sitting in the hero. Transparent, the hero's halftone field
-     runs under the panels and they read as floating on it instead — the panels
-     keep their own borders and grounds, so the chain is still legible; only
-     the box around it is gone. overflow: hidden stays: it clips the scaled
-     wrapper, which is layout, not decoration. */
-  background: transparent;
-  border: 0;
-`;
-
-const ScaleWrapper = styled.div<{ $scale: number; $w: number; $h: number }>`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: ${({ $w }) => $w}px;
-  height: ${({ $h }) => $h}px;
-  transform: scale(${({ $scale }) => $scale});
-  transform-origin: top left;
-`;
-
-const Stage = styled.div`
-  position: absolute;
-  inset: 0;
-`;
-
 type Box = { x: number; y: number; w: number };
 
-const panelBase = css<{ $box: Box }>`
-  position: absolute;
-  box-sizing: border-box;
-  border-radius: var(--radius-sm);
-  left: ${({ $box }) => $box.x}px;
-  top: ${({ $box }) => $box.y}px;
-  width: ${({ $box }) => $box.w}px;
-
-  /* Sunk and hidden until the entry timeline lifts it, so nothing flashes
-     into place first. Motion off means no timeline, so CSS shows it here. */
-  opacity: 0;
-  transform: translateY(16px);
-
-  @media (prefers-reduced-motion: reduce) {
-    opacity: 1;
-    transform: none;
-  }
-`;
-
-/* Ambient context. Present, never readable, never competing for attention. */
-
-const Connectors = styled.svg`
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-  pointer-events: none;
-  /* The stroke is --color-text-on-dark-subtle (0.55-alpha cream), so 0.55 here
-     lands the drawn line at ~0.30 — the wireframe's dashed light reading
-     (rgba(250,241,233,.3) on .scene__conn). */
-  opacity: 0.55;
-`;
-
-/* ------------------------------------------------------------ panel shell */
-
-/* All three panels carry the view, founder direction 2026-08-26. The centre
-   card was the only one that flipped: cream for GTM, GitHub-dark for
-   Engineering, with Evidence and Flows staying dark in both. That read as one
-   card changing inside a fixed scene rather than as two different rooms. Now
-   the whole stage flips together, so `$dark` means Engineering everywhere and
-   the GTM view is three cream cards floating on the hero's halftone.
-
-   The grounds and the lift are the centre card's, so nothing here invents a
-   third surface treatment. */
-const panelSkin = css<{ $dark: boolean }>`
-  transition: background 0.4s ${EASE_IN}, border-color 0.4s ${EASE_IN};
-  background: ${({ $dark }) =>
-    $dark ? "var(--color-terminalChrome-githubDarkSurface)" : "var(--color-secondary)"};
-  border: 1px solid
-    ${({ $dark }) =>
-      $dark ? "var(--color-terminalChrome-githubBorder)" : "transparent"};
-  box-shadow: ${({ $dark }) => ($dark ? "none" : "0 20px 45px rgba(0, 0, 0, 0.45)")};
-`;
-
-const LeftPanel = styled.div<{ $dark: boolean; $box: Box }>`
-  ${panelBase};
-  ${panelSkin};
-  padding: 16px;
-`;
-
-const PanelLabel = styled.p<{ $dark: boolean }>`
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  /* The centre card's own label pairing, reused: chrome text on the
-     GitHub-dark ground, the muted card ink on cream. */
-  color: ${({ $dark }) =>
-    $dark ? "var(--color-terminalChrome-githubText)" : "var(--color-text-light)"};
-  margin: 0 0 12px 0;
-`;
-
-const EvidenceRow = styled.div<{ $dark: boolean }>`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 0;
-
-  & + & {
-    border-top: 1px solid
-      ${({ $dark }) =>
-        $dark ? "var(--color-terminalChrome-githubBorder)" : "rgba(0, 0, 0, 0.08)"};
-  }
-`;
-
-/* Four sources now, two per view: `code`/`db` for Engineering and
-   `metric`/`flow` for GTM. The first of each pair is the warm one and the
-   second the green one, so the panel keeps the same two-tone reading whichever
-   view is up. Each tone has a dark-ground and a cream-ground reading: peach on
-   near-black is the wireframe's .ev-chip, and it is unreadable on cream, so the
-   light column uses the centre card's own badge inks (`Badge` above). */
+/* Four sources, two per view: `code`/`db` for Engineering and `metric`/`flow`
+   for GTM. The first of each pair is the warm one and the second the green
+   one, so the Evidence panel keeps the same two-tone reading whichever view is
+   up. The colours per tone and ground are in the stylesheet, keyed on
+   `data-warm`. */
 const CHIP_TONE = {
   code: { warm: true },
   metric: { warm: true },
@@ -476,452 +241,23 @@ const CHIP_TONE = {
   flow: { warm: false },
 } as const;
 
-const SourceChip = styled.span<{
-  $source: "code" | "db" | "metric" | "flow";
-  $dark: boolean;
-}>`
-  flex: 0 0 auto;
-  font-family: var(--font-mono);
-  font-size: 10px;
-  padding: 2px 6px;
-  border-radius: var(--radius-xs);
-  ${({ $source, $dark }) => {
-    const warm = CHIP_TONE[$source].warm;
-    if ($dark)
-      return css`
-        color: ${warm ? "var(--color-accent)" : "#9db78a"};
-        background: ${warm ? "rgba(254, 192, 137, 0.16)" : "rgba(157, 183, 138, 0.18)"};
-      `;
-    return css`
-      color: ${warm ? "#8a3a12" : "#12633a"};
-      background: ${warm ? "rgba(249, 115, 22, 0.16)" : "rgba(39, 201, 63, 0.16)"};
-    `;
-  }};
-`;
-
-const EvidencePath = styled.span<{ $dark: boolean }>`
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: ${({ $dark }) => ($dark ? "#ffffff" : "var(--color-text-dark)")};
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-`;
-
-/* ------------------------------------------------------------ centre card */
-
-const CenterCard = styled.div<{ $dark: boolean; $box: Box }>`
-  ${panelBase};
-  padding: 18px;
-  transition: background 0.4s ${EASE_IN}, border-color 0.4s ${EASE_IN};
-  background: ${({ $dark }) =>
-    $dark ? "var(--color-terminalChrome-githubDarkBg)" : "var(--color-secondary)"};
-  border: 1px solid
-    ${({ $dark }) => ($dark ? "var(--color-terminalChrome-githubBorder)" : "transparent")};
-  /* Back to the deep lift. 0.45 was a bruise on the cream band; on the
-     restored near-black stage it is what floats the cream card above the
-     ground (the wireframe's .scene__center shadow-modal on dark). */
-  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.45);
-`;
-
-const CardHead = styled.div`
-  margin-bottom: 14px;
-`;
-
-const CardLabel = styled.p<{ $dark: boolean }>`
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  margin: 0;
-  color: ${({ $dark }) =>
-    $dark ? "var(--color-terminalChrome-githubText)" : "var(--color-text-light)"};
-`;
-
-const StepName = styled.h3<{ $dark: boolean }>`
-  font-family: var(--font-primary);
-  font-size: 22px;
-  font-weight: 500;
-  line-height: 1.2;
-  margin: 4px 0 0 0;
-  color: ${({ $dark }) => ($dark ? "#ffffff" : "var(--color-text-dark)")};
-`;
-
-const PathName = styled.h3`
-  font-family: var(--font-mono);
-  font-size: 15px;
-  font-weight: 400;
-  line-height: 1.2;
-  margin: 4px 0 0 0;
-  color: #ffffff;
-`;
-
-/* The view switch, in the frame's top right rather than on a card, because it
-   changes the whole scene and not just the card it would sit in. The menu is the
-   design system's `DropdownMenu`, so its surface, focus ring and item states are
-   the package's; only the trigger is drawn here, in the scene's palette. */
-const ToggleRow = styled.div`
-  position: absolute;
-  top: 20px;
-  right: 24px;
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-  z-index: 2;
-`;
-
-const ViewTrigger = styled.button<{ $inviting: boolean }>`
-  display: inline-flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-  padding: 6px 10px;
-  border-radius: var(--radius-xs);
-  /* The wireframe's .scene__view: a light-hairline pill on the dark stage,
-     no fill, peach on hover. The white-filled, ink-ringed cut was for the
-     white stage. */
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  background: transparent;
-  font-family: var(--font-primary);
-  font-size: var(--font-size-xs);
-  line-height: 1;
-  color: var(--color-text);
-  cursor: pointer;
-  transition:
-    background var(--transition-fast),
-    border-color var(--transition-fast);
-  ${({ $inviting }) =>
-    $inviting &&
-    css`
-      animation: ${softPulse} 2.4s ease-in-out infinite;
-    `};
-
-  &:hover {
-    border-color: var(--color-accent);
-  }
-
-  /* Light ink, not accent: peach on this near-black clears 3:1, but the cream
-     outline is the higher-contrast ring and matches the stage's ink. */
-  &:focus-visible {
-    outline: 2px solid var(--color-text);
-    outline-offset: 2px;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    animation: none;
-  }
-`;
-
-const ViewCaption = styled.span`
-  color: var(--color-text-on-dark-subtle);
-`;
-
-/* Rotates when the menu is open. Radix sets `data-state` on the trigger. */
-const ViewChevron = styled.span`
-  display: inline-block;
-  color: var(--color-text-on-dark-subtle);
-  transition: transform var(--transition-fast);
-
-  ${ViewTrigger}[data-state="open"] & {
-    transform: rotate(180deg);
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    transition: none;
-  }
-`;
-
-/* The Skene mark in the centre card's head. Both connectors terminate on that
-   card, so the middle of the diagram is where the mark belongs. */
-const MarkSlot = styled.span`
-  display: inline-flex;
-  float: right;
-  margin-left: var(--spacing-sm);
-  line-height: 0;
-`;
-
-/* Only the card contents cross-fade. The card itself never moves, which is
-   what makes this read as one signal seen twice. */
-const CardBody = styled.div<{ $animate: boolean }>`
-  ${({ $animate }) =>
-    $animate &&
-    css`
-      animation: ${fadeInUp} 0.5s ${EASE_IN} both;
-    `};
-
-  @media (prefers-reduced-motion: reduce) {
-    animation: none;
-  }
-`;
-
-const BadgeRow = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-bottom: 14px;
-`;
-
-const Badge = styled.span<{ $tone: "stage" | "ok" | "warn" }>`
-  font-family: var(--font-mono);
-  font-size: 10px;
-  padding: 3px 8px;
-  border-radius: var(--radius-xs);
-  ${({ $tone }) => {
-    if ($tone === "ok")
-      return css`
-        color: #12633a;
-        background: rgba(39, 201, 63, 0.16);
-      `;
-    if ($tone === "warn")
-      return css`
-        color: #8a3a12;
-        background: rgba(249, 115, 22, 0.16);
-      `;
-    return css`
-      color: var(--color-text-dark);
-      background: rgba(0, 0, 0, 0.06);
-    `;
-  }};
-`;
-
-const FeedsRow = styled.div`
-  border-top: 1px solid rgba(0, 0, 0, 0.08);
-  padding-top: 12px;
-  font-family: var(--font-primary);
-  font-size: 13px;
-  color: var(--color-text-dark);
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-`;
-
-const FeedsValue = styled.span`
-  font-family: var(--font-mono);
-  color: var(--color-text-light);
-`;
-
-const Code = styled.pre`
-  margin: 0 0 12px 0;
-  padding: 12px;
-  border-radius: var(--radius-xs);
-  background: var(--color-terminalChrome-githubDarkSurface);
-  border: 1px solid var(--color-terminalChrome-githubBorder);
-  font-family: var(--font-mono);
-  font-size: 12px;
-  line-height: 1.7;
-  overflow-x: auto;
-`;
-
-const CodeLine = styled.div<{ $removed: boolean }>`
-  color: ${({ $removed }) =>
-    $removed ? "var(--color-terminalChrome-terminalRed)" : "var(--color-terminalChrome-githubText)"};
-  ${({ $removed }) =>
-    $removed &&
-    css`
-      background: rgba(255, 85, 85, 0.12);
-      text-decoration: line-through;
-      margin: 0 -12px;
-      padding: 0 12px;
-    `};
-`;
-
-const TableLine = styled.div`
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--color-terminalChrome-githubText);
-  display: flex;
-  gap: 8px;
-  border-top: 1px solid var(--color-terminalChrome-githubBorder);
-  padding-top: 12px;
-`;
-
-const TableCols = styled.span`
-  color: var(--color-terminalChrome-warmTan);
-`;
-
-/* ------------------------------------------------------------ right panel */
-
-const RightPanel = styled.div<{ $dark: boolean; $box: Box }>`
-  ${panelBase};
-  ${panelSkin};
-  padding: 14px;
-`;
-
-/* Flows is a GTM-view panel, so it is always on cream now. Its inks were
-   written for the dark stage it used to sit on; they are the card-side ones
-   here. The active row keeps a peach wash, at the heavier alpha cream needs. */
-const FlowRow = styled.div<{ $active: boolean }>`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  padding: 9px 8px;
-  margin: 0 -8px;
-  border-radius: var(--radius-xs);
-  font-family: var(--font-primary);
-  font-size: 12px;
-  color: ${({ $active }) =>
-    $active ? "var(--color-text-dark)" : "var(--color-text-light)"};
-  background: ${({ $active }) => ($active ? "rgba(254, 192, 137, 0.30)" : "transparent")};
-  transition: background var(--transition-fast);
-`;
-
-const FlowCount = styled.span<{ $active: boolean }>`
-  font-family: var(--font-mono);
-  font-size: 12px;
-  /* Ink weight, not accent. Bright peach as TEXT is the wireframe's reading on
-     near-black; on cream it fails contrast, which is what the design system's
-     light-surface rule (machine/rules.yaml:152-156) says. The active row is
-     marked by its wash and its weight instead. */
-  color: ${({ $active }) =>
-    $active ? "var(--color-text-dark)" : "var(--color-text-light)"};
-  font-weight: ${({ $active }) => ($active ? 500 : 400)};
-`;
-
-const FlowBar = styled.div<{ $pct: number; $active: boolean }>`
-  height: 3px;
-  margin: 0 0 8px 0;
-  border-radius: 2px;
-  width: ${({ $pct }) => $pct}%;
-  /* Peach fill for the active bar (the wireframe's .flow-bar--active i). As a
-     BAR rather than text it carries on cream, so it stays. The inactive fills
-     are ink at low alpha, the cream-ground counterpart of the light wash. */
-  background: ${({ $active }) =>
-    $active ? "var(--color-accent)" : "rgba(0, 0, 0, 0.16)"};
-`;
-
-const PrStrip = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding-bottom: 10px;
-  margin-bottom: 10px;
-  border-bottom: 1px solid var(--color-terminalChrome-githubBorder);
-  font-family: var(--font-primary);
-  font-size: 12px;
-  color: var(--color-terminalChrome-githubText);
-`;
-
-const PrNumber = styled.span`
-  font-family: var(--font-mono);
-  color: var(--color-chrome-muted);
-`;
-
-const ReviewHead = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-bottom: 8px;
-`;
-
-const BotBadge = styled.span`
-  font-family: var(--font-mono);
-  font-size: 10px;
-  padding: 2px 6px;
-  border-radius: var(--radius-xs);
-  color: var(--color-terminalChrome-githubDarkBg);
-  background: var(--color-chrome-accent);
-`;
-
-const ReviewBody = styled.p`
-  font-family: var(--font-primary);
-  font-size: 12px;
-  line-height: 1.6;
-  color: var(--color-terminalChrome-githubText);
-  margin: 0 0 12px 0;
-`;
-
-/* The one-click suggestion block. GitHub renders the fix inline and the author
-   commits it without leaving the review. */
-const Suggestion = styled.div`
-  border: 1px solid var(--color-terminalChrome-githubBorder);
-  border-radius: var(--radius-xs);
-  overflow: hidden;
-  margin-bottom: 10px;
-`;
-
-const SuggestionHead = styled.div`
-  font-family: var(--font-mono);
-  font-size: 10px;
-  padding: 6px 10px;
-  color: var(--color-chrome-muted);
-  background: rgba(255, 255, 255, 0.04);
-  border-bottom: 1px solid var(--color-terminalChrome-githubBorder);
-`;
-
-const SuggestionLine = styled.div<{ $added: boolean }>`
-  font-family: var(--font-mono);
-  font-size: 11px;
-  line-height: 1.9;
-  padding: 0 10px;
-  color: ${({ $added }) =>
-    $added
-      ? "var(--color-terminalChrome-tailwindEmerald)"
-      : "var(--color-chrome-muted)"};
-  background: ${({ $added }) => ($added ? "rgba(34, 197, 94, 0.12)" : "transparent")};
-
-  &::before {
-    content: "${({ $added }) => ($added ? "+" : " ")}";
-    display: inline-block;
-    width: 12px;
-  }
-`;
-
-const CommitButton = styled.div`
-  font-family: var(--font-primary);
-  font-size: 12px;
-  text-align: center;
-  padding: 8px 12px;
-  border-radius: var(--radius-xs);
-  color: #ffffff;
-  background: rgba(34, 197, 94, 0.18);
-  border: 1px solid rgba(34, 197, 94, 0.4);
-`;
-
-const StatusBadge = styled.span`
-  font-family: var(--font-mono);
-  font-size: 10px;
-  padding: 2px 6px;
-  border-radius: var(--radius-xs);
-  color: var(--color-terminalChrome-terminalRed);
-  background: rgba(255, 85, 85, 0.14);
-`;
-
-/* The one shared caption, on both grounds: cream in the GTM view (Evidence and
-   Flows), GitHub dark in the Engineering one (Evidence and the review). */
-const Footnote = styled.p<{ $dark?: boolean }>`
-  font-family: var(--font-mono);
-  font-size: 10px;
-  line-height: 1.6;
-  /* The dark flag is the Engineering view, which is where the GitHub-dark
-     panels are. The GTM reading is cream-ground now, not stage-ground, so it
-     takes the card's muted ink rather than the on-dark subtle tier. */
-  color: ${({ $dark }) =>
-    $dark ? "var(--color-chrome-muted)" : "var(--color-text-light)"};
-  margin: 10px 0 0 0;
-`;
-
-/* gsap is imported inside the entry effect below, not at module scope.
+/* The entry reveal is CSS, keyed on `data-entered`.
  *
- * Measured 2026-09-01: a static `import gsap from "gsap"` here put gsap in
- * this component's client chunk, `04xui0pxt.et1.js`, 111 KB raw and 43 KB
- * gzipped, and that chunk was in the homepage's initial `<script>` list. It
- * was the largest route-specific chunk on the page: 43 KB of the homepage's
- * 122 KB of non-shared JavaScript, against a 10.5 KB median for the other
- * seven, and Lighthouse attributed 450 ms of LCP savings to the page's unused
- * JavaScript.
+ * It was a gsap timeline behind a dynamic import, and the import was dynamic
+ * for a measured reason: a static `import gsap from "gsap"` put a 111 KB raw /
+ * 43 KB gzipped chunk in the consuming homepage's initial script list, the
+ * largest route-specific chunk on the page. Moving it into the effect took the
+ * page's initial JavaScript from 310,100 to 265,801 gzipped bytes and kept
+ * every word of the server-rendered copy, which the consumer's markdown corpus
+ * is generated from. Removing the library keeps both properties and drops the
+ * 43 KB that still shipped after the fold.
  *
- * `next/dynamic` around the component does NOT fix this and was measured not
- * to: without `ssr: false` the chunk stays in the initial list, and `ssr:
- * false` is not usable here because this component server-renders the
- * homepage's evidence rows and their footnote, which
- * `scripts/build-agent-content.mjs` generates the committed markdown corpus
- * from. Copy that leaves the HTML leaves the corpus.
- *
- * Moving the import into the effect keeps every word of that copy in the
- * server-rendered HTML and takes only the animation library out of the
- * critical path. The effect runs at hydration, and the timeline it builds is
- * a ScrollTrigger that does not fire until the scene reaches 80% of the
- * viewport, so the library has the whole scroll distance to arrive.
+ * What the timeline did is three declarations in `styles/journey-signal-scene.css`:
+ * the panels rise in sequence (0.6s, 0.08s stagger, expo-out) and the two
+ * connectors draw (0.5s, 0.1s stagger) once the stage is inside the top 80% of
+ * the viewport, which was the ScrollTrigger's `start: "top 80%"`. An
+ * IntersectionObserver sets the attribute once; nothing reverses it, which was
+ * `toggleActions: "play none none none"`.
  */
 
 type View = "gtm" | "eng";
@@ -1174,88 +510,62 @@ export function JourneySignalScene() {
     return () => io.disconnect();
   }, []);
 
-  /* Entry: connectors draw, then the three panels rise in sequence. */
+  /* Entry, in two parts. `data-entered` on the stage is what the stylesheet
+     keys the reveal on; the observer's bottom margin is the old ScrollTrigger's
+     `start: "top 80%"`, so the stage counts as entered once any of it is inside
+     the top 80% of the viewport. Set once and never cleared. */
+  const [entered, setEntered] = useState(false);
+  useEffect(() => {
+    const scene = sceneRef.current;
+    if (!scene || entered) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) setEntered(true);
+      },
+      { rootMargin: "0px 0px -20% 0px" }
+    );
+    io.observe(scene);
+    return () => io.disconnect();
+  }, [entered]);
+
+  /* Each connector's length, so the stylesheet can hide the stroke behind a
+     dash offset and draw it on entry. Measured rather than guessed: the paths
+     are hand-placed per layout and change with it. Under reduced motion the
+     stylesheet ignores this and keeps the dashed presentation attribute. */
   useEffect(() => {
     const scene = sceneRef.current;
     if (!scene) return;
+    scene.querySelectorAll<SVGPathElement>("[data-connector]").forEach((path) => {
+      path.style.setProperty("--jss-len", String(path.getTotalLength()));
+    });
+  }, [layout]);
 
-    /* `[data-reveal]` panels are `opacity: 0` in the stylesheet so nothing
-       flashes into place before the timeline lifts them. With gsap now loaded
-       asynchronously there is a window where it has not arrived, and if the
-       import ever fails there would be no timeline at all, so this is the
-       floor: cancelled on success, and on failure it reveals the panels
-       through the same CSS the reduced-motion path uses. Without it a network
-       error would leave the section permanently blank. */
-    let cancelled = false;
-    const reveal = () => {
-      scene.querySelectorAll<HTMLElement>("[data-reveal]").forEach((el) => {
-        el.style.opacity = "1";
-        el.style.transform = "none";
-      });
-    };
-
-    let revert: (() => void) | undefined;
-
-    void (async () => {
-      const [{ default: gsap }, { ScrollTrigger }] = await Promise.all([
-        import("gsap"),
-        import("gsap/ScrollTrigger"),
-      ]).catch((error) => {
-        reveal();
-        throw error;
-      });
-      if (cancelled) return;
-      gsap.registerPlugin(ScrollTrigger);
-
-      if (reduced) {
-        gsap.set(scene.querySelectorAll("[data-reveal]"), { opacity: 1, y: 0 });
-        return;
-      }
-
-      const ctx = gsap.context(() => {
-        const paths = scene.querySelectorAll<SVGPathElement>("[data-connector]");
-        paths.forEach((path) => {
-          const len = path.getTotalLength();
-          gsap.set(path, { strokeDasharray: len, strokeDashoffset: len });
-        });
-
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: scene,
-            start: "top 80%",
-            toggleActions: "play none none none",
-          },
-        });
-
-        tl.to(scene.querySelectorAll("[data-reveal]"), {
-          opacity: 1,
-          y: 0,
-          duration: 0.6,
-          stagger: 0.08,
-          ease: "expo.out",
-        }).to(
-          paths,
-          { strokeDashoffset: 0, duration: 0.5, stagger: 0.1, ease: "expo.out" },
-          "-=0.35"
-        );
-      }, scene);
-      if (cancelled) ctx.revert();
-      else revert = () => ctx.revert();
-    })();
-
-    return () => {
-      cancelled = true;
-      revert?.();
-    };
-  }, [reduced]);
+  const box = (b: Box) => ({ left: b.x, top: b.y, width: b.w });
+  const animate = !reduced || undefined;
 
   return (
-    <Section>
-      <Inner>
-        <Container ref={containerRef} $ratio={layout.w / layout.h}>
-          <ScaleWrapper $scale={effectiveScale} $w={layout.w} $h={layout.h}>
-            <Stage ref={sceneRef}>
-              <ToggleRow>
+    <section className="jss">
+      <div className="jss-inner">
+        <div
+          ref={containerRef}
+          className="jss-frame"
+          style={{ aspectRatio: layout.w / layout.h }}
+        >
+          <div
+            className="jss-scale"
+            style={{
+              width: layout.w,
+              height: layout.h,
+              transform: `scale(${effectiveScale})`,
+            }}
+          >
+            <div
+              ref={sceneRef}
+              className="jss-stage"
+              data-view={view}
+              data-entered={entered || undefined}
+            >
+              <div className="jss-toggle-row">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     {/*
@@ -1265,17 +575,18 @@ export function JourneySignalScene() {
                       "View" caption makes the name "View GTM", which is what a
                       sighted reader reads too.
                     */}
-                    <ViewTrigger
+                    <button
                       type="button"
+                      className="jss-view-trigger"
                       onFocus={() => setTouched(true)}
-                      $inviting={!touched && !reduced}
+                      data-inviting={(!touched && !reduced) || undefined}
                     >
-                      <ViewCaption>View</ViewCaption>
+                      <span className="jss-view-caption">View</span>
                       {VIEW_LABEL[view]}
-                      <ViewChevron aria-hidden>
+                      <span className="jss-view-chevron" aria-hidden>
                         <ChevronDown size={14} />
-                      </ViewChevron>
-                    </ViewTrigger>
+                      </span>
+                    </button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" sideOffset={6}>
                     <DropdownMenuRadioGroup
@@ -1291,9 +602,13 @@ export function JourneySignalScene() {
                     </DropdownMenuRadioGroup>
                   </DropdownMenuContent>
                 </DropdownMenu>
-              </ToggleRow>
+              </div>
 
-              <Connectors viewBox={`0 0 ${layout.w} ${layout.h}`} aria-hidden>
+              <svg
+                className="jss-connectors"
+                viewBox={`0 0 ${layout.w} ${layout.h}`}
+                aria-hidden
+              >
                 {layout.connectors.map((d) => (
                   <path
                     key={d}
@@ -1305,29 +620,29 @@ export function JourneySignalScene() {
                     strokeDasharray="4 4"
                   />
                 ))}
-              </Connectors>
+              </svg>
 
-              <LeftPanel data-reveal $dark={dark} $box={layout.left}>
-                <PanelLabel $dark={dark}>Evidence</PanelLabel>
+              <div data-reveal className="jss-panel jss-skin jss-left" style={box(layout.left)}>
+                <p className="jss-panel-label">Evidence</p>
                 {/* Keyed on the view, like the other two panels' bodies, so the
                     rows cross-fade on the toggle instead of swapping in place. */}
-                <CardBody key={view} $animate={!reduced}>
+                <div key={view} className="jss-card-body" data-animate={animate}>
                   {(dark ? EVIDENCE_ENG : EVIDENCE_GTM).map((row) => (
-                    <EvidenceRow key={row.label} $dark={dark}>
-                      <SourceChip $source={row.source} $dark={dark}>
+                    <div key={row.label} className="jss-ev-row">
+                      <span className="jss-chip" data-warm={String(CHIP_TONE[row.source].warm)}>
                         {row.source}
-                      </SourceChip>
-                      <EvidencePath $dark={dark}>{row.label}</EvidencePath>
-                    </EvidenceRow>
+                      </span>
+                      <span className="jss-ev-path">{row.label}</span>
+                    </div>
                   ))}
-                  <Footnote $dark={dark}>
+                  <p className="jss-footnote">
                     {dark ? EVIDENCE_ENG_FOOTNOTE : EVIDENCE_GTM_FOOTNOTE}
-                  </Footnote>
-                </CardBody>
-              </LeftPanel>
+                  </p>
+                </div>
+              </div>
 
-              <CenterCard data-reveal $dark={dark} $box={layout.center}>
-                <CardHead>
+              <div data-reveal className="jss-panel jss-center" style={box(layout.center)}>
+                <div className="jss-card-head">
                   {/* The middle of the diagram is this card: both connectors
                       terminate on it, and it is the identity the dropped
                       `BridgeNode` used to carry. `tone` names the GROUND rather
@@ -1335,110 +650,125 @@ export function JourneySignalScene() {
                       in one view and near-black in the other, so `block` is the
                       variant that survives the switch: it brings its own tile
                       and is the only one safe on any ground. */}
-                  <MarkSlot aria-hidden>
+                  <span className="jss-mark-slot" aria-hidden>
                     <SkeneMark tone="block" size={20} />
-                  </MarkSlot>
+                  </span>
                   <div>
-                    <CardLabel $dark={dark}>
-                      {dark ? "Call site" : "Journey step"}
-                    </CardLabel>
+                    <p className="jss-card-label">{dark ? "Call site" : "Journey step"}</p>
                     {dark ? (
-                      <PathName>{CALL_SITE.path}</PathName>
+                      <h3 className="jss-path-name">{CALL_SITE.path}</h3>
                     ) : (
-                      <StepName $dark={dark}>{STEP.name}</StepName>
+                      <h3 className="jss-step-name">{STEP.name}</h3>
                     )}
                   </div>
-                </CardHead>
+                </div>
 
-
-                <CardBody key={view} $animate={!reduced}>
+                <div key={view} className="jss-card-body" data-animate={animate}>
                   {dark ? (
                     <>
-                      <Code>
+                      <pre className="jss-code">
                         {CALL_SITE.lines.map((line) => (
-                          <CodeLine key={line.text} $removed={line.tone === "removed"}>
+                          <div
+                            key={line.text}
+                            className="jss-code-line"
+                            data-removed={line.tone === "removed" || undefined}
+                          >
                             {line.text}
-                          </CodeLine>
+                          </div>
                         ))}
-                      </Code>
-                      <TableLine>
+                      </pre>
+                      <div className="jss-table-line">
                         <span>{CALL_SITE.table}</span>
-                        <TableCols>{CALL_SITE.columns}</TableCols>
-                      </TableLine>
+                        <span className="jss-table-cols">{CALL_SITE.columns}</span>
+                      </div>
                     </>
                   ) : (
                     <>
-                      <BadgeRow>
-                        <Badge $tone="stage">
+                      <div className="jss-badge-row">
+                        <span className="jss-badge" data-tone="stage">
                           {STEP.stage} · {STEP.stageLabel}
-                        </Badge>
-                        <Badge $tone="ok">{STEP.confidence}</Badge>
-                        <Badge $tone="warn">{STEP.gap}</Badge>
-                      </BadgeRow>
-                      <FeedsRow>
+                        </span>
+                        <span className="jss-badge" data-tone="ok">
+                          {STEP.confidence}
+                        </span>
+                        <span className="jss-badge" data-tone="warn">
+                          {STEP.gap}
+                        </span>
+                      </div>
+                      <div className="jss-feeds-row">
                         <span>Feeds</span>
-                        <FeedsValue>{STEP.feeds}</FeedsValue>
-                      </FeedsRow>
+                        <span className="jss-feeds-value">{STEP.feeds}</span>
+                      </div>
                     </>
                   )}
-                </CardBody>
-              </CenterCard>
+                </div>
+              </div>
 
-              <RightPanel data-reveal $dark={dark} $box={layout.right}>
-                <CardBody key={view} $animate={!reduced}>
+              <div data-reveal className="jss-panel jss-skin jss-right" style={box(layout.right)}>
+                <div key={view} className="jss-card-body" data-animate={animate}>
                   {dark ? (
                     <>
                       {/* The same opening as its two neighbours. Without it the
                           panel starts on a bare `#412`, which reads as a PR
                           number only to someone who already works in PRs. */}
-                      <PanelLabel $dark={dark}>{REVIEW.label}</PanelLabel>
-                      <PrStrip>
-                        <PrNumber>{REVIEW.number}</PrNumber>
+                      <p className="jss-panel-label">{REVIEW.label}</p>
+                      <div className="jss-pr-strip">
+                        <span className="jss-pr-number">{REVIEW.number}</span>
                         <span>{REVIEW.pr}</span>
-                      </PrStrip>
-                      <ReviewHead>
-                        <BotBadge>Skene</BotBadge>
-                        <StatusBadge>{REVIEW.status}</StatusBadge>
-                      </ReviewHead>
-                      <ReviewBody>{REVIEW.body}</ReviewBody>
-                      <Suggestion>
-                        <SuggestionHead>{REVIEW.suggestionLabel}</SuggestionHead>
+                      </div>
+                      <div className="jss-review-head">
+                        <span className="jss-bot-badge">Skene</span>
+                        <span className="jss-status-badge">{REVIEW.status}</span>
+                      </div>
+                      <p className="jss-review-body">{REVIEW.body}</p>
+                      <div className="jss-suggestion">
+                        <div className="jss-suggestion-head">{REVIEW.suggestionLabel}</div>
                         {REVIEW.suggestion.map((line) => (
-                          <SuggestionLine key={line.text} $added={line.tone === "added"}>
+                          <div
+                            key={line.text}
+                            className="jss-suggestion-line"
+                            data-added={line.tone === "added" || undefined}
+                          >
                             {line.text}
-                          </SuggestionLine>
+                          </div>
                         ))}
-                      </Suggestion>
-                      <CommitButton>{REVIEW.cta}</CommitButton>
-                      <Footnote $dark>{REVIEW.footnote}</Footnote>
+                      </div>
+                      <div className="jss-commit">{REVIEW.cta}</div>
+                      <p className="jss-footnote">{REVIEW.footnote}</p>
                     </>
                   ) : (
                     <>
-                      <PanelLabel $dark={dark}>Flows</PanelLabel>
+                      <p className="jss-panel-label">Flows</p>
                       {FLOW_ROWS.map((row) => {
-                        const active = Boolean(row.active);
+                        const active = Boolean(row.active) || undefined;
                         const pct =
                           (Number(row.count.replace(/,/g, "")) / FLOW_MAX) * 100;
                         return (
                           <div key={row.label}>
-                            <FlowRow $active={active}>
+                            <div className="jss-flow-row" data-active={active}>
                               <span>{row.label}</span>
-                              <FlowCount $active={active}>{row.count}</FlowCount>
-                            </FlowRow>
-                            <FlowBar $pct={pct} $active={active} />
+                              <span className="jss-flow-count" data-active={active}>
+                                {row.count}
+                              </span>
+                            </div>
+                            <div
+                              className="jss-flow-bar"
+                              data-active={active}
+                              style={{ width: `${pct}%` }}
+                            />
                           </div>
                         );
                       })}
-                      <Footnote>{FLOWS_FOOTNOTE}</Footnote>
+                      <p className="jss-footnote">{FLOWS_FOOTNOTE}</p>
                     </>
                   )}
-                </CardBody>
-              </RightPanel>
-            </Stage>
-          </ScaleWrapper>
-        </Container>
-      </Inner>
-    </Section>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 }
 

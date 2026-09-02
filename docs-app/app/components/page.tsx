@@ -143,7 +143,7 @@ import { TrustFact, TrustPanel } from '@skene/design-system/sections/trust-panel
 import { ValueCard, ValueCards } from '@skene/design-system/sections/value-cards'
 
 import {
-  AskWidgetCase, BillingToggleCase, FrozenGsap, HashScroll, JourneySceneCase,
+  AskWidgetCase, BillingToggleCase, HashScroll, JourneySceneCase,
 } from './islands'
 
 /**
@@ -227,23 +227,6 @@ export default function ComponentGalleryPage() {
   return (
     <main className="flex flex-col items-start gap-6 p-6">
       <HashScroll />
-      {/* Holds every GSAP timeline on the page at 2.5s. Two cases below are
-          GSAP-driven and neither can hold a baseline without it — see the
-          component's own header in ./islands for what 2.5 is and why the CSS
-          freeze does not reach this. Mounted once, at the top, rather than per
-          case: the freeze is global by construction (there is one
-          `gsap.globalTimeline`), and two copies would just seek the same
-          timelines twice. */}
-      <FrozenGsap
-        at={[
-          // The second integrations case, one full cycle later, so the pair
-          // proves the swap rather than one lit card. 9.5s sits inside the
-          // last detail's hold (8.61 → 10.51 on the timeline's own clock) and
-          // well before the closing fade at 12.51.
-          { seconds: 9.5, selector: '[data-visual="section-card-animation-integrations-last"]' },
-        ]}
-        seconds={2.5}
-      />
       <h1 className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
         component gallery
       </h1>
@@ -2930,13 +2913,12 @@ export default function ComponentGalleryPage() {
             covered by frames, only sampled by them, and two samples is the
             point at which the sampling proves the cycle moves.
 
-            The playhead is set by `FrozenGsap` at the top of this page, which
-            reaches GSAP because nothing else on the page does: FREEZE_CSS and
-            Playwright's `animations: 'disabled'` cover CSS animations,
-            transitions and the Web Animations API, and GSAP is none of those.
-            Without it a `repeat: -1` timeline never gives `toHaveScreenshot`
-            two identical frames and the case times out. */}
-        <CardAnimationIntegrations />
+            The frame is pinned with the component's own `frame` prop, since
+            2026-09-02. Before that a `FrozenGsap` island seeked the gsap
+            timeline to t=2.5s; the package has no gsap now and the cycle runs
+            on timed state, so a held frame is a prop rather than a playhead.
+            `frame={0}` is the state 2.5s held. */}
+        <CardAnimationIntegrations frame={0} />
       </Case>
 
       <Case name="section-card-animation-integrations-last" width="w-[880px]">
@@ -2957,8 +2939,8 @@ export default function ComponentGalleryPage() {
             `audit` subcommand exists, and that the s-spelling of
             `analyse-journey` is the one the consuming repo's `check-claims.sh`
             accepts. This frame is where a regression to any of the three would
-            show. */}
-        <CardAnimationIntegrations />
+            show. `frame={3}` is the state t=9.5s held. */}
+        <CardAnimationIntegrations frame={3} />
       </Case>
 
       <Case name="section-journey-signal-scene" width="w-[1120px]">
