@@ -1,5 +1,38 @@
 # @skene/design-system
 
+## 0.23.0
+
+### Minor Changes
+
+- feat: `HubCards` and `HubCard`, the grid where every card is a whole link
+
+  Extracted from `skene-marketing-website`, where it existed **twice** under two
+  names that had no idea about each other. `core/ResourceCard` drew the five cards
+  on /resources; `core/PLGHub`'s `TopicCard` drew the cards on
+  /resources/playbooks and /product-led-growth. Their grounds are byte-identical —
+  same 1px hairline, same radius, same 24px padding, the same
+  `rgba(20,20,20,0.6)` fill lifting to 0.8 on hover with the border going to peach
+  — because one was copied from the other and neither knew.
+
+  **The copies had drifted in exactly one place, and it is why this is a component
+  rather than a convention.** `TopicIcon` took its colour as a prop, and its single
+  call site passed the literal `#fac089`. The brand peach is `#fec089`. One
+  character, shipped, invisible to every gate in that repository because a raw hex
+  inside a styled-components prop is not a Tailwind arbitrary value. The icon here
+  takes no colour prop: there was one colour in use and it was meant to be the
+  brand's.
+
+  **The whole card is the link**, which both originals did — the target is the
+  card, not the six words at the bottom of it. `asChild` is there because the
+  consumers are Next apps and `next/link` has to BE the root rather than sit
+  inside it. Without it a caller nests an anchor in an anchor, which is invalid
+  and which no typechecker reports.
+
+  The supporting lines are a slot rather than a `details: string[]`, because the
+  two originals filled that space differently: /resources listed bullets, the
+  playbook cards wrote a labelled line. An array prop would have served one and
+  forced the other back into a local copy, which is how there came to be two.
+
 ## 0.22.0
 
 ### Minor Changes

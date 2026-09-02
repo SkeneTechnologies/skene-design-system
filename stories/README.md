@@ -30,8 +30,8 @@ That resolves to `dist/`, which means:
 
 ## Coverage is a ratchet, not a gate
 
-`npm run stories:check` (part of `npm run verify`). **82 of 82 modules have
-stories; `BACKLOG.json` is empty.** (82, not 90: `src/patterns` is deliberately
+`npm run stories:check` (part of `npm run verify`). **83 of 83 modules have
+stories; `BACKLOG.json` is empty.** (83, not 91: `src/patterns` is deliberately
 untracked — see `TRACKED` in the script.)
 
 - A component **not** in the backlog must have a story. New components cannot
@@ -49,7 +49,7 @@ the story never gets written, or the check gets disabled. See the header of
 ## Stories are rendered, not just built
 
 `npm run stories:render` (needs `npm run storybook:build` and a running
-Storybook) loads all 388 stories and fails on anything that throws, logs a
+Storybook) loads all 392 stories and fails on anything that throws, logs a
 console error, or renders empty.
 
 `storybook build` compiles stories; it does not run them. The gap is real: this

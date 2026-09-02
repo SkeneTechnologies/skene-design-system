@@ -30,7 +30,7 @@ in `node_modules/@skene/design-system/`:
 | `inventory.json` | the generated index: every module with its exports, line count, gallery **cases** and authored usage, plus the ten resolved design decisions with their verdicts. This is what `seen:` in `context.yaml` points at. Import it as `@skene/design-system/inventory.json`, or read `docs-app/app/decisions/inventory.json` under the package root. |
 
 Nothing pointed at these until 2026-08-13, which is the failure they were built
-to prevent: the package has 90 modules and ten adjudicated clusters where the
+to prevent: the package has 91 modules and ten adjudicated clusters where the
 same visual object was drawn twice, every one of them by somebody who could not
 find the first. Each is in `inventory.json` with its verdict — the same ten
 named two rows above, which this sentence read as "twenty" until 2026-09-01.
@@ -118,7 +118,7 @@ describes this path only.
 Installed this way there is no npm registry and no npm token:
 
 ```jsonc
-"@skene/design-system": "git+https://github.com/SkeneTechnologies/skene-design-system.git#semver:^0.22.0"
+"@skene/design-system": "git+https://github.com/SkeneTechnologies/skene-design-system.git#semver:^0.23.0"
 ```
 
 npm resolves `semver:` against git **tags**, and `package-lock.json` pins the
@@ -149,13 +149,13 @@ git push origin main && git push origin v<version>
 
 Verified by installing this package from a clean directory with only the git
 dependency in `package.json`: the range above resolves to the highest matching
-tag and pins the commit. At `^0.22.0` the range resolves `v0.22.0`, the tag the
+tag and pins the commit. At `^0.23.0` the range resolves `v0.23.0`, the tag the
 release that bumped package.json to it also pushed.
 (This sentence read `v0.3.0` for six releases, then `v0.10.0` for another, then
 `v0.11.0` through the 0.12.0 release — the same drift the note above warns
 about, in the paragraph that warns about it, now three times over. The 0.13.0
 release is the first one the gates caught rather than a reader, and 0.16.0,
-0.17.0, 0.18.0, 0.19.0, 0.20.0, 0.21.0 and 0.22.0 the second through eighth: each time both the range and
+0.17.0, 0.18.0, 0.19.0, 0.20.0, 0.21.0, 0.22.0 and 0.23.0 the second through ninth: each time both the range and
 this sentence went stale on the version bump and both failed the build before
 anyone read them. Treat it as
 something a release updates, per that note, not something anyone remembers by
@@ -320,14 +320,14 @@ npm run verify          # all of the above, plus the build
 
 ### The gallery
 
-`docs-app/` is a Next app rendering 89 of the 90 modules as 98 cases in both
+`docs-app/` is a Next app rendering 90 of the 91 modules as 99 cases in both
 modes, and it is the instrument every duplicate collapse in this package was
 proven against. The one module with no case is exactly the one
 `machine/context.yaml` marks `seen: []` and tells an agent to treat as
 unproven — `ui/sonner`, a toast host with no resting state to snapshot.
 
 This sentence has now gone stale twice. It said "all 79 modules" until the
-total reached 90, was corrected to "79 of the 90 modules as 85 cases, and the
+total reached 91, was corrected to "79 of the 91 modules as 85 cases, and the
 ten that gained no case", and that correction was stale in turn — the real
 figures were 88, 97 and one. A count in a document an agent is meant to trust
 is a claim like any other, and this one is now gated: see

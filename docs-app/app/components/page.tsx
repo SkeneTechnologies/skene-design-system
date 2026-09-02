@@ -77,6 +77,7 @@ import { SkeneLockup, SkeneMark } from '@skene/design-system/patterns/skene-mark
 
 import { AgentCallout } from '@skene/design-system/sections/agent-callout'
 import { NoticeBar } from '@skene/design-system/sections/notice-bar'
+import { HubCards, HubCard } from '@skene/design-system/sections/hub-cards'
 import { AnnotatedCurve } from '@skene/design-system/sections/annotated-curve'
 import {
   AppPanel, AppWindow, ArtFrame, ArtPanel, ArtTitle, DataCell, DataRow, DataTable, StatPill,
@@ -891,6 +892,33 @@ export default function ComponentGalleryPage() {
       </Case>
 
       {/* ---------------------------------------------------------- sections */}
+
+      <Case name="section-hub-cards" width="w-[880px]">
+        {/* Two cards rather than one, because the grid is half the component
+            and a single card does not show that the call to action pins to the
+            bottom when the cards have different amounts of content. */}
+        <HubCards className="lg:grid-cols-2">
+          <HubCard
+            href="#"
+            icon={<span className="text-[15px]">▤</span>}
+            title="Documentation"
+            description="Install Skene and configure validation"
+            cta="View documentation"
+          >
+            <ul className="m-0 grid list-none gap-1 p-0">
+              <li>Install: MCP server, GitHub Action, cloud API</li>
+              <li>What Skene reads, and which libraries</li>
+            </ul>
+          </HubCard>
+          <HubCard
+            href="#"
+            icon={<span className="text-[15px]">◇</span>}
+            title="Glossary"
+            description="Definitions for analytics instrumentation"
+            cta="Explore glossary"
+          />
+        </HubCards>
+      </Case>
 
       <Case name="section-notice-bar" width="w-[880px]">
         {/* Full-bleed by nature, so the case is as wide as the gallery allows

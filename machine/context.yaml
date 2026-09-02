@@ -38,7 +38,7 @@
 #   takes three props and everything a <button> takes".
 
 version: "1.0.0"
-counts: { modules: 90, ui: 30, patterns: 8, sections: 52, authored: 90, assets: 27, intents: 20 }
+counts: { modules: 91, ui: 30, patterns: 8, sections: 53, authored: 91, assets: 27, intents: 20 }
 
 intents:
   open-a-page: >-
@@ -3364,6 +3364,54 @@ modules:
           under it, as an `<li>`. That is `TrustFact`, which composes this at
           its defaults.
     sameAs: [sections/trust-panel#TrustFact, sections/feature-row#FeatureIcon]
+  sections/hub-cards:
+    import: "@skene/design-system/sections/hub-cards"
+    exports: [HubCards, HubCard]
+    polarity: inherits
+    seen: [section-hub-cards]
+    overrides: [className]
+    props:
+      HubCards:
+        children: { type: React.ReactNode, required: true }
+    useFor: >-
+      A hub grid where every card is a whole link into a section of the site:
+      an icon, a heading, a line of description, supporting lines, and a call
+      to action with an arrow. The card is the target, not the words at the
+      bottom of it.
+    intent: [navigate]
+    alsoFor:
+      - claim: >-
+          A card with no supporting lines, or none with an icon. Everything
+          but the title and the href is optional, which is how the same grid
+          serves a five-card index and a list of playbooks.
+        via: prop HubCard.children
+      - claim: >-
+          A next/link or any router link as the card root, rather than a bare
+          anchor. Without it a caller nests an anchor inside an anchor, which
+          is invalid and which no typechecker reports.
+        via: prop HubCard.asChild
+    watchFor:
+      - note: >-
+          The icon takes no colour prop, deliberately. The implementation this
+          was extracted from had one, and its single call site passed the
+          literal #fac089 against a brand peach of #fec089. One character,
+          shipped, and invisible to every gate because a raw hex in a
+          styled-components prop is not a Tailwind arbitrary value.
+        via: prop HubCard.icon
+      - note: >-
+          Its fill is rgba(20,20,20,0.6), translucent so a textured page
+          ground reads through. Overriding it with a chrome surface token
+          makes it opaque and flattens the dither behind it.
+        via: prop HubCard.className
+    notFor:
+      - instead: ValueCards
+        why: >-
+          A row that argues by contrast, costs then a gain. These cards are
+          peers and none of them is making a claim about the others.
+      - instead: SurfaceTiles
+        why: >-
+          A row of tiles with one selected and a detail panel under it. Here
+          every card carries its own detail and none is selected.
   sections/integration-rows:
     import: "@skene/design-system/sections/integration-rows"
     exports: [IntegrationRows]

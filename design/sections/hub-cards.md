@@ -1,4 +1,4 @@
-# sections/notice-bar
+# sections/hub-cards
 
 <!-- @design:generated -->
 
@@ -8,30 +8,24 @@ _@skene/design-system 0.23.0._
 
 |  |  |
 | --- | --- |
-| import | `@skene/design-system/sections/notice-bar` |
+| import | `@skene/design-system/sections/hub-cards` |
 | polarity | `inherits` |
 | boundary | server-renderable |
-| intent | `interrupt-the-reader` |
+| intent | `navigate` |
 
 ## Use for
 
-A full-bleed advisory bar across the top of a page, carrying one line: this page is archived, this content is from an earlier version, this environment is staging. It spans the viewport, sits above the content, and separates itself with a single hairline.
+A hub grid where every card is a whole link into a section of the site: an icon, a heading, a line of description, supporting lines, and a call to action with an arrow. The card is the target, not the words at the bottom of it.
 
 ## Exports
 
-`NoticeBar`
+`HubCards`, `HubCard`
 
 ## Props
 
 | export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
-| `NoticeBar` | `role` | `'note' \| 'status' \| 'alert'` |  | `'note'` |
-
-## Accepts
-
-| export | props passed through |
-| --- | --- |
-| `NoticeBar` | `React.ComponentProps<'aside'>` |
+| `HubCards` | `children` | `React.ReactNode` | **yes** |  |
 
 ## Also for
 
@@ -39,20 +33,22 @@ Every claim cites the prop, default or export that makes it true. A claim that c
 
 | claim | via |
 | --- | --- |
-| A status or alert bar rather than an advisory. The landmark role is a prop, so the same bar can announce assertively when the message actually warrants interrupting a screen reader. | `prop NoticeBar.role` |
+| A card with no supporting lines, or none with an icon. Everything but the title and the href is optional, which is how the same grid serves a five-card index and a list of playbooks. | `prop HubCard.children` |
+| A next/link or any router link as the card root, rather than a bare anchor. Without it a caller nests an anchor inside an anchor, which is invalid and which no typechecker reports. | `prop HubCard.asChild` |
 
 ## Not for — reach for this instead
 
 | instead | why |
 | --- | --- |
-| `Alert` | An inset callout inside the content, bordered on four sides and inside the page's measure. This spans the viewport and sits above it. |
+| `ValueCards` | A row that argues by contrast, costs then a gain. These cards are peers and none of them is making a claim about the others. |
+| `SurfaceTiles` | A row of tiles with one selected and a detail panel under it. Here every card carries its own detail and none is selected. |
 
 ## Watch for
 
 | note | via |
 | --- | --- |
-| It is NOT Alert and cannot be swapped for one. Alert is an inset card with a title and a description that sits in the content, bordered on four sides and inside the page's measure. This spans the viewport and sits above it. Reaching for Alert here produces a rounded box floating where a bar belongs. | `export NoticeBar` |
-| Its ground is translucent, rgba(255,255,255,0.04), so the textured header underneath shows through. Overriding it with a chrome surface token makes it opaque and punches a flat rectangle through the dither. | `prop NoticeBar.className` |
+| The icon takes no colour prop, deliberately. The implementation this was extracted from had one, and its single call site passed the literal #fac089 against a brand peach of #fec089. One character, shipped, and invisible to every gate because a raw hex in a styled-components prop is not a Tailwind arbitrary value. | `prop HubCard.icon` |
+| Its fill is rgba(20,20,20,0.6), translucent so a textured page ground reads through. Overriding it with a chrome surface token makes it opaque and flattens the dither behind it. | `prop HubCard.className` |
 
 ## Reachable from outside
 
@@ -60,7 +56,7 @@ Every claim cites the prop, default or export that makes it true. A claim that c
 
 ## Rendered in
 
-Gallery cases with a committed light and dark baseline: `section-notice-bar`.
+Gallery cases with a committed light and dark baseline: `section-hub-cards`.
 
 ## What binds this module
 
