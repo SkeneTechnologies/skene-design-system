@@ -312,8 +312,8 @@
           "via": "prop HubCard.children"
         },
         {
-          "claim": "A next/link or any router link as the card root, rather than a bare anchor. Without it a caller nests an anchor inside an anchor, which is invalid and which no typechecker reports.",
-          "via": "prop HubCard.asChild"
+          "claim": "A next/link or any router link as the card root, rather than a bare anchor. Without one the caller nests an anchor inside an anchor, which is invalid and which no typechecker reports.",
+          "via": "prop HubCard.linkAs"
         }
       ],
       "watchFor": [
@@ -324,6 +324,10 @@
         {
           "note": "Its fill is rgba(20,20,20,0.6), translucent so a textured page ground reads through. Overriding it with a chrome surface token makes it opaque and flattens the dither behind it.",
           "via": "prop HubCard.className"
+        },
+        {
+          "note": "linkAs, not asChild, and the difference is forced. asChild merges props into a single child and this component renders three of its own, so Slot throws React.Children.only. The first cut shipped asChild and the consumer's build failed prerendering on it.",
+          "via": "prop HubCard.linkAs"
         }
       ],
       "notFor": [

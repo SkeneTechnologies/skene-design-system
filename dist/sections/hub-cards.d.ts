@@ -23,10 +23,19 @@ import * as React from 'react';
  *
  * Both originals made the root an anchor rather than putting a link in the
  * footer, so the target is the card and not the six words at the bottom of it.
- * That is kept. `asChild` is here because the consumers are Next apps and
- * `next/link` has to BE the root element rather than sit inside it; this package
- * cannot import it. Without `asChild` a caller nests an anchor inside an anchor,
- * which is invalid and which no typechecker will tell them about.
+ * That is kept, and it is why the root is `linkAs` rather than the `asChild`
+ * every other linkable part of this package uses. `asChild` merges props into
+ * the caller's single child, and this component renders three of its own —
+ * header, body, call to action — so `Slot` has nothing to merge into and throws
+ * `React.Children.only`. That is not theoretical: the first cut of this
+ * component shipped `asChild`, and the consumer's build failed prerendering
+ * /resources on exactly it.
+ *
+ * `linkAs` inverts the relationship. The caller names the component that should
+ * be the root — `next/link`, a router link, or nothing for a bare anchor — and
+ * this component keeps ownership of what goes inside it. Without a root the
+ * caller can name, they nest an anchor inside an anchor, which is invalid and
+ * which no typechecker will tell them about.
  *
  * ## Translucent, like `NoticeBar`
  *
@@ -59,8 +68,11 @@ export interface HubCardProps extends Omit<React.ComponentProps<'a'>, 'title' | 
     children?: React.ReactNode;
     /** The call to action. The arrow after it is the component's. */
     cta?: React.ReactNode;
-    /** Render the root as the caller's element, for `next/link`. */
-    asChild?: boolean;
+    /**
+     * The element or component to render as the card's root. `a` by default;
+     * pass `next/link` in a Next app so the whole card is a client-side link.
+     */
+    linkAs?: React.ElementType;
 }
-export declare function HubCard({ icon, title, description, children, cta, asChild, className, ...props }: HubCardProps): React.JSX.Element;
+export declare function HubCard({ icon, title, description, children, cta, linkAs: Root, className, ...props }: HubCardProps): React.JSX.Element;
 //# sourceMappingURL=hub-cards.d.ts.map

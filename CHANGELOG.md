@@ -1,5 +1,26 @@
 # @skene/design-system
 
+## 0.23.1
+
+### Patch Changes
+
+- fix: `HubCard` takes `linkAs` instead of `asChild`
+
+  `asChild` merges props into the caller's **single** child, and `HubCard` renders
+  three of its own — header, body, call to action — so `Slot` has nothing to merge
+  into and throws `React.Children.only`.
+
+  This is not theoretical. 0.23.0 shipped with `asChild`, and the first consumer to
+  adopt it failed its production build prerendering `/resources` on exactly that.
+
+  `linkAs` inverts the relationship: the caller names the component that should be
+  the root (`next/link`, a router link, or nothing for a bare anchor) and this
+  component keeps ownership of what goes inside it.
+
+  `asChild` is gone rather than deprecated. It shipped for one release, had one
+  adopter, and that adopter could not build with it, so there is nothing in the
+  field to keep working.
+
 ## 0.23.0
 
 ### Minor Changes
