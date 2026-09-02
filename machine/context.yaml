@@ -4605,6 +4605,7 @@ modules:
       SectionBackdrop:
         texture: { type: BackdropTexture, default: "'journey'" }
         src: { type: string }
+        field: { type: "'image' | 'css'", default: "'image'" }
         inset: { type: number, default: 6 }
         children: { type: React.ReactNode }
     useFor: >-

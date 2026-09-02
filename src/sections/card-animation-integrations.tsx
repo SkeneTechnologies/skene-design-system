@@ -1,14 +1,30 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import type gsapLib from 'gsap'
 import { ClipboardCheck, Cloud, GitPullRequest, Terminal, type LucideIcon } from 'lucide-react'
 
 import { cn } from '../lib/utils.js'
 import { useContainerScale } from '../lib/use-container-scale.js'
 
-gsap.registerPlugin(ScrollTrigger)
+/*
+ * gsap is imported inside the effect below, not at module scope.
+ *
+ * A static `import gsap from 'gsap'` here put gsap in this component's client
+ * chunk and that chunk in the initial `<script>` list of every page importing
+ * it. Measured on www.skene.ai: 45 KB gzipped on the two product routes that
+ * render this, for an animation that sits below the fold behind a ScrollTrigger
+ * which does not fire until the scene reaches 80% of the viewport.
+ *
+ * The `import type` above is erased at build, so it costs nothing at runtime.
+ *
+ * The same change was made to `JourneySignalScene` in the consuming app on
+ * 2026-09-01 and took its homepage initial JavaScript from 310,100 to 265,801
+ * gzipped bytes. `next/dynamic` around the component does NOT achieve this and
+ * was measured not to: without `ssr: false` the chunk stays in the initial
+ * list, and `ssr: false` removes the server-rendered markup, which is not
+ * acceptable for a component carrying copy.
+ */
 
 /** Resolved from this module so Vite emits a browser URL, not a file:// path. */
 const INTEGRATIONS_TEXTURE = new URL('../../assets/plugin.png', import.meta.url).href
@@ -133,7 +149,10 @@ const BADGE_STYLES: Record<BadgeVariant, { background: string; color: string }> 
   amber: { background: '#faeeda', color: '#633806' },
 }
 
+/* Takes the gsap instance rather than closing over a module import, because
+   there is no longer a module import to close over. */
 function resetElements(
+  gsap: typeof gsapLib,
   cards: HTMLDivElement[],
   detailPanel: HTMLDivElement | null,
   detailInner: HTMLDivElement | null,
@@ -185,73 +204,104 @@ export function CardAnimationIntegrations({
     const detailInner = detailInnerRef.current
     const visibleElements = [...cardElements, detailPanel].filter(Boolean)
 
-    const ctx = gsap.context(() => {
-      resetElements(cardElements, detailPanel, detailInner, setActiveIdx)
+    /* The cards start hidden and the timeline is what reveals them, so a failed
+       import would leave the scene permanently blank where a static import
+       could not. This is the floor: on failure, show them. */
+    let cancelled = false
+    let revert: (() => void) | undefined
+    const reveal = () => {
+      for (const el of visibleElements) {
+        if (!el) continue
+        el.style.opacity = '1'
+        el.style.visibility = 'visible'
+        el.style.transform = 'none'
+      }
+    }
 
-      const tl = gsap.timeline({
-        repeat: -1,
-        repeatDelay: 0.5,
-        delay: 0.3,
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: 'top 80%',
-          toggleActions: 'play pause resume pause',
-        },
+    void (async () => {
+      const [{ default: gsap }, { ScrollTrigger }] = await Promise.all([
+        import('gsap'),
+        import('gsap/ScrollTrigger'),
+      ]).catch((error) => {
+        reveal()
+        throw error
       })
+      if (cancelled) return
+      gsap.registerPlugin(ScrollTrigger)
 
-      tl.call(() => {
-        resetElements(cardElements, detailPanel, detailInner, setActiveIdx)
-      })
-        .to(cardElements, {
-          autoAlpha: 1,
-          y: 0,
-          duration: 0.45,
-          ease: 'power2.out',
-          stagger: 0.12,
-        })
-        .to({}, { duration: FIRST_ACTIVE_DELAY })
-        .call(() => setActiveIdx(0))
-        .to(
-          detailPanel,
-          { autoAlpha: 1, y: 0, duration: 0.4, ease: 'power2.out' },
-          '<',
-        )
-        .to({}, { duration: CYCLE_HOLD })
-        .to(detailInner, {
-          autoAlpha: 0,
-          y: 4,
-          duration: SWAP_OUT,
-          ease: 'power2.in',
+      const ctx = gsap.context(() => {
+        resetElements(gsap, cardElements, detailPanel, detailInner, setActiveIdx)
+
+        const tl = gsap.timeline({
+          repeat: -1,
+          repeatDelay: 0.5,
+          delay: 0.3,
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: 'top 80%',
+            toggleActions: 'play pause resume pause',
+          },
         })
 
-      for (let idx = 1; idx < details.length; idx++) {
-        tl.call(() => setActiveIdx(idx)).to(detailInner, {
-          autoAlpha: 1,
-          y: 0,
-          duration: SWAP_IN,
-          ease: 'power2.out',
+        tl.call(() => {
+          resetElements(gsap, cardElements, detailPanel, detailInner, setActiveIdx)
         })
-
-        if (idx < details.length - 1) {
-          tl.to({}, { duration: CYCLE_HOLD - SWAP_OUT - SWAP_IN }).to(detailInner, {
+          .to(cardElements, {
+            autoAlpha: 1,
+            y: 0,
+            duration: 0.45,
+            ease: 'power2.out',
+            stagger: 0.12,
+          })
+          .to({}, { duration: FIRST_ACTIVE_DELAY })
+          .call(() => setActiveIdx(0))
+          .to(
+            detailPanel,
+            { autoAlpha: 1, y: 0, duration: 0.4, ease: 'power2.out' },
+            '<',
+          )
+          .to({}, { duration: CYCLE_HOLD })
+          .to(detailInner, {
             autoAlpha: 0,
             y: 4,
             duration: SWAP_OUT,
             ease: 'power2.in',
           })
-        } else {
-          tl.to({}, { duration: CYCLE_HOLD - SWAP_IN })
+
+        for (let idx = 1; idx < details.length; idx++) {
+          tl.call(() => setActiveIdx(idx)).to(detailInner, {
+            autoAlpha: 1,
+            y: 0,
+            duration: SWAP_IN,
+            ease: 'power2.out',
+          })
+
+          if (idx < details.length - 1) {
+            tl.to({}, { duration: CYCLE_HOLD - SWAP_OUT - SWAP_IN }).to(detailInner, {
+              autoAlpha: 0,
+              y: 4,
+              duration: SWAP_OUT,
+              ease: 'power2.in',
+            })
+          } else {
+            tl.to({}, { duration: CYCLE_HOLD - SWAP_IN })
+          }
         }
-      }
 
-      tl.to(visibleElements, {
-        autoAlpha: 0,
-        duration: 0.4,
-        delay: 2,
-      })
-    }, containerRef)
+        tl.to(visibleElements, {
+          autoAlpha: 0,
+          duration: 0.4,
+          delay: 2,
+        })
+      }, containerRef)
+      if (cancelled) ctx.revert()
+      else revert = () => ctx.revert()
+    })()
 
-    return () => ctx.revert()
+    return () => {
+      cancelled = true
+      revert?.()
+    }
   }, [])
 
   const detail = getDisplayDetail(details, activeIdx)

@@ -27,6 +27,7 @@ The halftone field a panel floats on: a container that paints one of the three r
 | --- | --- | --- | --- | --- |
 | `SectionBackdrop` | `texture` | `BackdropTexture` |  | `'journey'` |
 | `SectionBackdrop` | `src` | `string` |  |  |
+| `SectionBackdrop` | `field` | `'image' \| 'css'` |  | `'image'` |
 | `SectionBackdrop` | `inset` | `number` |  | `6` |
 | `SectionBackdrop` | `children` | `React.ReactNode` |  |  |
 

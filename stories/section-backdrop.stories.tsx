@@ -39,3 +39,35 @@ export const Bare: Story = { args: { texture: 'journey', className: 'h-[220px]' 
 
 /** A wide inset, so the field reads as a mat rather than as a background. */
 export const Inset: Story = { args: { texture: 'schema', inset: 48, children: panel } }
+
+/**
+ * `field="css"` against the raster, all three textures.
+ *
+ * The pair is here so the difference is judged rather than described. The
+ * module comment on this component records that an earlier CSS field "read as a
+ * chunky checkerboard next to the actual fine dot halftone"; that note stands
+ * against that implementation. This one is `.skene-field` from
+ * `styles/effects.css`, which shipped for `ArtFrame` in 0.17.0. It is still not
+ * pixel-identical, which is why `field` defaults to `image`.
+ *
+ * The reason to opt in: a raster backdrop is a Largest Contentful Paint
+ * candidate the preload scanner cannot see, and on www.skene.ai that discovery
+ * delay measured 2,281 ms. A CSS field is not an image.
+ */
+export const RasterVsCss: Story = {
+  render: () => (
+    <div className="grid gap-6">
+      {(['journey', 'github', 'schema'] as const).map((texture) => (
+        <div key={texture} className="grid gap-4 md:grid-cols-2">
+          {(['image', 'css'] as const).map((field) => (
+            <SectionBackdrop key={field} texture={texture} field={field}>
+              <div className="rounded-xl border border-chrome-line-on-light bg-surface-1 p-6 text-text-primary">
+                {texture} · {field}
+              </div>
+            </SectionBackdrop>
+          ))}
+        </div>
+      ))}
+    </div>
+  ),
+}

@@ -1431,7 +1431,7 @@
       ],
       "summary": "The PR surface is a GitHub App that posts reviews; nothing ships as an Actions workflow.",
       "client": true,
-      "lines": 352,
+      "lines": 402,
       "cases": [
         "section-card-animation-integrations",
         "section-card-animation-integrations-last"
@@ -2638,7 +2638,7 @@
       ],
       "summary": "The halftone field a product mock sits on inside a feature row.",
       "client": false,
-      "lines": 82,
+      "lines": 145,
       "cases": [
         "section-backdrop"
       ],
