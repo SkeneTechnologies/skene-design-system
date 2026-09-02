@@ -3390,14 +3390,20 @@ modules:
           anchor. Without one the caller nests an anchor inside an anchor,
           which is invalid and which no typechecker reports.
         via: prop HubCard.linkAs
+      - claim: >-
+          A hub whose cards are colour-coded by topic. The accent is a named
+          union over tokens this package already ships, six neon and gold
+          roles plus the brand peach.
+        via: prop HubCard.accent
     watchFor:
       - note: >-
-          The icon takes no colour prop, deliberately. The implementation this
-          was extracted from had one, and its single call site passed the
-          literal #fac089 against a brand peach of #fec089. One character,
-          shipped, and invisible to every gate because a raw hex in a
-          styled-components prop is not a Tailwind arbitrary value.
-        via: prop HubCard.icon
+          accent is a NAMED union, not a hex, and that is the point. The
+          implementation this was extracted from took a free-form hex and one
+          of its call sites passed the literal #fac089 against a brand peach
+          of #fec089. One character, shipped, invisible to every gate because
+          a raw hex in a styled-components prop is not a Tailwind arbitrary
+          value. A union will not compile the typo.
+        via: prop HubCard.accent
       - note: >-
           Its fill is rgba(20,20,20,0.6), translucent so a textured page
           ground reads through. Overriding it with a chrome surface token

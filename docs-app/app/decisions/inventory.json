@@ -2059,7 +2059,7 @@
       ],
       "summary": "The hub grid: a set of cards, each of which is a whole link into a section of",
       "client": false,
-      "lines": 154,
+      "lines": 196,
       "cases": [
         "section-hub-cards"
       ],
@@ -2069,10 +2069,11 @@
         "purpose": "A hub grid where every card is a whole link into a section of the site: an icon, a heading, a line of description, supporting lines, and a call to action with an arrow. The card is the target, not the words at the bottom of it.",
         "alsoFor": [
           "A card with no supporting lines, or none with an icon. Everything but the title and the href is optional, which is how the same grid serves a five-card index and a list of playbooks.",
-          "A next/link or any router link as the card root, rather than a bare anchor. Without one the caller nests an anchor inside an anchor, which is invalid and which no typechecker reports."
+          "A next/link or any router link as the card root, rather than a bare anchor. Without one the caller nests an anchor inside an anchor, which is invalid and which no typechecker reports.",
+          "A hub whose cards are colour-coded by topic. The accent is a named union over tokens this package already ships, six neon and gold roles plus the brand peach."
         ],
         "watchFor": [
-          "The icon takes no colour prop, deliberately. The implementation this was extracted from had one, and its single call site passed the literal #fac089 against a brand peach of #fec089. One character, shipped, and invisible to every gate because a raw hex in a styled-components prop is not a Tailwind arbitrary value.",
+          "accent is a NAMED union, not a hex, and that is the point. The implementation this was extracted from took a free-form hex and one of its call sites passed the literal #fac089 against a brand peach of #fec089. One character, shipped, invisible to every gate because a raw hex in a styled-components prop is not a Tailwind arbitrary value. A union will not compile the typo.",
           "Its fill is rgba(20,20,20,0.6), translucent so a textured page ground reads through. Overriding it with a chrome surface token makes it opaque and flattens the dither behind it.",
           "linkAs, not asChild, and the difference is forced. asChild merges props into a single child and this component renders three of its own, so Slot throws React.Children.only. The first cut shipped asChild and the consumer's build failed prerendering on it."
         ],

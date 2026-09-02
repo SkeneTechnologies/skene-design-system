@@ -13,13 +13,18 @@ import { cn } from '../lib/utils.js'
  * `rgba(20,20,20,0.6)` fill lifting to 0.8 on hover with the border going to
  * peach — because one was copied from the other and neither knew.
  *
- * The copies had drifted in exactly one place, and it is the reason this is
- * worth having as a component rather than a convention: `TopicIcon` took its
- * colour as a prop, and the single call site passed the literal `#fac089`.
+ * The copies had drifted in one place, and it is the reason this is worth
+ * having as a component rather than a convention: `TopicIcon` took its colour as
+ * a free-form hex, and one of its two call sites passed the literal `#fac089`.
  * The brand peach is `#fec089`. One character, shipped, invisible to every gate
  * in that repository because a raw hex inside a styled-components prop is not a
- * Tailwind arbitrary value. The icon here takes no colour prop. There was one
- * colour in use and it was meant to be the brand's.
+ * Tailwind arbitrary value.
+ *
+ * `accent` is therefore a NAMED union rather than the hex it replaces. The other
+ * call site does use the axis for real, seven values across a topic hub, and
+ * every one of them is a colour this package already ships under a name. A hex
+ * prop cannot tell `#fec089` from `#fac089`; a union will not compile the
+ * second.
  *
  * ## Why the whole card is the link
  *
@@ -47,6 +52,36 @@ import { cn } from '../lib/utils.js'
  * `--color-chrome-surface-*` is the opaque family and would flatten the dither
  * every page that uses this paints behind it.
  */
+/**
+ * The icon tint. Named rather than free, because the free version shipped a
+ * typo'd brand colour to production.
+ *
+ * The six after `peach` are the package's own neon and gold roles, which is
+ * where the consuming hub's palette already landed by hand: `success` is
+ * `#39ff14`, `marketing` `#ff007f`, `sales` `#ff3131`, `product` `#ffaa00`,
+ * `gold` `#e8c260`. `engineering` is the one that MOVES a value: that hub used
+ * `#00d4ff` and this token is `#80eaff`, so adopting the name adopts the
+ * package's cyan rather than reproducing the local one.
+ */
+export type HubAccent =
+  | 'peach'
+  | 'gold'
+  | 'engineering'
+  | 'success'
+  | 'marketing'
+  | 'sales'
+  | 'product'
+
+const ACCENT: Record<HubAccent, { text: string; wash: string }> = {
+  peach: { text: 'text-brand-peach', wash: '[background:rgba(212,165,116,0.15)]' },
+  gold: { text: 'text-primary-gold', wash: '[background:color-mix(in_srgb,var(--color-primary-gold)_15%,transparent)]' },
+  engineering: { text: 'text-neon-engineering', wash: '[background:color-mix(in_srgb,var(--color-neon-engineering)_15%,transparent)]' },
+  success: { text: 'text-neon-success', wash: '[background:color-mix(in_srgb,var(--color-neon-success)_15%,transparent)]' },
+  marketing: { text: 'text-neon-marketing', wash: '[background:color-mix(in_srgb,var(--color-neon-marketing)_15%,transparent)]' },
+  sales: { text: 'text-neon-sales', wash: '[background:color-mix(in_srgb,var(--color-neon-sales)_15%,transparent)]' },
+  product: { text: 'text-neon-product', wash: '[background:color-mix(in_srgb,var(--color-neon-product)_15%,transparent)]' },
+}
+
 export interface HubCardsProps {
   children: React.ReactNode
   className?: string
@@ -69,6 +104,8 @@ export interface HubCardProps
   extends Omit<React.ComponentProps<'a'>, 'title' | 'children'> {
   /** The mark in the corner. A lucide icon at 20px in both originals. */
   icon?: React.ReactNode
+  /** The icon's tint. `peach` is the brand default. */
+  accent?: HubAccent
   /** The card's heading. */
   title: React.ReactNode
   /** One line under the heading. */
@@ -93,6 +130,7 @@ export interface HubCardProps
 
 export function HubCard({
   icon,
+  accent = 'peach',
   title,
   description,
   children,
@@ -116,7 +154,11 @@ export function HubCard({
         {icon ? (
           <span
             aria-hidden
-            className="flex size-10 shrink-0 items-center justify-center rounded-sm text-brand-peach [background:rgba(212,165,116,0.15)]"
+            className={cn(
+              'flex size-10 shrink-0 items-center justify-center rounded-sm',
+              ACCENT[accent].text,
+              ACCENT[accent].wash,
+            )}
           >
             {icon}
           </span>

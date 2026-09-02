@@ -77,3 +77,20 @@ export const Grid: Story = {
     </div>
   ),
 }
+
+/**
+ * The accent axis, which is a named union rather than the free-form hex it
+ * replaces. `engineering` is the one that moves a value on adoption: the hub
+ * this came from used `#00d4ff` and the token is `#80eaff`.
+ */
+export const Accents: Story = {
+  render: (args) => (
+    <div className="w-[980px]">
+      <HubCards>
+        {(['peach', 'gold', 'engineering', 'success', 'marketing', 'sales'] as const).map((a) => (
+          <HubCard key={a} {...args} accent={a} title={a} description={`accent="${a}"`} />
+        ))}
+      </HubCards>
+    </div>
+  ),
+}

@@ -1,5 +1,27 @@
 # @skene/design-system
 
+## 0.24.0
+
+### Minor Changes
+
+- feat: `HubCard` gains a named `accent`
+
+  0.23.0 shipped this component with no colour prop, on the reading that its two
+  sources used one colour and one of them had typo'd it. That was half right. The
+  playbooks hub did hardcode a single (wrong) hex, but the topic hub uses the axis
+  for real: **seven distinct accents across its cards.**
+
+  So the axis comes back, named rather than free. `peach`, `gold`, `engineering`,
+  `success`, `marketing`, `sales`, `product` — every one a colour this package
+  already ships, which is where that hub's palette had independently landed.
+
+  A hex prop cannot tell `#fec089` from `#fac089`. A union will not compile the
+  second.
+
+  **One value moves on adoption.** The consuming hub used `#00d4ff` and
+  `--color-neon-engineering` is `#80eaff`, so taking the name takes this package's
+  cyan rather than reproducing the local one. The other six match exactly.
+
 ## 0.23.1
 
 ### Patch Changes

@@ -74,7 +74,7 @@ that is a token in a commit.
 Consumers not yet migrated install it as a git dependency instead:
 
 ```json
-"@skene/design-system": "git+https://github.com/SkeneTechnologies/skene-design-system.git#semver:^0.23.1"
+"@skene/design-system": "git+https://github.com/SkeneTechnologies/skene-design-system.git#semver:^0.24.0"
 ```
 
 ## Configuration
