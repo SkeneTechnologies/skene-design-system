@@ -1172,6 +1172,7 @@ modules:
     props:
       Eyebrow:
         onLight: { type: boolean, default: "false" }
+        tone: { type: "'muted' | 'accent'", default: "'muted'" }
         children: { type: React.ReactNode, required: true }
       DisplayHeading:
         size: { type: "'hero' | 'page' | 'section'", default: "'page'" }

@@ -20,6 +20,26 @@ export interface EyebrowProps {
      * one recipe is what a prop is for.
      */
     onLight?: boolean;
+    /**
+     * `accent` draws the chip in brand peach, border and ink both, instead of the
+     * muted chrome default.
+     *
+     * Ported from `skene-marketing-website`'s `SectionBadge`, which is being
+     * retired: 74 call sites across its `(landing)` tree drew this chip in peach,
+     * at the same 11px, and it was the only eyebrow that tree had. Migrating them
+     * onto the muted default would have turned every section kicker on roughly a
+     * hundred routes grey in the name of adopting the design system, which is a
+     * visual change wearing a refactor's clothes. The tone is the visual, so the
+     * tone becomes a prop.
+     *
+     * Full-opacity border, matching what it replaces. That component drew
+     * `outline outline-1 outline-peach` against `#fec089`, which is this
+     * package's `brand.peach` under another name.
+     *
+     * Wins over `onLight` when both are set. An accent chip is legible on either
+     * ground, so there is nothing for `onLight` to correct.
+     */
+    tone?: 'muted' | 'accent';
     className?: string;
     children: React.ReactNode;
 }
@@ -29,7 +49,7 @@ export interface EyebrowProps {
  * Uses `font.tracking.eyebrow` (0.16em) and `font.size.pill`, which existed as
  * tokens with nothing rendering them.
  */
-export declare function Eyebrow({ onLight, className, children }: EyebrowProps): import("react").JSX.Element;
+export declare function Eyebrow({ onLight, tone, className, children, }: EyebrowProps): import("react").JSX.Element;
 export interface DisplayHeadingProps {
     /** `hero` is the homepage size, `page` a subpage h1, `section` a section head. */
     size?: 'hero' | 'page' | 'section';

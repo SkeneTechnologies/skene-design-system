@@ -14,10 +14,12 @@ export { PillNav, PillNavLink } from './pill-nav.js';
  * Uses `font.tracking.eyebrow` (0.16em) and `font.size.pill`, which existed as
  * tokens with nothing rendering them.
  */
-export function Eyebrow({ onLight = false, className, children }) {
-    return (_jsx("span", { className: cn('inline-block rounded-sm border px-2 py-1 font-mono uppercase', onLight
-            ? 'border-chrome-line-on-light text-text-muted'
-            : 'border-chrome-surface-border text-chrome-text-muted', className), style: {
+export function Eyebrow({ onLight = false, tone = 'muted', className, children, }) {
+    return (_jsx("span", { className: cn('inline-block rounded-sm border px-2 py-1 font-mono uppercase', tone === 'accent'
+            ? 'border-brand-peach text-brand-peach'
+            : onLight
+                ? 'border-chrome-line-on-light text-text-muted'
+                : 'border-chrome-surface-border text-chrome-text-muted', className), style: {
             fontSize: 'var(--font-size-pill)',
             letterSpacing: 'var(--font-tracking-eyebrow)',
         }, children: children }));

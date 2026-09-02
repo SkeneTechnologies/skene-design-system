@@ -1,5 +1,33 @@
 # @skene/design-system
 
+## 0.20.0
+
+### Minor Changes
+
+- feat: `Eyebrow` gains an `accent` tone
+
+  The peach chip. Ported from `skene-marketing-website`'s `SectionBadge`, which
+  is being retired as that repository moves its `(landing)` tree onto this
+  package.
+
+  That component drew `outline outline-1 outline-peach` with `text-peach` at
+  11px, against `#fec089`, which is this package's `brand.peach` under another
+  name. It had **74 call sites** across roughly a hundred routes and it was the
+  only eyebrow that tree had.
+
+  Without this prop those 74 chips would have migrated onto the muted chrome
+  default, turning every section kicker on that tree grey. That is a visual
+  change wearing a refactor's clothes, and it is the failure mode the whole
+  migration is trying to avoid: adopting the design system should not be how a
+  brand colour quietly leaves the site. The tone IS the visual, so the tone
+  becomes a prop.
+
+  `tone="accent"` wins over `onLight` when both are set. An accent chip is
+  legible on either ground, so there is nothing for `onLight` to correct.
+
+  The default is unchanged, so every existing call site renders exactly as
+  before.
+
 ## 0.19.0
 
 ### Minor Changes
