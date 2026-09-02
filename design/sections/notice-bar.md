@@ -1,4 +1,4 @@
-# sections/mcp-block
+# sections/notice-bar
 
 <!-- @design:generated -->
 
@@ -8,29 +8,30 @@ _@skene/design-system 0.22.0._
 
 |  |  |
 | --- | --- |
-| import | `@skene/design-system/sections/mcp-block` |
+| import | `@skene/design-system/sections/notice-bar` |
 | polarity | `inherits` |
 | boundary | server-renderable |
-| intent | `display-code`, `group-related-items` |
+| intent | `interrupt-the-reader` |
 
 ## Use for
 
-A panel inside the MCP artifact: a config snippet to paste, or the list of tools the server answers with.
+A full-bleed advisory bar across the top of a page, carrying one line: this page is archived, this content is from an earlier version, this environment is staging. It spans the viewport, sits above the content, and separates itself with a single hairline.
 
 ## Exports
 
-`McpBlock`, `McpCode`, `McpTool`
+`NoticeBar`
 
 ## Props
 
 | export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
-| `McpBlock` | `title` | `React.ReactNode` |  |  |
-| `McpBlock` | `meta` | `React.ReactNode` |  |  |
-| `McpBlock` | `children` | `React.ReactNode` |  |  |
-| `McpCode` | `children` | `React.ReactNode` | **yes** |  |
-| `McpTool` | `name` | `React.ReactNode` | **yes** |  |
-| `McpTool` | `description` | `React.ReactNode` |  |  |
+| `NoticeBar` | `role` | `'note' \| 'status' \| 'alert'` |  | `'note'` |
+
+## Accepts
+
+| export | props passed through |
+| --- | --- |
+| `NoticeBar` | `React.ComponentProps<'aside'>` |
 
 ## Also for
 
@@ -38,40 +39,28 @@ Every claim cites the prop, default or export that makes it true. A claim that c
 
 | claim | via |
 | --- | --- |
-| Any code-plus-catalogue pairing — an API key block and its scopes, a config and its options. | `export McpCode` |
-| A tool or endpoint list on its own, via McpTool rows inside a titled block. | `prop McpTool.description` |
+| A status or alert bar rather than an advisory. The landmark role is a prop, so the same bar can announce assertively when the message actually warrants interrupting a screen reader. | `prop NoticeBar.role` |
 
 ## Not for — reach for this instead
 
 | instead | why |
 | --- | --- |
-| `Terminal` | A terminal transcript with traffic lights. That is patterns/terminal. |
-| `TerminalBlock` | An install snippet with a copy button. That is TerminalBlock. |
+| `Alert` | An inset callout inside the content, bordered on four sides and inside the page's measure. This spans the viewport and sits above it. |
 
 ## Watch for
 
 | note | via |
 | --- | --- |
-| It is one panel, not the window. The surface it depicts stacks two of these inside a single AppWindow, which is why there is no crumb prop here. | `prop McpBlock.meta` |
-| The code block takes themed tokens rather than chrome, because it is a settings screen and not a terminal. | `export McpCode` |
+| It is NOT Alert and cannot be swapped for one. Alert is an inset card with a title and a description that sits in the content, bordered on four sides and inside the page's measure. This spans the viewport and sits above it. Reaching for Alert here produces a rounded box floating where a bar belongs. | `export NoticeBar` |
+| Its ground is translucent, rgba(255,255,255,0.04), so the textured header underneath shows through. Overriding it with a chrome surface token makes it opaque and punches a flat rectangle through the dither. | `prop NoticeBar.className` |
 
 ## Reachable from outside
 
 `className`
 
-## Composes
-
-`same-layer/artifact-shell`
-
 ## Rendered in
 
-Gallery cases with a committed light and dark baseline: `section-mcp-block`.
-
-## Page templates that carry it
-
-| template | role |
-| --- | --- |
-| [comparison-page](../pages/comparison-page.md) | optional, in 1 of 2 |
+Gallery cases with a committed light and dark baseline: `section-notice-bar`.
 
 ## What binds this module
 

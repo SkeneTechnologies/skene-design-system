@@ -76,6 +76,7 @@ import { Terminal, TerminalLine } from '@skene/design-system/patterns/terminal'
 import { SkeneLockup, SkeneMark } from '@skene/design-system/patterns/skene-mark'
 
 import { AgentCallout } from '@skene/design-system/sections/agent-callout'
+import { NoticeBar } from '@skene/design-system/sections/notice-bar'
 import { AnnotatedCurve } from '@skene/design-system/sections/annotated-curve'
 import {
   AppPanel, AppWindow, ArtFrame, ArtPanel, ArtTitle, DataCell, DataRow, DataTable, StatPill,
@@ -890,6 +891,27 @@ export default function ComponentGalleryPage() {
       </Case>
 
       {/* ---------------------------------------------------------- sections */}
+
+      <Case name="section-notice-bar" width="w-[880px]">
+        {/* Full-bleed by nature, so the case is as wide as the gallery allows
+            and the bar is shown edge to edge inside it. The ground behind is
+            checkered on purpose: this component's fill is translucent so a
+            textured header shows through, and a case on a flat panel would
+            prove nothing about the one property worth proving. */}
+        <div className="bg-[repeating-conic-gradient(#1b1b1b_0%_25%,#0e0e0e_0%_50%)] bg-[length:8px_8px]">
+          <NoticeBar>
+            <span>
+              From an earlier version of Skene.{' '}
+              <a
+                href="/product"
+                className="whitespace-nowrap border-b border-transparent text-brand-peach hover:border-brand-peach"
+              >
+                See the current product →
+              </a>
+            </span>
+          </NoticeBar>
+        </div>
+      </Case>
 
       <Case name="section-agent-callout" width="w-[880px]">
         {/* Both shipped instances. The first is the standing one — eyebrow,

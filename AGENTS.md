@@ -74,7 +74,7 @@ that is a token in a commit.
 Consumers not yet migrated install it as a git dependency instead:
 
 ```json
-"@skene/design-system": "git+https://github.com/SkeneTechnologies/skene-design-system.git#semver:^0.21.0"
+"@skene/design-system": "git+https://github.com/SkeneTechnologies/skene-design-system.git#semver:^0.22.0"
 ```
 
 ## Configuration
@@ -142,7 +142,7 @@ All of these ship inside the package, so from a consumer they are under
 
 | # | file | answers |
 |---|---|---|
-| 1 | `machine/context.yaml` | **which module to reach for**, and what else each one is good for. 89 modules. Start here, always. |
+| 1 | `machine/context.yaml` | **which module to reach for**, and what else each one is good for. 90 modules. Start here, always. |
 | 2 | `machine/components.yaml` | what you must **not** do with the one you picked. |
 | 3 | `machine/rules.yaml` | the reach ladder, the `must_not` list, and `ask_first_when`. |
 | 4 | `machine/tokens.yaml` | the token vocabulary, and which role belongs on which surface. |
@@ -193,7 +193,7 @@ contract was edited and the Markdown was not.
 
 ## Before you write a component
 
-**Grep `machine/context.yaml`.** There are 89 modules and a documented history
+**Grep `machine/context.yaml`.** There are 90 modules and a documented history
 of the same visual object being drawn twice by someone who could not find the
 first — ten adjudicated clusters of it, each recorded in `inventory.json` with
 its verdict. If you are about to write a card, a

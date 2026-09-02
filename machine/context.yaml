@@ -38,7 +38,7 @@
 #   takes three props and everything a <button> takes".
 
 version: "1.0.0"
-counts: { modules: 89, ui: 30, patterns: 8, sections: 51, authored: 89, assets: 27, intents: 20 }
+counts: { modules: 90, ui: 30, patterns: 8, sections: 52, authored: 90, assets: 27, intents: 20 }
 
 intents:
   open-a-page: >-
@@ -3988,6 +3988,49 @@ modules:
       - instead: TerminalBlock
         why: >-
           An install snippet with a copy button. That is TerminalBlock.
+  sections/notice-bar:
+    import: "@skene/design-system/sections/notice-bar"
+    exports: [NoticeBar]
+    polarity: inherits
+    seen: [section-notice-bar]
+    overrides: [className]
+    props:
+      NoticeBar:
+        role: { type: "'note' | 'status' | 'alert'", default: "'note'" }
+    accepts:
+      NoticeBar: "React.ComponentProps<'aside'>"
+    useFor: >-
+      A full-bleed advisory bar across the top of a page, carrying one line:
+      this page is archived, this content is from an earlier version, this
+      environment is staging. It spans the viewport, sits above the content,
+      and separates itself with a single hairline.
+    intent: [interrupt-the-reader]
+    alsoFor:
+      - claim: >-
+          A status or alert bar rather than an advisory. The landmark role is
+          a prop, so the same bar can announce assertively when the message
+          actually warrants interrupting a screen reader.
+        via: prop NoticeBar.role
+    watchFor:
+      - note: >-
+          It is NOT Alert and cannot be swapped for one. Alert is an inset
+          card with a title and a description that sits in the content,
+          bordered on four sides and inside the page's measure. This spans the
+          viewport and sits above it. Reaching for Alert here produces a
+          rounded box floating where a bar belongs.
+        via: export NoticeBar
+      - note: >-
+          Its ground is translucent, rgba(255,255,255,0.04), so the textured
+          header underneath shows through. Overriding it with a chrome surface
+          token makes it opaque and punches a flat rectangle through the
+          dither.
+        via: prop NoticeBar.className
+    notFor:
+      - instead: Alert
+        why: >-
+          An inset callout inside the content, bordered on four sides and
+          inside the page's measure. This spans the viewport and sits above
+          it.
   sections/overview-tiles:
     import: "@skene/design-system/sections/overview-tiles"
     exports: [OverviewTiles, OverviewTile]

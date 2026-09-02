@@ -2351,6 +2351,35 @@
       }
     },
     {
+      "module": "notice-bar",
+      "layer": "sections",
+      "import": "@skene/design-system/sections/notice-bar",
+      "exports": [
+        "NoticeBar"
+      ],
+      "summary": "A full-bleed advisory bar across the top of a page.",
+      "client": false,
+      "lines": 75,
+      "cases": [
+        "section-notice-bar"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "notice-bar",
+        "purpose": "A full-bleed advisory bar across the top of a page, carrying one line: this page is archived, this content is from an earlier version, this environment is staging. It spans the viewport, sits above the content, and separates itself with a single hairline.",
+        "alsoFor": [
+          "A status or alert bar rather than an advisory. The landmark role is a prop, so the same bar can announce assertively when the message actually warrants interrupting a screen reader."
+        ],
+        "watchFor": [
+          "It is NOT Alert and cannot be swapped for one. Alert is an inset card with a title and a description that sits in the content, bordered on four sides and inside the page's measure. This spans the viewport and sits above it. Reaching for Alert here produces a rounded box floating where a bar belongs.",
+          "Its ground is translucent, rgba(255,255,255,0.04), so the textured header underneath shows through. Overriding it with a chrome surface token makes it opaque and punches a flat rectangle through the dither."
+        ],
+        "notFor": [
+          "An inset callout inside the content, bordered on four sides and inside the page's measure. This spans the viewport and sits above it."
+        ]
+      }
+    },
+    {
       "module": "overview-tiles",
       "layer": "sections",
       "import": "@skene/design-system/sections/overview-tiles",
@@ -3154,15 +3183,15 @@
   "unbuilt": [],
   "gallery": {
     "route": "/components",
-    "cases": 100
+    "cases": 101
   },
   "counts": {
-    "modules": 89,
-    "exports": 266,
+    "modules": 90,
+    "exports": 267,
     "ui": 30,
     "patterns": 8,
-    "sections": 51,
+    "sections": 52,
     "noVisual": 1,
-    "withUsage": 89
+    "withUsage": 90
   }
 }

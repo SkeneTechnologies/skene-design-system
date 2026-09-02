@@ -1,5 +1,36 @@
 # @skene/design-system
 
+## 0.22.0
+
+### Minor Changes
+
+- feat: `NoticeBar`, the full-bleed advisory bar
+
+  Ported from `skene-marketing-website`'s `ArchiveBanner`, which is being retired.
+  Seven of its route-group layouts render one to say the page below is from an
+  earlier version of the product.
+
+  **It is not a variant of `Alert`, and the difference is structural.** `Alert` is
+  an inset card with a title and a description that sits IN the content: bordered
+  on four sides, rounded, inside the page's measure. This spans the viewport, sits
+  ABOVE the content, carries one line, and separates itself with a single hairline
+  underneath. Neither can be expressed as a variant of the other without one of
+  them growing a prop that removes its own shape.
+
+  `docs/design-system-gaps.md` in that repository recorded the absence twice, as
+  gap 4 ("no callout or advisory primitive") and gap 5 ("`Alert` has no `warning`
+  variant and hardcodes `role='alert'`"). This closes the first and sidesteps the
+  second by taking `role` as a prop: `note` by default, because an advisory about
+  the page you are already on is not an assertive live region that should
+  interrupt a screen reader mid-sentence.
+
+  **The fill is translucent on purpose.** `rgba(255,255,255,0.04)` over
+  `--color-chrome-line-subtle`, both compositing rather than covering. Every page
+  this sits on paints a textured header beneath it, so an opaque
+  `--color-chrome-surface-*` fill would punch a flat rectangle through the dither.
+  The 0.04 is transcribed from what it replaces and has no token here, because the
+  package ships no alpha that low.
+
 ## 0.21.0
 
 ### Minor Changes
