@@ -2592,6 +2592,35 @@
       }
     },
     {
+      "module": "prose",
+      "layer": "sections",
+      "import": "@skene/design-system/sections/prose",
+      "exports": [
+        "Prose"
+      ],
+      "summary": "Long-form body copy: the container that styles the HTML inside it.",
+      "client": false,
+      "lines": 87,
+      "cases": [
+        "section-prose"
+      ],
+      "demo": null,
+      "usage": {
+        "module": "prose",
+        "purpose": "Long-form body copy whose HTML this package did not author: MDX, a CMS body, an array of sections rendered as plain tags. It styles its DESCENDANTS rather than rendering its own markup, which is the one place that is correct.",
+        "alsoFor": [
+          "A dense column, a sidebar note or a definition list, where the comfortable rhythm is too loose. The vertical scale halves and the type does not move."
+        ],
+        "watchFor": [
+          "It applies NO panel: no border, no radius, no padding, no ground. Where the column sits and what frames it are page decisions. The implementation this came from welded its prose rules to a bordered card with a sidebar-docking variant, and the two pages using it framed it differently.",
+          "Sizes are token values rather than Tailwind text-* utilities on purpose. The package's marketing scale and Tailwind's default ladder are different, and mixing them is how a document ends up with two h2 sizes."
+        ],
+        "notFor": [
+          "A section with a heading, a lede and a visual, authored as props. This is for a document whose markup the caller does not control."
+        ]
+      }
+    },
+    {
       "module": "question-grid",
       "layer": "sections",
       "import": "@skene/design-system/sections/question-grid",
@@ -3217,15 +3246,15 @@
   "unbuilt": [],
   "gallery": {
     "route": "/components",
-    "cases": 102
+    "cases": 103
   },
   "counts": {
-    "modules": 91,
-    "exports": 269,
+    "modules": 92,
+    "exports": 270,
     "ui": 30,
     "patterns": 8,
-    "sections": 53,
+    "sections": 54,
     "noVisual": 1,
-    "withUsage": 91
+    "withUsage": 92
   }
 }

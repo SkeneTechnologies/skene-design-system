@@ -53,6 +53,7 @@ export * from './patterns/marketing.js'
  */
 export * from './sections/agent-callout.js'
 export * from './sections/hub-cards.js'
+export * from './sections/prose.js'
 export * from './sections/notice-bar.js'
 export * from './sections/faq-band.js'
 export * from './sections/recommendation-card.js'

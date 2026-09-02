@@ -1,11 +1,11 @@
 ---
 name: skene-design-system
-description: "Use when building, restyling or reviewing ANY user interface in a repository that depends on @skene/design-system — before writing a component, not after. Triggers include: adding or changing a React component, a card, chip, badge, table, button, form control, modal, nav, window frame, status marker, metric, chart-like figure, textured background or any small label; picking a colour, spacing, radius or typographic value; and any request to make a page or section look a certain way. Use it especially when about to write a NEW component, because the thing usually already exists — the package has 91 modules and ten documented clusters where one visual object was drawn twice. Do NOT use for first-time installation or Tailwind @source configuration (that is skene-design-system-setup), for assembling a whole page from sections (that is skene-design-system-pages), or for UI work in a repo that does not depend on this package."
+description: "Use when building, restyling or reviewing ANY user interface in a repository that depends on @skene/design-system — before writing a component, not after. Triggers include: adding or changing a React component, a card, chip, badge, table, button, form control, modal, nav, window frame, status marker, metric, chart-like figure, textured background or any small label; picking a colour, spacing, radius or typographic value; and any request to make a page or section look a certain way. Use it especially when about to write a NEW component, because the thing usually already exists — the package has 92 modules and ten documented clusters where one visual object was drawn twice. Do NOT use for first-time installation or Tailwind @source configuration (that is skene-design-system-setup), for assembling a whole page from sections (that is skene-design-system-pages), or for UI work in a repo that does not depend on this package."
 ---
 
 # Building UI with @skene/design-system
 
-**Grep `machine/context.yaml` before you write a component.** 91 modules, and a
+**Grep `machine/context.yaml` before you write a component.** 92 modules, and a
 documented history of the same visual object being drawn twice by someone who
 could not find the first — ten adjudicated clusters of it, plus an
 eleventh found in the marketing site's twenty comparison pages, which

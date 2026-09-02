@@ -78,6 +78,7 @@ import { SkeneLockup, SkeneMark } from '@skene/design-system/patterns/skene-mark
 import { AgentCallout } from '@skene/design-system/sections/agent-callout'
 import { NoticeBar } from '@skene/design-system/sections/notice-bar'
 import { HubCards, HubCard } from '@skene/design-system/sections/hub-cards'
+import { Prose } from '@skene/design-system/sections/prose'
 import { AnnotatedCurve } from '@skene/design-system/sections/annotated-curve'
 import {
   AppPanel, AppWindow, ArtFrame, ArtPanel, ArtTitle, DataCell, DataRow, DataTable, StatPill,
@@ -892,6 +893,30 @@ export default function ComponentGalleryPage() {
       </Case>
 
       {/* ---------------------------------------------------------- sections */}
+
+      <Case name="section-prose" width="w-[720px]">
+        {/* A document, not a props payload: the point of the case is that the
+            tags inside are plain and the container is what styles them. */}
+        <Prose>
+          <article>
+            <h2>What the check reads</h2>
+            <p>
+              Skene reads the repository and the schema, then compares what it
+              finds against the plan.
+            </p>
+            <h3>What counts as a break</h3>
+            <ul>
+              <li>An event that stopped being written</li>
+              <li>
+                A property that changed shape, <code>plan</code> string to object
+              </li>
+            </ul>
+            <blockquote>
+              A row that stopped arriving is not a failing test.
+            </blockquote>
+          </article>
+        </Prose>
+      </Case>
 
       <Case name="section-hub-cards" width="w-[880px]">
         {/* Two cards rather than one, because the grid is half the component

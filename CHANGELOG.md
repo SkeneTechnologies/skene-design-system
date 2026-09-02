@@ -1,5 +1,37 @@
 # @skene/design-system
 
+## 0.25.0
+
+### Minor Changes
+
+- feat: `Prose`, the container that styles the HTML inside it
+
+  The one module here that styles **descendants** rather than rendering its own
+  markup, because its input is a document it did not author: MDX, a CMS body, an
+  array of sections rendered as plain tags. Every other section takes content as
+  props; this one cannot, and pretending otherwise is why consumers keep writing
+  their own.
+
+  `skene-marketing-website` had **two** prose treatments for the same elements, in
+  two vocabularies that could not be compared without reading both:
+  `mdx-components.tsx` in Tailwind classes for docs and the blog, and
+  `core/ContentArea` in CSS custom properties for the glossary and series pages.
+  Nothing connected them and they disagreed.
+
+  **The reconciliation is recorded rather than silent.** Mapped onto the tokens the
+  two agreed on three of four levels — h1 at 30px, h3 at 18px, body at 14px — and
+  disagreed on h2, 24px against 20px. `--font-size-h2` settles it at 24. A
+  consumer adopting this moves that one level.
+
+  Sizes are token values rather than Tailwind `text-*` utilities, because the
+  package's marketing scale and Tailwind's default ladder are different ladders and
+  mixing them is how a document ends up with two h2 sizes.
+
+  **No panel.** No border, no radius, no padding, no ground. The implementation
+  this came from welded its prose rules to a bordered card with a sidebar-docking
+  variant; where a column sits and what frames it are page decisions, and the two
+  pages using it framed it differently. This styles the words.
+
 ## 0.24.0
 
 ### Minor Changes

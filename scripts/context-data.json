@@ -346,6 +346,35 @@
       ]
     },
     {
+      "module": "sections/prose",
+      "useFor": "Long-form body copy whose HTML this package did not author: MDX, a CMS body, an array of sections rendered as plain tags. It styles its DESCENDANTS rather than rendering its own markup, which is the one place that is correct.",
+      "intent": [
+        "explain-a-process"
+      ],
+      "alsoFor": [
+        {
+          "claim": "A dense column, a sidebar note or a definition list, where the comfortable rhythm is too loose. The vertical scale halves and the type does not move.",
+          "via": "prop Prose.density"
+        }
+      ],
+      "watchFor": [
+        {
+          "note": "It applies NO panel: no border, no radius, no padding, no ground. Where the column sits and what frames it are page decisions. The implementation this came from welded its prose rules to a bordered card with a sidebar-docking variant, and the two pages using it framed it differently.",
+          "via": "prop Prose.className"
+        },
+        {
+          "note": "Sizes are token values rather than Tailwind text-* utilities on purpose. The package's marketing scale and Tailwind's default ladder are different, and mixing them is how a document ends up with two h2 sizes.",
+          "via": "export Prose"
+        }
+      ],
+      "notFor": [
+        {
+          "instead": "LightSectionCard",
+          "why": "A section with a heading, a lede and a visual, authored as props. This is for a document whose markup the caller does not control."
+        }
+      ]
+    },
+    {
       "module": "sections/notice-bar",
       "useFor": "A full-bleed advisory bar across the top of a page, carrying one line: this page is archived, this content is from an earlier version, this environment is staging. It spans the viewport, sits above the content, and separates itself with a single hairline.",
       "intent": [

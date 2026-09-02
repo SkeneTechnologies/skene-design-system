@@ -38,7 +38,7 @@
 #   takes three props and everything a <button> takes".
 
 version: "1.0.0"
-counts: { modules: 91, ui: 30, patterns: 8, sections: 53, authored: 91, assets: 27, intents: 20 }
+counts: { modules: 92, ui: 30, patterns: 8, sections: 54, authored: 92, assets: 27, intents: 20 }
 
 intents:
   open-a-page: >-
@@ -4510,6 +4510,49 @@ modules:
           A whole cream section band carrying copy and buttons. This is a
           frame with a 640px cap and no title/lede/actions slots; use
           `LightSectionCard`.
+  sections/prose:
+    import: "@skene/design-system/sections/prose"
+    exports: [Prose]
+    polarity: inherits
+    seen: [section-prose]
+    overrides: [className]
+    customProperties: [--font-size-h1, --font-size-h2, --font-size-stage-header, --font-size-label, --font-line-height-relaxed, --font-size-body-sm]
+    props:
+      Prose:
+        density: { type: "'comfortable' | 'compact'", default: "'comfortable'" }
+    accepts:
+      Prose: "React.ComponentProps<'div'>"
+    useFor: >-
+      Long-form body copy whose HTML this package did not author: MDX, a CMS
+      body, an array of sections rendered as plain tags. It styles its
+      DESCENDANTS rather than rendering its own markup, which is the one place
+      that is correct.
+    intent: [explain-a-process]
+    alsoFor:
+      - claim: >-
+          A dense column, a sidebar note or a definition list, where the
+          comfortable rhythm is too loose. The vertical scale halves and the
+          type does not move.
+        via: prop Prose.density
+    watchFor:
+      - note: >-
+          It applies NO panel: no border, no radius, no padding, no ground.
+          Where the column sits and what frames it are page decisions. The
+          implementation this came from welded its prose rules to a bordered
+          card with a sidebar-docking variant, and the two pages using it
+          framed it differently.
+        via: prop Prose.className
+      - note: >-
+          Sizes are token values rather than Tailwind text-* utilities on
+          purpose. The package's marketing scale and Tailwind's default ladder
+          are different, and mixing them is how a document ends up with two h2
+          sizes.
+        via: export Prose
+    notFor:
+      - instead: LightSectionCard
+        why: >-
+          A section with a heading, a lede and a visual, authored as props.
+          This is for a document whose markup the caller does not control.
   sections/question-grid:
     import: "@skene/design-system/sections/question-grid"
     exports: [QuestionGrid, QuestionCard]
