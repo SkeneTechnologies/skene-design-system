@@ -28,43 +28,99 @@ import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-run
  * separate from the styled-components definitions further down for the same
  * reason `data.ts` existed: edit the exported consts in that block for
  * different labels without touching the rest of the file.
+ *
+ * ## Re-synced from the source 2026-09-02
+ *
+ * The port above happened on 2026-08-25 and then the two copies drifted, in one
+ * direction: skene-marketing-website put six more commits into its copy and this
+ * file got none of them. Anything else consuming this section was rendering a
+ * stale scene, and the drift was invisible from either side.
+ *
+ * What arrived with the re-sync:
+ *
+ *   TWO EVIDENCE SETS instead of one. `EVIDENCE_ENG` and `EVIDENCE_GTM`, on
+ *   founder direction 2026-08-26: the panel showed a file path and a table in
+ *   BOTH views, which is the engineer's answer handed to a GTM reader who has
+ *   no use for it. The scene's whole claim is that one signal has two readings,
+ *   and Evidence was the panel not making it. `EvidenceSource` widened from
+ *   "code" | "db" to include "metric" and "flow" to carry it.
+ *
+ *   A COPY CORRECTION, 2026-08-29. "the metric it moves" became "the number it
+ *   reports into". The shipped string asserted that the step MOVES the metric,
+ *   which is a causal claim the consumer's `voice.md:57` bans, and it
+ *   contradicted the panel's own "Feeds" label eight lines away.
+ *
+ *   A `$dark` prop threaded through several styled components, and gsap loaded
+ *   inside the entry effect rather than at module scope, which is the same
+ *   change 0.18.0 made to `CardAnimationIntegrations` for the same reason.
+ *
+ * The two repository-local dependencies the source file carried did not need
+ * porting. Its `useContainerScale` is character-for-character this package's
+ * `lib/use-container-scale` apart from quoting, and its `media` import from
+ * `@/styles/breakpoints` had ZERO uses in the file.
  */
 import { useCallback, useEffect, useRef, useState } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { ChevronDown } from "lucide-react";
 import styled, { css, keyframes } from "styled-components";
 import { SkeneMark } from "../patterns/skene-mark.js";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger, } from "../ui/dropdown-menu.js";
 import { useContainerScale } from "../lib/use-container-scale.js";
-gsap.registerPlugin(ScrollTrigger);
-const EVIDENCE = [
-    { source: "code", label: "app/onboarding/route.ts" },
-    { source: "db", label: "public.accounts" },
+/**
+ * Evidence, once per view. Founder direction 2026-08-26: the panel showed a
+ * file path and a table in BOTH views, which is the engineer's answer given to
+ * a GTM reader who has no use for it. The scene's whole claim is that one
+ * signal has two readings, and Evidence was the one panel not making it.
+ *
+ * Engineering gets the code evidence it already had. GTM gets the same step
+ * stated as what it produces: the metric it feeds, and the flow it sits in.
+ * Both pairs are already elsewhere in this file (`STEP.feeds`, `FLOW_ROWS`), so
+ * the two views cannot drift apart.
+ *
+ * The footnote states where the pair came from, because a badge over a bare
+ * string does not. Flows carries a line like it for the same reason.
+ */
+const EVIDENCE_ENG = [
+    { source: "code", label: "app/upgrade/route.ts" },
+    { source: "db", label: "public.subscriptions" },
 ];
+const EVIDENCE_ENG_FOOTNOTE = "Where the step was found: the call in your code, and the table behind it.";
+const EVIDENCE_GTM = [
+    { source: "metric", label: "Paid conversion rate" },
+    { source: "flow", label: "Upgrade started" },
+];
+/**
+ * "the number it reports into", not "the metric it moves", corrected 2026-08-29.
+ * The shipped string asserted that the step MOVES the metric, which is a causal
+ * claim `voice.md:57` bans, and it contradicted the panel's own "Feeds" label
+ * eight lines away. Reporting into a number is what the component actually
+ * draws.
+ */
+const EVIDENCE_GTM_FOOTNOTE = "What the step feeds: the number it reports into, and the flow it sits in.";
 const STEP = {
-    name: "Onboarding started",
+    name: "Upgrade started",
     stage: "activation",
     stageLabel: "First Value",
     /** Events detected in the codebase are reported at 100% confidence. */
     confidence: "Detected · 100%",
-    feeds: "Activation rate",
+    feeds: "Paid conversion rate",
     gap: "1 property missing: plan",
 };
 const CALL_SITE = {
-    path: "app/onboarding/route.ts",
+    path: "app/upgrade/route.ts",
     lines: [
-        { text: 'skene.track("onboarding_started", {', tone: "plain" },
-        { text: "  account_id: account.id,", tone: "plain" },
-        { text: "  plan: account.plan,", tone: "removed" },
+        { text: 'skene.track("upgrade_started", {', tone: "plain" },
+        { text: "  subscription_id: sub.id,", tone: "plain" },
+        { text: "  plan: sub.plan,", tone: "removed" },
         { text: "})", tone: "plain" },
     ],
-    table: "public.accounts",
+    table: "public.subscriptions",
     columns: "id, user_id, plan",
 };
 const FLOWS_FOOTNOTE = "How users actually move, captured by one script tag.";
 const FLOW_ROWS = [
-    { label: "Signed up", count: "4,182" },
-    { label: "Onboarding started", count: "1,097", active: true },
-    { label: "Reached first value", count: "863" },
+    { label: "Pricing viewed", count: "4,182" },
+    { label: "Upgrade started", count: "1,097", active: true },
+    { label: "Upgrade completed", count: "863" },
 ];
 /**
  * What the GitHub App posts on a pull request.
@@ -80,24 +136,37 @@ const FLOW_ROWS = [
  * request. Both happen in GitHub. Nothing is copied and pasted anywhere else,
  * so this panel must never show the reader a prompt to carry somewhere.
  */
+/**
+ * Trimmed 2026-08-26, founder note: "the #412 should be clear that this is a
+ * PR. Now there is bit too much going on for a visitor to easily comprehend."
+ *
+ * Two changes. The panel now carries a `Pull request` label, so it opens the
+ * same way its two neighbours do (`Evidence`, `Call site`) instead of starting
+ * cold on a bare `#412` that only a developer reads as a PR number.
+ *
+ * And three things came out. The `Medium` severity badge was a third chip in a
+ * row where the status chip is the one that matters. The `or comment
+ * /skene fix` line was a second path offered before the reader has taken in the
+ * first. The footnote's second sentence ("It holds the merge until you accept
+ * it or dismiss it") is true and is documented on /product/features; what has
+ * to survive HERE is the hedge, because a model judging a diff can be wrong and
+ * the panel says so out loud. All three are recoverable from this comment.
+ */
 const REVIEW = {
-    pr: "Add plan tiers to onboarding",
+    pr: "Add plan tiers to upgrade",
     number: "#412",
+    label: "Pull request",
     status: "Changes requested",
-    severity: "Medium",
-    body: "onboarding_started no longer writes plan. Every activation number split by tier goes flat from this merge, and the weeks it stays broken are not recoverable later.",
+    body: "upgrade_started no longer writes plan. Every activation number split by tier goes flat from this merge, and the weeks it stays broken are not recoverable later.",
     suggestionLabel: "Suggested change",
     suggestion: [
-        { text: "  account_id: account.id,", tone: "context" },
-        { text: "  plan: account.plan,", tone: "added" },
+        { text: "  subscription_id: sub.id,", tone: "context" },
+        { text: "  plan: sub.plan,", tone: "added" },
     ],
     cta: "Apply suggestion",
-    altPrefix: "or comment",
-    altCommand: "/skene fix",
     /** A model judging a diff can be wrong, so the panel says so out loud. */
-    footnote: "A judgement on the diff, not a check against your plan. It holds the merge until you accept it or dismiss it.",
+    footnote: "A judgement on the diff, not a check against your plan.",
 };
-/* ============================================================== styles ==== */
 /* A long settle on the way in. Everything here eases the same way so the
    entry and the view switch feel like one motion system. */
 const EASE_IN = "cubic-bezier(0.16, 1, 0.3, 1)";
@@ -105,56 +174,86 @@ const fadeInUp = keyframes `
   from { opacity: 0; transform: translateY(14px); }
   to   { opacity: 1; transform: translateY(0); }
 `;
-/* Ink, not peach. On cream a peach ring measures about 1.2:1 and the pulse is
-   simply invisible; it was drawn for the near-black stage this scene used to
-   sit on. */
+/* Peach again. The ink ring below it was the cream-stage reading; the stage is
+   back on near-black per the approved alt wireframe, which is the ground this
+   pulse was drawn for in the first place. */
 const softPulse = keyframes `
-  0%, 100% { box-shadow: 0 0 0 0 rgba(20, 20, 20, 0.28); }
-  50%      { box-shadow: 0 0 0 6px rgba(20, 20, 20, 0); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(254, 192, 137, 0.38); }
+  50%      { box-shadow: 0 0 0 6px rgba(254, 192, 137, 0); }
 `;
 /* ---------------------------------------------------------------- section */
 /*
- * THE SCENE IS LIGHT-THEMED, on the assumption it sits inside a `light`-classed
- * band (e.g. `Bridge`) or a `light`-classed wrapper around it directly.
+ * THE SCENE IS DARK-THEMED AGAIN, restored 2026-08-26 to the approved alt
+ * wireframe (.webanatomy/build-page/home-calcom-style-alt/wireframe.html).
+ * The block between this restoration and the original dark cut was a
+ * deliberate inversion to a white stage for the cream `Bridge` band; the
+ * homepage hero is the scene's only remaining home and it sits on
+ * `chrome.surface.darker`, which is the ground the wireframe draws: near-black
+ * stage, dark translucent side panels with light ink, cream centre card in the
+ * GTM view, faint light ambient text, light dashed connectors.
  *
- * The values below are the LIGHT reading of the scene's own token names. Where
- * a package token says the same thing it is aliased rather than re-stated,
- * which is what makes those three lines resolve correctly under `light`. The
- * literals that remain are the ones the package has no name for.
+ * Why the block still exists at all: the scene was authored against
+ * `(landing)/globals.scss`, which the `(site)` routes do not load; only
+ * `globals.css` is there, and it leaves most of these names undefined while
+ * aliasing three of them (--color-accent, --color-primary, --color-secondary)
+ * to the design-system palette. Declaring the set on this section keeps the
+ * scene's own vocabulary intact without overriding those three for the package
+ * components that share the page.
  *
- * What does NOT flip: everything the engineering view draws. `--color-terminal
- * Chrome-*` is invariant across `light`/dark and stays dark on the cream, which
- * is `machine/rules.yaml:115-131` working as designed rather than an
- * oversight. A code block and a GitHub review are the exact case that role
- * exists for.
+ * The values are the DARK reading of the same names, transcribed from the
+ * wireframe's `.scene` styles. Literals rather than theme-aware `text.*`
+ * aliases on purpose: outside a `light` subtree those aliases resolve to light
+ * ink, but the centre card is CREAM in the GTM view, so its internal roles
+ * (--color-text-light / --color-text-dark) must stay ink-dark no matter what
+ * ancestor the section gains. The stage-side roles are light literals for the
+ * same reason in reverse.
+ *
+ * What never flipped in either direction: everything the engineering view
+ * draws. `--color-terminalChrome-*` is invariant in `globals.css`, which is
+ * `machine/rules.yaml:115-131` working as designed. A code block and a GitHub
+ * review are the exact case that role exists for.
  */
 const sceneTokens = css `
   --color-primary: #000000;
-  --color-secondary: #ffffff;
+  /* The GTM centre card's ground: cream, the wireframe's .scene__center
+     background (--cream = brand.light). Was #ffffff on the white stage. */
+  --color-secondary: var(--color-brand-light);
+  /* Outside a 'light' subtree this is the bright reading, #fec089 — the value
+     drawn for near-black. (Inside the old cream band it resolved to #89684a,
+     which is why the inversion had to route around it.) */
   --color-accent: var(--color-brand-peach);
-  --color-accent-muted: rgba(137, 104, 74, 0.12);
-  --color-text: var(--color-text-primary);
-  --color-text-light: var(--color-text-muted);
-  --color-text-dark: var(--color-text-primary);
-  /* The three "on dark" roles now name ink on cream. The names are the scene's
-     and are left alone; a rename would touch every panel for no rendered
-     difference. */
-  --color-text-on-dark: var(--color-text-primary);
-  --color-text-on-dark-muted: var(--color-text-muted);
-  --color-text-on-dark-subtle: rgba(0, 0, 0, 0.5);
-  /* The quiet role INSIDE the two panels that stayed dark. The three
-     "on dark" names above now mean ink on cream, so a dark-only panel reading
-     one of them renders black on #0d1117: invisible, and invisible in exactly
-     the way a build cannot catch. This is the reading they used to have. */
+  /* The active flow row's tint, back to a peach wash on dark. Was a
+     brown-alpha tint tuned for white. */
+  --color-accent-muted: rgba(254, 192, 137, 0.14);
+  /* Stage-side ink: the toggle and the active flow row, both on dark. */
+  --color-text: #faf1e9;
+  /* CARD-side muted ink: the GTM card label and feeds value, on cream.
+     Wireframe reads #525252 (.scene__feeds) beside a warm #8a6a4f label;
+     one token serves both here, as it always has. */
+  --color-text-light: #525252;
+  /* CARD-side primary ink on cream, wireframe's #1a1a1a. */
+  --color-text-dark: #1a1a1a;
+  /* The three "on dark" roles mean what their names say again. The wireframe's
+     readings: ev-path warm-strong, muted rows, and the .3-alpha subtle tier
+     shared by panel labels, connectors and footnotes. */
+  --color-text-on-dark: rgba(250, 241, 233, 0.82);
+  --color-text-on-dark-muted: rgba(250, 241, 233, 0.64);
+  --color-text-on-dark-subtle: rgba(250, 241, 233, 0.55);
+  /* The quiet role inside the two GitHub-dark engineering panels. Unchanged by
+     both the inversion and this restoration: those panels never flipped. */
   --color-chrome-muted: rgba(201, 209, 217, 0.62);
-  /* Brand, for those same two dark panels. --color-accent now resolves to the
-     LIGHT reading of peach, #89684a, which is the value designed for cream and
-     is muddy on #0d1117. warmTan is the invariant chrome-side warm and is what
-     the rest of the review already uses. */
+  /* Brand for those same GitHub-dark panels. warmTan is the invariant
+     chrome-side warm the rest of the review already uses; kept even though
+     --color-accent is bright again, so the review's warm stays the chrome
+     family's rather than the brand's. */
   --color-chrome-accent: var(--color-terminalChrome-warmTan);
   --color-background-dark: transparent;
-  --color-background-darker: #ffffff;
-  --color-border-on-dark: var(--color-chrome-line-on-light);
+  /* The stage ground the comments kept naming through the white era: the
+     near-black the dark-only panels were always read against. */
+  --color-background-darker: #0d1117;
+  /* Wireframe panel border: rgba(255,255,255,.10); one notch up so the frame
+     edge survives the wash. Was chrome.line.onLight for the white stage. */
+  --color-border-on-dark: rgba(255, 255, 255, 0.12);
   --font-primary:
     var(--font-geist-sans, ui-sans-serif, system-ui, sans-serif), sans-serif;
   --font-mono: var(--font-geist-mono, ui-monospace, monospace), monospace;
@@ -171,13 +270,14 @@ const sceneTokens = css `
   --spacing-xxl: 48px;
   --transition-fast: 150ms ease;
 `;
-/* The consuming layout owns the band's ground, padding and max width, so this
-   owns none of them. */
+/* `Bridge` owns the band's ground, padding and max width, so this owns none of
+   them. `media` is still imported for the panels below. */
 const Section = styled.section `
   ${sceneTokens};
   position: relative;
-  /* A flex/grid ITEM in whatever row the consumer puts it in, and would
-     otherwise size to its content. */
+  /* Bridge wraps each child in its own flex track (bridge.tsx:246-260), so this
+     is a flex ITEM and would otherwise size to its content. BridgeNode carries
+     the same width for the same reason (bridge.tsx:99). */
   width: 100%;
   min-width: 0;
 `;
@@ -191,14 +291,17 @@ const Container = styled.div `
   position: relative;
   width: 100%;
   aspect-ratio: ${({ $ratio }) => $ratio};
-  border-radius: var(--radius-md);
   overflow: hidden;
-  /* A faint ink wash over white, so the floor still has a top-lit gradient
-     rather than being a flat rectangle. */
-  background:
-    radial-gradient(120% 90% at 50% 0%, rgba(20, 20, 20, 0.05), transparent 70%),
-    var(--color-background-darker);
-  border: 1px solid var(--color-border-on-dark);
+  /* No ground and no border, founder direction 2026-08-26.
+     The stage used to paint its own near-black plus a top-lit white wash, and
+     ring itself in the on-dark border token. That reads as a framed picture of
+     the product sitting in the hero. Transparent, the hero's halftone field
+     runs under the panels and they read as floating on it instead — the panels
+     keep their own borders and grounds, so the chain is still legible; only
+     the box around it is gone. overflow: hidden stays: it clips the scaled
+     wrapper, which is layout, not decoration. */
+  background: transparent;
+  border: 0;
 `;
 const ScaleWrapper = styled.div `
   position: absolute;
@@ -231,33 +334,7 @@ const panelBase = css `
     transform: none;
   }
 `;
-/* Ambient context. Present, never readable, never competing for attention.
-   Two strengths, not one: in the GTM view the cards on top are light and
-   sparse, so the texture can sit at a strength that actually reads as
-   present rather than as a rendering artifact. In the Engineering view the
-   call site and PR review cards are already dense with their own text, so
-   the same strength would compete rather than add texture; it drops back
-   down there instead. */
-const Ambient = styled.div `
-  ${panelBase};
-  /* Ink at a lower alpha than the white it replaced. Dark text on white carries
-     further than white on black at the same opacity, and this has to stay
-     present without ever becoming readable. */
-  opacity: ${({ $dark }) => ($dark ? 0.07 : 0.18)};
-  transition: opacity 0.4s ${EASE_IN};
-  transform: none;
-  pointer-events: none;
-  padding: 0;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  line-height: 1.8;
-  color: #141414;
-  user-select: none;
-
-  @media (prefers-reduced-motion: reduce) {
-    transition: none;
-  }
-`;
+/* Ambient context. Present, never readable, never competing for attention. */
 const Connectors = styled.svg `
   position: absolute;
   inset: 0;
@@ -265,26 +342,41 @@ const Connectors = styled.svg `
   height: 100%;
   overflow: visible;
   pointer-events: none;
-  /* The stroke is ink; a dashed ink line at 30% on white is fainter than the
-     same line would be in a brand colour on black, hence the higher value. */
+  /* The stroke is --color-text-on-dark-subtle (0.55-alpha cream), so 0.55 here
+     lands the drawn line at ~0.30 — the wireframe's dashed light reading
+     (rgba(250,241,233,.3) on .scene__conn). */
   opacity: 0.55;
 `;
 /* ------------------------------------------------------------ panel shell */
+/* All three panels carry the view, founder direction 2026-08-26. The centre
+   card was the only one that flipped: cream for GTM, GitHub-dark for
+   Engineering, with Evidence and Flows staying dark in both. That read as one
+   card changing inside a fixed scene rather than as two different rooms. Now
+   the whole stage flips together, so `$dark` means Engineering everywhere and
+   the GTM view is three cream cards floating on the hero's halftone.
+
+   The grounds and the lift are the centre card's, so nothing here invents a
+   third surface treatment. */
+const panelSkin = css `
+  transition: background 0.4s ${EASE_IN}, border-color 0.4s ${EASE_IN};
+  background: ${({ $dark }) => $dark ? "var(--color-terminalChrome-githubDarkSurface)" : "var(--color-secondary)"};
+  border: 1px solid
+    ${({ $dark }) => $dark ? "var(--color-terminalChrome-githubBorder)" : "transparent"};
+  box-shadow: ${({ $dark }) => ($dark ? "none" : "0 20px 45px rgba(0, 0, 0, 0.45)")};
+`;
 const LeftPanel = styled.div `
   ${panelBase};
+  ${panelSkin};
   padding: 16px;
-  /* An opaque card. A translucent white wash only reads as a panel when the
-     ground behind it is near-black. */
-  background: #ffffff;
-  border: 1px solid var(--color-border-on-dark);
-  box-shadow: 0 1px 2px rgba(20, 20, 20, 0.04);
 `;
 const PanelLabel = styled.p `
   font-family: var(--font-mono);
   font-size: 10px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--color-text-on-dark-subtle);
+  /* The centre card's own label pairing, reused: chrome text on the
+     GitHub-dark ground, the muted card ink on cream. */
+  color: ${({ $dark }) => $dark ? "var(--color-terminalChrome-githubText)" : "var(--color-text-light)"};
   margin: 0 0 12px 0;
 `;
 const EvidenceRow = styled.div `
@@ -294,23 +386,45 @@ const EvidenceRow = styled.div `
   padding: 8px 0;
 
   & + & {
-    border-top: 1px solid var(--color-border-on-dark);
+    border-top: 1px solid
+      ${({ $dark }) => $dark ? "var(--color-terminalChrome-githubBorder)" : "rgba(0, 0, 0, 0.08)"};
   }
 `;
+/* Four sources now, two per view: `code`/`db` for Engineering and
+   `metric`/`flow` for GTM. The first of each pair is the warm one and the
+   second the green one, so the panel keeps the same two-tone reading whichever
+   view is up. Each tone has a dark-ground and a cream-ground reading: peach on
+   near-black is the wireframe's .ev-chip, and it is unreadable on cream, so the
+   light column uses the centre card's own badge inks (`Badge` above). */
+const CHIP_TONE = {
+    code: { warm: true },
+    metric: { warm: true },
+    db: { warm: false },
+    flow: { warm: false },
+};
 const SourceChip = styled.span `
   flex: 0 0 auto;
   font-family: var(--font-mono);
   font-size: 10px;
   padding: 2px 6px;
   border-radius: var(--radius-xs);
-  /* Ink-dark enough to clear 4.5:1 on their own tints, on a white ground. */
-  color: ${({ $source }) => ($source === "code" ? "#0f6e56" : "#7a4e12")};
-  background: ${({ $source }) => $source === "code" ? "rgba(15, 110, 86, 0.1)" : "rgba(122, 78, 18, 0.1)"};
+  ${({ $source, $dark }) => {
+    const warm = CHIP_TONE[$source].warm;
+    if ($dark)
+        return css `
+        color: ${warm ? "var(--color-accent)" : "#9db78a"};
+        background: ${warm ? "rgba(254, 192, 137, 0.16)" : "rgba(157, 183, 138, 0.18)"};
+      `;
+    return css `
+      color: ${warm ? "#8a3a12" : "#12633a"};
+      background: ${warm ? "rgba(249, 115, 22, 0.16)" : "rgba(39, 201, 63, 0.16)"};
+    `;
+}};
 `;
 const EvidencePath = styled.span `
   font-family: var(--font-mono);
   font-size: 11px;
-  color: var(--color-text-on-dark);
+  color: ${({ $dark }) => ($dark ? "#ffffff" : "var(--color-text-dark)")};
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -323,7 +437,10 @@ const CenterCard = styled.div `
   background: ${({ $dark }) => $dark ? "var(--color-terminalChrome-githubDarkBg)" : "var(--color-secondary)"};
   border: 1px solid
     ${({ $dark }) => ($dark ? "var(--color-terminalChrome-githubBorder)" : "transparent")};
-  box-shadow: var(--shadow-modal, 0 12px 28px rgba(20, 20, 20, 0.12));
+  /* Back to the deep lift. 0.45 was a bruise on the cream band; on the
+     restored near-black stage it is what floats the cream card above the
+     ground (the wireframe's .scene__center shadow-modal on dark). */
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.45);
 `;
 const CardHead = styled.div `
   margin-bottom: 14px;
@@ -352,87 +469,69 @@ const PathName = styled.h3 `
   margin: 4px 0 0 0;
   color: #ffffff;
 `;
-/* The view switch, centred below the frame rather than the top right or
-   floating over the bottom of it, because it changes the whole scene and not
-   just a corner of it. A two-way segmented control reads as "the same scene,
-   two positions" the way a dropdown menu does not: both options are always
-   visible, and the sliding thumb is what actually moves when the view
-   changes, rather than a label swapping inside a closed trigger. Plain
-   buttons, not this package's own `DropdownMenu`: there is no menu to open
-   here, so the radio-menu primitives (built for a closed-until-clicked list)
-   do not fit; `role="group"` plus `aria-pressed` on each button is the
-   standard accessible shape for a mutually-exclusive toggle pair.
-
-   Below the card, in normal flow, NOT `position: absolute` pinned to the
-   Stage's bottom edge. The Stage is a fixed design-space height per layout
-   (WIDE/MEDIUM/COMPACT), but the panels inside it size to their own content,
-   and the Engineering view's PR review card runs taller than the GTM view's
-   Flows card. An absolutely-positioned switch anchored to the Stage's bottom
-   overlapped that card's own footnote text. Flow layout sidesteps the
-   mismatch entirely: the switch just sits after whatever height the card
-   actually rendered at. */
-const ViewSwitchRow = styled.div `
+/* The view switch, in the frame's top right rather than on a card, because it
+   changes the whole scene and not just the card it would sit in. The menu is the
+   design system's `DropdownMenu`, so its surface, focus ring and item states are
+   the package's; only the trigger is drawn here, in the scene's palette. */
+const ToggleRow = styled.div `
+  position: absolute;
+  top: 20px;
+  right: 24px;
   display: flex;
-  justify-content: center;
-  margin-top: 20px;
+  align-items: center;
+  gap: var(--spacing-sm);
+  z-index: 2;
 `;
-const ViewSwitchTrack = styled.div `
-  position: relative;
-  display: grid;
-  grid-auto-flow: column;
-  padding: 3px;
-  border-radius: 999px;
-  border: 1px solid var(--color-border-on-dark);
-  background: #ffffff;
-  box-shadow: 0 1px 2px rgba(20, 20, 20, 0.04);
+const ViewTrigger = styled.button `
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: 6px 10px;
+  border-radius: var(--radius-xs);
+  /* The wireframe's .scene__view: a light-hairline pill on the dark stage,
+     no fill, peach on hover. The white-filled, ink-ringed cut was for the
+     white stage. */
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: transparent;
+  font-family: var(--font-primary);
+  font-size: var(--font-size-xs);
+  line-height: 1;
+  color: var(--color-text);
+  cursor: pointer;
+  transition:
+    background var(--transition-fast),
+    border-color var(--transition-fast);
   ${({ $inviting }) => $inviting &&
     css `
       animation: ${softPulse} 2.4s ease-in-out infinite;
     `};
 
+  &:hover {
+    border-color: var(--color-accent);
+  }
+
+  /* Light ink, not accent: peach on this near-black clears 3:1, but the cream
+     outline is the higher-contrast ring and matches the stage's ink. */
+  &:focus-visible {
+    outline: 2px solid var(--color-text);
+    outline-offset: 2px;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     animation: none;
   }
 `;
-/* Slides under whichever button is active. Sized and positioned in JS
-   (`$left`/`$width`, from the active button's own `offsetLeft`/`offsetWidth`)
-   rather than a 50/50 CSS split, because "GTM" and "Engineering" are not the
-   same width and a fixed half-and-half thumb would either clip the longer
-   label or leave a gap around the shorter one. */
-const ViewSwitchThumb = styled.div `
-  position: absolute;
-  top: 3px;
-  bottom: 3px;
-  left: ${({ $left }) => $left}px;
-  width: ${({ $width }) => $width}px;
-  border-radius: 999px;
-  background: var(--color-text);
-  transition: left 0.3s ${EASE_IN}, width 0.3s ${EASE_IN};
-
-  @media (prefers-reduced-motion: reduce) {
-    transition: none;
-  }
+const ViewCaption = styled.span `
+  color: var(--color-text-on-dark-subtle);
 `;
-const ViewSwitchButton = styled.button `
-  position: relative;
-  z-index: 1;
-  padding: 6px 14px;
-  border: none;
-  border-radius: 999px;
-  background: transparent;
-  font-family: var(--font-primary);
-  font-size: var(--font-size-xs);
-  line-height: 1;
-  white-space: nowrap;
-  color: ${({ $active }) => ($active ? "#ffffff" : "var(--color-text)")};
-  cursor: pointer;
-  transition: color 0.3s ${EASE_IN};
+/* Rotates when the menu is open. Radix sets `data-state` on the trigger. */
+const ViewChevron = styled.span `
+  display: inline-block;
+  color: var(--color-text-on-dark-subtle);
+  transition: transform var(--transition-fast);
 
-  /* Ink, not accent. A peach ring on white is about 1.2:1 and fails the 3:1
-     floor a focus indicator owes. */
-  &:focus-visible {
-    outline: 2px solid var(--color-text);
-    outline-offset: 2px;
+  ${ViewTrigger}[data-state="open"] & {
+    transform: rotate(180deg);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -537,12 +636,12 @@ const TableCols = styled.span `
 /* ------------------------------------------------------------ right panel */
 const RightPanel = styled.div `
   ${panelBase};
+  ${panelSkin};
   padding: 14px;
-  transition: background 0.4s ${EASE_IN}, border-color 0.4s ${EASE_IN};
-  background: ${({ $dark }) => $dark ? "var(--color-terminalChrome-githubDarkSurface)" : "#ffffff"};
-  border: 1px solid
-    ${({ $dark }) => ($dark ? "var(--color-terminalChrome-githubBorder)" : "var(--color-border-on-dark)")};
 `;
+/* Flows is a GTM-view panel, so it is always on cream now. Its inks were
+   written for the dark stage it used to sit on; they are the card-side ones
+   here. The active row keeps a peach wash, at the heavier alpha cream needs. */
 const FlowRow = styled.div `
   display: flex;
   align-items: center;
@@ -553,17 +652,18 @@ const FlowRow = styled.div `
   border-radius: var(--radius-xs);
   font-family: var(--font-primary);
   font-size: 12px;
-  color: ${({ $active }) => ($active ? "var(--color-text)" : "var(--color-text-on-dark-muted)")};
-  background: ${({ $active }) => ($active ? "var(--color-accent-muted)" : "transparent")};
+  color: ${({ $active }) => $active ? "var(--color-text-dark)" : "var(--color-text-light)"};
+  background: ${({ $active }) => ($active ? "rgba(254, 192, 137, 0.30)" : "transparent")};
   transition: background var(--transition-fast);
 `;
 const FlowCount = styled.span `
   font-family: var(--font-mono);
   font-size: 12px;
-  /* Not --color-accent as text: at low weight the brand colour reads under a
-     4.5:1 floor on white. The active row is marked by its tint and by ink
-     weight instead. */
-  color: ${({ $active }) => $active ? "var(--color-text)" : "var(--color-text-on-dark-subtle)"};
+  /* Ink weight, not accent. Bright peach as TEXT is the wireframe's reading on
+     near-black; on cream it fails contrast, which is what the design system's
+     light-surface rule (machine/rules.yaml:152-156) says. The active row is
+     marked by its wash and its weight instead. */
+  color: ${({ $active }) => $active ? "var(--color-text-dark)" : "var(--color-text-light)"};
   font-weight: ${({ $active }) => ($active ? 500 : 400)};
 `;
 const FlowBar = styled.div `
@@ -571,8 +671,10 @@ const FlowBar = styled.div `
   margin: 0 0 8px 0;
   border-radius: 2px;
   width: ${({ $pct }) => $pct}%;
-  /* Peach as a FILL is fine; it is text-as-peach that fails contrast. */
-  background: ${({ $active }) => $active ? "var(--color-accent)" : "rgba(20, 20, 20, 0.16)"};
+  /* Peach fill for the active bar (the wireframe's .flow-bar--active i). As a
+     BAR rather than text it carries on cream, so it stays. The inactive fills
+     are ink at low alpha, the cream-ground counterpart of the light wash. */
+  background: ${({ $active }) => $active ? "var(--color-accent)" : "rgba(0, 0, 0, 0.16)"};
 `;
 const PrStrip = styled.div `
   display: flex;
@@ -602,14 +704,6 @@ const BotBadge = styled.span `
   border-radius: var(--radius-xs);
   color: var(--color-terminalChrome-githubDarkBg);
   background: var(--color-chrome-accent);
-`;
-const SeverityBadge = styled.span `
-  font-family: var(--font-mono);
-  font-size: 10px;
-  padding: 2px 6px;
-  border-radius: var(--radius-xs);
-  color: var(--color-terminalChrome-warmTan);
-  background: rgba(172, 139, 93, 0.18);
 `;
 const ReviewBody = styled.p `
   font-family: var(--font-primary);
@@ -660,25 +754,6 @@ const CommitButton = styled.div `
   background: rgba(34, 197, 94, 0.18);
   border: 1px solid rgba(34, 197, 94, 0.4);
 `;
-/* The second way to take the fix. Same place, no context switch. */
-const AltFix = styled.div `
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  margin-top: 8px;
-  font-family: var(--font-primary);
-  font-size: 11px;
-  color: var(--color-chrome-muted);
-`;
-const FixCommand = styled.code `
-  font-family: var(--font-mono);
-  font-size: 11px;
-  padding: 2px 6px;
-  border-radius: var(--radius-xs);
-  color: var(--color-chrome-accent);
-  background: rgba(255, 255, 255, 0.08);
-`;
 const StatusBadge = styled.span `
   font-family: var(--font-mono);
   font-size: 10px;
@@ -687,14 +762,16 @@ const StatusBadge = styled.span `
   color: var(--color-terminalChrome-terminalRed);
   background: rgba(255, 85, 85, 0.14);
 `;
-/* The one shared caption: the flows panel uses it on white, the review on
-   GitHub dark. It is the only element in the scene that crosses the polarity
-   line, so it is the only one that has to be told which side it is on. */
+/* The one shared caption, on both grounds: cream in the GTM view (Evidence and
+   Flows), GitHub dark in the Engineering one (Evidence and the review). */
 const Footnote = styled.p `
   font-family: var(--font-mono);
   font-size: 10px;
   line-height: 1.6;
-  color: ${({ $dark }) => $dark ? "var(--color-chrome-muted)" : "var(--color-text-on-dark-subtle)"};
+  /* The dark flag is the Engineering view, which is where the GitHub-dark
+     panels are. The GTM reading is cream-ground now, not stage-ground, so it
+     takes the card's muted ink rather than the on-dark subtle tier. */
+  color: ${({ $dark }) => $dark ? "var(--color-chrome-muted)" : "var(--color-text-light)"};
   margin: 10px 0 0 0;
 `;
 const VIEW_LABEL = {
@@ -711,22 +788,33 @@ const VIEW_LABEL = {
 const WIDE = {
     w: 1100,
     h: 516,
-    ambientA: { x: 26, y: 22, w: 206 },
-    ambientB: { x: 296, y: 400, w: 206 },
     left: { x: 8, y: 150, w: 268 },
     center: { x: 322, y: 58, w: 430 },
     right: { x: 800, y: 90, w: 292 },
     connectors: ["M 276 216 H 299 V 190 H 322", "M 752 216 H 776 V 190 H 800"],
 };
+/**
+ * Rebuilt 2026-08-26 against the ENGINEERING view, and widened.
+ *
+ * The 400x1040 version was laid out against the GTM view's panel heights
+ * (132 / 192 / 216), but the Engineering view runs the same three panels much
+ * taller (132 / 238 / 354) and overran its own floor. Every box below is
+ * placed against the taller view, so both read the same.
+ *
+ * The width went 400 to 460 for the hero swap. The stage scales to its
+ * container, so wider design units mean a SMALLER rendered stage. The panels
+ * widen with it (368 to 428, same 16px margins), so the extra units go to the
+ * copy rather than to a right-hand gutter.
+ */
 const COMPACT = {
-    w: 400,
-    h: 1040,
-    ambientA: { x: 206, y: 516, w: 180 },
-    ambientB: { x: 14, y: 946, w: 190 },
-    left: { x: 16, y: 68, w: 368 },
-    center: { x: 16, y: 240, w: 368 },
-    right: { x: 16, y: 620, w: 368 },
-    connectors: ["M 200 208 V 240", "M 200 548 V 620"],
+    w: 460,
+    h: 904,
+    left: { x: 16, y: 60, w: 428 },
+    center: { x: 16, y: 266, w: 428 },
+    right: { x: 16, y: 536, w: 428 },
+    /* Straight drops down the stack's centre line (460/2 = 230), from each
+       panel's bottom edge in the GTM view to the next panel's top edge. */
+    connectors: ["M 230 234 V 266", "M 230 458 V 536"],
 };
 /**
  * For hero-column widths (roughly 420-720px), where WIDE's three-across chain
@@ -734,29 +822,69 @@ const COMPACT = {
  * hero's text column. Evidence and the centre card stay side by side (the
  * pairing a reader scans first); the densest panel (Flows / PR review) drops
  * to its own full-width row below.
+ *
+ * Ported from `@skene/design-system@0.12.0`
+ * `sections/journey-signal-scene.tsx`, which grew this layout for exactly this
+ * slot, and then corrected in four places. See the standing note above `Mode`
+ * for why the package version is not adopted wholesale; the four corrections
+ * are annotated inline below. Three are upstream defects and are filed as
+ * T5.5 item 8; the fourth is this repo's own, corrected 2026-08-27.
  */
 const MEDIUM = {
     w: 600,
-    h: 640,
-    ambientA: { x: 16, y: 14, w: 160 },
-    ambientB: { x: 340, y: 300, w: 160 },
-    left: { x: 16, y: 60, w: 170 },
-    center: { x: 202, y: 24, w: 382 },
-    right: { x: 16, y: 300, w: 568 },
+    h: 690,
+    /* Every box starts below y 48, because `ToggleRow` is absolutely positioned
+       at top 20 / right 24 of the STAGE, not of a panel. With the packaged
+       centre card at y 24 the View control landed inside it: white-on-cream,
+       which is why it kept reading as an empty pill in the GTM view. The strip
+       is reserved now, in this layout and in COMPACT.
+  
+       NOT an upstream defect, corrected 2026-08-27. The absolute placement is
+       OURS, at `styles.ts:351-359`; the package puts the switch in flow below
+       the stage (`journey-signal-scene.tsx:445-449`, with a comment saying why),
+       so `MEDIUM.center.y: 24` collides with nothing there. It is a porting
+       hazard rather than a defect, and is filed upstream as one. This layout
+       keeps the reserved strip because this repo keeps the absolute toggle.
+  
+       The height is the ENGINEERING view's, not the GTM one. Upstream's 640
+       leaves 5px under the PR review panel, so any copy change clips it. This is
+       336 + 317 with a real floor under it, re-measured after the review panel
+       was trimmed. UPSTREAM DEFECT 1 of 3: packaged `MEDIUM.h` is 640. Nothing
+       consumed MEDIUM upstream before this site did, so none of the three was
+       caught there; re-verified unrecorded in the package at 0.12.0 on
+       2026-08-27. */
+    /* UPSTREAM DEFECT 2 of 3, T5.5 item 8.
+       Evidence is 230 wide, not the package's 170. At 170 both of its rows
+       ellipsis — `app/upgrade/…` and `public.subscri…` — and the panel's whole
+       job is naming the file and the table. 230 clears the longer of the two
+       (`app/upgrade/route.ts`, 20 mono characters after the `code` badge) with
+       16px to spare. Journey step / Call site gives up the 60: at 322 it still
+       holds its widest line, `skene.track("upgrade_started", {`, unwrapped. */
+    left: { x: 16, y: 60, w: 230 },
+    center: { x: 262, y: 60, w: 322 },
+    right: { x: 16, y: 336, w: 568 },
     /**
-     * Anchored to measured geometry, not guessed. Evidence (left) runs two
-     * rows and sits ~132px tall, so 60 + 132/2 = 126 is its right edge's
-     * vertical mid-point. Journey step / Call site (center) bottoms out at
-     * ~24 + 192 = 216, which is where the second connector starts, straight
-     * down to Flows / PR review's top edge at 300.
+     * Anchored to measured geometry, not guessed. Evidence (left) runs two rows
+     * and a footnote and sits 190px tall, so 60 + 190/2 = 155 is its right
+     * edge's vertical mid-point, and 16 + 230 = 246 is that edge (the package's
+     * 186/126 was for a 170-wide, footnote-less box).
+     * Journey step / Call site (center) bottoms out at 60 + 192 = 252 in the GTM
+     * view, which is where the second connector starts, straight down to Flows /
+     * PR review's top edge at 336. The Engineering view runs that card to 298, so
+     * the connector begins under it there — upstream's behaviour, kept: a
+     * connector that moved with the toggle would redraw on every auto-advance.
      */
-    connectors: ["M 186 126 H 194 V 60 H 202", "M 393 216 V 300"],
+    connectors: ["M 246 155 H 254 V 96 H 262", "M 423 252 V 336"],
 };
 const AUTO_ADVANCE_MS = 6000;
-const WIDE_MIN = 720;
+/* UPSTREAM DEFECT 3 of 3, T5.5 item 8.
+   WIDE needs 900, not the package's 720. At 768 the hero stacks and the scene
+   takes the full 730px column — over 720, so WIDE fired and scaled its 1100px
+   stage to 0.66, putting the panel body copy at 8.6px. The tablet got the
+   desktop layout and the desktop got the phone one. 900 is the width where
+   WIDE holds 0.82 or better; below it MEDIUM reads better at any size. */
+const WIDE_MIN = 900;
 const MEDIUM_MIN = 420;
-const AMBIENT_FILES = ["app/", "  onboarding/", "    route.ts", "  pricing/", "lib/track.ts"];
-const AMBIENT_TABLES = ["orders", "accounts", "subscriptions", "sessions"];
 /** Flow bar widths, as a share of the top of the funnel. */
 const FLOW_MAX = 4182;
 function usePrefersReducedMotion() {
@@ -778,14 +906,10 @@ export function JourneySignalScene() {
     const [inView, setInView] = useState(false);
     const [mode, setMode] = useState("wide");
     const reduced = usePrefersReducedMotion();
-    const gtmButtonRef = useRef(null);
-    const engButtonRef = useRef(null);
-    const [thumb, setThumb] = useState({ left: 0, width: 0 });
     const layout = mode === "wide" ? WIDE : mode === "medium" ? MEDIUM : COMPACT;
     const dark = view === "eng";
-    // The container hook always measures against the WIDE design width, so
-    // `scale` alone only holds for that layout; the others need their own
-    // divisor. This reduces to `scale` when layout.w === WIDE.w.
+    // The container hook measures against the wide design, so every other
+    // layout needs its own divisor. Same observed width either way.
     const effectiveScale = (scale * WIDE.w) / layout.w;
     useEffect(() => {
         const el = containerRef.current;
@@ -802,16 +926,6 @@ export function JourneySignalScene() {
         setTouched(true);
         setView(next);
     }, []);
-    /* The thumb's position and width come from the active button's own
-       rendered box, not a 50/50 split: "GTM" and "Engineering" are different
-       lengths, and a fixed half-and-half thumb would either clip the longer
-       label or leave slack around the shorter one. */
-    useEffect(() => {
-        const btn = view === "gtm" ? gtmButtonRef.current : engButtonRef.current;
-        if (!btn)
-            return;
-        setThumb({ left: btn.offsetLeft, width: btn.offsetWidth });
-    }, [view]);
     /* Auto-advance while the scene is on screen, and hand over for good the
        moment someone reaches for the toggle themselves. */
     useEffect(() => {
@@ -841,37 +955,71 @@ export function JourneySignalScene() {
         const scene = sceneRef.current;
         if (!scene)
             return;
-        if (reduced) {
-            gsap.set(scene.querySelectorAll("[data-reveal]"), { opacity: 1, y: 0 });
-            return;
-        }
-        const ctx = gsap.context(() => {
-            const paths = scene.querySelectorAll("[data-connector]");
-            paths.forEach((path) => {
-                const len = path.getTotalLength();
-                gsap.set(path, { strokeDasharray: len, strokeDashoffset: len });
+        /* `[data-reveal]` panels are `opacity: 0` in the stylesheet so nothing
+           flashes into place before the timeline lifts them. With gsap now loaded
+           asynchronously there is a window where it has not arrived, and if the
+           import ever fails there would be no timeline at all, so this is the
+           floor: cancelled on success, and on failure it reveals the panels
+           through the same CSS the reduced-motion path uses. Without it a network
+           error would leave the section permanently blank. */
+        let cancelled = false;
+        const reveal = () => {
+            scene.querySelectorAll("[data-reveal]").forEach((el) => {
+                el.style.opacity = "1";
+                el.style.transform = "none";
             });
-            const tl = gsap.timeline({
-                scrollTrigger: {
-                    trigger: scene,
-                    start: "top 80%",
-                    toggleActions: "play none none none",
-                },
+        };
+        let revert;
+        void (async () => {
+            const [{ default: gsap }, { ScrollTrigger }] = await Promise.all([
+                import("gsap"),
+                import("gsap/ScrollTrigger"),
+            ]).catch((error) => {
+                reveal();
+                throw error;
             });
-            tl.to(scene.querySelectorAll("[data-reveal]"), {
-                opacity: 1,
-                y: 0,
-                duration: 0.6,
-                stagger: 0.08,
-                ease: "expo.out",
-            }).to(paths, { strokeDashoffset: 0, duration: 0.5, stagger: 0.1, ease: "expo.out" }, "-=0.35");
-        }, scene);
-        return () => ctx.revert();
+            if (cancelled)
+                return;
+            gsap.registerPlugin(ScrollTrigger);
+            if (reduced) {
+                gsap.set(scene.querySelectorAll("[data-reveal]"), { opacity: 1, y: 0 });
+                return;
+            }
+            const ctx = gsap.context(() => {
+                const paths = scene.querySelectorAll("[data-connector]");
+                paths.forEach((path) => {
+                    const len = path.getTotalLength();
+                    gsap.set(path, { strokeDasharray: len, strokeDashoffset: len });
+                });
+                const tl = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: scene,
+                        start: "top 80%",
+                        toggleActions: "play none none none",
+                    },
+                });
+                tl.to(scene.querySelectorAll("[data-reveal]"), {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.6,
+                    stagger: 0.08,
+                    ease: "expo.out",
+                }).to(paths, { strokeDashoffset: 0, duration: 0.5, stagger: 0.1, ease: "expo.out" }, "-=0.35");
+            }, scene);
+            if (cancelled)
+                ctx.revert();
+            else
+                revert = () => ctx.revert();
+        })();
+        return () => {
+            cancelled = true;
+            revert?.();
+        };
     }, [reduced]);
-    return (_jsx(Section, { children: _jsxs(Inner, { children: [_jsx(Container, { ref: containerRef, "$ratio": layout.w / layout.h, children: _jsx(ScaleWrapper, { "$scale": effectiveScale, "$w": layout.w, "$h": layout.h, children: _jsxs(Stage, { ref: sceneRef, children: [_jsx(Ambient, { "$box": layout.ambientA, "$dark": dark, "aria-hidden": true, children: AMBIENT_FILES.map((line) => (_jsx("div", { children: line }, line))) }), _jsx(Ambient, { "$box": layout.ambientB, "$dark": dark, "aria-hidden": true, children: AMBIENT_TABLES.map((line) => (_jsx("div", { children: line }, line))) }), _jsx(Connectors, { viewBox: `0 0 ${layout.w} ${layout.h}`, "aria-hidden": true, children: layout.connectors.map((d) => (_jsx("path", { "data-connector": true, d: d, fill: "none", stroke: "var(--color-text-on-dark-subtle)", strokeWidth: 1.5, strokeDasharray: "4 4" }, d))) }), _jsxs(LeftPanel, { "data-reveal": true, "$box": layout.left, children: [_jsx(PanelLabel, { children: "Evidence" }), EVIDENCE.map((row) => (_jsxs(EvidenceRow, { children: [_jsx(SourceChip, { "$source": row.source, children: row.source }), _jsx(EvidencePath, { children: row.label })] }, row.label)))] }), _jsxs(CenterCard, { "data-reveal": true, "$dark": dark, "$box": layout.center, children: [_jsxs(CardHead, { children: [_jsx(MarkSlot, { "aria-hidden": true, children: _jsx(SkeneMark, { tone: "block", size: 20 }) }), _jsxs("div", { children: [_jsx(CardLabel, { "$dark": dark, children: dark ? "Call site" : "Journey step" }), dark ? (_jsx(PathName, { children: CALL_SITE.path })) : (_jsx(StepName, { "$dark": dark, children: STEP.name }))] })] }), _jsx(CardBody, { "$animate": !reduced, children: dark ? (_jsxs(_Fragment, { children: [_jsx(Code, { children: CALL_SITE.lines.map((line) => (_jsx(CodeLine, { "$removed": line.tone === "removed", children: line.text }, line.text))) }), _jsxs(TableLine, { children: [_jsx("span", { children: CALL_SITE.table }), _jsx(TableCols, { children: CALL_SITE.columns })] })] })) : (_jsxs(_Fragment, { children: [_jsxs(BadgeRow, { children: [_jsxs(Badge, { "$tone": "stage", children: [STEP.stage, " \u00B7 ", STEP.stageLabel] }), _jsx(Badge, { "$tone": "ok", children: STEP.confidence }), _jsx(Badge, { "$tone": "warn", children: STEP.gap })] }), _jsxs(FeedsRow, { children: [_jsx("span", { children: "Feeds" }), _jsx(FeedsValue, { children: STEP.feeds })] })] })) }, view)] }), _jsx(RightPanel, { "data-reveal": true, "$dark": dark, "$box": layout.right, children: _jsx(CardBody, { "$animate": !reduced, children: dark ? (_jsxs(_Fragment, { children: [_jsxs(PrStrip, { children: [_jsx(PrNumber, { children: REVIEW.number }), _jsx("span", { children: REVIEW.pr })] }), _jsxs(ReviewHead, { children: [_jsx(BotBadge, { children: "Skene" }), _jsx(StatusBadge, { children: REVIEW.status }), _jsx(SeverityBadge, { children: REVIEW.severity })] }), _jsx(ReviewBody, { children: REVIEW.body }), _jsxs(Suggestion, { children: [_jsx(SuggestionHead, { children: REVIEW.suggestionLabel }), REVIEW.suggestion.map((line) => (_jsx(SuggestionLine, { "$added": line.tone === "added", children: line.text }, line.text)))] }), _jsx(CommitButton, { children: REVIEW.cta }), _jsxs(AltFix, { children: [_jsx("span", { children: REVIEW.altPrefix }), _jsx(FixCommand, { children: REVIEW.altCommand })] }), _jsx(Footnote, { "$dark": true, children: REVIEW.footnote })] })) : (_jsxs(_Fragment, { children: [_jsx(PanelLabel, { children: "Flows" }), FLOW_ROWS.map((row) => {
-                                                    const active = Boolean(row.active);
-                                                    const pct = (Number(row.count.replace(/,/g, "")) / FLOW_MAX) * 100;
-                                                    return (_jsxs("div", { children: [_jsxs(FlowRow, { "$active": active, children: [_jsx("span", { children: row.label }), _jsx(FlowCount, { "$active": active, children: row.count })] }), _jsx(FlowBar, { "$pct": pct, "$active": active })] }, row.label));
-                                                }), _jsx(Footnote, { children: FLOWS_FOOTNOTE })] })) }, view) })] }) }) }), _jsx(ViewSwitchRow, { children: _jsxs(ViewSwitchTrack, { role: "group", "aria-label": "View", "$inviting": !touched && !reduced, children: [_jsx(ViewSwitchThumb, { "$left": thumb.left, "$width": thumb.width }), _jsx(ViewSwitchButton, { ref: gtmButtonRef, type: "button", "aria-pressed": view === "gtm", "$active": view === "gtm", onClick: () => selectView("gtm"), onFocus: () => setTouched(true), children: VIEW_LABEL.gtm }), _jsx(ViewSwitchButton, { ref: engButtonRef, type: "button", "aria-pressed": view === "eng", "$active": view === "eng", onClick: () => selectView("eng"), onFocus: () => setTouched(true), children: VIEW_LABEL.eng })] }) })] }) }));
+    return (_jsx(Section, { children: _jsx(Inner, { children: _jsx(Container, { ref: containerRef, "$ratio": layout.w / layout.h, children: _jsx(ScaleWrapper, { "$scale": effectiveScale, "$w": layout.w, "$h": layout.h, children: _jsxs(Stage, { ref: sceneRef, children: [_jsx(ToggleRow, { children: _jsxs(DropdownMenu, { children: [_jsx(DropdownMenuTrigger, { asChild: true, children: _jsxs(ViewTrigger, { type: "button", onFocus: () => setTouched(true), "$inviting": !touched && !reduced, children: [_jsx(ViewCaption, { children: "View" }), VIEW_LABEL[view], _jsx(ViewChevron, { "aria-hidden": true, children: _jsx(ChevronDown, { size: 14 }) })] }) }), _jsx(DropdownMenuContent, { align: "end", sideOffset: 6, children: _jsxs(DropdownMenuRadioGroup, { value: view, onValueChange: (next) => selectView(next), children: [_jsx(DropdownMenuRadioItem, { value: "gtm", children: VIEW_LABEL.gtm }), _jsx(DropdownMenuRadioItem, { value: "eng", children: VIEW_LABEL.eng })] }) })] }) }), _jsx(Connectors, { viewBox: `0 0 ${layout.w} ${layout.h}`, "aria-hidden": true, children: layout.connectors.map((d) => (_jsx("path", { "data-connector": true, d: d, fill: "none", stroke: "var(--color-text-on-dark-subtle)", strokeWidth: 1.5, strokeDasharray: "4 4" }, d))) }), _jsxs(LeftPanel, { "data-reveal": true, "$dark": dark, "$box": layout.left, children: [_jsx(PanelLabel, { "$dark": dark, children: "Evidence" }), _jsxs(CardBody, { "$animate": !reduced, children: [(dark ? EVIDENCE_ENG : EVIDENCE_GTM).map((row) => (_jsxs(EvidenceRow, { "$dark": dark, children: [_jsx(SourceChip, { "$source": row.source, "$dark": dark, children: row.source }), _jsx(EvidencePath, { "$dark": dark, children: row.label })] }, row.label))), _jsx(Footnote, { "$dark": dark, children: dark ? EVIDENCE_ENG_FOOTNOTE : EVIDENCE_GTM_FOOTNOTE })] }, view)] }), _jsxs(CenterCard, { "data-reveal": true, "$dark": dark, "$box": layout.center, children: [_jsxs(CardHead, { children: [_jsx(MarkSlot, { "aria-hidden": true, children: _jsx(SkeneMark, { tone: "block", size: 20 }) }), _jsxs("div", { children: [_jsx(CardLabel, { "$dark": dark, children: dark ? "Call site" : "Journey step" }), dark ? (_jsx(PathName, { children: CALL_SITE.path })) : (_jsx(StepName, { "$dark": dark, children: STEP.name }))] })] }), _jsx(CardBody, { "$animate": !reduced, children: dark ? (_jsxs(_Fragment, { children: [_jsx(Code, { children: CALL_SITE.lines.map((line) => (_jsx(CodeLine, { "$removed": line.tone === "removed", children: line.text }, line.text))) }), _jsxs(TableLine, { children: [_jsx("span", { children: CALL_SITE.table }), _jsx(TableCols, { children: CALL_SITE.columns })] })] })) : (_jsxs(_Fragment, { children: [_jsxs(BadgeRow, { children: [_jsxs(Badge, { "$tone": "stage", children: [STEP.stage, " \u00B7 ", STEP.stageLabel] }), _jsx(Badge, { "$tone": "ok", children: STEP.confidence }), _jsx(Badge, { "$tone": "warn", children: STEP.gap })] }), _jsxs(FeedsRow, { children: [_jsx("span", { children: "Feeds" }), _jsx(FeedsValue, { children: STEP.feeds })] })] })) }, view)] }), _jsx(RightPanel, { "data-reveal": true, "$dark": dark, "$box": layout.right, children: _jsx(CardBody, { "$animate": !reduced, children: dark ? (_jsxs(_Fragment, { children: [_jsx(PanelLabel, { "$dark": dark, children: REVIEW.label }), _jsxs(PrStrip, { children: [_jsx(PrNumber, { children: REVIEW.number }), _jsx("span", { children: REVIEW.pr })] }), _jsxs(ReviewHead, { children: [_jsx(BotBadge, { children: "Skene" }), _jsx(StatusBadge, { children: REVIEW.status })] }), _jsx(ReviewBody, { children: REVIEW.body }), _jsxs(Suggestion, { children: [_jsx(SuggestionHead, { children: REVIEW.suggestionLabel }), REVIEW.suggestion.map((line) => (_jsx(SuggestionLine, { "$added": line.tone === "added", children: line.text }, line.text)))] }), _jsx(CommitButton, { children: REVIEW.cta }), _jsx(Footnote, { "$dark": true, children: REVIEW.footnote })] })) : (_jsxs(_Fragment, { children: [_jsx(PanelLabel, { "$dark": dark, children: "Flows" }), FLOW_ROWS.map((row) => {
+                                                const active = Boolean(row.active);
+                                                const pct = (Number(row.count.replace(/,/g, "")) / FLOW_MAX) * 100;
+                                                return (_jsxs("div", { children: [_jsxs(FlowRow, { "$active": active, children: [_jsx("span", { children: row.label }), _jsx(FlowCount, { "$active": active, children: row.count })] }), _jsx(FlowBar, { "$pct": pct, "$active": active })] }, row.label));
+                                            }), _jsx(Footnote, { children: FLOWS_FOOTNOTE })] })) }, view) })] }) }) }) }) }));
 }
 export default JourneySignalScene;

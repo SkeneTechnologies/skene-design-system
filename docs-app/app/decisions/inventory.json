@@ -2118,7 +2118,7 @@
       ],
       "summary": "A documented exception to `machine/rules.yaml`'s `styled_components_for_new_features`.",
       "client": true,
-      "lines": 1215,
+      "lines": 1446,
       "cases": [
         "section-journey-signal-scene",
         "section-journey-signal-scene-medium"

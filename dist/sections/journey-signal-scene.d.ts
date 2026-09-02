@@ -26,6 +26,36 @@
  * separate from the styled-components definitions further down for the same
  * reason `data.ts` existed: edit the exported consts in that block for
  * different labels without touching the rest of the file.
+ *
+ * ## Re-synced from the source 2026-09-02
+ *
+ * The port above happened on 2026-08-25 and then the two copies drifted, in one
+ * direction: skene-marketing-website put six more commits into its copy and this
+ * file got none of them. Anything else consuming this section was rendering a
+ * stale scene, and the drift was invisible from either side.
+ *
+ * What arrived with the re-sync:
+ *
+ *   TWO EVIDENCE SETS instead of one. `EVIDENCE_ENG` and `EVIDENCE_GTM`, on
+ *   founder direction 2026-08-26: the panel showed a file path and a table in
+ *   BOTH views, which is the engineer's answer handed to a GTM reader who has
+ *   no use for it. The scene's whole claim is that one signal has two readings,
+ *   and Evidence was the panel not making it. `EvidenceSource` widened from
+ *   "code" | "db" to include "metric" and "flow" to carry it.
+ *
+ *   A COPY CORRECTION, 2026-08-29. "the metric it moves" became "the number it
+ *   reports into". The shipped string asserted that the step MOVES the metric,
+ *   which is a causal claim the consumer's `voice.md:57` bans, and it
+ *   contradicted the panel's own "Feeds" label eight lines away.
+ *
+ *   A `$dark` prop threaded through several styled components, and gsap loaded
+ *   inside the entry effect rather than at module scope, which is the same
+ *   change 0.18.0 made to `CardAnimationIntegrations` for the same reason.
+ *
+ * The two repository-local dependencies the source file carried did not need
+ * porting. Its `useContainerScale` is character-for-character this package's
+ * `lib/use-container-scale` apart from quoting, and its `media` import from
+ * `@/styles/breakpoints` had ZERO uses in the file.
  */
 import React from "react";
 export declare function JourneySignalScene(): React.JSX.Element;

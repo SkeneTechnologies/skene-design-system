@@ -1,5 +1,40 @@
 # @skene/design-system
 
+## 0.21.0
+
+### Minor Changes
+
+- fix: re-sync `JourneySignalScene` with the source it was ported from
+
+  The port happened on 2026-08-25 and the two copies then drifted, in one
+  direction: `skene-marketing-website` put six more commits into its copy and
+  this file got none of them. Anything else consuming this section was rendering
+  a stale scene, and the drift was invisible from either side.
+
+  What arrives with the re-sync:
+
+  - **Two evidence sets instead of one.** `EVIDENCE_ENG` and `EVIDENCE_GTM`, on
+    founder direction 2026-08-26: the panel showed a file path and a table in
+    BOTH views, which is the engineer's answer handed to a GTM reader who has no
+    use for it. The scene's whole claim is that one signal has two readings, and
+    Evidence was the panel not making it. `EvidenceSource` widened from
+    `"code" | "db"` to include `"metric"` and `"flow"` to carry it.
+  - **A copy correction, 2026-08-29.** "the metric it moves" became "the number
+    it reports into". The shipped string asserted that the step MOVES the metric,
+    a causal claim the consumer's `voice.md:57` bans, and it contradicted the
+    panel's own "Feeds" label eight lines away.
+  - **A `$dark` prop** threaded through several styled components.
+  - **gsap loaded inside the entry effect** rather than at module scope, the same
+    change 0.18.0 made to `CardAnimationIntegrations` for the same reason.
+
+  Neither of the two repository-local dependencies the source carried needed
+  porting, which is worth recording because they looked like blockers. Its
+  `useContainerScale` is character-for-character this package's
+  `lib/use-container-scale` apart from quoting and a `'use client'`, and its
+  `media` import from `@/styles/breakpoints` had **zero** uses in the file.
+
+  The export shape is unchanged: a named `JourneySignalScene` and a default.
+
 ## 0.20.0
 
 ### Minor Changes
