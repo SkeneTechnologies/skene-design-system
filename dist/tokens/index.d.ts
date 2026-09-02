@@ -292,6 +292,21 @@ export declare const tokens: {
         readonly modal: "0 25px 50px -12px rgba(0,0,0,0.5)";
         readonly terminal: "0 32px 64px -16px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(255,255,255,0.02)";
     };
+    readonly blur: {
+        readonly glass: "12px";
+        readonly chrome: "8px";
+        readonly panel: "50px";
+    };
+    readonly zIndex: {
+        readonly base: "1";
+        readonly dropdown: "1000";
+        readonly sticky: "1020";
+        readonly fixed: "1030";
+        readonly modalBackdrop: "1040";
+        readonly modal: "1050";
+        readonly popover: "1060";
+        readonly tooltip: "1070";
+    };
     readonly duration: {
         readonly instant: "100ms";
         readonly short: "200ms";

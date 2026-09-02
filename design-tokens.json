@@ -694,6 +694,46 @@
       "$value": "0 32px 64px -16px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(255,255,255,0.02)"
     }
   },
+  "blur": {
+    "glass": {
+      "$value": "12px",
+      "$description": "backdrop-filter for a translucent control sitting over artwork. The Button glass variants are the callers."
+    },
+    "chrome": {
+      "$value": "8px",
+      "$description": "backdrop-filter for a sticky bar over page content."
+    },
+    "panel": {
+      "$value": "50px",
+      "$description": "backdrop-filter for a dropdown or popover surface, heavy enough to abstract what is behind it."
+    }
+  },
+  "zIndex": {
+    "base": {
+      "$value": "1"
+    },
+    "dropdown": {
+      "$value": "1000"
+    },
+    "sticky": {
+      "$value": "1020"
+    },
+    "fixed": {
+      "$value": "1030"
+    },
+    "modalBackdrop": {
+      "$value": "1040"
+    },
+    "modal": {
+      "$value": "1050"
+    },
+    "popover": {
+      "$value": "1060"
+    },
+    "tooltip": {
+      "$value": "1070"
+    }
+  },
   "duration": {
     "instant": {
       "$value": "100ms"

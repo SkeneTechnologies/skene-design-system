@@ -297,6 +297,21 @@ export const tokens = {
     modal: "0 25px 50px -12px rgba(0,0,0,0.5)",
     terminal: "0 32px 64px -16px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(255,255,255,0.02)",
   },
+  blur: {
+    glass: "12px",
+    chrome: "8px",
+    panel: "50px",
+  },
+  zIndex: {
+    base: "1",
+    dropdown: "1000",
+    sticky: "1020",
+    fixed: "1030",
+    modalBackdrop: "1040",
+    modal: "1050",
+    popover: "1060",
+    tooltip: "1070",
+  },
   duration: {
     instant: "100ms",
     short: "200ms",

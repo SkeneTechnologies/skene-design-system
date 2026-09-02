@@ -205,6 +205,21 @@
   --shadow-modal: 0 25px 50px -12px rgba(0,0,0,0.5);
   --shadow-terminal: 0 32px 64px -16px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(255,255,255,0.02);
 
+  /* blur (3) */
+  --blur-glass: 12px;
+  --blur-chrome: 8px;
+  --blur-panel: 50px;
+
+  /* zIndex (8) */
+  --z-index-base: 1;
+  --z-index-dropdown: 1000;
+  --z-index-sticky: 1020;
+  --z-index-fixed: 1030;
+  --z-index-modal-backdrop: 1040;
+  --z-index-modal: 1050;
+  --z-index-popover: 1060;
+  --z-index-tooltip: 1070;
+
   /* duration (4) */
   --duration-instant: 100ms;
   --duration-short: 200ms;

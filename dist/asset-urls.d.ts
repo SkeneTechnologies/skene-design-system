@@ -36,6 +36,21 @@ export declare const assetUrls: {
     readonly integrationsField: string;
     /** The closing-CTA backdrop. `pixel-bg.webp`. */
     readonly pixelField: string;
+    /**
+     * The same field at full resolution, 3,012,190 bytes against `pixelField`'s
+     * 146,850.
+     *
+     * Both existed already and neither repository knew about the other: this one
+     * was `skene-marketing-website/public/img/pixel-bg.webp`, shipped whole into
+     * the closing CTA of `/product/architecture`. It is kept because it is the
+     * larger original and deleting it from the consumer without keeping it
+     * anywhere would have destroyed the only copy.
+     *
+     * DO NOT reach for this to paint a section. `pixelField` is the one a page
+     * renders; twenty times the bytes buys nothing at the sizes a backdrop is
+     * displayed at. This is here so a future re-encode has a source to work from.
+     */
+    readonly pixelFieldSource: string;
     /** The halftone laid over media, and the subpage header ground. */
     readonly subpageDither: string;
     /** Peach symbol on its own black tile — safe on any ground. */

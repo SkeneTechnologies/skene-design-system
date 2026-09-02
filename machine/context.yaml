@@ -38,7 +38,7 @@
 #   takes three props and everything a <button> takes".
 
 version: "1.0.0"
-counts: { modules: 89, ui: 30, patterns: 8, sections: 51, authored: 89, assets: 26, intents: 20 }
+counts: { modules: 89, ui: 30, patterns: 8, sections: 51, authored: 89, assets: 27, intents: 20 }
 
 intents:
   open-a-page: >-
@@ -268,10 +268,11 @@ modules:
     polarity: inherits
     seen: [ui-button]
     overrides: [className]
+    customProperties: [--blur-glass]
     props:
       Button:
         asChild: { type: boolean, default: "false" }
-        variant: { type: "\"link\" | \"default\" | \"destructive\" | \"outline\" | \"secondary\" | \"ghost\"" }
+        variant: { type: "\"default\" | \"destructive\" | \"outline\" | \"secondary\" | \"ghost\" | \"link\" | \"glass\" | \"glass-dark\"" }
         size: { type: "\"default\" | \"sm\" | \"lg\" | \"icon\"" }
     accepts:
       Button: React.ButtonHTMLAttributes<HTMLButtonElement>
@@ -5475,6 +5476,32 @@ assets:
     notFor: >-
       A section backdrop. It is weighted for full-bleed type at the foot of a
       page, not for a panel inset.
+  pixelFieldSource:
+    import: "import { assetUrls } from '@skene/design-system/asset-urls'"
+    file: assets/pixel-bg-source.webp
+    bytes: 3012190
+    kind: texture
+    usedBy: []
+    is: >-
+      The same field at full resolution, 3,012,190 bytes against
+      `pixelField`'s 146,850. Both existed already and neither repository knew
+      about the other: this one was
+      `skene-marketing-website/public/img/pixel-bg.webp`, shipped whole into
+      the closing CTA of `/product/architecture`. It is kept because it is the
+      larger original and deleting it from the consumer without keeping it
+      anywhere would have destroyed the only copy. DO NOT reach for this to
+      paint a section. `pixelField` is the one a page renders; twenty times
+      the bytes buys nothing at the sizes a backdrop is displayed at. This is
+      here so a future re-encode has a source to work from.
+    useFor: >-
+      A re-encode source, nothing else. It is the full-resolution original of
+      pixelField, 3,012,190 bytes against 146,850, kept when
+      skene-marketing-website's copy was retired so the estate does not lose
+      the only large version.
+    notFor: >-
+      Rendering. Never hand it to a component or a background-image: at the
+      sizes a backdrop displays, twenty times the bytes buys no visible
+      quality. Use pixelField.
   subpageDither:
     import: "import { assetUrls } from '@skene/design-system/asset-urls'"
     file: assets/dither-subpage.webp

@@ -36,6 +36,21 @@ export const assetUrls = {
     integrationsField: new URL('../assets/plugin.png', import.meta.url).href,
     /** The closing-CTA backdrop. `pixel-bg.webp`. */
     pixelField: new URL('../assets/pixel-bg.webp', import.meta.url).href,
+    /**
+     * The same field at full resolution, 3,012,190 bytes against `pixelField`'s
+     * 146,850.
+     *
+     * Both existed already and neither repository knew about the other: this one
+     * was `skene-marketing-website/public/img/pixel-bg.webp`, shipped whole into
+     * the closing CTA of `/product/architecture`. It is kept because it is the
+     * larger original and deleting it from the consumer without keeping it
+     * anywhere would have destroyed the only copy.
+     *
+     * DO NOT reach for this to paint a section. `pixelField` is the one a page
+     * renders; twenty times the bytes buys nothing at the sizes a backdrop is
+     * displayed at. This is here so a future re-encode has a source to work from.
+     */
+    pixelFieldSource: new URL('../assets/pixel-bg-source.webp', import.meta.url).href,
     /** The halftone laid over media, and the subpage header ground. */
     subpageDither: new URL('../assets/dither-subpage.webp', import.meta.url).href,
     /** Peach symbol on its own black tile — safe on any ground. */

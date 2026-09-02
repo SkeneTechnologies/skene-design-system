@@ -26,7 +26,7 @@ The action primitive. Six variants, four sizes.
 | export | prop | type / allowed | required | default |
 | --- | --- | --- | --- | --- |
 | `Button` | `asChild` | `boolean` |  | `false` |
-| `Button` | `variant` | `"link" \| "default" \| "destructive" \| "outline" \| "secondary" \| "ghost"` |  |  |
+| `Button` | `variant` | `"default" \| "destructive" \| "outline" \| "secondary" \| "ghost" \| "link" \| "glass" \| "glass-dark"` |  |  |
 | `Button` | `size` | `"default" \| "sm" \| "lg" \| "icon"` |  |  |
 
 ## Accepts
@@ -58,6 +58,10 @@ Every claim cites the prop, default or export that makes it true. A claim that c
 ## Reachable from outside
 
 `className`
+
+## Custom properties
+
+`--blur-glass`
 
 ## Constraints
 

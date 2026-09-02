@@ -20,7 +20,7 @@ path over HTTP. The stylesheet is at
 - `design/pages/` — one file per page template: section order, what is load-bearing, the band grammar, and the routes it was derived from. Ten of them, e.g. `design/pages/product-page.md`. The index is in DESIGN.md.
 - `design/` — one file per module, at the module's own path, e.g. `design/sections/artifact-shell.md`: what it is for, props, what it is NOT for, and what you must not do.
 - `design/index.md` — all 89 modules indexed twice: by intent, for when you know what you are trying to DO rather than what it is called, and by namespace.
-- `design/tokens.md` — the 241 token values with the derivation rationale in each note. Split out of DESIGN.md so that orienting does not cost you the whole palette.
+- `design/tokens.md` — the 252 token values with the derivation rationale in each note. Split out of DESIGN.md so that orienting does not cost you the whole palette.
 
 ## Contracts (YAML, shipped inside the package)
 
@@ -48,4 +48,4 @@ path over HTTP. The stylesheet is at
 
 ## Data
 
-- [design-tokens.json](/design-tokens.json): 241 token values, the source the CSS and TS are generated from.
+- [design-tokens.json](/design-tokens.json): 252 token values, the source the CSS and TS are generated from.

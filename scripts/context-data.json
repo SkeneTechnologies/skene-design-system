@@ -3647,6 +3647,11 @@
       "notFor": "A section backdrop. It is weighted for full-bleed type at the foot of a page, not for a panel inset."
     },
     {
+      "key": "pixelFieldSource",
+      "useFor": "A re-encode source, nothing else. It is the full-resolution original of pixelField, 3,012,190 bytes against 146,850, kept when skene-marketing-website's copy was retired so the estate does not lose the only large version.",
+      "notFor": "Rendering. Never hand it to a component or a background-image: at the sizes a backdrop displays, twenty times the bytes buys no visible quality. Use pixelField."
+    },
+    {
       "key": "subpageDither",
       "useFor": "Two jobs: the halftone laid over video or photography inside DitheredMedia, and the ground of a subpage header via HeroBackdrop. Every subpage in skene-site uses the second at imageOpacity 0.72.",
       "notFor": "A texture behind an artifact — that is the three card fields. This one is a treatment applied OVER media, not a field placed under a panel."

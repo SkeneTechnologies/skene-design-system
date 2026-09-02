@@ -10,7 +10,7 @@ _Generated from `design-tokens.json` by `scripts/generate-token-docs.mjs`. Do no
 between the markers — change the JSON and run `npm run tokens`. `npm run tokens:check`
 fails the build if this block is stale._
 
-_Source version 2.8.0, 241 tokens, of which 54 are mode-aware and
+_Source version 2.8.0, 252 tokens, of which 54 are mode-aware and
 shown here in every mode they declare._
 
 ### color
@@ -212,6 +212,27 @@ shown here in every mode they declare._
 | `shadow.popover` | `0 10px 15px -3px rgba(0,0,0,0.4)` |  |
 | `shadow.modal` | `0 25px 50px -12px rgba(0,0,0,0.5)` |  |
 | `shadow.terminal` | `0 32px 64px -16px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(255,255,255,0.02)` |  |
+
+### blur
+
+| Token | Value | Description |
+| --- | --- | --- |
+| `blur.glass` | `12px` | backdrop-filter for a translucent control sitting over artwork. The Button glass variants are the callers. |
+| `blur.chrome` | `8px` | backdrop-filter for a sticky bar over page content. |
+| `blur.panel` | `50px` | backdrop-filter for a dropdown or popover surface, heavy enough to abstract what is behind it. |
+
+### zIndex
+
+| Token | Value | Description |
+| --- | --- | --- |
+| `zIndex.base` | `1` |  |
+| `zIndex.dropdown` | `1000` |  |
+| `zIndex.sticky` | `1020` |  |
+| `zIndex.fixed` | `1030` |  |
+| `zIndex.modalBackdrop` | `1040` |  |
+| `zIndex.modal` | `1050` |  |
+| `zIndex.popover` | `1060` |  |
+| `zIndex.tooltip` | `1070` |  |
 
 ### duration
 
