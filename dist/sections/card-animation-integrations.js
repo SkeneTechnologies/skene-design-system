@@ -1,12 +1,27 @@
 'use client';
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useEffect, useRef, useState } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ClipboardCheck, Cloud, GitPullRequest, Terminal } from 'lucide-react';
 import { cn } from '../lib/utils.js';
 import { useContainerScale } from '../lib/use-container-scale.js';
-gsap.registerPlugin(ScrollTrigger);
+/*
+ * gsap is imported inside the effect below, not at module scope.
+ *
+ * A static `import gsap from 'gsap'` here put gsap in this component's client
+ * chunk and that chunk in the initial `<script>` list of every page importing
+ * it. Measured on www.skene.ai: 45 KB gzipped on the two product routes that
+ * render this, for an animation that sits below the fold behind a ScrollTrigger
+ * which does not fire until the scene reaches 80% of the viewport.
+ *
+ * The `import type` above is erased at build, so it costs nothing at runtime.
+ *
+ * The same change was made to `JourneySignalScene` in the consuming app on
+ * 2026-09-01 and took its homepage initial JavaScript from 310,100 to 265,801
+ * gzipped bytes. `next/dynamic` around the component does NOT achieve this and
+ * was measured not to: without `ssr: false` the chunk stays in the initial
+ * list, and `ssr: false` removes the server-rendered markup, which is not
+ * acceptable for a component carrying copy.
+ */
 /** Resolved from this module so Vite emits a browser URL, not a file:// path. */
 const INTEGRATIONS_TEXTURE = new URL('../../assets/plugin.png', import.meta.url).href;
 /**
@@ -104,7 +119,9 @@ const BADGE_STYLES = {
     teal: { background: '#e1f5ee', color: '#085041' },
     amber: { background: '#faeeda', color: '#633806' },
 };
-function resetElements(cards, detailPanel, detailInner, setActiveIdx) {
+/* Takes the gsap instance rather than closing over a module import, because
+   there is no longer a module import to close over. */
+function resetElements(gsap, cards, detailPanel, detailInner, setActiveIdx) {
     gsap.set(cards, { autoAlpha: 0, y: 12 });
     gsap.set(detailPanel, { autoAlpha: 0, y: 8 });
     gsap.set(detailInner, { autoAlpha: 1, y: 0 });
@@ -131,64 +148,97 @@ export function CardAnimationIntegrations({ backgroundImage = INTEGRATIONS_TEXTU
         const detailPanel = detailPanelRef.current;
         const detailInner = detailInnerRef.current;
         const visibleElements = [...cardElements, detailPanel].filter(Boolean);
-        const ctx = gsap.context(() => {
-            resetElements(cardElements, detailPanel, detailInner, setActiveIdx);
-            const tl = gsap.timeline({
-                repeat: -1,
-                repeatDelay: 0.5,
-                delay: 0.3,
-                scrollTrigger: {
-                    trigger: containerRef.current,
-                    start: 'top 80%',
-                    toggleActions: 'play pause resume pause',
-                },
+        /* The cards start hidden and the timeline is what reveals them, so a failed
+           import would leave the scene permanently blank where a static import
+           could not. This is the floor: on failure, show them. */
+        let cancelled = false;
+        let revert;
+        const reveal = () => {
+            for (const el of visibleElements) {
+                if (!el)
+                    continue;
+                el.style.opacity = '1';
+                el.style.visibility = 'visible';
+                el.style.transform = 'none';
+            }
+        };
+        void (async () => {
+            const [{ default: gsap }, { ScrollTrigger }] = await Promise.all([
+                import('gsap'),
+                import('gsap/ScrollTrigger'),
+            ]).catch((error) => {
+                reveal();
+                throw error;
             });
-            tl.call(() => {
-                resetElements(cardElements, detailPanel, detailInner, setActiveIdx);
-            })
-                .to(cardElements, {
-                autoAlpha: 1,
-                y: 0,
-                duration: 0.45,
-                ease: 'power2.out',
-                stagger: 0.12,
-            })
-                .to({}, { duration: FIRST_ACTIVE_DELAY })
-                .call(() => setActiveIdx(0))
-                .to(detailPanel, { autoAlpha: 1, y: 0, duration: 0.4, ease: 'power2.out' }, '<')
-                .to({}, { duration: CYCLE_HOLD })
-                .to(detailInner, {
-                autoAlpha: 0,
-                y: 4,
-                duration: SWAP_OUT,
-                ease: 'power2.in',
-            });
-            for (let idx = 1; idx < details.length; idx++) {
-                tl.call(() => setActiveIdx(idx)).to(detailInner, {
+            if (cancelled)
+                return;
+            gsap.registerPlugin(ScrollTrigger);
+            const ctx = gsap.context(() => {
+                resetElements(gsap, cardElements, detailPanel, detailInner, setActiveIdx);
+                const tl = gsap.timeline({
+                    repeat: -1,
+                    repeatDelay: 0.5,
+                    delay: 0.3,
+                    scrollTrigger: {
+                        trigger: containerRef.current,
+                        start: 'top 80%',
+                        toggleActions: 'play pause resume pause',
+                    },
+                });
+                tl.call(() => {
+                    resetElements(gsap, cardElements, detailPanel, detailInner, setActiveIdx);
+                })
+                    .to(cardElements, {
                     autoAlpha: 1,
                     y: 0,
-                    duration: SWAP_IN,
+                    duration: 0.45,
                     ease: 'power2.out',
+                    stagger: 0.12,
+                })
+                    .to({}, { duration: FIRST_ACTIVE_DELAY })
+                    .call(() => setActiveIdx(0))
+                    .to(detailPanel, { autoAlpha: 1, y: 0, duration: 0.4, ease: 'power2.out' }, '<')
+                    .to({}, { duration: CYCLE_HOLD })
+                    .to(detailInner, {
+                    autoAlpha: 0,
+                    y: 4,
+                    duration: SWAP_OUT,
+                    ease: 'power2.in',
                 });
-                if (idx < details.length - 1) {
-                    tl.to({}, { duration: CYCLE_HOLD - SWAP_OUT - SWAP_IN }).to(detailInner, {
-                        autoAlpha: 0,
-                        y: 4,
-                        duration: SWAP_OUT,
-                        ease: 'power2.in',
+                for (let idx = 1; idx < details.length; idx++) {
+                    tl.call(() => setActiveIdx(idx)).to(detailInner, {
+                        autoAlpha: 1,
+                        y: 0,
+                        duration: SWAP_IN,
+                        ease: 'power2.out',
                     });
+                    if (idx < details.length - 1) {
+                        tl.to({}, { duration: CYCLE_HOLD - SWAP_OUT - SWAP_IN }).to(detailInner, {
+                            autoAlpha: 0,
+                            y: 4,
+                            duration: SWAP_OUT,
+                            ease: 'power2.in',
+                        });
+                    }
+                    else {
+                        tl.to({}, { duration: CYCLE_HOLD - SWAP_IN });
+                    }
                 }
-                else {
-                    tl.to({}, { duration: CYCLE_HOLD - SWAP_IN });
-                }
-            }
-            tl.to(visibleElements, {
-                autoAlpha: 0,
-                duration: 0.4,
-                delay: 2,
-            });
-        }, containerRef);
-        return () => ctx.revert();
+                tl.to(visibleElements, {
+                    autoAlpha: 0,
+                    duration: 0.4,
+                    delay: 2,
+                });
+            }, containerRef);
+            if (cancelled)
+                ctx.revert();
+            else
+                revert = () => ctx.revert();
+        })();
+        return () => {
+            cancelled = true;
+            revert?.();
+        };
     }, []);
     const detail = getDisplayDetail(details, activeIdx);
     return (_jsxs("div", { ref: containerRef, "aria-label": "Skene integrations animation", className: cn('relative aspect-square w-full overflow-hidden rounded-sm', className), children: [_jsx("img", { src: backgroundImage, alt: "", "aria-hidden": true, className: "pointer-events-none absolute inset-0 h-full w-full object-cover" }), _jsx("div", { className: "absolute left-0 top-0 z-[1] flex items-center justify-center", style: {
