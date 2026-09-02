@@ -10,6 +10,9 @@
 
 @import "./tokens.css";
 @import "./effects.css";
+/* One section ships its own stylesheet: the journey scene, which was on
+   styled-components until 2026-09-02 and is plain CSS now. */
+@import "./journey-signal-scene.css";
 
 /* Tailwind v4's automatic content detection hard-excludes node_modules, and
    there is no config file to override that in. Without an explicit @source, the

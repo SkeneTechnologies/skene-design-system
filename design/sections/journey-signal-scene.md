@@ -41,15 +41,17 @@ Every claim cites the prop, default or export that makes it true. A claim that c
 | note | via |
 | --- | --- |
 | Requires a `light` ancestor. Its tokens alias straight to this package's `--color-text-primary` etc., which default to the DARK reading (near-white) without one, and every card in the scene has a white/cream background regardless of page theme — without `light` somewhere above it, the ink text renders near-invisible on its own cards. `polarity: inherits` in the derived block below is why: this module sets no `light`/`dark` class itself, unlike a self-contained band such as `Bridge`. | `export JourneySignalScene` |
-| The only styled-components module in the package (`documentation/20260825_journey_signal_scene_design.md` records why: a straight port of a component the founder already rejected rebuilding on package primitives once). Importing it does not pull styled-components into anything else, but do not use it as precedent for a second one — the exception is this component's history, not a reopened door. | `export JourneySignalScene` |
+| Plain CSS since 2026-09-02, in `styles/journey-signal-scene.css`, which ships through `styles/index.css`. It was the only styled-components module in the package until then (`documentation/20260825_journey_signal_scene_design.md` records why: a straight port of a component the founder already rejected rebuilding on package primitives once). The port kept every declaration and dropped the runtime; the `jss-` class prefix is the scene's own, and the stage's `data-view` attribute is where the old `$dark` prop went. | `export JourneySignalScene` |
 
 ## Reachable from outside
 
-`use client`
+`style`, `use client`
+
+`style` means this module writes an inline style that beats any class you pass.
 
 ## Custom properties
 
-`--font-primary`, `--font-geist-sans`, `--font-mono`, `--font-geist-mono`, `--font-size-xs`, `--font-size-base`, `--line-height-relaxed`, `--radius-xs`
+`--jss-len`
 
 ## Constraints
 

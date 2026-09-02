@@ -3707,7 +3707,7 @@
           "via": "export JourneySignalScene"
         },
         {
-          "note": "The only styled-components module in the package (`documentation/20260825_journey_signal_scene_design.md` records why: a straight port of a component the founder already rejected rebuilding on package primitives once). Importing it does not pull styled-components into anything else, but do not use it as precedent for a second one — the exception is this component's history, not a reopened door.",
+          "note": "Plain CSS since 2026-09-02, in `styles/journey-signal-scene.css`, which ships through `styles/index.css`. It was the only styled-components module in the package until then (`documentation/20260825_journey_signal_scene_design.md` records why: a straight port of a component the founder already rejected rebuilding on package primitives once). The port kept every declaration and dropped the runtime; the `jss-` class prefix is the scene's own, and the stage's `data-view` attribute is where the old `$dark` prop went.",
           "via": "export JourneySignalScene"
         }
       ],
