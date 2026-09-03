@@ -25,7 +25,22 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-PW="$(node -p "require('$ROOT/docs-app/node_modules/@playwright/test/package.json').version")"
+# The image tag comes from the LOCKFILE, not from an installed copy.
+#
+# It used to read `docs-app/node_modules/@playwright/test/package.json`, which
+# is a chicken-and-egg: those modules are only ever installed INSIDE the
+# container, in a named volume, so a clean checkout could not run this script at
+# all. It failed with MODULE_NOT_FOUND before Docker was even reached, which
+# reads as a broken script rather than a missing prerequisite.
+#
+# The lockfile pins one exact version and is committed, so it answers the same
+# question without anything being installed first.
+PW="$(node -p "
+  const l = require('$ROOT/docs-app/package-lock.json');
+  const k = Object.keys(l.packages || {}).find(k => k.endsWith('node_modules/@playwright/test'));
+  if (!k) { console.error('no @playwright/test in docs-app/package-lock.json'); process.exit(1); }
+  l.packages[k].version;
+")"
 IMAGE="mcr.microsoft.com/playwright:v${PW}-noble"
 PLATFORM="${VISUAL_PLATFORM:-linux/amd64}"
 SUFFIX="$(echo "$PLATFORM" | tr '/' '-')"
