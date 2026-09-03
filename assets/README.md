@@ -7,7 +7,7 @@ It ships because it is brand furniture rather than content, and because it is
 small enough that every consumer paying for it is a fair trade for pages that
 look right out of the box.
 
-`card1_bg` / `card2_bg` / `card3_bg` (142–227 KB) are the halftone fields behind
+`card1_bg` / `card2_bg` / `card3_bg` (62–93 KB) are the halftone fields behind
 feature-row visuals, and `pixel-bg.webp` (143 KB) is the closing-CTA backdrop.
 Same argument: they are brand furniture, they recur on every marketing surface,
 and `SectionBackdrop` is not reproducible without them. The alternative was
@@ -17,6 +17,18 @@ chunky checkerboard beside the real dot halftone. A texture is not a colour.
 The pairing is fixed and follows the live site, so the same backdrop sits behind
 the same kind of artifact: card1 journeys and measurement, card2 GitHub and
 editor chrome, card3 schema and connections.
+
+The three fields were re-encoded on 2026-09-03 at the same 1462×1462 pixels,
+lossy WebP quality 50, from the files that shipped until 0.26.0: 145,562 →
+63,446 bytes, 185,736 → 72,878 and 232,696 → 95,012. The artwork is flat
+colour blocks, so the encoder has little to lose: mean per-channel error against
+the previous file is 2.2 to 3.0 of 255 and a 1:1 crop is not tellable apart. On
+a consumer page every `ArtFrame` and `SectionBackdrop` shares one download per
+texture, so the saving is per route, not per frame: a route that painted all
+three went from 564 KB to 231 KB. Lossless was tried and is 6 to 10 times the
+original, and a downscale to 1024 px softens the dots on a 2x display, so
+neither is the answer. Further savings belong to a `field="css"` consumer, not
+to this file.
 
 ## The brand marks
 
