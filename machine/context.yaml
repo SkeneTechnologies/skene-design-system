@@ -5554,7 +5554,7 @@ assets:
   journeyField:
     import: "import { assetUrls } from '@skene/design-system/asset-urls'"
     file: assets/card1_bg.webp
-    bytes: 145562
+    bytes: 63446
     kind: texture
     usedBy: [sections/artifact-shell, sections/section-backdrop]
     is: >-
@@ -5569,7 +5569,7 @@ assets:
   githubField:
     import: "import { assetUrls } from '@skene/design-system/asset-urls'"
     file: assets/card2_bg.webp
-    bytes: 185736
+    bytes: 72878
     kind: texture
     usedBy: [sections/artifact-shell, sections/section-backdrop]
     is: >-
@@ -5584,7 +5584,7 @@ assets:
   schemaField:
     import: "import { assetUrls } from '@skene/design-system/asset-urls'"
     file: assets/card3_bg.webp
-    bytes: 232696
+    bytes: 95012
     kind: texture
     usedBy: [sections/artifact-shell, sections/section-backdrop]
     is: >-
