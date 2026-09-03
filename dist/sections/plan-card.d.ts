@@ -43,6 +43,16 @@ export interface PlanCardProps {
     tierAs?: 'h2' | 'h3';
     /** Right of the tier marker, e.g. "Popular". */
     flag?: React.ReactNode;
+    /**
+     * The headline figure. A plain string like `"$249"` or `"$0"` gets the
+     * display treatment: the clamp scale and the tight `-0.06em` tracking that
+     * a large numeral needs.
+     *
+     * ANYTHING WRAPPED IN AN ELEMENT OPTS OUT OF THE TRACKING, deliberately, and
+     * a caller passing e.g. `<span className="text-[22px]">Contact us</span>`
+     * gets normal spacing without asking for it. See the note on the `strong`
+     * below for why that has to be the default rather than the caller's job.
+     */
     price: React.ReactNode;
     /** Billing unit, e.g. "/mo". */
     unit?: React.ReactNode;

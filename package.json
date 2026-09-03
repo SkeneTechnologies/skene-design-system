@@ -1,6 +1,6 @@
 {
   "name": "@skene/design-system",
-  "version": "0.26.2",
+  "version": "0.26.3",
   "description": "Skene design system: tokens, Tailwind v4 theme, components, and the machine-readable contracts an agent reads before writing UI.",
   "license": "UNLICENSED",
   "repository": {

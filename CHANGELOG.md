@@ -1,5 +1,25 @@
 # @skene/design-system
 
+## 0.26.3
+
+### Patch Changes
+
+- fix: rebuild `dist` so 0.26.2's `PlanCard` change actually ships
+
+  0.26.2 carried the fix in `src` and not in `dist`. `tsc` is incremental here
+  with a committed `.tsbuildinfo`, and the source file arrived via
+  `git checkout <sha> -- src/...` during a rebase, which left a timestamp the
+  incremental build read as unchanged. The compile was skipped and the tag went up
+  around a `dist` that still had the old class list.
+
+  Consumers install `dist`, so 0.26.2 is inert rather than wrong: it changes
+  nothing. This is the same change with the build actually run.
+
+  `ci.yml` already guards this. It builds and then runs
+  `git diff --exit-code -- dist`, and it failed on 0.26.2 as designed. What it
+  could not do was run before the tag, because the release was pushed straight to
+  `main` and tagged in the same breath rather than going through a pull request.
+
 ## 0.26.2
 
 ### Patch Changes
