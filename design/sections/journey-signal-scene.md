@@ -9,7 +9,7 @@ _@skene/design-system 0.26.3._
 |  |  |
 | --- | --- |
 | import | `@skene/design-system/sections/journey-signal-scene` |
-| polarity | `inherits` |
+| polarity | `applies-dark` |
 | boundary | `"use client"` — client component |
 | intent | `explain-a-process`, `pitch-a-capability` |
 
@@ -70,7 +70,7 @@ Gallery cases with a committed light and dark baseline: `section-journey-signal-
 
 ## What binds this module
 
-- **Polarity `inherits`.** It puts no theme class on its own root, so it takes the page. Place it on a light fill and the `light` class is yours to add, or its mode-aware tokens resolve to their DARK values against that fill — measured at 1.07:1 on rendered pixels.
+- **Polarity `applies-dark`.** It puts `dark` on its own root — a dark subtree wherever you place it, including inside a light surface.
 - **Content is props.** This section hardcodes no copy; the page supplies it.
 
 These are the rules this module can break. The full set, the surface roles and

@@ -2944,9 +2944,11 @@ export default function ComponentGalleryPage() {
       </Case>
 
       <Case name="section-journey-signal-scene" width="w-[1120px]">
-        {/* The scene's WIDE layout, GTM view. 1,214 lines, the package's only
-            styled-components module, and until now `seen: []` — nothing here
-            had ever rendered it.
+        {/* The scene's WIDE layout, GTM view.
+            787 lines, CSS since the gsap-and-styled-components removal
+            (`#26`/`#27`); the entry reveal is an IntersectionObserver and two
+            CSS transitions now, not a GSAP timeline. This comment previously
+            described the styled-components/GSAP version and was stale.
 
             One frame proves one state and this module has two axes of them: a
             GTM / Engineering view toggle, and three hand-placed layouts it
@@ -2958,21 +2960,56 @@ export default function ComponentGalleryPage() {
             which is where every filed defect against it lives. The two
             unheld corners are WIDE + Engineering and MEDIUM + GTM.
 
-            The view is pinned by clicking the toggle once on mount, which is
-            the module's own documented handover rather than a trick — see
-            `JourneySceneCase` in ./islands. Without it the scene auto-advances
-            every 6s while on screen and the capture lands wherever the clock
-            is. The entry timeline is GSAP and is held with everything else at
-            2.5s, which is past its ~1.2s end, so this is its settled state.
+            The view is pinned by opening the toggle once on mount and
+            selecting the option that matches — see `JourneySceneCase` in
+            ./islands. It previously did not: it dispatched `.click()` on the
+            trigger (Radix opens on `pointerdown`, so that never opened the
+            menu) and, once that was fixed, matched the selected item by text
+            across `document` globally rather than scoped to its own
+            portalled content, so this case and the Engineering case below —
+            both mounted on the same page, both opening their menu on mount —
+            could grab each other's item. Fixed by scoping the search to the
+            trigger's own `aria-controls` target. This case previously
+            rendered GTM correctly by coincidence, not because the pin
+            worked; it is pinned for real now, and so is the Engineering case
+            below.
 
             COMPACT is not held. It needs a container under 420 and this page's
             cases are sized in one axis only, so a phone-width frame of this
             scene would need the iframe treatment
             `pattern-pill-nav-mobile-menu` uses. Recorded rather than skipped
             quietly. */}
-        <JourneySceneCase view="GTM" width="w-full p-4">
-          <JourneySignalScene />
-        </JourneySceneCase>
+        {/*
+          DARK GROUND, deliberately, and new as of the fix below. `Case`'s own
+          background is `bg-background`, which is mode-aware and turns cream
+          under the light sweep. Until now that mattered: the scene's polarity
+          derived as `inherits` (the fallback `polarityOf` in
+          `scripts/build-context.mjs` returns when it finds no `light`/`dark`
+          literal on the module's own root), which was never a decision, only
+          the absence of one. Every ink value the scene paints —
+          `--color-text-on-dark*`, the connector stroke, the flow bars — is a
+          literal cream-on-dark value with no light-mode translation; the
+          module has never been rendered on anything but a dark page. Under
+          the light sweep the connectors and roughly half the scene's text
+          were cream-on-cream at ~0.55 alpha: present in the DOM, invisible on
+          screen, and every gallery baseline taken before this fix recorded
+          that as correct.
+
+          The real fix is `dark` as a literal on the module's own root
+          (`<section className="dark jss">` in journey-signal-scene.tsx),
+          which makes `polarityOf` derive `applies-dark` — true rather than
+          asserted, and the same mechanism every other themed module in this
+          package uses. `Chrome` here is the matching gallery-side half: the
+          established wrapper for "chrome-only by design" modules (see
+          `pattern-pill-nav` above), giving this case a fixed-dark ground for
+          BOTH sweeps so what the gallery captures is what production has
+          always shown, rather than freezing the light-sweep bug as the
+          baseline a second time. */}
+        <Chrome className="w-full p-4">
+          <JourneySceneCase view="GTM" width="w-full">
+            <JourneySignalScene />
+          </JourneySceneCase>
+        </Chrome>
       </Case>
 
       <Case name="section-journey-signal-scene-medium" width="w-[1120px]">
@@ -3013,18 +3050,21 @@ export default function ComponentGalleryPage() {
 
             The two mode captures of this case are the proof, and they are the
             reason to look at both files rather than one. They DIFFER, and they
-            must not: the scene sits under an explicit `light` wrapper, so the
-            page's mode should reach nothing inside it. What reaches in is the
-            fallback. `color` on an undefined property resolves to `inherit`, so
+            must not: this case has no wrapper forcing a ground either way (the
+            WIDE case above wraps in `Chrome` for exactly this reason; this one
+            deliberately does not, so the leak stays visible), so the page's
+            sweep mode reaches straight into the module's ink. What reaches in
+            is the fallback. `color` on an undefined property resolves to
+            `inherit`, so
             the panels take the gallery `Case`'s own `text-foreground` — ink
             under the light sweep, near-white under the dark one — and the
             Engineering view is legible in one baseline and almost absent in the
             other. A component whose ink is decided by a page two levels up is
             the defect stated as a picture.
 
-            Not fixed here. Eighteen undefined properties inside a
-            1,214-line styled-components module is a token decision, not a
-            coverage chore, and it needs someone to say whether the generator
+            Not fixed here. Eighteen undefined properties inside this 787-line
+            module is a token decision, not a coverage chore, and it needs
+            someone to say whether the generator
             should emit `terminalChrome` or the module should move onto the
             roles that exist. This frame is what makes that reviewable.
 
@@ -3067,8 +3107,12 @@ export default function ComponentGalleryPage() {
             reviewable at all: with a baseline, correcting 720/170/640 or
             emitting the missing properties lands as a picture of what changed;
             without one it lands as a list of names and a promise. So this is a
-            regression floor and a filed defect, not an endorsement, and the
-            frame is EXPECTED to move — twice. */}
+            regression floor and a filed defect, not an endorsement. It has
+            already moved once, when the view-pinning mechanism itself got
+            fixed (this frame used to hold a scene that never actually reached
+            the Engineering view at all — see the WIDE case above) and now
+            legitimately shows Engineering content for the first time. Still
+            EXPECTED to move again, once the tokens or the geometry are. */}
         <JourneySceneCase view="Engineering" width="w-[600px] p-4">
           <JourneySignalScene />
         </JourneySceneCase>

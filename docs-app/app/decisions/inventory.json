@@ -2152,7 +2152,7 @@
       ],
       "summary": "Evidence, a traced journey step, and the PR review that catches it breaking,",
       "client": true,
-      "lines": 776,
+      "lines": 799,
       "cases": [
         "section-journey-signal-scene",
         "section-journey-signal-scene-medium"
