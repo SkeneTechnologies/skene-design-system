@@ -2491,7 +2491,7 @@
       ],
       "summary": "Pricing: the grid and the tier card. The monthly/yearly switch is the only",
       "client": false,
-      "lines": 188,
+      "lines": 224,
       "cases": [
         "section-plan-card"
       ],

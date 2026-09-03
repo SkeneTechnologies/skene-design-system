@@ -1,5 +1,36 @@
 # @skene/design-system
 
+## 0.26.2
+
+### Patch Changes
+
+- fix: `PlanCard` no longer imposes its price tracking on what a caller passes
+
+  `tracking-[-0.06em]` is sized for a large numeral and computes to **−3.456px**
+  at the clamp's 57.6px. Letter-spacing declared in `em` resolves against the
+  element that **declares** it and then inherits as that absolute length; it does
+  not re-resolve against a child's own font-size.
+
+  So a caller passing `<span className="text-[22px]">Contact us</span>` got
+  −3.456px at 22px, which is **−0.157em**. The word space closed up until the card
+  read **"Contactus"**, and it shipped that way to production on
+  skene-marketing-website's `/pricing`.
+
+  `[&_*]:tracking-normal` puts the split where the design already assumed it: the
+  tight tracking applies to the bare string a caller passes for a price, and an
+  element a caller wraps around something else is by definition not that numeral.
+  The `unit` span is a sibling rather than a descendant, so it is unaffected.
+
+  **Fixed here rather than at the call site**, because the call site cannot see
+  the problem. The consuming repository had two copies of this card — one carrying
+  a hand-written `tracking-normal` and a comment explaining the trap, the other
+  not — and the one without it was the page nobody was looking at. One component
+  imposing a value on arbitrary children is the defect; a caller remembering to
+  undo it is not a fix.
+
+  `__tests__/plan-card-price-tracking.test.tsx` covers it, and was checked to fail
+  with the change reverted.
+
 ## 0.26.1
 
 ### Patch Changes

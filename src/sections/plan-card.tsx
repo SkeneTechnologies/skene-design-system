@@ -62,6 +62,16 @@ export interface PlanCardProps {
   tierAs?: 'h2' | 'h3'
   /** Right of the tier marker, e.g. "Popular". */
   flag?: React.ReactNode
+  /**
+   * The headline figure. A plain string like `"$249"` or `"$0"` gets the
+   * display treatment: the clamp scale and the tight `-0.06em` tracking that
+   * a large numeral needs.
+   *
+   * ANYTHING WRAPPED IN AN ELEMENT OPTS OUT OF THE TRACKING, deliberately, and
+   * a caller passing e.g. `<span className="text-[22px]">Contact us</span>`
+   * gets normal spacing without asking for it. See the note on the `strong`
+   * below for why that has to be the default rather than the caller's job.
+   */
   price: React.ReactNode
   /** Billing unit, e.g. "/mo". */
   unit?: React.ReactNode
@@ -144,7 +154,33 @@ export function PlanCard({
       </div>
 
       <div className="mb-[18px] mt-7 flex items-baseline gap-1.5">
-        <strong className="text-[clamp(2.55rem,4vw,4rem)] font-normal leading-none tracking-[-0.06em]">
+        {/*
+          `[&_*]:tracking-normal` is the load-bearing half of this line.
+
+          `tracking-[-0.06em]` is sized for a large numeral, and at the clamp's
+          57.6px it computes to -3.456px. Letter-spacing declared in `em`
+          resolves against the element that DECLARES it and then inherits as
+          that absolute length; it does not re-resolve against a child's own
+          font-size. So a caller passing `<span className="text-[22px]">Contact
+          us</span>` used to get -3.456px at 22px, which is -0.157em, and the
+          word space closed up until it read as "Contactus". That shipped to
+          production on skene-marketing-website's /pricing and was found in a
+          screenshot pass rather than by any gate.
+
+          Resetting tracking on descendants makes the split fall where the
+          design already assumed it: the tight tracking applies to the bare
+          string a caller passes for a price, and an element a caller wraps
+          around something else is by definition not that numeral. The `unit`
+          span is a SIBLING rather than a descendant, so it is unaffected.
+
+          Fixing it here rather than at the call site because the call site
+          cannot see the problem. The consuming repository had two copies of
+          this card, one of which carried a hand-written `tracking-normal` and
+          a comment explaining the trap, and the other of which did not. One
+          component imposing a value on arbitrary children is the defect; a
+          caller remembering to undo it is not a fix.
+        */}
+        <strong className="text-[clamp(2.55rem,4vw,4rem)] font-normal leading-none tracking-[-0.06em] [&_*]:tracking-normal">
           {price}
         </strong>
         {unit ? <span className="text-text-muted">{unit}</span> : null}
