@@ -396,7 +396,31 @@ export function JourneySignalScene() {
     }, [layout]);
     const box = (b) => ({ left: b.x, top: b.y, width: b.w });
     const animate = !reduced || undefined;
-    return (_jsx("section", { className: "jss", children: _jsx("div", { className: "jss-inner", children: _jsx("div", { ref: containerRef, className: "jss-frame", style: { aspectRatio: layout.w / layout.h }, children: _jsx("div", { className: "jss-scale", style: {
+    return (
+    /* `dark` is a literal here, not decoration: it is what tells
+       `polarityOf` (scripts/build-context.mjs) this module applies a theme
+       rather than inheriting one, and it is true rather than asserted for the
+       gate's benefit. Every ink value in journey-signal-scene.css is a dark-
+       ground literal (see the block comment above .jss), the stage never reads
+       a `.light`/`.dark` ancestor, and the GTM centre card being cream is
+       internal composition, not the section adapting to a light page. Until
+       this class existed the derivation fell through to `inherits`, its default
+       for "no theme literal found" rather than a claim anyone made.
+
+       Two consumers were separately compensating for that absence, and both
+       come off with this: docs-app's gallery case now wraps this module in
+       `Chrome` instead of leaving it on the mode-aware page background (see
+       `page.tsx`), and `JourneySceneCase` no longer paints a `bg-brand-light`
+       card behind it (see `islands.tsx`) — that wrapper's own doc comment
+       explained it as a fix for this exact `inherits` state, and painting
+       cream behind a module whose `.jss-frame` is deliberately transparent
+       ("so the hero's halftone field runs under the panels") defeated the one
+       rule the stylesheet states outright. Every gallery baseline taken before
+       this fix had the scene floating on a cream rectangle no page has ever
+       actually shown it on, with the connectors and every "on dark" ink value
+       cream-on-cream at roughly 0.55 alpha: present in the DOM, invisible on
+       screen. */
+    _jsx("section", { className: "dark jss", children: _jsx("div", { className: "jss-inner", children: _jsx("div", { ref: containerRef, className: "jss-frame", style: { aspectRatio: layout.w / layout.h }, children: _jsx("div", { className: "jss-scale", style: {
                         width: layout.w,
                         height: layout.h,
                         transform: `scale(${effectiveScale})`,

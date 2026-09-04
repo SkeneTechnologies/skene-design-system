@@ -3517,7 +3517,7 @@ modules:
     import: "@skene/design-system/sections/journey-signal-scene"
     exports: [JourneySignalScene]
     client: true
-    polarity: inherits
+    polarity: applies-dark
     seen: [section-journey-signal-scene, section-journey-signal-scene-medium]
     overrides: [style, use client]
     customProperties: [--jss-len]
