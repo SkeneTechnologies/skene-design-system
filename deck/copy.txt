@@ -1,0 +1,165 @@
+## 1. Title
+
+SEED ROUND
+
+GTM experiments grounded on your actual codebase.
+
+Skene is the GTM engineer that connects marketing campaigns, sales processes and customer success initiatives with product code, analytics and databases.
+
+skene.ai · Teemu Kinos, CEO & Co-founder · teemu@skene.ai
+
+## 2. Founders
+
+We have lived through this problem before Skene.
+
+We built and sold a €2M ARR company to LeadDesk, a €30M ARR company, where it was impossible to tell what the product analytics meant.
+
+Teppo Hudsson, CPO and co-founder. Signed to Virgin/EMI and played 500 shows across Europe, the US and Japan. Then CTO at CosmEthics, lead architect at Elisa and founding partner at Fibo Labs. Leads product.
+
+Teemu Kinos, CEO and co-founder. Founded GetJenny, grew it to €2M ARR and 100 clients, sold it to LeadDesk in 2021. Led marketing there, then ran a €10M revenue line. Leads go-to-market and fundraising.
+
+Michele Boggia, CTO and co-founder. PhD in physics, Marie Curie fellow. Built GetJenny's ML engine and LeadDesk's LLM features. Leads engineering.
+
+## 3. The problem
+
+Every GTM plan is an experiment. It is impossible to tell why.
+
+When a team launches a new process, there is no way to tell if it is working, because not every milestone that leads to the goal gets tracked.
+
+01 Half of it is never tracked. A plan names the goal and the steps that lead to it. Half of those steps never get tracked. There is no way to see progress, and no next step once the goal is reached.
+
+02 Coding agents break the tracking that exists. Agents rewrite the lines that track the event. The change does not block the build, so nothing catches it in deployment. The number just goes missing.
+
+03 Nobody can say what the number refers to. Growth asks what a number means, or how it relates to their experiment. Engineering digs out the definition next sprint. It was counting something else.
+
+04 Adding the missing tracking takes a sprint. Growth asks for the steps to be tracked. Engineering builds it next sprint. The experiment either runs for two weeks with no data to prove it, or waits two weeks until the tracking is done.
+
+05 So GTM runs fewer experiments. Teams cannot tell whether the next experiment will get the tracking it needs. They run fewer experiments than the product ships releases.
+
+Illustration: activation funnel, last 28 days, no alerts. Signed up 4,820. Invited a teammate, down 11% since Tuesday, real or did tracking break? Reached first value, not measured.
+
+## 4. The product
+
+Skene is the GTM engineer you cannot hire.
+
+01 Decide what to measure. Today: growth, in a document. With Skene: Skene writes it as a tracking plan the code can be checked against.
+
+02 Get it into the product. Today: engineering, from a ticket. With Skene: Skene writes the change for an engineer to apply.
+
+03 Keep it correct as the code changes. Today: tracking-plan tools, after the bad event has already landed. Nobody before merge. With Skene: Skene checks every pull request against the tracking plan before merge.
+
+04 Read the answer after launch. Today: growth, in a spreadsheet, weeks later. With Skene: Skene computes the verdict from the company's own data.
+
+## 5. How it works
+
+Skene reads your code and your database. Then it checks every pull request.
+
+Skene reads your repository and your database schema, and builds a tracking plan of what your product should track. Every pull request is checked against that tracking plan before merge, and every result gets a verdict against it after launch.
+
+Every release: an agent writes the code and opens a pull request. Skene checks it against the tracking plan, before merge.
+
+Checked path. Your database: we read your schema and check the events reach it. Every event lands. Your analytics: they chart the events, we keep the code that sends them correct. The funnel is real. Your GTM tools (Clay): Clay ships the play, Skene gives the verdict. You know if the play worked.
+
+Unchecked path. Your database: a field goes missing. Your analytics: the funnel moves for no reason. Your GTM tools: the play gets the wrong verdict.
+
+Tests and a reviewer check the code. Nothing in that review asks whether the events the growth team's plans are based on are still in place.
+
+Coding agents can check code, tracking-plan tools can flag a bad event after it lands, analytics tools can chart what reached them, and GTM tools can score a play, but none of them reads the code and the database together to say whether the event landed and what it did to revenue. Skene reads both.
+
+The tracking plan starts from what the growth team already has: a question, a template, or a campaign. Engineering connects the code and database after, and then the check runs.
+
+## 6. Milestones
+
+We proved the demand and found the buyer with pre-seed.
+
+Nov 2025, the MVP. Is this a real problem? Can we read a codebase we have never seen? Yes to both. Hundreds of signups.
+
+Jan 2026, Skene OSS. How do developers work with a tool like this? They use it and do not pay.
+
+Mar 2026, the terminal UI. If the tool is easier to use, will developers pay? No, it found the buyer. Developers have a say. The decision is not theirs.
+
+May 2026, Skene Cloud. Will the people who own that decision pay? First revenue in June. Ten paying customers by August.
+
+Next, runtime QA (first pieces live). How much breaks after merge, where a code check cannot see it? Answered when we can say what share only shows up in production.
+
+Next, goal-driven measurement (first version live). Does a verdict change what the team ships next? Answered when teams pick the next test from the last result.
+
+Next, a repeatable way to get customers. Which channel brings ten of these accounts on its own? Answered when one channel does it twice without us pushing.
+
+## 7. Traction
+
+Ten paying customers, zero ad spend.
+
+MRR since Skene Cloud launched: May €0, June €600, July €1,000, August €1,480. Ten paying customers in August.
+
+The community: we run the Supabase community events across Europe through 2026. Teemu is in SupaSquad, and Supabase promotes Skene in its monthly newsletter. A marketplace listing is under way. Our design partner Dreambase came out of this work.
+
+## 8. Why now
+
+Products now change faster than anyone can check. GTM has to run experiments at that speed, on numbers it can trust.
+
+Charts, 2023 to August 2026: merged pull requests a month (130M), commits a month (2.9B), new repositories a month (24M). Credit: GitHub.
+
+GitHub now sees 2.9 billion commits a month (GitHub data, via The New Stack, 2026). Developers themselves say 42% of the code they commit is AI-generated or assisted (Sonar, State of Code 2025).
+
+The code that records a signup is somewhere in those commits. It changes at the same pace. An agent rewrites it without knowing a growth plan depends on it, and nobody in the review checks.
+
+## 9. Who buys
+
+The growth team is the buyer for Skene.
+
+Our ICP is companies past €1M ARR, where engineering and GTM are separate teams. That separation is the friction Skene sells into: one team needs the work done, the other team does it.
+
+Economic buyer: leadership, function leads. They sign off the budget. Skene gives every experiment a verdict against revenue, so they know which ones to fund again.
+
+Champion: GTM engineer, RevOps. They own the experiment and wait a sprint for engineering to add tracking. With Skene the tracking ships with the release.
+
+Technical buyer: data team, engineering. They hold the veto or at least can stall the deal. They try the open-source tool on their own repo. Skene writes the tracking and they review it like any other PR, so they build product instead of event code.
+
+## 10. Go to market
+
+One channel, measured the same way every month.
+
+How a customer arrives: Supabase community events, content and direct outreach bring in the champion. If they can't access the code, they write the tracking plan and hand it to engineering. If they can, Skene checks the tracking plan against the code. The line that sells it: are you sure about that number? Show me the Skene. A function lead pays for Team when the second experiment needs it. Scale is a sales conversation, once a company has outgrown Team.
+
+What this round proves about the channel:
+
+Channel repeatability. Does one channel bring ten ICP accounts on its own? Ten ICP accounts from one channel, twice in a row. For each channel we count the calls we make and how many end in Team. The second ten come without us pushing.
+
+Inbound share. How many qualified leads contact Skene first? One in three by end of 2027.
+
+Sales playbook. Do the same steps close at the same rate and speed each time? One written playbook, with conversion rate and days to close each staying inside a set range on every deal.
+
+## 11. Pricing
+
+Land with the champion for free. Convert the team on a credit card. Expand with sales when they hit the ceiling.
+
+Free Team Scale
+
+Who uses it: Champion: GTM engineer, RevOps. Technical buyer runs the check if repo access exists. Champion and technical buyer: the growth team and the engineers who ship for it. Several growth teams, each with their own champion.
+
+Why they start: To see what their product measures today, and what it would need to track to prove the next experiment. One audit answers both, plus a live dashboard to share with the team. To run the second experiment. One Team subscription no longer covers the company.
+
+Upgrade trigger: The second experiment is blocked until they move to Team. Separately, history older than 90 days is deleted, and an email at day 76 gives them 14 days to keep it. Team stops checking PRs when they pass the repo, account or PR limit. Limits are set so a company around €1M ARR fits and a bigger one doesn't. None. Scale is the top.
+
+Target ACV: €0 €1–5k, today's customers average €1.7k €10–50k, per deal
+
+Who signs off: Nobody. The champion starts alone. Function lead on a card, or a VP in a 1:1. No procurement. Economic buyer: leadership, through procurement, legal and privacy review.
+
+## 12. The ask
+
+Raising a €1.5M seed round. 15% committed from existing investors.
+
+The round buys three goals.
+
+Goal 1, retention. Six-month net revenue retention above 110% by end of 2027. Until then, twenty teams still checking every pull request a month after their first fix.
+
+Goal 2, efficiency. A Team account pays back its cost of acquisition within 12 months. We count all GTM spend and the CEO's salary against new Team accounts.
+
+Goal 3, expansion. €2M ARR by the end of 2027, from [X] Team accounts at [€Y] and [Z] Scale accounts at [€W]. That is what lets us raise a Series A in Q1 2028. [Fill in the sum. If it does not reach €2M, change the goal.]
+
+Where it goes, 24 months of runway: €1.13M team of seven at about €9K a month each, €120K sales and marketing, €100K general (finance, travel, hosting), €50K SOC 2, legal and privacy terms for Scale, €100K buffer.
+
+## 13. Close
+
+Skene. Teemu Kinos, CEO & Co-founder · teemu@skene.ai · skene.ai

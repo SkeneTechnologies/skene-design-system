@@ -1,0 +1,575 @@
+<!doctype html>
+<html lang="en" class="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1920">
+<title>Skene seed deck, September 2026</title>
+<link rel="stylesheet" href="deck.css">
+</head>
+<body>
+<script>
+/* ------------------------------------------------------------------------ *
+ * MONEY. Every money figure in the deck lives here, once, in two variants.
+ * Default is EUR. Switch with ?currency=USD or the U key.
+ * The round and the budget stay in euros in both variants.
+ * ------------------------------------------------------------------------ */
+const MONEY = {
+  EUR: {
+    soldARR: '€2M ARR', leaddeskARR: '€30M ARR', getjennyARR: '€2M ARR',
+    revenueLine: '€10M revenue line',
+    mrrMay: '€0', mrrJun: '€600', mrrJul: '€1,000', mrrAug: '€1,480',
+    icpARR: '€1M ARR', teamARR: '€1M ARR',
+    acvFree: '€0',
+    acvTeam: '€1–5k, today’s customers average €1.7k',
+    acvScale: '€10–50k, per deal',
+    goal3ARR: '€2M ARR', goal3Y: '[€Y]', goal3W: '[€W]', goal3Floor: '€2M',
+    round: '€1.5M',
+    budTeam: '€1.13M', budTeamRate: '€9K', budSales: '€120K',
+    budGeneral: '€100K', budSoc: '€50K', budBuffer: '€100K'
+  },
+  USD: {
+    soldARR: '$2M ARR', leaddeskARR: '$30M ARR', getjennyARR: '$2M ARR',
+    revenueLine: '$12M revenue line',
+    mrrMay: '$0', mrrJun: '$697', mrrJul: '$1,161', mrrAug: '$1,718',
+    icpARR: '$1M ARR', teamARR: '$1M ARR',
+    acvFree: '$0',
+    acvTeam: '$1–5k, today’s customers average $2k',
+    acvScale: '$10–50k, per deal',
+    goal3ARR: '$2.3M ARR', goal3Y: '[$Y]', goal3W: '[$W]', goal3Floor: '$2.3M',
+    round: '€1.5M',
+    budTeam: '€1.13M', budTeamRate: '€9K', budSales: '€120K',
+    budGeneral: '€100K', budSoc: '€50K', budBuffer: '€100K'
+  }
+};
+/* The MRR chart's bar heights. The two currency series have the same shape, so
+   the drawing does not change when the currency does. */
+const MRR_SHAPE = [0, 600, 1000, 1480];
+</script>
+
+<div class="deck">
+
+<!-- =========================================================== 1  TITLE == -->
+<section class="slide is-active" id="s1">
+  <div class="mark"><img src="../assets/skene-lockup-on-dark.svg" alt="Skene"></div>
+  <div>
+    <p class="seed">SEED ROUND</p>
+    <h1 class="hero" style="margin-top:30px">GTM experiments grounded on <span class="lift">your actual codebase.</span></h1>
+  </div>
+  <div class="foot">
+    <p>Skene is the GTM engineer that connects marketing campaigns, sales processes and customer success initiatives with product code, analytics and databases.</p>
+    <p class="contact">skene.ai &middot; Teemu Kinos, CEO &amp; Co-founder &middot; teemu@skene.ai</p>
+  </div>
+  <div class="slide-no">01</div>
+</section>
+
+<!-- ======================================================== 2  FOUNDERS == -->
+<section class="slide" id="s2">
+  <div class="slide-head">
+    <p class="eyebrow">Founders</p>
+    <h2 class="h-slide">We have lived through this problem before Skene.</h2>
+    <p class="shared">We built and sold a <span data-money="soldARR"></span> company to LeadDesk, a <span data-money="leaddeskARR"></span> company, where it was impossible to tell what the product analytics meant.</p>
+  </div>
+  <div class="slide-body">
+    <div class="founders">
+      <article class="card tc-card">
+        <div class="tc-avatar" aria-hidden="true">TH</div>
+        <h3 class="tc-name">Teppo Hudsson</h3>
+        <p class="tc-role">CPO and co-founder</p>
+        <p class="tc-bio">Signed to Virgin/EMI and played 500 shows across Europe, the US and Japan. Then CTO at CosmEthics, lead architect at Elisa and founding partner at Fibo Labs.</p>
+        <p class="tc-leads"><span class="chip peach">Leads product</span></p>
+      </article>
+      <article class="card tc-card">
+        <div class="tc-avatar" aria-hidden="true">TK</div>
+        <h3 class="tc-name">Teemu Kinos</h3>
+        <p class="tc-role">CEO and co-founder</p>
+        <p class="tc-bio">Founded GetJenny, grew it to <span data-money="getjennyARR"></span> and 100 clients, sold it to LeadDesk in 2021. Led marketing there, then ran a <span data-money="revenueLine"></span>.</p>
+        <p class="tc-leads"><span class="chip peach">Leads go-to-market and fundraising</span></p>
+      </article>
+      <article class="card tc-card">
+        <div class="tc-avatar" aria-hidden="true">MB</div>
+        <h3 class="tc-name">Michele Boggia</h3>
+        <p class="tc-role">CTO and co-founder</p>
+        <p class="tc-bio">PhD in physics, Marie Curie fellow. Built GetJenny&rsquo;s ML engine and LeadDesk&rsquo;s LLM features.</p>
+        <p class="tc-leads"><span class="chip peach">Leads engineering</span></p>
+      </article>
+    </div>
+  </div>
+  <div class="slide-no">02</div>
+</section>
+
+<!-- ========================================================= 3  PROBLEM == -->
+<section class="slide" id="s3">
+  <div class="slide-head" style="margin-bottom:30px">
+    <p class="eyebrow">The problem</p>
+    <h2 class="h-slide tight">Every GTM plan is an experiment. It is impossible to tell why.</h2>
+    <p class="body" style="margin-top:14px;max-width:1500px">When a team launches a new process, there is no way to tell if it is working, because not every milestone that leads to the goal gets tracked.</p>
+  </div>
+  <div class="slide-body">
+    <ol class="failures">
+      <li class="failure"><span class="num">01</span><div><h3>Half of it is never tracked.</h3><p>A plan names the goal and the steps that lead to it. Half of those steps never get tracked. There is no way to see progress, and no next step once the goal is reached.</p></div></li>
+      <li class="failure"><span class="num">02</span><div><h3>Coding agents break the tracking that exists.</h3><p>Agents rewrite the lines that track the event. The change does not block the build, so nothing catches it in deployment. The number just goes missing.</p></div></li>
+      <li class="failure"><span class="num">03</span><div><h3>Nobody can say what the number refers to.</h3><p>Growth asks what a number means, or how it relates to their experiment. Engineering digs out the definition next sprint. It was counting something else.</p></div></li>
+      <li class="failure"><span class="num">04</span><div><h3>Adding the missing tracking takes a sprint.</h3><p>Growth asks for the steps to be tracked. Engineering builds it next sprint. The experiment either runs for two weeks with no data to prove it, or waits two weeks until the tracking is done.</p></div></li>
+      <li class="failure"><span class="num">05</span><div><h3>So GTM runs fewer experiments.</h3><p>Teams cannot tell whether the next experiment will get the tracking it needs. They run fewer experiments than the product ships releases.</p></div></li>
+    </ol>
+    <div class="fnl-wrap">
+      <!-- sections/funnel drawn on sections/artifact-shell's AppWindow. It is a
+           light surface on a dark page, so it carries `light` on its own root. -->
+      <div class="aw-window light">
+        <div class="aw-bar">
+          <span class="aw-title">activation funnel</span>
+          <span class="fnl-badges">
+            <span class="badge-light">last 28 days</span>
+            <span class="badge-light">no alerts</span>
+          </span>
+        </div>
+        <div class="aw-body">
+          <div class="fnl-row">
+            <div class="fnl-head"><span class="fnl-label">Signed up</span><span class="fnl-value">4,820</span></div>
+            <div class="fnl-track" aria-hidden="true"><div class="fnl-fill ok" style="width:100%"></div></div>
+          </div>
+          <div class="fnl-row">
+            <div class="fnl-head"><span class="fnl-label">Invited a teammate</span><span class="fnl-value quiet">down 11% since Tuesday</span></div>
+            <div class="fnl-track" aria-hidden="true"><div class="fnl-fill broken" style="width:44%"></div></div>
+            <p class="fnl-note">real or did tracking break?</p>
+          </div>
+          <div class="fnl-row">
+            <div class="fnl-head"><span class="fnl-label">Reached first value</span><span class="fnl-value quiet">not measured</span></div>
+            <div class="fnl-track unknown" aria-hidden="true"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-no">03</div>
+</section>
+
+<!-- ========================================================= 4  PRODUCT == -->
+<section class="slide" id="s4">
+  <div class="slide-head" style="margin-bottom:26px">
+    <p class="eyebrow">The product</p>
+    <h2 class="h-slide">Skene is the GTM engineer you cannot hire.</h2>
+  </div>
+  <div class="slide-body" style="flex-direction:column;justify-content:center">
+    <div class="jobs" style="flex:0 0 auto">
+      <article class="job">
+        <span class="num">01</span>
+        <h3>Decide what to measure.</h3>
+        <div class="col"><p class="col-label">Today:</p><p>growth, in a document.</p></div>
+        <div class="col skene"><p class="col-label skene">With Skene:</p><p>Skene writes it as a tracking plan the code can be checked against.</p></div>
+      </article>
+      <article class="job">
+        <span class="num">02</span>
+        <h3>Get it into the product.</h3>
+        <div class="col"><p class="col-label">Today:</p><p>engineering, from a ticket.</p></div>
+        <div class="col skene"><p class="col-label skene">With Skene:</p><p>Skene writes the change for an engineer to apply.</p></div>
+      </article>
+      <article class="job land">
+        <span class="num">03</span>
+        <h3>Keep it correct as the code changes.</h3>
+        <div class="col"><p class="col-label">Today:</p><p>tracking-plan tools, after the bad event has already landed. Nobody before merge.</p></div>
+        <div class="col skene"><p class="col-label skene">With Skene:</p><p>Skene checks every pull request against the tracking plan before merge.</p></div>
+      </article>
+      <article class="job">
+        <span class="num">04</span>
+        <h3>Read the answer after launch.</h3>
+        <div class="col"><p class="col-label">Today:</p><p>growth, in a spreadsheet, weeks later.</p></div>
+        <div class="col skene"><p class="col-label skene">With Skene:</p><p>Skene computes the verdict from the company&rsquo;s own data.</p></div>
+      </article>
+    </div>
+  </div>
+  <div class="slide-no">04</div>
+</section>
+
+<!-- ==================================================== 5  HOW IT WORKS == -->
+<section class="slide" id="s5">
+  <div class="slide-head" style="margin-bottom:24px">
+    <p class="eyebrow">How it works</p>
+    <h2 class="h-slide tight">Skene reads your code and your database. Then it checks every pull request.</h2>
+    <p class="body" style="margin-top:12px;max-width:1560px">Skene reads your repository and your database schema, and builds a tracking plan of what your product should track. Every pull request is checked against that tracking plan before merge, and every result gets a verdict against it after launch.</p>
+  </div>
+  <div class="slide-body">
+    <div class="paths">
+      <div class="pr-node"><b>Every release:</b> an agent writes the code and opens a pull request. Skene checks it against the tracking plan, before merge.</div>
+      <div class="lane checked">
+        <h3>Checked path.</h3>
+        <div class="lane-rows">
+          <div class="lane-row"><span class="k">Your database:</span><span class="v">we read your schema and check the events reach it. <em>Every event lands.</em></span></div>
+          <div class="lane-row"><span class="k">Your analytics:</span><span class="v">they chart the events, we keep the code that sends them correct. <em>The funnel is real.</em></span></div>
+          <div class="lane-row"><span class="k">Your GTM tools (Clay):</span><span class="v">Clay ships the play, Skene gives the verdict. <em>You know if the play worked.</em></span></div>
+        </div>
+      </div>
+      <div class="lane unchecked">
+        <h3>Unchecked path.</h3>
+        <div class="lane-rows">
+          <div class="lane-row"><span class="k">Your database:</span><span class="v">a field goes missing.</span></div>
+          <div class="lane-row"><span class="k">Your analytics:</span><span class="v">the funnel moves for no reason.</span></div>
+          <div class="lane-row"><span class="k">Your GTM tools:</span><span class="v">the play gets the wrong verdict.</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="notes">
+      <p class="first">Tests and a reviewer check the code. Nothing in that review asks whether the events the growth team&rsquo;s plans are based on are still in place.</p>
+      <hr class="rule">
+      <p>Coding agents can check code, tracking-plan tools can flag a bad event after it lands, analytics tools can chart what reached them, and GTM tools can score a play, but none of them reads the code and the database together to say whether the event landed and what it did to revenue. Skene reads both.</p>
+      <hr class="rule">
+      <p>The tracking plan starts from what the growth team already has: a question, a template, or a campaign. Engineering connects the code and database after, and then the check runs.</p>
+    </div>
+  </div>
+  <div class="slide-no">05</div>
+</section>
+
+<!-- ====================================================== 6  MILESTONES == -->
+<section class="slide" id="s6">
+  <div class="slide-head" style="margin-bottom:30px">
+    <p class="eyebrow">Milestones</p>
+    <h2 class="h-slide tight">We proved the demand and found the buyer with pre-seed.</h2>
+  </div>
+  <div class="slide-body" style="flex-direction:column;gap:34px;justify-content:center">
+    <div>
+      <div class="mile-band">
+        <article class="mile"><span class="when">Nov 2025</span><h3>the MVP.</h3><p class="q">Is this a real problem? Can we read a codebase we have never seen?</p><p class="a">Yes to both. Hundreds of signups.</p></article>
+        <article class="mile"><span class="when">Jan 2026</span><h3>Skene OSS.</h3><p class="q">How do developers work with a tool like this?</p><p class="a">They use it and do not pay.</p></article>
+        <article class="mile"><span class="when">Mar 2026</span><h3>the terminal UI.</h3><p class="q">If the tool is easier to use, will developers pay?</p><p class="a">No, it found the buyer. Developers have a say. The decision is not theirs.</p></article>
+        <article class="mile"><span class="when">May 2026</span><h3>Skene Cloud.</h3><p class="q">Will the people who own that decision pay?</p><p class="a">First revenue in June. Ten paying customers by August.</p></article>
+      </div>
+    </div>
+    <div>
+      <div class="mile-band next">
+        <article class="mile todo"><span class="when">Next</span><h3>runtime QA (first pieces live).</h3><p class="q">How much breaks after merge, where a code check cannot see it?</p><p class="a">Answered when we can say what share only shows up in production.</p></article>
+        <article class="mile todo"><span class="when">Next</span><h3>goal-driven measurement (first version live).</h3><p class="q">Does a verdict change what the team ships next?</p><p class="a">Answered when teams pick the next test from the last result.</p></article>
+        <article class="mile todo"><span class="when">Next</span><h3>a repeatable way to get customers.</h3><p class="q">Which channel brings ten of these accounts on its own?</p><p class="a">Answered when one channel does it twice without us pushing.</p></article>
+      </div>
+    </div>
+  </div>
+  <div class="slide-no">06</div>
+</section>
+
+<!-- ======================================================== 7  TRACTION == -->
+<section class="slide" id="s7">
+  <div class="slide-head" style="margin-bottom:34px">
+    <p class="eyebrow">Traction</p>
+    <h2 class="h-slide">Ten paying customers, zero ad spend.</h2>
+  </div>
+  <div class="slide-body">
+    <div class="chart-card card band">
+      <p class="mono" style="font-size:var(--font-size-label);letter-spacing:0.07em;text-transform:uppercase;color:var(--color-chrome-text-muted-strong)">MRR since Skene Cloud launched</p>
+      <div class="chart-frame" id="mrr-chart" style="margin-top:22px"></div>
+    </div>
+    <div class="side">
+      <div>
+        <p class="bignum">Ten</p>
+        <p class="bignum-label">paying customers in August.</p>
+      </div>
+      <hr class="rule">
+      <div>
+        <p class="mono" style="font-size:var(--font-size-label);letter-spacing:0.07em;text-transform:uppercase;color:var(--color-brand-peach);margin-bottom:14px">The community</p>
+        <p class="body">we run the Supabase community events across Europe through 2026. Teemu is in SupaSquad, and Supabase promotes Skene in its monthly newsletter. A marketplace listing is under way. Our design partner Dreambase came out of this work.</p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-no">07</div>
+</section>
+
+<!-- ======================================================== 8  WHY NOW == -->
+<section class="slide" id="s8">
+  <div class="slide-head" style="margin-bottom:34px">
+    <p class="eyebrow">Why now</p>
+    <h2 class="h-slide tight">Products now change faster than anyone can check. GTM has to run experiments at that speed, on numbers it can trust.</h2>
+  </div>
+  <div class="slide-body" style="flex-direction:column;gap:40px;justify-content:center">
+    <div>
+      <div class="charts3" id="gh-charts"></div>
+      <p class="src" style="margin-top:14px">Credit: GitHub.</p>
+    </div>
+    <hr class="rule">
+    <div class="para2">
+      <p class="body">GitHub now sees 2.9 billion commits a month (GitHub data, via The New Stack, 2026). Developers themselves say 42% of the code they commit is AI-generated or assisted (Sonar, State of Code 2025).</p>
+      <p class="body">The code that records a signup is somewhere in those commits. It changes at the same pace. An agent rewrites it without knowing a growth plan depends on it, and nobody in the review checks.</p>
+    </div>
+  </div>
+  <div class="slide-no">08</div>
+</section>
+
+<!-- ======================================================= 9  WHO BUYS == -->
+<section class="slide" id="s9">
+  <div class="slide-head">
+    <p class="eyebrow">Who buys</p>
+    <h2 class="h-slide">The growth team is the buyer for Skene.</h2>
+    <p class="icp">Our ICP is companies past <span data-money="icpARR"></span>, where engineering and GTM are separate teams. That separation is the friction Skene sells into: one team needs the work done, the other team does it.</p>
+  </div>
+  <div class="slide-body">
+    <div class="roles">
+      <article class="card role">
+        <p class="kicker">Economic buyer</p>
+        <h3>leadership, function leads.</h3>
+        <p>They sign off the budget. Skene gives every experiment a verdict against revenue, so they know which ones to fund again.</p>
+      </article>
+      <article class="card role">
+        <p class="kicker">Champion</p>
+        <h3>GTM engineer, RevOps.</h3>
+        <p>They own the experiment and wait a sprint for engineering to add tracking. With Skene the tracking ships with the release.</p>
+      </article>
+      <article class="card role">
+        <p class="kicker">Technical buyer</p>
+        <h3>data team, engineering.</h3>
+        <p>They hold the veto or at least can stall the deal. They try the open-source tool on their own repo. Skene writes the tracking and they review it like any other PR, so they build product instead of event code.</p>
+      </article>
+    </div>
+  </div>
+  <div class="slide-no">09</div>
+</section>
+
+<!-- =================================================== 10  GO TO MARKET == -->
+<section class="slide" id="s10">
+  <div class="slide-head" style="margin-bottom:34px">
+    <p class="eyebrow">Go to market</p>
+    <h2 class="h-slide">One channel, measured the same way every month.</h2>
+  </div>
+  <div class="slide-body">
+    <div class="arrive">
+      <p class="mono" style="font-size:var(--font-size-label);letter-spacing:0.07em;text-transform:uppercase;color:var(--color-chrome-text-muted-strong);margin-bottom:16px">How a customer arrives</p>
+      <p class="body" style="font-size:20px">Supabase community events, content and direct outreach bring in the champion. If they can&rsquo;t access the code, they write the tracking plan and hand it to engineering. If they can, Skene checks the tracking plan against the code. The line that sells it: are you sure about that number? Show me the Skene. A function lead pays for Team when the second experiment needs it. Scale is a sales conversation, once a company has outgrown Team.</p>
+    </div>
+    <div class="proofs">
+      <p class="mono" style="font-size:var(--font-size-label);letter-spacing:0.07em;text-transform:uppercase;color:var(--color-brand-peach)">What this round proves about the channel:</p>
+      <article class="proof">
+        <h3>Channel repeatability.</h3>
+        <p class="q">Does one channel bring ten ICP accounts on its own?</p>
+        <p class="t">Ten ICP accounts from one channel, twice in a row.</p>
+        <p class="t2">For each channel we count the calls we make and how many end in Team. The second ten come without us pushing.</p>
+      </article>
+      <article class="proof">
+        <h3>Inbound share.</h3>
+        <p class="q">How many qualified leads contact Skene first?</p>
+        <p class="t">One in three by end of 2027.</p>
+      </article>
+      <article class="proof">
+        <h3>Sales playbook.</h3>
+        <p class="q">Do the same steps close at the same rate and speed each time?</p>
+        <p class="t">One written playbook, with conversion rate and days to close each staying inside a set range on every deal.</p>
+      </article>
+    </div>
+  </div>
+  <div class="slide-no">10</div>
+</section>
+
+<!-- ======================================================== 11  PRICING == -->
+<section class="slide" id="s11">
+  <div class="slide-head" style="margin-bottom:26px">
+    <p class="eyebrow">Pricing</p>
+    <h2 class="h-slide tight">Land with the champion for free. Convert the team on a credit card. Expand with sales when they hit the ceiling.</h2>
+  </div>
+  <div class="slide-body" style="flex-direction:column;justify-content:center">
+    <table class="ptab">
+      <thead>
+        <tr>
+          <th class="rowhead"></th>
+          <th><span class="plan-name">Free</span></th>
+          <th><span class="plan-name">Team</span></th>
+          <th><span class="plan-name">Scale</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th class="rowhead">Who uses it</th>
+          <td>Champion: GTM engineer, RevOps. Technical buyer runs the check if repo access exists.</td>
+          <td>Champion and technical buyer: the growth team and the engineers who ship for it.</td>
+          <td>Several growth teams, each with their own champion.</td>
+        </tr>
+        <tr>
+          <th class="rowhead">Why they start</th>
+          <td>To see what their product measures today, and what it would need to track to prove the next experiment. One audit answers both, plus a live dashboard to share with the team.</td>
+          <td>To run the second experiment.</td>
+          <td>One Team subscription no longer covers the company.</td>
+        </tr>
+        <tr class="loud">
+          <th class="rowhead">Upgrade trigger</th>
+          <td>The second experiment is blocked until they move to Team. Separately, history older than 90 days is deleted, and an email at day 76 gives them 14 days to keep it.</td>
+          <td>Team stops checking PRs when they pass the repo, account or PR limit. Limits are set so a company around <span data-money="teamARR"></span> fits and a bigger one doesn&rsquo;t.</td>
+          <td>None. Scale is the top.</td>
+        </tr>
+        <tr>
+          <th class="rowhead">Target ACV</th>
+          <td><span data-money="acvFree"></span></td>
+          <td><span data-money="acvTeam"></span></td>
+          <td><span data-money="acvScale"></span></td>
+        </tr>
+        <tr>
+          <th class="rowhead">Who signs off</th>
+          <td>Nobody. The champion starts alone.</td>
+          <td>Function lead on a card, or a VP in a 1:1. No procurement.</td>
+          <td>Economic buyer: leadership, through procurement, legal and privacy review.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="slide-no">11</div>
+</section>
+
+<!-- ======================================================== 12  THE ASK == -->
+<section class="slide" id="s12">
+  <div class="slide-head" style="margin-bottom:30px">
+    <p class="eyebrow">The ask</p>
+    <div class="ask-head">
+      <p class="round">Raising a <span data-money="round"></span> seed round.</p>
+      <p class="commit">15% committed from existing investors.</p>
+    </div>
+  </div>
+  <div class="slide-body" style="flex-direction:column;gap:30px;justify-content:center">
+    <div>
+      <p class="body" style="margin-bottom:16px">The round buys three goals.</p>
+      <div class="goals">
+        <article class="goal">
+          <h3>Goal 1, retention.</h3>
+          <p>Six-month net revenue retention above 110% by end of 2027. Until then, twenty teams still checking every pull request a month after their first fix.</p>
+        </article>
+        <article class="goal">
+          <h3>Goal 2, efficiency.</h3>
+          <p>A Team account pays back its cost of acquisition within 12 months. We count all GTM spend and the CEO&rsquo;s salary against new Team accounts.</p>
+        </article>
+        <article class="goal">
+          <h3>Goal 3, expansion.</h3>
+          <p><span data-money="goal3ARR"></span> by the end of 2027, from <span class="ph">[X]</span> Team accounts at <span class="ph" data-money="goal3Y"></span> and <span class="ph">[Z]</span> Scale accounts at <span class="ph" data-money="goal3W"></span>. That is what lets us raise a Series A in Q1 2028.</p>
+          <p><span class="ph">[Fill in the sum. If it does not reach <span data-money="goal3Floor"></span>, change the goal.]</span></p>
+        </article>
+      </div>
+    </div>
+    <div>
+      <p class="mono" style="font-size:var(--font-size-label);letter-spacing:0.07em;text-transform:uppercase;color:var(--color-chrome-text-muted-strong);margin-bottom:14px">Where it goes, 24 months of runway:</p>
+      <div class="budget-bar" id="budget-bar"></div>
+      <ul class="budget-key" id="budget-key"></ul>
+    </div>
+  </div>
+  <div class="slide-no">12</div>
+</section>
+
+<!-- ========================================================== 13  CLOSE == -->
+<section class="slide" id="s13">
+  <img src="../assets/skene-symbol-on-dark.svg" alt="">
+  <p class="wordmark">Skene.</p>
+  <p class="contact">Teemu Kinos, CEO &amp; Co-founder &middot; teemu@skene.ai &middot; skene.ai</p>
+  <div class="slide-no">13</div>
+</section>
+
+</div>
+
+<div class="nav-hint">&larr; &rarr; slides &middot; U currency</div>
+
+<script>
+/* ---------------------------------------------------------------- money -- */
+const params = new URLSearchParams(location.search);
+let currency = (params.get('currency') || 'EUR').toUpperCase();
+if (!MONEY[currency]) currency = 'EUR';
+
+function paintMoney() {
+  const v = MONEY[currency];
+  document.querySelectorAll('[data-money]').forEach(el => {
+    el.textContent = v[el.dataset.money];
+  });
+  buildBudget();
+  buildMrr();
+}
+
+/* -------------------------------------------------- slide 7, MRR chart --- */
+/* SVG, drawn with design tokens. No chart library ships in this package. */
+function buildMrr() {
+  const host = document.getElementById('mrr-chart');
+  const v = MONEY[currency];
+  const labels = ['May', 'June', 'July', 'August'];
+  const values = [v.mrrMay, v.mrrJun, v.mrrJul, v.mrrAug];
+  const W = 900, H = 620, pad = 56, base = H - 78, top = 40;
+  const max = Math.max.apply(null, MRR_SHAPE) * 1.18;
+  const slot = (W - pad * 2) / MRR_SHAPE.length;
+  const bw = 118;
+  let bars = '';
+  MRR_SHAPE.forEach((n, i) => {
+    const h = Math.max(3, (n / max) * (base - top));
+    const x = pad + slot * i + (slot - bw) / 2;
+    const y = base - h;
+    const fill = i === MRR_SHAPE.length - 1
+      ? 'var(--color-brand-peach)'
+      : 'color-mix(in oklab, var(--color-brand-peach) ' + (34 + i * 16) + '%, var(--color-chrome-surface-3))';
+    bars +=
+      '<rect x="' + x + '" y="' + y + '" width="' + bw + '" height="' + h + '" rx="6" style="fill:' + fill + '"></rect>' +
+      '<text x="' + (x + bw / 2) + '" y="' + (y - 18) + '" text-anchor="middle" style="font-family:var(--font-family-mono, Geist Mono, ui-monospace, monospace);font-size:30px;fill:var(--color-chrome-text-primary)">' + values[i] + '</text>' +
+      '<text x="' + (x + bw / 2) + '" y="' + (base + 38) + '" text-anchor="middle" style="font-family:var(--font-family-mono, Geist Mono, ui-monospace, monospace);font-size:22px;fill:var(--color-chrome-text-muted)">' + labels[i] + '</text>';
+  });
+  host.innerHTML =
+    '<svg viewBox="0 0 ' + W + ' ' + H + '" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" role="img">' +
+    '<line x1="' + pad + '" y1="' + base + '" x2="' + (W - pad) + '" y2="' + base + '" style="stroke:var(--color-chrome-surface-border);stroke-width:1"></line>' +
+    bars + '</svg>';
+}
+
+/* -------------------------------------------- slide 8, three GitHub curves */
+const GH = [
+  { title: 'merged pull requests a month', end: '130M', shape: [0.30, 0.36, 0.44, 0.56, 0.74, 1.00] },
+  { title: 'commits a month',              end: '2.9B', shape: [0.34, 0.40, 0.47, 0.58, 0.76, 1.00] },
+  { title: 'new repositories a month',     end: '24M',  shape: [0.38, 0.44, 0.52, 0.63, 0.79, 1.00] }
+];
+function buildGh() {
+  const host = document.getElementById('gh-charts');
+  host.innerHTML = GH.map(c => {
+    const W = 520, H = 190, pad = 6;
+    const step = (W - pad * 2) / (c.shape.length - 1);
+    const pts = c.shape.map((s, i) => [pad + step * i, H - pad - s * (H - pad * 2 - 8)]);
+    const line = pts.map((p, i) => (i ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join(' ');
+    const area = line + ' L' + (W - pad) + ' ' + (H - pad) + ' L' + pad + ' ' + (H - pad) + ' Z';
+    return '<article class="mini">' +
+      '<h3>' + c.title + '</h3>' +
+      '<p class="end">' + c.end + '</p>' +
+      '<svg viewBox="0 0 ' + W + ' ' + H + '" width="100%" height="150" preserveAspectRatio="none" role="img">' +
+        '<path d="' + area + '" style="fill:color-mix(in oklab, var(--color-brand-peach) 16%, transparent)"></path>' +
+        '<path d="' + line + '" style="fill:none;stroke:var(--color-brand-peach);stroke-width:3;stroke-linejoin:round"></path>' +
+      '</svg>' +
+      '<div class="axis"><span>2023</span><span>August 2026</span></div>' +
+    '</article>';
+  }).join('');
+}
+
+/* ------------------------------------------------ slide 12, budget bar --- */
+const BUDGET = [
+  { k: 'budTeam',    share: 1130, tint: 'var(--color-brand-peach)',      tail: ' team of seven at about ', rate: 'budTeamRate', tail2: ' a month each' },
+  { k: 'budSales',   share: 120,  tint: 'var(--color-brand-bronze)',     tail: ' sales and marketing' },
+  { k: 'budGeneral', share: 100,  tint: 'var(--color-accent-violet)',    tail: ' general (finance, travel, hosting)' },
+  { k: 'budSoc',     share: 50,   tint: 'var(--color-accent-blue)',      tail: ' SOC 2, legal and privacy terms for Scale' },
+  { k: 'budBuffer',  share: 100,  tint: 'var(--color-chrome-surface-3)', tail: ' buffer' }
+];
+function buildBudget() {
+  const v = MONEY[currency];
+  const total = BUDGET.reduce((a, b) => a + b.share, 0);
+  document.getElementById('budget-bar').innerHTML = BUDGET.map(b =>
+    '<div class="budget-seg" style="flex:0 0 ' + (b.share / total * 100) + '%;background:' + b.tint + '"></div>').join('');
+  document.getElementById('budget-key').innerHTML = BUDGET.map(b =>
+    '<li><span class="swatch" style="background:' + b.tint + '"></span><span><span class="cream mono">' + v[b.k] + '</span>' +
+    b.tail + (b.rate ? '<span class="cream mono">' + v[b.rate] + '</span>' + b.tail2 : '') + '</span></li>').join('');
+}
+
+/* ------------------------------------------------------------ nav + fit -- */
+const slides = Array.from(document.querySelectorAll('.slide'));
+let index = Math.max(0, slides.findIndex(s => s.classList.contains('is-active')));
+function show(i) {
+  index = Math.min(slides.length - 1, Math.max(0, i));
+  slides.forEach((s, n) => s.classList.toggle('is-active', n === index));
+  history.replaceState(null, '', '#' + (index + 1));
+}
+function fit() {
+  const s = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+  document.querySelector('.deck').style.setProperty('--deck-scale', s);
+}
+window.addEventListener('resize', fit);
+window.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { show(index + 1); e.preventDefault(); }
+  else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { show(index - 1); e.preventDefault(); }
+  else if (e.key === 'Home') show(0);
+  else if (e.key === 'End') show(slides.length - 1);
+  else if (e.key === 'u' || e.key === 'U') { currency = currency === 'EUR' ? 'USD' : 'EUR'; paintMoney(); }
+});
+
+buildGh();
+paintMoney();
+fit();
+if (location.hash) { const n = parseInt(location.hash.slice(1), 10); if (n >= 1 && n <= slides.length) show(n - 1); }
+</script>
+</body>
+</html>
